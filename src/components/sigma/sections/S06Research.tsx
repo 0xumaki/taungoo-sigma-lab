@@ -87,7 +87,7 @@ export function S06Research() {
     >
       <div ref={root} className="relative flex h-full flex-col gap-3">
         {/* Ambient particles */}
-        <SigmaParticles count={10} />
+        <SigmaParticles count={10} color="#FFB300" />
         {/* tabs */}
         <div className="flex flex-wrap items-center gap-1.5">
           <button

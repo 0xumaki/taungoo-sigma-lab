@@ -6,10 +6,29 @@ const SECTOR_CODES = ["INIT", "MAN", "SYS", "VLT", "COL", "LOG", "DAT", "CAP", "
 export async function GET() {
   const encoder = new TextEncoder();
   let tick = 0;
+  let closed = false;
+  let interval: ReturnType<typeof setInterval> | null = null;
+  let comment: ReturnType<typeof setInterval> | null = null;
 
-  const stream = new ReadableStream({
+  const stream = new ReadableStream<Uint8Array>({
     start(controller) {
+      const stop = () => {
+        closed = true;
+        if (interval) clearInterval(interval);
+        if (comment) clearInterval(comment);
+      };
+
+      const safeEnqueue = (chunk: Uint8Array) => {
+        if (closed) return;
+        try {
+          controller.enqueue(chunk);
+        } catch {
+          stop();
+        }
+      };
+
       const sendEvent = () => {
+        if (closed) return;
         tick++;
         const data = {
           tick,
@@ -24,30 +43,34 @@ export async function GET() {
           status: tick % 40 < 3 ? "CALIBRATING" : "ONLINE",
         };
         const msg = `data: ${JSON.stringify(data)}\n\n`;
-        controller.enqueue(encoder.encode(msg));
+        safeEnqueue(encoder.encode(msg));
       };
 
       // send initial event immediately
       sendEvent();
 
       // then send every 2 seconds
-      const interval = setInterval(sendEvent, 2000);
+      interval = setInterval(sendEvent, 2000);
 
       // keep the stream alive with a comment every 15s
-      const comment = setInterval(() => {
-        try {
-          controller.enqueue(encoder.encode(": keepalive\n\n"));
-        } catch {
-          // stream closed
-        }
+      comment = setInterval(() => {
+        safeEnqueue(encoder.encode(": keepalive\n\n"));
       }, 15000);
 
       // cleanup on cancel
       return () => {
-        clearInterval(interval);
-        clearInterval(comment);
-        controller.close();
+        stop();
+        try {
+          controller.close();
+        } catch {
+          // already closed
+        }
       };
+    },
+    cancel() {
+      closed = true;
+      if (interval) clearInterval(interval);
+      if (comment) clearInterval(comment);
     },
   });
 

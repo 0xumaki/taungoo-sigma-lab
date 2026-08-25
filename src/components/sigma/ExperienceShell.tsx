@@ -201,6 +201,14 @@ export function ExperienceShell() {
       sigmaSound.playAmbient(destMeta.accent);
     }
 
+    // Check for reduced motion preference — if active, skip the animation and just swap
+    const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (prefersReduced) {
+      setRenderedView(dest);
+      setPhase("idle");
+      return;
+    }
+
     const panels = panelsRef.current.filter(Boolean) as HTMLDivElement[];
     const overlay = overlayRef.current;
     const flash = flashRef.current;

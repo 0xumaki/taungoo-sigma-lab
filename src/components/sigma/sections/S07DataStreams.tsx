@@ -138,7 +138,7 @@ export function S07DataStreams() {
     >
       <div ref={root} className="relative grid h-full grid-cols-12 grid-rows-6 gap-3">
         {/* Ambient floating data motes */}
-        <SigmaParticles count={24} />
+        <SigmaParticles count={24} color="#00FF94" />
         {/* big counter row */}
         <Panel data-ds label="LIVE METRICS" id={source} accent="#00FF94" className="col-span-12 md:col-span-8">
           <div className="grid grid-cols-2 divide-x divide-border/70 sm:grid-cols-4">

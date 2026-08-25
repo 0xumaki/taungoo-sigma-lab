@@ -6,6 +6,7 @@ import { useGSAP } from "@gsap/react";
 import { SECTIONS, MAP_META, getSection, type SectionMeta } from "@/lib/sigma/sections";
 import { useSigmaStore } from "@/lib/sigma/store";
 import { sigmaSound } from "@/lib/sigma/sound";
+import { useTilt3D } from "@/hooks/use-tilt-3d";
 import { cn } from "@/lib/utils";
 import { BrutalButton, Crosshair, Panel, Tag } from "./shared/components";
 
@@ -23,7 +24,7 @@ function MapNode({
   onEnter: () => void;
   onHover: (id: SectionMeta | null) => void;
 }) {
-  const ref = React.useRef<HTMLButtonElement>(null);
+  const ref = useTilt3D<HTMLButtonElement>(8);
   const { view } = useSigmaStore();
   const isActive = view === section.id;
 
@@ -38,10 +39,10 @@ function MapNode({
       onMouseLeave={() => onHover(null)}
       onClick={() => { onEnter(); sigmaSound.play("transition"); }}
       className={cn(
-        "group relative block w-full overflow-hidden border border-border bg-card text-left transition-[transform,border-color] duration-300 hover:-translate-y-1 hover:border-foreground/60",
+        "group relative block w-full overflow-hidden border border-border bg-card text-left transition-[border-color] duration-300 hover:border-foreground/60",
         isActive && "border-foreground"
       )}
-      style={{ aspectRatio: "4 / 3" }}
+      style={{ aspectRatio: "4 / 3", transformStyle: "preserve-3d" }}
     >
       {/* accent top bar */}
       <div className="absolute inset-x-0 top-0 z-20 h-[3px]" style={{ background: section.accent }} />

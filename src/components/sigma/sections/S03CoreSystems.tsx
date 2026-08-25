@@ -98,7 +98,7 @@ export function S03CoreSystems() {
     >
       <div ref={root} className="relative grid h-full grid-cols-12 grid-rows-6 gap-3">
         {/* Ambient system particles */}
-        <SigmaParticles count={18} />
+        <SigmaParticles count={18} color="#00E5FF" />
         {/* featured pillar 1 — large */}
         <PillarCard pillar={PILLARS[0]} className="col-span-12 row-span-3 md:col-span-5" featured />
         {/* featured pillar 2 */}

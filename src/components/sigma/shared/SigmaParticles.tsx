@@ -21,7 +21,7 @@ const CHARS = ["0", "1", "Σ", "▲", "▮", "░", "⬡", "◍", "Λ", "Δ"];
  * Renders ASCII-like particles that fade in/out, giving a "data in the void" feel.
  * Canvas-based for performance.
  */
-export function SigmaParticles({ count = 30 }: { count?: number }) {
+export function SigmaParticles({ count = 30, color = "#00FF94" }: { count?: number; color?: string }) {
   const canvasRef = React.useRef<HTMLCanvasElement>(null);
 
   React.useEffect(() => {
@@ -84,8 +84,9 @@ export function SigmaParticles({ count = 30 }: { count?: number }) {
         }
         m.opacity *= 0.5;
 
-        // draw
-        ctx.fillStyle = `rgba(0, 255, 148, ${m.opacity})`;
+        // draw — use the sector accent color
+        const rgb = hexToRgb(color);
+        ctx.fillStyle = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${m.opacity})`;
         ctx.font = `${m.size}px monospace`;
         ctx.fillText(m.char, m.x, m.y);
 
@@ -104,7 +105,7 @@ export function SigmaParticles({ count = 30 }: { count?: number }) {
       cancelAnimationFrame(raf);
       window.removeEventListener("resize", onResize);
     };
-  }, [count]);
+  }, [count, color]);
 
   return (
     <canvas
@@ -113,4 +114,13 @@ export function SigmaParticles({ count = 30 }: { count?: number }) {
       aria-hidden
     />
   );
+}
+
+function hexToRgb(hex: string): { r: number; g: number; b: number } {
+  const h = hex.replace("#", "");
+  return {
+    r: parseInt(h.slice(0, 2), 16),
+    g: parseInt(h.slice(2, 4), 16),
+    b: parseInt(h.slice(4, 6), 16),
+  };
 }

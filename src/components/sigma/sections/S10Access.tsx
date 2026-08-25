@@ -82,7 +82,7 @@ export function S10Access() {
     >
       <div ref={root} className="relative grid h-full grid-cols-12 gap-3">
         {/* Ambient particles */}
-        <SigmaParticles count={10} />
+        <SigmaParticles count={10} color="#FFEB3B" />
         {/* terminal form */}
         <Panel data-ap label="SECURE TERMINAL" id="TTY/ACCESS" accent="#FFEB3B" className="col-span-12 lg:col-span-8" scan>
           <div className="flex h-full flex-col p-4">

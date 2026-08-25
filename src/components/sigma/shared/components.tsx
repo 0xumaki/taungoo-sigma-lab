@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { cn } from "@/lib/utils";
+import { useMagnetic } from "@/hooks/use-magnetic";
 
 /* ---------------------------------------------------------------
    Crosshair — corner registration marks for panels
@@ -115,6 +116,7 @@ export function BrutalButton({
   variant = "solid",
   accent,
   arrow = true,
+  magnetic = true,
   ...props
 }: {
   children: React.ReactNode;
@@ -123,7 +125,9 @@ export function BrutalButton({
   variant?: "solid" | "ghost" | "outline";
   accent?: string;
   arrow?: boolean;
+  magnetic?: boolean;
 } & React.ButtonHTMLAttributes<HTMLButtonElement>) {
+  const magRef = useMagnetic<HTMLButtonElement>(0.2);
   const styles: Record<string, string> = {
     solid: "bg-foreground text-background hover:bg-foreground/85",
     ghost: "bg-transparent text-foreground hover:bg-foreground/10",
@@ -132,6 +136,7 @@ export function BrutalButton({
   };
   return (
     <button
+      ref={magnetic ? magRef : undefined}
       onClick={onClick}
       className={cn(
         "group inline-flex items-center gap-2 px-4 py-2.5 font-mono text-[11px] uppercase tracking-[0.2em] transition-all duration-200 active:translate-x-[2px] active:translate-y-[2px]",

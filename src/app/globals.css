@@ -165,6 +165,32 @@
   ::selection { background: #FF4500; color: #000; }
 }
 
+/* Light theme overrides — soften brutalist effects for white background */
+.light {
+  /* scanlines: use dark lines instead of black */
+  --scanline-color: rgba(0, 0, 0, 0.08);
+  /* noise: reduce opacity */
+  --noise-opacity: 0.03;
+  /* grid: darker lines */
+  --grid-color: rgba(0, 0, 0, 0.06);
+}
+.light ::-webkit-scrollbar-track { background: oklch(0.92 0 0); }
+.light ::-webkit-scrollbar-thumb { background: oklch(0.50 0 0); }
+.light ::-webkit-scrollbar-thumb:hover { background: oklch(0.30 0 0); }
+.light ::selection { background: #FF4500; color: #fff; }
+
+/* Reduced motion: disable all animations */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .sigma-spin-slow, .sigma-pulse, .sigma-blink, .sigma-sweep, .sigma-ticker, .sigma-glow-ring, .sigma-shimmer {
+    animation: none !important;
+  }
+}
+
 /* ============================================================
    SIGMA BRUTALISM — design system utilities
    ============================================================ */

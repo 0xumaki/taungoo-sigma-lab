@@ -72,7 +72,7 @@ export function S05Collective() {
     >
       <div ref={root} className="relative grid h-full grid-cols-12 gap-3">
         {/* Ambient particles */}
-        <SigmaParticles count={12} />
+        <SigmaParticles count={12} color="#FF2D7E" />
         {/* intro panel */}
         <Panel
           label="THE SIGMA COLLECTIVE"

@@ -51,7 +51,7 @@ export function S11Status() {
     >
       <div ref={root} className="relative grid h-full grid-cols-12 gap-3">
         {/* Ambient particles */}
-        <SigmaParticles count={12} />
+        <SigmaParticles count={12} color="#2979FF" />
         {/* status grid — all 11 sectors */}
         <Panel data-st label="SECTOR STATUS GRID" id="11/11" accent="#2979FF" className="col-span-12 lg:col-span-8">
           <div className="grid grid-cols-2 gap-px border border-border/70 bg-border/40 sm:grid-cols-3 lg:grid-cols-4">

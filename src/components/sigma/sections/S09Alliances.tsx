@@ -46,7 +46,7 @@ export function S09Alliances() {
     >
       <div ref={root} className="relative grid h-full grid-cols-12 gap-3">
         {/* Ambient alliance particles */}
-        <SigmaParticles count={14} />
+        <SigmaParticles count={14} color="#B388FF" />
         {/* relationship diagram */}
         <Panel label="RELATIONSHIP MESH" id="8 NODES" accent="#B388FF" className="col-span-12 lg:col-span-5" scan>
           <div className="relative h-full min-h-[280px] p-3">

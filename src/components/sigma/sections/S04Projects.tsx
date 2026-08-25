@@ -77,7 +77,7 @@ export function S04Projects() {
     >
       <div ref={root} className="relative flex h-full flex-col gap-3">
         {/* Ambient particles */}
-        <SigmaParticles count={11} />
+        <SigmaParticles count={11} color="#C6FF00" />
         {/* toolbar */}
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex flex-wrap gap-1.5">

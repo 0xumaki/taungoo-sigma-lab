@@ -84,7 +84,7 @@ export function S01Initializing() {
     >
       <div ref={root} className="relative grid h-full grid-cols-12 gap-3 overflow-hidden">
         {/* Ambient boot particles */}
-        <SigmaParticles count={16} />
+        <SigmaParticles count={16} color="#FFFFFF" />
         {/* LEFT VERTICAL PANEL */}
         <Panel
           data-hero-panel

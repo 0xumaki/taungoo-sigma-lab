@@ -46,7 +46,7 @@ export function S02Manifesto() {
     >
       <div ref={root} className="relative grid h-full grid-cols-12 gap-3">
         {/* Ambient particles */}
-        <SigmaParticles count={12} />
+        <SigmaParticles count={12} color="#FF4500" />
         {/* THE GIANT ORANGE CIRCLE */}
         <div className="pointer-events-none absolute inset-0 z-0 flex items-center">
           <div
