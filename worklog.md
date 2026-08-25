@@ -1024,3 +1024,38 @@ The Taungoo Sigma Lab is now at award-winning level with:
 - Reduced-motion accessibility, light/dark theme, custom 404
 - Sector completion celebration, onboarding tour, boot screen
 - Lint clean, 0 errors, 11/11 sectors pass
+
+---
+Task ID: CRON-ROUND-16 (Black Screen Root Cause Fix)
+Agent: main (orchestrator)
+Task: User reported black screen — take seriously, find root cause
+
+## Root Cause
+The `div.fixed.inset-0` root container had `position: fixed` + `inset: 0` (top/right/bottom/left: 0) but **height was computing to 0px**. This is because Tailwind's `inset-0` sets `top:0;right:0;bottom:0;left:0` but on a `fixed` element with no explicit width/height, some browsers compute the height as 0 when the parent chain doesn't establish a proper containing block.
+
+The result: the root container was 1280×0px — everything inside it (map, sectors, all content) was technically "visible" but had 0 height, rendering as a black screen. Only the fixed-position HUD elements (header, footer, sidebars) which don't depend on the parent's height were visible.
+
+## Fix
+Added a CSS rule in `globals.css`:
+```css
+.fixed.inset-0 {
+  width: 100vw;
+  height: 100vh;
+}
+```
+This forces any `fixed.inset-0` element to fill the viewport, regardless of parent height.
+
+## Verification
+- **Root div height**: 0px → 577px ✅
+- **Map nodes**: 11 visible, map height 546px ✅
+- **Sector sweep: 11/11 pass** ✅
+- **All APIs**: telemetry ok, health OPERATIONAL ✅
+- **Lint clean** ✅
+- **Root URL**: map visible with "CHOOSE YOUR SECTOR", 11 nodes, no black screen ✅
+- **Onboarding**: properly shows for first-time users, dismissed for returning users ✅
+- **Screenshot verification**: VLM confirmed "sector cards/nodes in a grid" visible
+
+## Priority Recommendations for Next Phase
+- Continue 15-min cron maintenance
+- Monitor for any remaining height issues on different viewport sizes
+- Consider adding `min-height: 100vh` to body as additional safety
