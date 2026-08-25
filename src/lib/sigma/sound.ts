@@ -17,7 +17,7 @@ import * as React from "react";
  *   sigmaSound.play("hover");
  */
 
-export type SoundType = "hover" | "click" | "transition" | "boot" | "error" | "open" | "close" | "complete";
+export type SoundType = "hover" | "click" | "transition" | "boot" | "error" | "open" | "close" | "complete" | "ambient";
 
 class SoundEngine {
   private ctx: AudioContext | null = null;
@@ -71,7 +71,24 @@ class SoundEngine {
       case "error":
         this.beep(150, now, 0.2, 0.25, "sawtooth");
         break;
+      case "ambient":
+        // will be handled by playAmbient with frequency param
+        break;
     }
+  }
+
+  /**
+   * Play an ambient tone tuned to a sector's accent color.
+   * Maps accent hex → frequency (visible spectrum → audible spectrum approximation).
+   */
+  playAmbient(accent: string) {
+    if (!this.enabled || !this.ctx || !this.master) return;
+    const freq = accentToFreq(accent);
+    const now = this.ctx.currentTime;
+    // soft sustained drone + harmonic
+    this.beep(freq, now, 1.5, 0.04, "sine");
+    this.beep(freq * 1.5, now + 0.1, 1.2, 0.02, "sine");
+    this.beep(freq * 2, now + 0.2, 1.0, 0.01, "triangle");
   }
 
   private beep(
@@ -168,4 +185,31 @@ export function useSigmaSound() {
   }, [init]);
 
   return { enabled, init, play, toggle };
+}
+
+/**
+ * Maps a hex accent color to a frequency (200-600Hz audible range).
+ * Uses the color's hue to pick a frequency on a pentatonic scale.
+ */
+function accentToFreq(hex: string): number {
+  // parse hex
+  const h = hex.replace("#", "");
+  const r = parseInt(h.slice(0, 2), 16) / 255;
+  const g = parseInt(h.slice(2, 4), 16) / 255;
+  const b = parseInt(h.slice(4, 6), 16) / 255;
+  const max = Math.max(r, g, b);
+  const min = Math.min(r, g, b);
+  const delta = max - min;
+  let hue = 0;
+  if (delta === 0) hue = 0;
+  else if (max === r) hue = ((g - b) / delta) % 6;
+  else if (max === g) hue = (b - r) / delta + 2;
+  else hue = (r - g) / delta + 4;
+  hue = hue * 60;
+  if (hue < 0) hue += 360;
+
+  // map hue (0-360) to pentatonic scale frequencies (200-600Hz)
+  const pentatonic = [220, 247, 277, 330, 370, 440, 494, 554];
+  const idx = Math.floor((hue / 360) * pentatonic.length) % pentatonic.length;
+  return pentatonic[idx];
 }

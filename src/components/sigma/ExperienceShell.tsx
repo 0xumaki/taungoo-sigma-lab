@@ -19,6 +19,7 @@ import { SigmaHelp } from "./shared/SigmaHelp";
 import { SigmaBreadcrumb } from "./shared/SigmaBreadcrumb";
 import { SigmaThemeToggle } from "./shared/SigmaThemeToggle";
 import { SigmaRandom } from "./shared/SigmaRandom";
+import { SigmaCompletion } from "./shared/SigmaCompletion";
 import { sigmaSound } from "@/lib/sigma/sound";
 import { SigmaMap } from "./SigmaMap";
 import { S01Initializing } from "./sections/S01Initializing";
@@ -195,6 +196,10 @@ export function ExperienceShell() {
     const destMeta = getSection(dest);
     setFlashAccent(destMeta.accent);
     sigmaSound.play("transition");
+    // play ambient tone tuned to the destination sector's accent color
+    if (dest !== "map") {
+      sigmaSound.playAmbient(destMeta.accent);
+    }
 
     const panels = panelsRef.current.filter(Boolean) as HTMLDivElement[];
     const overlay = overlayRef.current;
@@ -388,6 +393,9 @@ export function ExperienceShell() {
 
       {/* Theme toggle (below sound toggle) */}
       <SigmaThemeToggle />
+
+      {/* Sector completion tracker (below theme toggle) */}
+      <SigmaCompletion />
 
       {/* Tour mode (bottom-right) */}
       <SigmaTour />
