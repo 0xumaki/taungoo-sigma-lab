@@ -329,3 +329,92 @@
 
 /* Brutal shadow (offset, no blur) */
 .sigma-shadow-brutal { box-shadow: 6px 6px 0 0 currentColor; }
+
+/* Magnetic button hover — subtle translate toward cursor */
+.sigma-magnetic {
+  transition: transform 0.15s ease-out;
+  will-change: transform;
+}
+
+/* Glitch RGB split on hover */
+.sigma-rgb-split {
+  position: relative;
+  transition: text-shadow 0.2s;
+}
+.sigma-rgb-split:hover {
+  text-shadow:
+    -2px 0 0 #FF2D7E,
+    2px 0 0 #00E5FF;
+}
+
+/* Pulse glow ring */
+.sigma-glow-ring {
+  animation: sigma-glow-ring 2s ease-in-out infinite;
+}
+@keyframes sigma-glow-ring {
+  0%, 100% { box-shadow: 0 0 0 0 currentColor; }
+  50% { box-shadow: 0 0 0 4px transparent; }
+}
+
+/* Loading bar shimmer */
+.sigma-shimmer {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255,255,255,0.1) 50%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: sigma-shimmer 2s linear infinite;
+}
+@keyframes sigma-shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Terminal cursor block */
+.sigma-cursor-block {
+  display: inline-block;
+  width: 0.6em;
+  height: 1em;
+  background: currentColor;
+  vertical-align: text-bottom;
+  animation: sigma-blink 1s steps(2) infinite;
+}
+
+/* Data stream line draw */
+.sigma-line-draw {
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+  animation: sigma-line-draw 2s ease-out forwards;
+}
+@keyframes sigma-line-draw {
+  to { stroke-dashoffset: 0; }
+}
+
+/* Corner bracket expand on hover */
+.sigma-bracket-hover {
+  position: relative;
+}
+.sigma-bracket-hover::before,
+.sigma-bracket-hover::after {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 0;
+  border: 1px solid currentColor;
+  transition: width 0.3s, height 0.3s;
+}
+.sigma-bracket-hover::before {
+  top: 0; left: 0;
+  border-right: none; border-bottom: none;
+}
+.sigma-bracket-hover::after {
+  bottom: 0; right: 0;
+  border-left: none; border-top: none;
+}
+.sigma-bracket-hover:hover::before,
+.sigma-bracket-hover:hover::after {
+  width: 12px;
+  height: 12px;
+}

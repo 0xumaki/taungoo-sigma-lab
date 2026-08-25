@@ -151,3 +151,67 @@ Stage Summary:
 - All failures fixed and re-verified to 100% pass rate
 - App is more robust: GSAP clearProps prevents residual styles, safety timeout prevents stuck states
 - The clearProps fix also improves the map node rendering on first visit (opacity was occasionally <1 due to GSAP not fully clearing)
+
+---
+Task ID: CRON-ROUND-3
+Agent: main (orchestrator)
+Task: Fix bugs from previous round + add more maximalist features
+
+## Current Project Status
+The project was in a partially-broken state from the previous cron round (which hit a tool outage mid-verification). The new features (boot screen, cursor, command palette, telemetry API) were added but had several bugs:
+1. Lint error: `SigmaBoot.tsx` accessed a ref during render (`doneRef.current = onDone` at render time)
+2. Hydration crash: deep-link `?s=XX` caused intermittent blank pages due to `boot()` being called in `useEffect` during hydration
+3. Transition not completing: GSAP timeline using `useGSAP` hook with `gsap.context` cleanup was killing the timeline prematurely — transitions relied on the 4s safety timeout instead of completing in ~1.5s
+4. S07 crash: telemetry API returned `packets` but component expected `pkts` — `counters.pkts.toLocaleString()` crashed when `pkts` was undefined
+
+## Completed Modifications / Verification Results
+
+### Bug Fixes
+1. **SigmaBoot ref-during-render** → moved `doneRef.current = onDone` into a `useEffect`
+2. **Hydration crash (deep-link)** → deferred `boot()` call with `setTimeout(..., 0)` to avoid calling store `set()` during the hydration tick
+3. **Hydration crash (returning visitor)** → removed `requestAnimationFrame` wrapper, used direct `useEffect` with `try/catch` for `sessionStorage`
+4. **Transition not completing** → replaced `useGSAP` + `gsap.context` with plain `useEffect` + direct `gsap.timeline()` (no `ctx.revert()` cleanup that was killing the timeline); added 3s safety timeout that force-swaps the view if the timeline stalls
+5. **S07 counters mismatch** → mapped API field `packets` to state field `pkts` in the fetch handler
+6. **SigmaCommand useGSAP** → converted to `useEffect` + `gsap.context` with proper cleanup (only runs when `open` is true)
+7. Removed unused `useGSAP` import + `gsap.registerPlugin(useGSAP)` from ExperienceShell
+8. Added `suppressHydrationWarning` to root div
+9. Wrapped `sessionStorage` access in `try/catch` for private-mode safety
+
+### New Maximalist Features Added
+1. **SigmaProgress** (`shared/SigmaProgress.tsx`) — vertical sector progress indicator on the right edge showing all 11 sectors as ticks; current sector highlighted in its accent color; hover shows tooltip with sector name; click to navigate
+2. **SigmaShare** (`shared/SigmaShare.tsx`) — share button (bottom-left) that copies the current sector's deep-link URL to clipboard; shows toast notification on success
+3. **SigmaKonami** (`shared/SigmaKonami.tsx`) — Konami code easter egg (↑↑↓↓←→←→BA) triggers a full-screen Matrix rain animation with Σ characters + "Σ MODE ACTIVATED" glitch text for 4.5 seconds
+4. **New CSS utilities** in globals.css:
+   - `.sigma-magnetic` — transition for magnetic button effect
+   - `.sigma-rgb-split` — RGB split text shadow on hover
+   - `.sigma-glow-ring` — pulsing glow ring animation
+   - `.sigma-shimmer` — loading bar shimmer effect
+   - `.sigma-cursor-block` — terminal cursor block
+   - `.sigma-line-draw` — SVG line draw animation
+   - `.sigma-bracket-hover` — corner brackets that expand on hover
+
+### Verification
+- **QA v6: 29/29 pass, 0 fail**
+  - Map: 11 nodes, all opacity 1, 11 thumbnails, title, kbd hint ✅
+  - All 11 sectors render correct headers ✅
+  - Transition: Esc→map works ✅
+  - Command palette: opens, "vault" filter→1 result ✅
+  - Portfolio modal: 11 cards, opens, shows repo metadata ✅
+  - Telemetry API: ok, 40 stream points ✅
+  - Transmit API: ok ✅
+  - Keyboard: ArrowRight→s02 ✅
+  - Mobile: 390px viewport, 11 nodes, 2-col grid ✅
+- **New features verified**: progress indicator found, share button found, Konami code triggers Matrix rain ✅
+- **Lint clean**, dev server 200 OK, no runtime errors
+
+## Unresolved Issues / Risks
+- None critical — all 29 QA checks pass
+- The hydration fix uses `setTimeout(..., 0)` which adds a ~1 frame delay before deep-link boot; this is imperceptible but could theoretically be improved with a server-side redirect
+- The Konami code easter egg is not discoverable (by design) — could add a hint in the controls legend
+
+## Priority Recommendations for Next Phase
+- Add sound design (subtle UI ticks on hover/click/transition) — optional, requires user gesture to enable audio
+- Add a "tour mode" that auto-plays through all 11 sectors with voice-over narration
+- Add more per-section content depth (e.g. S05 Collective could have individual operator profile modals)
+- Consider adding a real-time WebSocket mini-service for the S07 data streams (currently uses HTTP polling every 1.2s)
+- Add Open Graph meta tags + a share image generator for social sharing

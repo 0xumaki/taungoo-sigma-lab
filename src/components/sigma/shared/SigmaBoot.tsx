@@ -2,7 +2,6 @@
 
 import * as React from "react";
 import gsap from "gsap";
-import { useSigmaStore } from "@/lib/sigma/store";
 
 const BOOT_STEPS = [
   "MOUNT KERNEL",
@@ -27,7 +26,9 @@ export function SigmaBoot({ onDone }: { onDone: () => void }) {
   const stepRef = React.useRef<HTMLSpanElement>(null);
   const logRef = React.useRef<HTMLDivElement>(null);
   const doneRef = React.useRef(onDone);
-  doneRef.current = onDone;
+  React.useEffect(() => {
+    doneRef.current = onDone;
+  }, [onDone]);
 
   React.useEffect(() => {
     const root = rootRef.current;

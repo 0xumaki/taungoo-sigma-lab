@@ -81,7 +81,15 @@ export function S07DataStreams() {
       if (d.stream) setStream(d.stream);
       if (d.sectors) setBars(d.sectors.map((s: { code: string; v: number }) => ({ sector: s.code, v: s.v })));
       if (d.radar) setRadar(d.radar);
-      if (d.counters) setCounters(d.counters);
+      if (d.counters) {
+        // Map API field names to component state field names
+        setCounters({
+          ops: d.counters.ops ?? 0,
+          pkts: d.counters.packets ?? d.counters.pkts ?? 0,
+          infer: d.counters.infer ?? 0,
+          uptimeLabel: d.counters.uptimeLabel ?? "—",
+        });
+      }
       if (d.systems) setSystems(d.systems);
       setSource("LIVE API");
     } catch {

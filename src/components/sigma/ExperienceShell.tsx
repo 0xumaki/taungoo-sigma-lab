@@ -2,13 +2,15 @@
 
 import * as React from "react";
 import gsap from "gsap";
-import { useGSAP } from "@gsap/react";
 import { useSigmaStore } from "@/lib/sigma/store";
 import { getSection, nextSection, prevSection, type SectionId } from "@/lib/sigma/sections";
 import { SigmaHud } from "./shared/SigmaHud";
 import { SigmaCursor } from "./shared/SigmaCursor";
 import { SigmaBoot } from "./shared/SigmaBoot";
 import { SigmaCommand } from "./shared/SigmaCommand";
+import { SigmaProgress } from "./shared/SigmaProgress";
+import { SigmaShare } from "./shared/SigmaShare";
+import { SigmaKonami } from "./shared/SigmaKonami";
 import { SigmaMap } from "./SigmaMap";
 import { S01Initializing } from "./sections/S01Initializing";
 import { S02Manifesto } from "./sections/S02Manifesto";
@@ -21,8 +23,6 @@ import { S08Capabilities } from "./sections/S08Capabilities";
 import { S09Alliances } from "./sections/S09Alliances";
 import { S10Access } from "./sections/S10Access";
 import { S11Status } from "./sections/S11Status";
-
-gsap.registerPlugin(useGSAP);
 
 const PANEL_COUNT = 8;
 
@@ -64,27 +64,37 @@ export function ExperienceShell() {
   const [booting, setBooting] = React.useState(false);
   const [cmdOpen, setCmdOpen] = React.useState(false);
 
-  // Deep-link support: ?s=01..11 boots directly to a sector (used for screenshots + sharing)
-  // Also: skip boot screen if a deep-link is present, or if already booted this session
+  // Deep-link + boot screen logic — single effect, runs once after mount
   React.useEffect(() => {
     if (typeof window === "undefined") return;
     const params = new URLSearchParams(window.location.search);
     const s = params.get("s");
     if (s) {
       const id = `s${s.padStart(2, "0")}` as SectionId;
-      useSigmaStore.getState().boot(id);
-      setRenderedView(id);
-      return; // deep-links skip the boot screen
+      // Defer to next tick to avoid hydration race condition
+      const t = setTimeout(() => {
+        useSigmaStore.getState().boot(id);
+        setRenderedView(id);
+      }, 0);
+      return () => clearTimeout(t); // deep-links skip the boot screen
     }
     // show boot screen only once per session
-    const seen = sessionStorage.getItem("sigma_booted");
-    if (!seen) {
-      setBooting(true);
+    try {
+      const seen = sessionStorage.getItem("sigma_booted");
+      if (!seen) {
+        setBooting(true);
+      }
+    } catch {
+      // sessionStorage may be unavailable (private mode) — skip boot
     }
   }, []);
 
   const handleBootDone = React.useCallback(() => {
-    sessionStorage.setItem("sigma_booted", "1");
+    try {
+      sessionStorage.setItem("sigma_booted", "1");
+    } catch {
+      // ignore
+    }
     setBooting(false);
   }, []);
 
@@ -147,98 +157,115 @@ export function ExperienceShell() {
     return () => clearTimeout(t);
   }, [phase, setPhase]);
 
-  // Run transition timeline on phase change
-  useGSAP(
-    () => {
-      if (phase !== "covering") return;
-      const dest = useSigmaStore.getState().view;
-      const destMeta = getSection(dest);
-      setFlashAccent(destMeta.accent);
+  // Run transition timeline on phase change — uses useEffect for reliability
+  React.useEffect(() => {
+    if (phase !== "covering") return;
+    const dest = useSigmaStore.getState().view;
+    const destMeta = getSection(dest);
+    setFlashAccent(destMeta.accent);
 
-      const tl = gsap.timeline({
-        onComplete: () => setPhase("idle"),
-        onReverseComplete: () => setPhase("idle"),
-      });
+    const panels = panelsRef.current.filter(Boolean) as HTMLDivElement[];
+    const overlay = overlayRef.current;
+    const flash = flashRef.current;
+    const label = labelRef.current;
 
-      // 1. COVER — panels slam down, staggered from top
-      tl.set(panelsRef.current, {
-        scaleY: 0,
-        transformOrigin: "top",
-        backgroundColor: destMeta.accent,
-      });
-      tl.set(overlayRef.current, { pointerEvents: "auto", zIndex: 90 });
-      tl.to(panelsRef.current, {
-        scaleY: 1,
-        duration: 0.42,
-        ease: "power3.in",
-        stagger: { each: 0.04, from: "start" },
-      });
+    if (panels.length === 0 || !overlay) {
+      // no panels yet — just swap immediately
+      setRenderedView(dest);
+      setPhase("idle");
+      return;
+    }
 
-      // 2. MIDPOINT — swap the rendered view + flash + label fly-through
-      tl.call(
-        () => {
-          setRenderedView(dest);
-          // flash
+    let done = false;
+    const finish = () => {
+      if (done) return;
+      done = true;
+      setPhase("idle");
+    };
+
+    const tl = gsap.timeline({
+      onComplete: finish,
+      onReverseComplete: finish,
+    });
+
+    // 1. COVER — panels slam down, staggered from top
+    tl.set(panels, {
+      scaleY: 0,
+      transformOrigin: "top",
+      backgroundColor: destMeta.accent,
+    });
+    tl.set(overlay, { pointerEvents: "auto", zIndex: 90 });
+    tl.to(panels, {
+      scaleY: 1,
+      duration: 0.42,
+      ease: "power3.in",
+      stagger: { each: 0.04, from: "start" },
+    });
+
+    // 2. MIDPOINT — swap the rendered view + flash + label fly-through
+    tl.call(
+      () => {
+        setRenderedView(dest);
+        if (flash) {
           gsap.fromTo(
-            flashRef.current,
+            flash,
             { opacity: 1 },
             { opacity: 0, duration: 0.5, ease: "power2.out" }
           );
-        },
-        [],
-        ">-0.05"
-      );
+        }
+      },
+      [],
+      ">-0.05"
+    );
 
-      // sector label flies through
-      tl.set(
-        labelRef.current,
-        { opacity: 0, x: -120 },
+    // sector label flies through
+    if (label) {
+      tl.set(label, { opacity: 0, x: -120 }, "<");
+      tl.to(
+        label,
+        { opacity: 1, x: 0, duration: 0.28, ease: "power3.out" },
         "<"
       );
       tl.to(
-        labelRef.current,
-        {
-          opacity: 1,
-          x: 0,
-          duration: 0.28,
-          ease: "power3.out",
-        },
-        "<"
-      );
-      tl.to(
-        labelRef.current,
-        {
-          opacity: 0,
-          x: 120,
-          duration: 0.28,
-          ease: "power3.in",
-        },
+        label,
+        { opacity: 0, x: 120, duration: 0.28, ease: "power3.in" },
         ">+0.04"
       );
+    }
 
-      // 3. REVEAL — panels retract from bottom, staggered
-      tl.set(panelsRef.current, {
-        transformOrigin: "bottom",
-      });
-      tl.to(panelsRef.current, {
-        scaleY: 0,
-        duration: 0.46,
-        ease: "power3.out",
-        stagger: { each: 0.035, from: "start" },
-        clearProps: "transform,backgroundColor",
-      });
+    // 3. REVEAL — panels retract from bottom, staggered
+    tl.set(panels, { transformOrigin: "bottom" });
+    tl.to(panels, {
+      scaleY: 0,
+      duration: 0.46,
+      ease: "power3.out",
+      stagger: { each: 0.035, from: "start" },
+      clearProps: "transform,backgroundColor",
+    });
 
-      tl.set(overlayRef.current, { pointerEvents: "none" });
-      tl.set(labelRef.current, { clearProps: "opacity,transform" });
-    },
-    { dependencies: [phase], scope: rootRef }
-  );
+    tl.set(overlay, { pointerEvents: "none" });
+    if (label) tl.set(label, { clearProps: "opacity,transform" });
+
+    // Safety: if timeline doesn't complete in 3s, force-finish
+    const safety = setTimeout(() => {
+      if (!done) {
+        tl.kill();
+        setRenderedView(dest);
+        finish();
+      }
+    }, 3000);
+
+    return () => {
+      clearTimeout(safety);
+    };
+  }, [phase, setPhase]);
 
   const meta = getSection(renderedView);
 
   return (
     <div
       ref={rootRef}
+      suppressHydrationWarning
       className="sigma-noise sigma-vignette relative fixed inset-0 overflow-hidden bg-background"
     >
       {/* Persistent layered background */}
@@ -311,6 +338,15 @@ export function ExperienceShell() {
 
       {/* Custom cursor reticle (desktop only) */}
       <SigmaCursor />
+
+      {/* Sector progress indicator (right edge) */}
+      <SigmaProgress />
+
+      {/* Share button (bottom-left) */}
+      <SigmaShare />
+
+      {/* Konami code easter egg */}
+      <SigmaKonami />
 
       {/* Command palette (Cmd/Ctrl+K or /) */}
       <SigmaCommand open={cmdOpen} onClose={() => setCmdOpen(false)} />

@@ -2,13 +2,10 @@
 
 import * as React from "react";
 import gsap from "gsap";
-import { useGSAP } from "@gsap/react";
 import { SECTIONS } from "@/lib/sigma/sections";
 import { useSigmaStore } from "@/lib/sigma/store";
 import { cn } from "@/lib/utils";
 import { Search, CornerDownLeft, ArrowUp, ArrowDown } from "lucide-react";
-
-gsap.registerPlugin(useGSAP);
 
 /**
  * SigmaCommand — a Cmd/Ctrl+K command palette for quick sector jumping.
@@ -83,9 +80,9 @@ export function SigmaCommand({
     return () => window.removeEventListener("keydown", onKey);
   }, [open, results, active, navigate, onClose, phase]);
 
-  useGSAP(
-    () => {
-      if (!open) return;
+  React.useEffect(() => {
+    if (!open) return;
+    const ctx = gsap.context(() => {
       gsap.fromTo(
         "[data-cmd-backdrop]",
         { opacity: 0 },
@@ -103,9 +100,9 @@ export function SigmaCommand({
         ease: "power2.out",
         stagger: 0.03,
       });
-    },
-    { dependencies: [open], scope: rootRef }
-  );
+    }, rootRef);
+    return () => ctx.revert();
+  }, [open]);
 
   if (!open) return null;
 
