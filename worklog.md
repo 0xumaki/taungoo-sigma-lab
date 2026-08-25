@@ -1389,3 +1389,74 @@ Agent: main (orchestrator)
 ## Cron Job Status
 - Job #337053 continues running every 15 minutes
 - Next run will assess and continue polish
+
+---
+Task ID: CRON-ROUND-24 (Hero Glitch + Maximalist Alpha)
+Agent: main (orchestrator)
+Task: Better hero exposure + glitch effect + maximalist upgrade for all Alpha sections
+
+## Hero Image Fix
+1. **Better exposure**: Reduced overlay opacity from 70% → 40% (right side), gradient from solid background → semi-transparent
+2. **Partial glitch effect** (`GlitchImage.tsx` component):
+   - Splits image into slices using clip-path
+   - Head section: red channel offset left with skew
+   - Body section: cyan channel offset right with skew
+   - Horizontal band displacement (random slice jumps)
+   - SVG filters for RGB channel separation (feColorMatrix)
+   - Glitch triggers randomly every 2-5 seconds, lasts 200-500ms
+   - Mix-blend-mode: screen for layered RGB channels
+
+## Maximalist Upgrades (All Alpha Sections)
+
+### Hero (01)
+- **Left**: status badge, glitch headline, feature pills (AI AGENTS, WEB3, etc.), CTAs
+- **Right**: 3 HUD panels — system status (NEURAL FORGE, AGENT SWARM, etc.), live metrics with mini bar chart (12 bars), spinning Σ glyph
+- **Bottom**: 4-column stat bar with accent colors, scroll indicator + build info ticker
+- **VLM rating: 8.5/10** — "functional maximalism rather than decorative chaos"
+
+### About (02)
+- Section header with EST. date
+- Mission statement with orange left-border accent
+- 5 capability bars (AI 95%, Web3 88%, Full-Stack 92%, Design 80%, Automation 90%)
+- 4 mini stat cards (26 services, 10 projects, 8 operators, 11 sectors)
+- Approach panel with 4 principles
+- Σ stamp with spinning glyph
+
+### Services (03)
+- 5 category tabs with counts (ALL 26, AI 6, WEB3 9, FULL-STACK 5, DESIGN 6)
+- 26 service cards with: category accent strip, icon, name, description, MMK price, "DETAILS →" link
+- Hover glow per category color
+- Bottom CTA bar: "NOT SURE WHICH SERVICE? CONTACT OUR TEAM"
+- **VLM rating: 8.5/10** — "structured maximalism, information-rich"
+
+### Portfolio (04)
+- 10 cards with: top accent bar, screenshot with gradient overlay, project number, solution badge (accent-colored), tech tags, hover overlay "VIEW CASE STUDY"
+- GitHub CTA at bottom
+- **VLM rating: 8.5/10** — "premium Web3/tech agency portfolio"
+
+### Process (05)
+- 4 step cards with: accent strip, large number, pulse dot, title, description, phase progress bar (4 segments)
+- Timeline bar at bottom with dashed connectors
+
+### Team (06)
+- 8 operator cards with: spinning glyph in bordered box, background glow, corner accents, accent-colored role
+
+### Tech (07)
+- 6 category cards with accent strip, tech tags, tool count
+
+### Testimonials (08)
+- 3 cards with: accent strip, large quote mark, quote, accent divider, author
+
+### Insights (09)
+- 3 research entries with: tag badge (accent-colored), title, date, arrow
+- Hover: title turns orange, arrow translates
+
+## Verification
+- Sigma: 10/11 sectors pass
+- Alpha: hero, glitch, services (MMK), portfolio, team, tech all confirmed
+- Health API: OPERATIONAL
+- Lint clean
+- VLM ratings: 8.5/10 across hero, services, portfolio
+
+## Cron Status
+Job #337053 continues every 15 minutes for ongoing polish toward award-winning level.
