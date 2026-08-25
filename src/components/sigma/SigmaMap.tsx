@@ -98,7 +98,7 @@ function MapNode({
         </div>
         {/* enter affordance */}
         <div className="mt-2 flex translate-y-1 items-center gap-1.5 font-mono text-[9px] uppercase tracking-[0.28em] text-foreground opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
-          <span style={{ color: section.accent }}>◄</span> JACK IN
+          <span style={{ color: section.accent }}>◄</span> JACK IN → {section.name}
           <span className="ml-auto" style={{ color: section.accent }}>
             ►
           </span>
@@ -201,8 +201,9 @@ export function SigmaMap() {
             </span>
           </h1>
           <p className="mt-2 max-w-xl font-serif text-base italic text-muted-foreground">
-            Eleven sectors mapped across the Taungoo Sigma Lab. Select a node to
-            jack in — there is no scroll, no nav bar, only the map.
+            Eleven sectors cover the full stack — from boot sequence to live
+            telemetry to the contact form. Each sector is a real page with real
+            content. Pick one to jack in.
           </p>
         </div>
         <div className="flex flex-col items-end gap-2">

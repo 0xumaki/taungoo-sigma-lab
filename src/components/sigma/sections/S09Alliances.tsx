@@ -42,7 +42,7 @@ export function S09Alliances() {
     <SectionShell
       id="s09"
       title="ALLIANCES"
-      tagline="A mesh of trusted collaborators. The lab is a node, not a hub."
+      tagline="Sector 09 is the partner network — universities, companies, and communities we build with."
     >
       <div ref={root} className="relative grid h-full grid-cols-12 gap-3">
         {/* Ambient alliance particles */}

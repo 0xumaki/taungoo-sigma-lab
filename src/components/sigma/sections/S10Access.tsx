@@ -78,7 +78,7 @@ export function S10Access() {
     <SectionShell
       id="s10"
       title="ACCESS PROTOCOL"
-      tagline="Request entry. Transmit credentials. The sigma will acknowledge."
+      tagline="Sector 10 is the intake form — pitch us a project, join the team, or request a deploy. The sigma will acknowledge."
     >
       <div ref={root} className="relative grid h-full grid-cols-12 gap-3">
         {/* Ambient particles */}

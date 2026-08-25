@@ -83,7 +83,7 @@ export function S06Research() {
     <SectionShell
       id="s06"
       title="RESEARCH LOGS"
-      tagline="Field notes, papers, datasets, and blueprints. Click any entry for the full dossier."
+      tagline="Sector 06 is the knowledge base — papers, datasets, and architecture blueprints. Click any for the full abstract."
     >
       <div ref={root} className="relative flex h-full flex-col gap-3">
         {/* Ambient particles */}

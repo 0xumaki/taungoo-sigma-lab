@@ -47,7 +47,7 @@ export function S11Status() {
     <SectionShell
       id="s11"
       title="SYSTEM STATUS"
-      tagline="All systems nominal. End of line. Return to the map to begin again."
+      tagline="Sector 11 is the ops dashboard — uptime, build info, and the full sector map. All systems nominal."
     >
       <div ref={root} className="relative grid h-full grid-cols-12 gap-3">
         {/* Ambient particles */}

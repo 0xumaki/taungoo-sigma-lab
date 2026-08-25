@@ -134,7 +134,7 @@ export function S07DataStreams() {
     <SectionShell
       id="s07"
       title="DATA STREAMS"
-      tagline="Live telemetry from the lab floor. These numbers are moving right now."
+      tagline="Sector 07 is the live dashboard — real-time metrics from running systems. These numbers are moving right now."
     >
       <div ref={root} className="relative grid h-full grid-cols-12 grid-rows-6 gap-3">
         {/* Ambient floating data motes */}

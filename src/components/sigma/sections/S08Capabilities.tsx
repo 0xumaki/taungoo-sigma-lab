@@ -61,7 +61,7 @@ export function S08Capabilities() {
     <SectionShell
       id="s08"
       title="CAPABILITIES"
-      tagline="Hardware registry & spec sheets. Click any unit to flip and reveal maintenance details."
+      tagline="Sector 08 is the hardware lab — compute, sensors, and infrastructure. Click any unit to flip and see maintenance logs."
     >
       <div ref={root} className="relative grid h-full grid-cols-12 gap-3 overflow-y-auto sigma-scroll-hidden">
         {/* Ambient particles */}

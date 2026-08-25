@@ -42,7 +42,7 @@ export function S02Manifesto() {
     <SectionShell
       id="s02"
       title="MANIFESTO"
-      tagline="We are the sigma variable — the unknown that shifts every equation we enter."
+      tagline="Sector 02 is the mission statement — we build AI, Web3, and community tech that ships to production."
     >
       <div ref={root} className="relative grid h-full grid-cols-12 gap-3">
         {/* Ambient particles */}

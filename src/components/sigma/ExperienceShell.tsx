@@ -3,7 +3,7 @@
 import * as React from "react";
 import gsap from "gsap";
 import { useSigmaStore } from "@/lib/sigma/store";
-import { getSection, nextSection, prevSection, type SectionId } from "@/lib/sigma/sections";
+import { getSection, nextSection, prevSection, SECTIONS, type SectionId } from "@/lib/sigma/sections";
 import { SigmaHud } from "./shared/SigmaHud";
 import { SigmaCursor } from "./shared/SigmaCursor";
 import { SigmaSpotlight } from "./shared/SigmaSpotlight";
@@ -11,16 +11,14 @@ import { SigmaOnboarding } from "./shared/SigmaOnboarding";
 import { SigmaBoot } from "./shared/SigmaBoot";
 import { SigmaCommand } from "./shared/SigmaCommand";
 import { SigmaProgress } from "./shared/SigmaProgress";
-import { SigmaShare } from "./shared/SigmaShare";
 import { SigmaKonami } from "./shared/SigmaKonami";
 import { SigmaSoundToggle } from "./shared/SigmaSoundToggle";
-import { SigmaTour } from "./shared/SigmaTour";
 import { SigmaHelp } from "./shared/SigmaHelp";
 import { SigmaBreadcrumb } from "./shared/SigmaBreadcrumb";
 import { SigmaThemeToggle } from "./shared/SigmaThemeToggle";
-import { SigmaRandom } from "./shared/SigmaRandom";
 import { SigmaCompletion } from "./shared/SigmaCompletion";
-import { SigmaMCMode } from "./shared/SigmaMCMode";
+import { SigmaMCController } from "./shared/SigmaMCController";
+import { SigmaToolbar } from "./shared/SigmaToolbar";
 import { sigmaSound } from "@/lib/sigma/sound";
 import { SigmaMap } from "./SigmaMap";
 import { S01Initializing } from "./sections/S01Initializing";
@@ -75,6 +73,10 @@ export function ExperienceShell() {
   const [booting, setBooting] = React.useState(false);
   const [onboarding, setOnboarding] = React.useState(false);
   const [cmdOpen, setCmdOpen] = React.useState(false);
+  const [mcActive, setMcActive] = React.useState(false);
+  const [tourActive, setTourActive] = React.useState(false);
+  const [tourPaused, setTourPaused] = React.useState(false);
+  const [tourIndex, setTourIndex] = React.useState(0);
 
   // Deep-link + boot screen + onboarding logic — single effect, runs once after mount
   React.useEffect(() => {
@@ -179,11 +181,31 @@ export function ExperienceShell() {
       } else if (e.key === "=" || e.key === "+") {
         // s11 (the "=" key is next to "-" on the keyboard)
         if (cur !== "s11") { navigate("s11"); sigmaSound.play("click"); }
+      } else if (e.key === "c" || e.key === "C") {
+        // MC mode toggle
+        const t = e.target as HTMLElement;
+        if (t && (t.tagName === "INPUT" || t.tagName === "TEXTAREA" || t.isContentEditable)) return;
+        e.preventDefault();
+        setMcActive((a) => !a);
+      } else if (e.key === "t" || e.key === "T") {
+        // Tour toggle
+        const t = e.target as HTMLElement;
+        if (t && (t.tagName === "INPUT" || t.tagName === "TEXTAREA" || t.isContentEditable)) return;
+        e.preventDefault();
+        if (tourActive) {
+          setTourPaused((p) => !p);
+        } else {
+          // start tour from current sector
+          const curIdx = SECTIONS.findIndex((s) => s.id === cur);
+          setTourIndex(curIdx >= 0 ? curIdx : 0);
+          setTourActive(true);
+          setTourPaused(false);
+        }
       }
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [navigate]);
+  }, [navigate, tourActive]);
 
   // Safety: if phase stays "covering" for >4s (e.g. GSAP interrupted), force-reset to idle
   React.useEffect(() => {
@@ -195,6 +217,25 @@ export function ExperienceShell() {
     }, 4000);
     return () => clearTimeout(t);
   }, [phase, setPhase]);
+
+  // Tour mode: auto-advance through sectors every 6s
+  React.useEffect(() => {
+    if (!tourActive || tourPaused) return;
+    if (phase !== "idle") return;
+    const SECTOR_DURATION = 6000;
+    const startTs = Date.now();
+    const interval = setInterval(() => {
+      if (Date.now() - startTs >= SECTOR_DURATION) {
+        setTourIndex((idx) => {
+          const next = (idx + 1) % SECTIONS.length;
+          navigate(SECTIONS[next].id);
+          sigmaSound.play("transition");
+          return next;
+        });
+      }
+    }, 500);
+    return () => clearInterval(interval);
+  }, [tourActive, tourPaused, phase, navigate]);
 
   // Run transition timeline on phase change — uses useEffect for reliability
   React.useEffect(() => {
@@ -397,12 +438,6 @@ export function ExperienceShell() {
       {/* Sector progress indicator (right edge) */}
       <SigmaProgress />
 
-      {/* Share button (bottom-left) */}
-      <SigmaShare />
-
-      {/* Random sector button (bottom-left, above share) */}
-      <SigmaRandom />
-
       {/* Sound toggle (top-right) */}
       <SigmaSoundToggle />
 
@@ -412,11 +447,27 @@ export function ExperienceShell() {
       {/* Sector completion tracker (below theme toggle) */}
       <SigmaCompletion />
 
-      {/* MC MODE button (matrix + glitch + music) */}
-      <SigmaMCMode />
+      {/* MC mode controller (matrix + glitch + music) */}
+      <SigmaMCController active={mcActive} onToggle={() => setMcActive((a) => !a)} />
 
-      {/* Tour mode (bottom-right) */}
-      <SigmaTour />
+      {/* Unified bottom-right toolbar (SHARE, RANDOM, MC, TOUR, ⌘K) */}
+      {!booting && (
+        <SigmaToolbar
+          onCmdOpen={() => setCmdOpen(true)}
+          mcActive={mcActive}
+          onMCToggle={() => setMcActive((a) => !a)}
+          tourActive={tourActive}
+          tourPaused={tourPaused}
+          onTourStart={() => {
+            const curIdx = SECTIONS.findIndex((s) => s.id === view);
+            setTourIndex(curIdx >= 0 ? curIdx : 0);
+            setTourActive(true);
+            setTourPaused(false);
+          }}
+          onTourPause={() => setTourPaused((p) => !p)}
+          onTourStop={() => { setTourActive(false); setTourPaused(false); }}
+        />
+      )}
 
       {/* Visited sectors breadcrumb (top-center) */}
       <SigmaBreadcrumb />
@@ -436,18 +487,6 @@ export function ExperienceShell() {
       {/* Onboarding overlay (first visit only, after boot) */}
       {onboarding && !booting && (
         <SigmaOnboarding onDone={() => setOnboarding(false)} />
-      )}
-
-      {/* Cmd+K hint badge (bottom-right, above HUD) */}
-      {!cmdOpen && !booting && (
-        <button
-          onClick={() => setCmdOpen(true)}
-          className="fixed bottom-9 right-9 z-[80] hidden items-center gap-1.5 border border-border bg-background/80 px-2 py-1 font-mono text-[9px] uppercase tracking-[0.18em] text-muted-foreground backdrop-blur-sm transition-colors hover:border-foreground/40 hover:text-foreground md:flex"
-          data-cursor="hover"
-        >
-          <kbd className="text-foreground">⌘K</kbd>
-          JUMP TO SECTOR
-        </button>
       )}
     </div>
   );

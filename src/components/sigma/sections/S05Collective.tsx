@@ -68,7 +68,7 @@ export function S05Collective() {
     <SectionShell
       id="s05"
       title="COLLECTIVE"
-      tagline="Eight operators behind the sigma variable. No egos, only handles. Click any operator for their dossier."
+      tagline="Sector 05 is the engineering team — 8 operators with handles, not egos. Click any for their dossier."
     >
       <div ref={root} className="relative grid h-full grid-cols-12 gap-3">
         {/* Ambient particles */}

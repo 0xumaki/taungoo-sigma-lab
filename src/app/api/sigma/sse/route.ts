@@ -7,23 +7,15 @@ export async function GET() {
   const encoder = new TextEncoder();
   let tick = 0;
   let closed = false;
-  let interval: ReturnType<typeof setInterval> | null = null;
-  let comment: ReturnType<typeof setInterval> | null = null;
 
   const stream = new ReadableStream<Uint8Array>({
     start(controller) {
-      const stop = () => {
-        closed = true;
-        if (interval) clearInterval(interval);
-        if (comment) clearInterval(comment);
-      };
-
       const safeEnqueue = (chunk: Uint8Array) => {
         if (closed) return;
         try {
           controller.enqueue(chunk);
         } catch {
-          stop();
+          closed = true;
         }
       };
 
@@ -46,31 +38,29 @@ export async function GET() {
         safeEnqueue(encoder.encode(msg));
       };
 
-      // send initial event immediately
+      // send initial event
       sendEvent();
 
-      // then send every 2 seconds
-      interval = setInterval(sendEvent, 2000);
+      // send every 2 seconds
+      const interval = setInterval(() => {
+        if (!closed) sendEvent();
+      }, 2000);
 
-      // keep the stream alive with a comment every 15s
-      comment = setInterval(() => {
+      // keepalive every 15s
+      const keepalive = setInterval(() => {
         safeEnqueue(encoder.encode(": keepalive\n\n"));
       }, 15000);
 
-      // cleanup on cancel
+      // cleanup
       return () => {
-        stop();
-        try {
-          controller.close();
-        } catch {
-          // already closed
-        }
+        closed = true;
+        clearInterval(interval);
+        clearInterval(keepalive);
+        try { controller.close(); } catch {}
       };
     },
     cancel() {
       closed = true;
-      if (interval) clearInterval(interval);
-      if (comment) clearInterval(comment);
     },
   });
 

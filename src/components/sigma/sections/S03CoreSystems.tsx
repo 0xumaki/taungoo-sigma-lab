@@ -94,7 +94,7 @@ export function S03CoreSystems() {
     <SectionShell
       id="s03"
       title="CORE SYSTEMS"
-      tagline="Five research pillars wired into one engine. Each ships to production."
+      tagline="Sector 03 is the tech stack — five research pillars from neural orchestration to edge IoT, each deployed."
     >
       <div ref={root} className="relative grid h-full grid-cols-12 grid-rows-6 gap-3">
         {/* Ambient system particles */}
