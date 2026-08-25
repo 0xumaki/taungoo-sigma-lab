@@ -120,7 +120,7 @@ export function SigmaHud() {
         </div>
         <div className="ml-auto flex items-center">
           <span className="border-l border-border/80 px-3 text-muted-foreground">
-            <span className="sigma-blink">▮</span> [M] MAP · [←/→] NAV · [⌘K] JUMP · [T] TOUR · [R] RANDOM · [H] HELP · [L] THEME · [SFX]
+            <span className="sigma-blink">▮</span> [M] MAP · [←/→] NAV · [⌘K] JUMP · [T] TOUR · [R] RAND · [C] MC · [H] HELP · [L] THEME
           </span>
         </div>
       </footer>

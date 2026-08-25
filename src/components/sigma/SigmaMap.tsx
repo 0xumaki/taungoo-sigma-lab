@@ -142,6 +142,39 @@ export function SigmaMap() {
 
   const readout = hovered ?? MAP_META;
 
+  // Cursor-following parallax for the background grid
+  React.useEffect(() => {
+    const root = rootRef.current;
+    if (!root) return;
+    const mq = window.matchMedia("(pointer: fine)");
+    if (!mq.matches) return;
+    const rmq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    if (rmq.matches) return;
+
+    let raf = 0;
+    let tx = 0, ty = 0, cx = 0, cy = 0;
+    const grid = root.querySelector(".sigma-grid");
+    const onMove = (e: MouseEvent) => {
+      const rect = root.getBoundingClientRect();
+      tx = ((e.clientX - rect.left) / rect.width - 0.5) * 20;
+      ty = ((e.clientY - rect.top) / rect.height - 0.5) * 20;
+    };
+    const loop = () => {
+      cx += (tx - cx) * 0.05;
+      cy += (ty - cy) * 0.05;
+      if (grid) {
+        (grid as HTMLElement).style.transform = `translate(${cx.toFixed(1)}px, ${cy.toFixed(1)}px)`;
+      }
+      raf = requestAnimationFrame(loop);
+    };
+    raf = requestAnimationFrame(loop);
+    root.addEventListener("mousemove", onMove);
+    return () => {
+      cancelAnimationFrame(raf);
+      root.removeEventListener("mousemove", onMove);
+    };
+  }, []);
+
   return (
     <div
       ref={rootRef}

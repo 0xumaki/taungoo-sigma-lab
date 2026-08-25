@@ -4,15 +4,17 @@ import * as React from "react";
 import { SECTIONS } from "@/lib/sigma/sections";
 import { useSigmaStore } from "@/lib/sigma/store";
 import { toast } from "sonner";
+import { SigmaCelebration } from "./SigmaCelebration";
 
 /**
  * SigmaCompletion — tracks which sectors the user has visited.
  * Shows a completion progress ring in the HUD area.
- * When all 11 sectors are visited, shows a "PERFECT SIGMA" celebration toast.
+ * When all 11 sectors are visited, triggers a full-screen celebration.
  */
 export function SigmaCompletion() {
   const view = useSigmaStore((s) => s.view);
   const [visited, setVisited] = React.useState<Set<string>>(new Set());
+  const [celebrating, setCelebrating] = React.useState(false);
 
   // load from localStorage
   React.useEffect(() => {
@@ -41,9 +43,7 @@ export function SigmaCompletion() {
       }
       // celebrate when all 11 are visited
       if (next.size === 11) {
-        toast.success("▮ PERFECT SIGMA — ALL 11 SECTORS EXPLORED", {
-          description: "You have mapped the entire Taungoo Sigma Lab.",
-        });
+        setCelebrating(true);
       }
       return next;
     });
@@ -56,6 +56,7 @@ export function SigmaCompletion() {
   const dashOffset = circumference - (pct / 100) * circumference;
 
   return (
+    <>
     <div className="fixed right-9 top-[100px] z-[78] hidden items-center gap-2 md:flex">
       <div className="relative h-10 w-10">
         <svg className="h-full w-full -rotate-90" viewBox="0 0 40 40">
@@ -98,5 +99,11 @@ export function SigmaCompletion() {
         </span>
       </div>
     </div>
+
+    {/* Celebration overlay when all 11 visited */}
+    {celebrating && (
+      <SigmaCelebration onComplete={() => setCelebrating(false)} />
+    )}
+    </>
   );
 }

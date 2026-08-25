@@ -20,6 +20,7 @@ import { SigmaBreadcrumb } from "./shared/SigmaBreadcrumb";
 import { SigmaThemeToggle } from "./shared/SigmaThemeToggle";
 import { SigmaRandom } from "./shared/SigmaRandom";
 import { SigmaCompletion } from "./shared/SigmaCompletion";
+import { SigmaMCMode } from "./shared/SigmaMCMode";
 import { sigmaSound } from "@/lib/sigma/sound";
 import { SigmaMap } from "./SigmaMap";
 import { S01Initializing } from "./sections/S01Initializing";
@@ -172,6 +173,12 @@ export function ExperienceShell() {
         const target =
           n === 0 ? "map" : (`s${String(n).padStart(2, "0")}` as SectionId);
         if (target !== cur) { navigate(target); sigmaSound.play("click"); }
+      } else if (e.key === "-" || e.key === "_") {
+        // s10 (the "-" key is next to 0 on the keyboard)
+        if (cur !== "s10") { navigate("s10"); sigmaSound.play("click"); }
+      } else if (e.key === "=" || e.key === "+") {
+        // s11 (the "=" key is next to "-" on the keyboard)
+        if (cur !== "s11") { navigate("s11"); sigmaSound.play("click"); }
       }
     };
     window.addEventListener("keydown", onKey);
@@ -404,6 +411,9 @@ export function ExperienceShell() {
 
       {/* Sector completion tracker (below theme toggle) */}
       <SigmaCompletion />
+
+      {/* MC MODE button (matrix + glitch + music) */}
+      <SigmaMCMode />
 
       {/* Tour mode (bottom-right) */}
       <SigmaTour />

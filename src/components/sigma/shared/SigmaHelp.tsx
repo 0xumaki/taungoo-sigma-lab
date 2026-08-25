@@ -10,11 +10,15 @@ const SHORTCUTS = [
   { key: "M", desc: "Return to Nexus Map" },
   { key: "ESC", desc: "Back to Map (from any sector)" },
   { key: "← →", desc: "Previous / Next sector" },
-  { key: "0-9", desc: "Jump to sector (0=Map, 1-11=sectors)" },
+  { key: "0-9", desc: "Jump to sector (0=Map, 1-9=sectors)" },
+  { key: "- =", desc: "Jump to sector 10 / 11" },
   { key: "⌘K", desc: "Open Command Palette" },
   { key: "/", desc: "Quick-open Command Palette" },
   { key: "T", desc: "Toggle Tour Mode" },
+  { key: "R", desc: "Random sector" },
+  { key: "C", desc: "MC MODE (matrix + glitch + music)" },
   { key: "H", desc: "Toggle this Help overlay" },
+  { key: "L", desc: "Toggle dark/light theme" },
   { key: "↑↑↓↓←→←→BA", desc: "Konami code (secret)" },
 ];
 
