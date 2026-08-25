@@ -6,6 +6,7 @@ import { useGSAP } from "@gsap/react";
 import { useSigmaStore } from "@/lib/sigma/store";
 import { SectionShell } from "../shared/SectionShell";
 import { Panel, Tag } from "../shared/components";
+import { SigmaParticles } from "../shared/SigmaParticles";
 
 gsap.registerPlugin(useGSAP);
 
@@ -95,7 +96,9 @@ export function S03CoreSystems() {
       title="CORE SYSTEMS"
       tagline="Five research pillars wired into one engine. Each ships to production."
     >
-      <div ref={root} className="grid h-full grid-cols-12 grid-rows-6 gap-3">
+      <div ref={root} className="relative grid h-full grid-cols-12 grid-rows-6 gap-3">
+        {/* Ambient system particles */}
+        <SigmaParticles count={18} />
         {/* featured pillar 1 — large */}
         <PillarCard pillar={PILLARS[0]} className="col-span-12 row-span-3 md:col-span-5" featured />
         {/* featured pillar 2 */}

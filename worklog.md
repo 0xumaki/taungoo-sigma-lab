@@ -529,3 +529,53 @@ The project was stable (11/11 sectors, all APIs pass). The worklog recommended: 
 - Consider adding a "deep link share" with scroll position
 - Add a /api/sigma/metrics endpoint for Prometheus-style monitoring
 - Consider adding keyboard shortcut [L] for theme toggle (currently click-only)
+
+---
+Task ID: CRON-ROUND-10
+Agent: main (orchestrator)
+Task: Add [L] theme shortcut, Prometheus metrics endpoint, S03+S09 particles
+
+## Current Project Status
+The project was stable (11/11 sectors, all APIs pass). The worklog recommended: WebSocket for S07, fine-tune light theme, per-section particles for S03+S09, metrics endpoint, [L] theme shortcut.
+
+## Completed Modifications / Verification Results
+
+### New Features Added
+1. **[L] Keyboard Shortcut for Theme Toggle** (`SigmaThemeToggle.tsx`)
+   - Pressing [L] toggles between SIGMA DARK and SIGMA LIGHT
+   - Input-guarded (won't trigger when typing in inputs/textareas)
+   - Refactored `toggle()` to `useCallback` with functional state update for safety
+   - Updated HUD help text: `[M] MAP · [←/→] NAV · [⌘K] JUMP · [T] TOUR · [H] HELP · [L] THEME · [SFX] SOUND`
+
+2. **`/api/sigma/metrics` Endpoint** (`api/sigma/metrics/route.ts`)
+   - Prometheus exposition format (text/plain; version=0.0.4)
+   - Metrics: `sigma_uptime_seconds` (counter), `sigma_sectors_total` (gauge), `sigma_projects_total`, `sigma_operators_total`, `sigma_memory_rss_bytes`, `sigma_memory_heap_used_bytes`, `sigma_memory_heap_total_bytes`, `sigma_memory_external_bytes`, `sigma_status` (1=operational), `sigma_build_info` (with version/codename/nextjs/react/node labels), `sigma_api_requests_total` (per-endpoint counter with simulated values)
+   - Ready for Prometheus/Grafana scraping
+
+3. **Ambient Particles for S03 + S09**
+   - S03 (Core Systems): 18 floating data motes
+   - S09 (Alliances): 14 floating data motes
+   - Both use the existing `SigmaParticles` component
+   - Now 4 sectors have ambient particles: S01, S03, S07, S09
+
+### Verification
+- **Lint clean**, dev server 200 OK, no runtime errors
+- **Sector sweep: 11/11 pass** ✅
+- **[L] shortcut**: pressing [L] switches `html` class from `dark` → `light` → `dark` ✅
+- **Metrics API**: returns Prometheus format, content-type `text/plain; version=0.0.4; charset=utf-8` ✅
+- **S03 particles**: canvas renders (1 canvas element), CORE SYSTEMS renders ✅
+- **S09 particles**: canvas renders (1 canvas element), ALLIANCES renders ✅
+- **All 6 API endpoints**: telemetry ok, health OPERATIONAL, version 2.7.SIGMA, badge image/svg+xml, metrics text/plain ✅
+
+## Unresolved Issues / Risks
+- None critical — all features work
+- Light theme scanline/noise opacity could be fine-tuned for white background
+- Metrics API request counters are simulated (not real request tracking)
+
+## Priority Recommendations for Next Phase
+- Add a real-time WebSocket mini-service for S07 data streams
+- Add real request tracking to the metrics endpoint (middleware-based)
+- Fine-tune light theme: adjust scanline/noise/hazard opacity for white bg
+- Add per-section particles for remaining sectors (S02, S04, S05, S06, S08, S10, S11)
+- Consider adding a /api/sigma/changelog endpoint that returns the version changelog
+- Consider adding a "random sector" button ([R] key) for discovery
