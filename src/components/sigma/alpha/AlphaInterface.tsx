@@ -16,12 +16,38 @@ import { AlphaFooter } from "./AlphaFooter";
 
 /**
  * AlphaInterface — the traditional scrolling website interface.
- * All 11 sections on one scrollable page, keeping the brutalist design theme.
- * Replaces the Sigma mode's map-based navigation with a standard website layout.
+ * Uses scroll-behavior: smooth for anchor navigation.
  */
 export function AlphaInterface() {
+  React.useEffect(() => {
+    // Enable smooth scroll for the Alpha interface
+    const container = document.querySelector("[data-alpha-scroll]");
+    if (container) {
+      container.scrollTo({ top: 0, behavior: "auto" });
+    }
+    // Handle hash navigation
+    const handleHash = () => {
+      const hash = window.location.hash;
+      if (hash) {
+        const el = document.querySelector(hash);
+        if (el) {
+          setTimeout(() => {
+            el.scrollIntoView({ behavior: "smooth", block: "start" });
+          }, 100);
+        }
+      }
+    };
+    window.addEventListener("hashchange", handleHash);
+    handleHash();
+    return () => window.removeEventListener("hashchange", handleHash);
+  }, []);
+
   return (
-    <div className="absolute inset-0 overflow-y-auto overflow-x-hidden bg-background">
+    <div
+      data-alpha-scroll
+      className="absolute inset-0 overflow-y-auto overflow-x-hidden bg-background"
+      style={{ scrollBehavior: "smooth" }}
+    >
       <AlphaNav />
       <AlphaHero />
       <AlphaAbout />

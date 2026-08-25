@@ -36,8 +36,8 @@ const SERVICES: ServiceDetail[] = [
     description: "We build production-grade AI chatbots that handle real workloads — sales, support, onboarding, and internal tools. Multi-model orchestration means your bot uses the right model for each task, optimizing for cost and quality.",
     features: ["Multi-model orchestration (GPT-4, Claude, Llama)", "Custom training on your data", "Web, mobile, and API integration", "Conversation analytics dashboard", "Human handoff escalation", "Multi-language support"],
     packages: [
-      { name: "STARTER", price: "$2,500", features: ["1 channel (web)", "10k messages/mo", "2 models", "Email support"] },
-      { name: "PRO", price: "$5,000", features: ["3 channels", "50k messages/mo", "5 models", "Analytics dashboard", "Priority support"], popular: true },
+      { name: "STARTER", price: "3,020,000 MMK", features: ["1 channel (web)", "10k messages/mo", "2 models", "Email support"] },
+      { name: "PRO", price: "6,040,000 MMK", features: ["3 channels", "50k messages/mo", "5 models", "Analytics dashboard", "Priority support"], popular: true },
       { name: "ENTERPRISE", price: "custom", features: ["Unlimited channels", "Custom volume", "All models + fine-tuned", "Dedicated manager", "SLA + 24/7 support"] },
     ],
     comparison: [
@@ -56,8 +56,8 @@ const SERVICES: ServiceDetail[] = [
     description: "Voice AI agents that handle real phone calls — sales, support, scheduling, and intake. Built with ElevenLabs, Whisper, and our proprietary sigma-loop stabilizer for natural-sounding conversations.",
     features: ["Natural voice synthesis (ElevenLabs)", "Real-time speech recognition (Whisper)", "Function calling for bookings/orders", "CRM integration", "Multi-language voice", "Call recording + transcription"],
     packages: [
-      { name: "STARTER", price: "$5,000", features: ["100 calls/mo", "1 language", "Basic CRM", "Email support"] },
-      { name: "PRO", price: "$12,000", features: ["500 calls/mo", "3 languages", "Full CRM integration", "Analytics dashboard", "Priority support"], popular: true },
+      { name: "STARTER", price: "6,040,000 MMK", features: ["100 calls/mo", "1 language", "Basic CRM", "Email support"] },
+      { name: "PRO", price: "14,490,000 MMK", features: ["500 calls/mo", "3 languages", "Full CRM integration", "Analytics dashboard", "Priority support"], popular: true },
       { name: "ENTERPRISE", price: "custom", features: ["Unlimited calls", "All languages", "Custom integrations", "Dedicated infrastructure", "SLA + 24/7 support"] },
     ],
     comparison: [
@@ -76,8 +76,8 @@ const SERVICES: ServiceDetail[] = [
     description: "Coordinated swarms of AI agents that handle multi-step workflows — research, data enrichment, content generation, code review, and more. Each agent specializes in one task; the swarm orchestrator manages handoffs.",
     features: ["Multi-agent orchestration (up to 50 agents)", "Custom agent specialization", "Workflow builder (N8N + custom)", "Distributed task queue", "Real-time monitoring dashboard", "API access for external triggers"],
     packages: [
-      { name: "STARTER", price: "$8,000", features: ["5 agents", "1k tasks/mo", "Basic workflows", "Email support"] },
-      { name: "PRO", price: "$20,000", features: ["20 agents", "10k tasks/mo", "Custom workflows", "Monitoring dashboard", "Priority support"], popular: true },
+      { name: "STARTER", price: "9,660,000 MMK", features: ["5 agents", "1k tasks/mo", "Basic workflows", "Email support"] },
+      { name: "PRO", price: "24,150,000 MMK", features: ["20 agents", "10k tasks/mo", "Custom workflows", "Monitoring dashboard", "Priority support"], popular: true },
       { name: "ENTERPRISE", price: "custom", features: ["50+ agents", "Unlimited tasks", "Bespoke orchestration", "Dedicated infrastructure", "SLA + 24/7 support"] },
     ],
     comparison: [
@@ -96,7 +96,7 @@ const SERVICES: ServiceDetail[] = [
     description: "Automate your business processes with AI-powered workflows. We build N8N pipelines that connect your tools, automate repetitive tasks, and use AI to handle exceptions — reducing manual work by up to 80%.",
     features: ["N8N workflow development", "200+ app integrations", "AI-powered exception handling", "Custom API development", "Process monitoring + alerting", "Team training + documentation"],
     packages: [
-      { name: "STARTER", price: "$3,000", features: ["3 workflows", "10 integrations", "Basic monitoring", "Email support"] },
+      { name: "STARTER", price: "3,620,000 MMK", features: ["3 workflows", "10 integrations", "Basic monitoring", "Email support"] },
       { name: "PRO", price: "$8,000", features: ["10 workflows", "Unlimited integrations", "Full monitoring", "Team training", "Priority support"], popular: true },
       { name: "ENTERPRISE", price: "custom", features: ["Unlimited workflows", "Custom development", "Dedicated support", "SLA + 24/7", "Process optimization"] },
     ],
@@ -116,8 +116,8 @@ const SERVICES: ServiceDetail[] = [
     description: "We design and build REST/GraphQL APIs, MCP (Model Context Protocol) servers, and integration layers that connect your systems. Production-ready with auth, rate limiting, and monitoring.",
     features: ["REST/GraphQL API design", "MCP server development", "Authentication + rate limiting", "API documentation (OpenAPI)", "SDK generation", "Monitoring + logging"],
     packages: [
-      { name: "STARTER", price: "$4,000", features: ["1 API endpoint", "Basic auth", "Documentation", "Email support"] },
-      { name: "PRO", price: "$10,000", features: ["10 endpoints", "Full auth + rate limiting", "SDK generation", "Monitoring", "Priority support"], popular: true },
+      { name: "STARTER", price: "4,830,000 MMK", features: ["1 API endpoint", "Basic auth", "Documentation", "Email support"] },
+      { name: "PRO", price: "12,080,000 MMK", features: ["10 endpoints", "Full auth + rate limiting", "SDK generation", "Monitoring", "Priority support"], popular: true },
       { name: "ENTERPRISE", price: "custom", features: ["Unlimited endpoints", "MCP server", "Custom integrations", "Dedicated infrastructure", "SLA + 24/7"] },
     ],
     comparison: [
@@ -136,8 +136,8 @@ const SERVICES: ServiceDetail[] = [
     description: "Custom non-custodial wallet development for web, mobile, and browser extension. Support for EVM chains, Solana, and custom L2s. Security audited and production-ready.",
     features: ["Multi-chain support (EVM, Solana, custom)", "Non-custodial architecture", "Hardware wallet integration (Ledger, Trezor)", "Biometric authentication", "Transaction simulation + security", "Cross-chain swaps"],
     packages: [
-      { name: "STARTER", price: "$15,000", features: ["1 chain", "Web only", "Basic wallet functions", "Security review"] },
-      { name: "PRO", price: "$30,000", features: ["5 chains", "Web + mobile", "Hardware wallet support", "Full audit", "Priority support"], popular: true },
+      { name: "STARTER", price: "18,110,000 MMK", features: ["1 chain", "Web only", "Basic wallet functions", "Security review"] },
+      { name: "PRO", price: "36,220,000 MMK", features: ["5 chains", "Web + mobile", "Hardware wallet support", "Full audit", "Priority support"], popular: true },
       { name: "ENTERPRISE", price: "custom", features: ["All chains", "All platforms", "Custom features", "Full audit + bug bounty", "SLA + 24/7"] },
     ],
     comparison: [
@@ -156,8 +156,8 @@ const SERVICES: ServiceDetail[] = [
     description: "Production-grade smart contract development in Solidity and Rust (Soroban). Full lifecycle: design, development, testing, auditing, deployment, and monitoring.",
     features: ["Solidity + Rust (Soroban) development", "Formal verification", "Gas optimization", "Upgradeable proxy patterns", "On-chain monitoring", "Multi-sig deployment"],
     packages: [
-      { name: "STARTER", price: "$8,000", features: ["1 contract", "Basic testing", "Deployment", "Email support"] },
-      { name: "PRO", price: "$20,000", features: ["5 contracts", "Full test suite", "Gas optimization", "Monitoring", "Priority support"], popular: true },
+      { name: "STARTER", price: "9,660,000 MMK", features: ["1 contract", "Basic testing", "Deployment", "Email support"] },
+      { name: "PRO", price: "24,150,000 MMK", features: ["5 contracts", "Full test suite", "Gas optimization", "Monitoring", "Priority support"], popular: true },
       { name: "ENTERPRISE", price: "custom", features: ["Unlimited contracts", "Formal verification", "Custom architecture", "Full audit", "SLA + 24/7"] },
     ],
     comparison: [
@@ -176,8 +176,8 @@ const SERVICES: ServiceDetail[] = [
     description: "Full DEX development — AMM pools, order books, limit orders, cross-chain swaps, and liquidity management. Deployed on EVM chains with sub-second finality.",
     features: ["Custom AMM (constant product, stable, weighted)", "Order book matching engine", "Cross-chain swaps (LayerZero, CCIP)", "Liquidity management dashboard", "MEV protection", "Flash loan integration"],
     packages: [
-      { name: "STARTER", price: "$20,000", features: ["1 AMM pool type", "1 chain", "Basic frontend", "Security review"] },
-      { name: "PRO", price: "$50,000", features: ["3 pool types", "3 chains", "Full DEX frontend", "Full audit", "Priority support"], popular: true },
+      { name: "STARTER", price: "24,150,000 MMK", features: ["1 AMM pool type", "1 chain", "Basic frontend", "Security review"] },
+      { name: "PRO", price: "60,370,000 MMK", features: ["3 pool types", "3 chains", "Full DEX frontend", "Full audit", "Priority support"], popular: true },
       { name: "ENTERPRISE", price: "custom", features: ["Custom pool types", "All chains", "White-label DEX", "Full audit + bounty", "SLA + 24/7"] },
     ],
     comparison: [
@@ -196,8 +196,8 @@ const SERVICES: ServiceDetail[] = [
     description: "Production web applications built with Next.js, React, and TypeScript. From landing pages to complex SaaS dashboards — we build scalable, performant, and maintainable web apps.",
     features: ["Next.js + React + TypeScript", "Server-side rendering + ISR", "Database design (PostgreSQL + Prisma)", "Authentication (NextAuth)", "Real-time features (WebSocket)", "CI/CD pipeline"],
     packages: [
-      { name: "STARTER", price: "$5,000", features: ["5 pages", "Basic CMS", "Responsive design", "Email support"] },
-      { name: "PRO", price: "$15,000", features: ["20 pages", "Full CMS + dashboard", "Auth + database", "Real-time features", "Priority support"], popular: true },
+      { name: "STARTER", price: "6,040,000 MMK", features: ["5 pages", "Basic CMS", "Responsive design", "Email support"] },
+      { name: "PRO", price: "18,110,000 MMK", features: ["20 pages", "Full CMS + dashboard", "Auth + database", "Real-time features", "Priority support"], popular: true },
       { name: "ENTERPRISE", price: "custom", features: ["Unlimited pages", "Custom architecture", "Microservices", "Dedicated team", "SLA + 24/7"] },
     ],
     comparison: [
@@ -216,8 +216,8 @@ const SERVICES: ServiceDetail[] = [
     description: "Cross-platform mobile apps with React Native / Expo, or native Swift/Kotlin. From MVP to production — App Store and Play Store ready.",
     features: ["React Native / Expo (cross-platform)", "Native Swift / Kotlin (optional)", "Offline-first architecture", "Push notifications", "In-app purchases", "App Store / Play Store submission"],
     packages: [
-      { name: "STARTER", price: "$10,000", features: ["5 screens", "1 platform", "Basic API", "Email support"] },
-      { name: "PRO", price: "$25,000", features: ["15 screens", "Both platforms", "Full API + auth", "Push notifications", "Priority support"], popular: true },
+      { name: "STARTER", price: "12,080,000 MMK", features: ["5 screens", "1 platform", "Basic API", "Email support"] },
+      { name: "PRO", price: "30,190,000 MMK", features: ["15 screens", "Both platforms", "Full API + auth", "Push notifications", "Priority support"], popular: true },
       { name: "ENTERPRISE", price: "custom", features: ["Unlimited screens", "Both + web", "Custom integrations", "Dedicated team", "SLA + 24/7"] },
     ],
     comparison: [

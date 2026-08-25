@@ -81,22 +81,22 @@ export function SigmaHud() {
       </header>
 
       {/* LEFT VERTICAL RAIL */}
-      <aside className="pointer-events-none fixed left-0 top-8 bottom-8 z-[70] hidden w-8 border-r border-border/60 bg-background/60 font-mono text-[9px] uppercase tracking-[0.3em] text-muted-foreground lg:flex">
+      <aside className="pointer-events-none fixed left-0 top-8 bottom-8 z-[70] hidden w-8 overflow-hidden border-r border-border/60 bg-background/60 font-mono text-[9px] uppercase tracking-[0.2em] text-muted-foreground lg:flex">
         <div
-          className="flex flex-1 items-center justify-center"
+          className="flex flex-1 items-center justify-center overflow-hidden"
           style={{ writingMode: "vertical-rl" }}
         >
-          TAUNGOO / {meta.code} / BUILD 2.4.SIGMA
+          Σ / {meta.code}
         </div>
       </aside>
 
       {/* RIGHT VERTICAL RAIL */}
-      <aside className="pointer-events-none fixed right-0 top-8 bottom-8 z-[70] hidden w-8 overflow-hidden border-l border-border/60 bg-background/60 font-mono text-[9px] uppercase tracking-[0.3em] text-muted-foreground lg:flex">
+      <aside className="pointer-events-none fixed right-0 top-8 bottom-8 z-[70] hidden w-8 overflow-hidden border-l border-border/60 bg-background/60 font-mono text-[9px] uppercase tracking-[0.2em] text-muted-foreground lg:flex">
         <div
           className="flex flex-1 items-center justify-center overflow-hidden"
           style={{ writingMode: "vertical-rl", transform: "rotate(180deg)" }}
         >
-          X{String(coords.x).padStart(4, "0")} · Y{String(coords.y).padStart(4, "0")}
+          {String(coords.x).padStart(4, "0")} · {String(coords.y).padStart(4, "0")}
         </div>
       </aside>
 

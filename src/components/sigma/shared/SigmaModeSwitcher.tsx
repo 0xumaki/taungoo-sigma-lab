@@ -31,7 +31,7 @@ export function SigmaModeSwitcher({
   // Initialize audio
   React.useEffect(() => {
     const audio = new Audio("/chidori.mp3");
-    audio.volume = 0.7;
+    audio.volume = 0.15;
     audioRef.current = audio;
     return () => {
       audio.pause();
@@ -199,20 +199,17 @@ export function SigmaModeSwitcher({
         </button>
       </div>
 
-      {/* Transition overlay */}
-      {transitioning && (
-        <>
-          <div
-            ref={overlayRef}
-            className="pointer-events-none fixed inset-0 z-[200]"
-            style={{ opacity: 0 }}
-          />
-          <canvas
-            ref={lightningRef}
-            className="pointer-events-none fixed inset-0 z-[201]"
-          />
-        </>
-      )}
+      {/* Transition overlay — always rendered, opacity controlled by GSAP */}
+      <div
+        ref={overlayRef}
+        className="pointer-events-none fixed inset-0 z-[200]"
+        style={{ opacity: 0, display: transitioning ? "block" : "none" }}
+      />
+      <canvas
+        ref={lightningRef}
+        className="pointer-events-none fixed inset-0 z-[201]"
+        style={{ display: transitioning ? "block" : "none" }}
+      />
     </>
   );
 }

@@ -439,29 +439,29 @@ export function ExperienceShell() {
         <div className="sigma-hazard-orange absolute inset-x-0 top-0 h-2 opacity-0" />
       </div>
 
-      {/* Persistent HUD */}
-      <SigmaHud />
+      {/* Persistent HUD — Sigma mode only */}
+      {mode === "sigma" && <SigmaHud />}
 
-      {/* Custom cursor reticle (desktop only) */}
+      {/* Custom cursor reticle (desktop only, both modes) */}
       <SigmaCursor />
 
-      {/* Sector progress indicator (right edge) */}
-      <SigmaProgress />
+      {/* Sector progress indicator (right edge, Sigma mode only) */}
+      {mode === "sigma" && <SigmaProgress />}
 
-      {/* Sound toggle (top-right) */}
-      <SigmaSoundToggle />
+      {/* Sound toggle (top-right, Sigma mode only) */}
+      {mode === "sigma" && <SigmaSoundToggle />}
 
-      {/* Theme toggle (below sound toggle) */}
-      <SigmaThemeToggle />
+      {/* Theme toggle (below sound toggle, Sigma mode only) */}
+      {mode === "sigma" && <SigmaThemeToggle />}
 
-      {/* Sector completion tracker (below theme toggle) */}
-      <SigmaCompletion />
+      {/* Sector completion tracker (Sigma mode only) */}
+      {mode === "sigma" && <SigmaCompletion />}
 
-      {/* MC mode controller (matrix + glitch + music) */}
+      {/* MC mode controller (matrix + glitch + music, both modes) */}
       <SigmaMCController active={mcActive} onToggle={() => setMcActive((a) => !a)} />
 
-      {/* Unified bottom-right toolbar (SHARE, RANDOM, MC, TOUR, ⌘K) */}
-      {!booting && (
+      {/* Unified bottom-right toolbar (Sigma mode only) */}
+      {mode === "sigma" && !booting && (
         <SigmaToolbar
           onCmdOpen={() => setCmdOpen(true)}
           mcActive={mcActive}
@@ -479,16 +479,16 @@ export function ExperienceShell() {
         />
       )}
 
-      {/* Visited sectors breadcrumb (top-center) */}
-      <SigmaBreadcrumb />
+      {/* Visited sectors breadcrumb (top-center, Sigma mode only) */}
+      {mode === "sigma" && <SigmaBreadcrumb />}
 
-      {/* Help overlay ([H] key) */}
+      {/* Help overlay ([H] key, both modes) */}
       <SigmaHelp />
 
-      {/* Konami code easter egg */}
+      {/* Konami code easter egg (both modes) */}
       <SigmaKonami />
 
-      {/* Command palette (Cmd/Ctrl+K or /) */}
+      {/* Command palette (Cmd/Ctrl+K or /, both modes) */}
       <SigmaCommand open={cmdOpen} onClose={() => setCmdOpen(false)} />
 
       {/* Boot screen (first visit only) */}
