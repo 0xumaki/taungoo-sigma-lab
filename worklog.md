@@ -430,3 +430,55 @@ The project was stable (11/11 sectors pass from previous round). All previous fe
 - Consider adding a /sitemap.xml + /robots.txt for SEO
 - Add a /api/sigma/version endpoint with build info + changelog
 - Consider adding a "deep link share" feature that generates a URL with the current sector + scroll position
+
+---
+Task ID: CRON-ROUND-8
+Agent: main (orchestrator)
+Task: Add robots.txt, sitemap.xml, version API, onboarding tour, boot safety timeout
+
+## Current Project Status
+The project was stable (10/11 sectors, all APIs pass). The worklog recommended: sitemap.xml, robots.txt, version endpoint, first-visit guided tour, per-section particles. Also identified an intermittent blank-page issue on the root URL (boot screen stuck).
+
+## Completed Modifications / Verification Results
+
+### Bug Fix
+1. **Boot screen safety timeout** — added a 6s `setTimeout` in ExperienceShell that force-clears the `booting` state if it stays `true` for too long. This prevents the intermittent blank-page issue where the boot screen's rAF progress fails to complete, leaving the page stuck behind the boot overlay.
+
+### New Features Added
+1. **robots.txt** (`public/robots.txt`) — allows all crawlers, blocks `/api/`, optionally blocks AI training bots (GPTBot, CCBot, Google-Extended), references sitemap
+
+2. **sitemap.xml** (`public/sitemap.xml`) — 12 URLs: root + 11 sector deep-links (`?s=01` through `?s=11`), with change frequencies (daily for S07 telemetry, weekly for portfolio/research, monthly for others) and priority weights (1.0 for root, 0.9 for portfolio, 0.6-0.8 for others)
+
+3. **`/api/sigma/version` Endpoint** (`api/sigma/version/route.ts`)
+   - Returns: version (2.7.SIGMA), codename (TAUNGOO), buildDate, tech stack (Next.js 16.1.1, React 19, GSAP 3.15, Tailwind 4, Node version), uptime, sector/project/operator counts
+   - 20 features list (from Nexus Map to sitemap)
+   - 5-entry changelog (v2.0 → v2.7) with dated change lists
+
+4. **First-Visit Onboarding Tour** (`shared/SigmaOnboarding.tsx`)
+   - 4-step guided overlay: (1) Welcome to the Nexus — explains the map concept, (2) Click to Jack In — explains interaction, (3) Keyboard Shortcuts — lists all keys, (4) Explore Freely — highlights portfolio + telemetry
+   - Each step has: icon (spinning glyph), accent color, title, body text, progress dots
+   - NEXT / ENTER THE MAP navigation, SKIP option
+   - GSAP intro animation (backdrop fade + panel scale + step slide)
+   - Sound feedback on each step
+   - Gated by `localStorage("sigma_onboarded")` — shows once per browser, after boot screen completes
+
+### Verification
+- **Lint clean**, dev server 200 OK, no runtime errors
+- **Sector sweep: 10/11 pass** (s01 first-compile delay — known)
+- **robots.txt**: serves correctly ✅
+- **sitemap.xml**: 12 URLs ✅
+- **Version API**: returns 2.7.SIGMA, 20 features, 5 changelog entries ✅
+- **Onboarding**: 4-step flow works (step1→step2→step3→step4→ENTER THE MAP→map with 11 nodes) ✅
+- **All APIs**: telemetry, transmit, health (OPERATIONAL), version (2.7.SIGMA) ✅
+
+## Unresolved Issues / Risks
+- None critical — all features work
+- S01 first-compile delay (8s) is a Next.js dev-mode issue, not a bug
+- Onboarding appears after boot screen on first visit — may delay first interaction by ~8s total (boot 3s + onboarding interaction time)
+
+## Priority Recommendations for Next Phase
+- Add a real-time WebSocket mini-service for S07 data streams
+- Add per-section ambient particles for other sectors (S01 boot, S03 systems)
+- Consider adding a "deep link share" feature with scroll position
+- Add a /api/sigma/status badge endpoint (SVG badge for README embedding)
+- Consider adding a dark/light theme toggle (currently dark-only)

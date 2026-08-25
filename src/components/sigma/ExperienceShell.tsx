@@ -7,6 +7,7 @@ import { getSection, nextSection, prevSection, type SectionId } from "@/lib/sigm
 import { SigmaHud } from "./shared/SigmaHud";
 import { SigmaCursor } from "./shared/SigmaCursor";
 import { SigmaSpotlight } from "./shared/SigmaSpotlight";
+import { SigmaOnboarding } from "./shared/SigmaOnboarding";
 import { SigmaBoot } from "./shared/SigmaBoot";
 import { SigmaCommand } from "./shared/SigmaCommand";
 import { SigmaProgress } from "./shared/SigmaProgress";
@@ -68,9 +69,10 @@ export function ExperienceShell() {
   const [renderedView, setRenderedView] = React.useState<SectionId>(view);
   const [flashAccent, setFlashAccent] = React.useState<string>("#FFFFFF");
   const [booting, setBooting] = React.useState(false);
+  const [onboarding, setOnboarding] = React.useState(false);
   const [cmdOpen, setCmdOpen] = React.useState(false);
 
-  // Deep-link + boot screen logic — single effect, runs once after mount
+  // Deep-link + boot screen + onboarding logic — single effect, runs once after mount
   React.useEffect(() => {
     if (typeof window === "undefined") return;
     const params = new URLSearchParams(window.location.search);
@@ -82,7 +84,7 @@ export function ExperienceShell() {
         useSigmaStore.getState().boot(id);
         setRenderedView(id);
       }, 0);
-      return () => clearTimeout(t); // deep-links skip the boot screen
+      return () => clearTimeout(t); // deep-links skip the boot screen + onboarding
     }
     // show boot screen only once per session
     try {
@@ -90,8 +92,15 @@ export function ExperienceShell() {
       if (!seen) {
         setBooting(true);
       }
+      // show onboarding only once per browser (localStorage)
+      const onboarded = localStorage.getItem("sigma_onboarded");
+      if (!onboarded) {
+        // delay onboarding until after boot screen
+        const ob = setTimeout(() => setOnboarding(true), seen ? 500 : 4000);
+        return () => clearTimeout(ob);
+      }
     } catch {
-      // sessionStorage may be unavailable (private mode) — skip boot
+      // sessionStorage/localStorage may be unavailable (private mode) — skip
     }
   }, []);
 
@@ -103,6 +112,20 @@ export function ExperienceShell() {
     }
     setBooting(false);
   }, []);
+
+  // Safety: if boot screen stays for >6s, force-clear it (prevents stuck blank page)
+  React.useEffect(() => {
+    if (!booting) return;
+    const t = setTimeout(() => {
+      setBooting(false);
+      try {
+        sessionStorage.setItem("sigma_booted", "1");
+      } catch {
+        // ignore
+      }
+    }, 6000);
+    return () => clearTimeout(t);
+  }, [booting]);
 
   // Command palette: Cmd/Ctrl+K to open, also '/' as a secondary trigger
   React.useEffect(() => {
@@ -375,6 +398,11 @@ export function ExperienceShell() {
 
       {/* Boot screen (first visit only) */}
       {booting && <SigmaBoot onDone={handleBootDone} />}
+
+      {/* Onboarding overlay (first visit only, after boot) */}
+      {onboarding && !booting && (
+        <SigmaOnboarding onDone={() => setOnboarding(false)} />
+      )}
 
       {/* Cmd+K hint badge (bottom-right, above HUD) */}
       {!cmdOpen && !booting && (
