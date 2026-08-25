@@ -1460,3 +1460,47 @@ Task: Better hero exposure + glitch effect + maximalist upgrade for all Alpha se
 
 ## Cron Status
 Job #337053 continues every 15 minutes for ongoing polish toward award-winning level.
+
+---
+Task ID: CRON-ROUND-25 (Alpha Maximalist Upgrade)
+Agent: main (orchestrator)
+
+## Changes
+
+### Hero (reverted + glitch)
+- Reverted to previous layout (2-column: content + spinning Σ glyph)
+- Reduced background image brightness (overlay 80% opacity on left, 30% on right)
+- Kept GlitchImage component (head + body glitch with RGB split)
+
+### Services (working filters + sci-fi cards)
+- Category filters now WORK: clicking "WEB3" shows 9 services, "AI" shows 6, etc.
+- 10 services have detail page links, 16 link to #contact with "INQUIRE →"
+- Sci-fi card design: header bar (category + index), body (icon box + title + desc + corner accents), footer (price + link)
+
+### Portfolio (case study pages)
+- Created 10 case study pages at /portfolio/[slug]
+- Each: hero, screenshot, metrics grid, challenge/approach/outcome, features, tech stack, CTA
+- Portfolio cards now link to /portfolio/[slug] instead of just hover overlay
+
+### Contact (sci-fi terminal form)
+- Terminal-style form with: identity input, channel selector (5 channels), service selector (9 services), message textarea
+- Transmit log with streaming steps ("establish secure channel... handshake OK... transmitting... sigma acknowledged")
+- Posts to /api/sigma/transmit API
+- Right side: direct channels panel, response protocol (72H/24-7/AES-256), access tier, Σ stamp
+
+### Footer (maximalist)
+- Hazard stripe top border
+- 5-column grid: logo+status, services, company, resources, connect
+- Status indicators (SYSTEM ONLINE, SIGMA VAR 1.0000, BUILD 2.7.SIGMA)
+- API endpoints listed with links
+- Copyright + meta bar (DUAL MODE: Σ / Α, 11 SECTORS)
+- Fake barcode
+
+## Verification
+- Sigma: 10/11 sectors pass
+- Alpha: hero, services (MMK), portfolio, contact terminal, footer all render
+- Service filters: working (WEB3 → 9 services shown)
+- Case study pages: 200 (Omnibridge, Vortex confirmed)
+- Health API: OPERATIONAL
+- Lint clean
+- Cron #337053 continues every 15 min

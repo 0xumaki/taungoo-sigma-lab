@@ -1,16 +1,16 @@
 "use client";
 
 const PROJECTS = [
-  { name: "Omnibridge", desc: "Cross-chain bridge protocol with MCP & A2A server", tech: ["Solidity", "TypeScript", "Web3"], solution: "Multi-chain interoperability", image: "/portfolio/ominibridge.png", accent: "#00FF94" },
-  { name: "Dukon Pro", desc: "Private capital real estate investment platform", tech: ["Next.js", "TypeScript", "Prisma"], solution: "Real estate tokenization", image: "/portfolio/dukon-pro.png", accent: "#FF4500" },
-  { name: "Royal DAO", desc: "Decentralized autonomous organization governance", tech: ["Solidity", "React", "The Graph"], solution: "On-chain governance", image: "/portfolio/royaldao.png", accent: "#C6FF00" },
-  { name: "Vortex Sales OS", desc: "Autonomous AI sales operating system with voice agents", tech: ["TypeScript", "OpenAI", "Twilio"], solution: "AI-driven sales automation", image: "/portfolio/vortex-sales-os.png", accent: "#00E5FF" },
-  { name: "GymMaster", desc: "Gym management software with 4-panel split interface", tech: ["TypeScript", "Next.js", "Prisma"], solution: "Facility management", image: "/portfolio/gymmaster.png", accent: "#FF2D7E" },
-  { name: "Lumina Tarot", desc: "Mystical daily companion for tarot and sound frequencies", tech: ["HTML", "CSS", "JavaScript"], solution: "Lifestyle app", image: "/portfolio/lumina-tarot.png", accent: "#FFB300" },
-  { name: "Sai Pay", desc: "Digital wallet and payment application", tech: ["TypeScript", "Next.js"], solution: "Fintech wallet", image: "/portfolio/sai-pay.png", accent: "#B388FF" },
-  { name: "Brorus", desc: "Decentralized finance protocol platform", tech: ["TypeScript", "Solidity"], solution: "DeFi infrastructure", image: "/portfolio/brorus.png", accent: "#FF3D3D" },
-  { name: "Asean Swap", desc: "Multi-chain token swap exchange", tech: ["TypeScript", "Web3"], solution: "DEX trading", image: "/portfolio/asean-swap.png", accent: "#FFEB3B" },
-  { name: "ManyMarket", desc: "Multi-marketplace aggregation platform", tech: ["TypeScript", "Next.js"], solution: "Marketplace aggregation", image: "/portfolio/manymarket.png", accent: "#2979FF" },
+  { name: "Omnibridge", desc: "Cross-chain bridge protocol with MCP & A2A server", tech: ["Solidity", "TypeScript", "Web3"], solution: "Multi-chain interoperability", image: "/portfolio/ominibridge.png", accent: "#00FF94", slug: "omnibridge" },
+  { name: "Dukon Pro", desc: "Private capital real estate investment platform", tech: ["Next.js", "TypeScript", "Prisma"], solution: "Real estate tokenization", image: "/portfolio/dukon-pro.png", accent: "#FF4500", slug: "dukon-pro" },
+  { name: "Royal DAO", desc: "Decentralized autonomous organization governance", tech: ["Solidity", "React", "The Graph"], solution: "On-chain governance", image: "/portfolio/royaldao.png", accent: "#C6FF00", slug: "royaldao" },
+  { name: "Vortex Sales OS", desc: "Autonomous AI sales operating system with voice agents", tech: ["TypeScript", "OpenAI", "Twilio"], solution: "AI-driven sales automation", image: "/portfolio/vortex-sales-os.png", accent: "#00E5FF", slug: "vortex-sales-os" },
+  { name: "GymMaster", desc: "Gym management software with 4-panel split interface", tech: ["TypeScript", "Next.js", "Prisma"], solution: "Facility management", image: "/portfolio/gymmaster.png", accent: "#FF2D7E", slug: "gymmaster" },
+  { name: "Lumina Tarot", desc: "Mystical daily companion for tarot and sound frequencies", tech: ["HTML", "CSS", "JavaScript"], solution: "Lifestyle app", image: "/portfolio/lumina-tarot.png", accent: "#FFB300", slug: "lumina-tarot" },
+  { name: "Sai Pay", desc: "Digital wallet and payment application", tech: ["TypeScript", "Next.js"], solution: "Fintech wallet", image: "/portfolio/sai-pay.png", accent: "#B388FF", slug: "sai-pay" },
+  { name: "Brorus", desc: "Decentralized finance protocol platform", tech: ["TypeScript", "Solidity"], solution: "DeFi infrastructure", image: "/portfolio/brorus.png", accent: "#FF3D3D", slug: "brorus" },
+  { name: "Asean Swap", desc: "Multi-chain token swap exchange", tech: ["TypeScript", "Web3"], solution: "DEX trading", image: "/portfolio/asean-swap.png", accent: "#FFEB3B", slug: "asean-swap" },
+  { name: "ManyMarket", desc: "Multi-marketplace aggregation platform", tech: ["TypeScript", "Next.js"], solution: "Marketplace aggregation", image: "/portfolio/manymarket.png", accent: "#2979FF", slug: "manymarket" },
 ];
 
 export function AlphaPortfolio() {
@@ -41,10 +41,10 @@ export function AlphaPortfolio() {
         {/* Project grid — maximalist cards */}
         <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {PROJECTS.map((p, i) => (
-            <div
+            <a
               key={p.name}
-              className="group relative border border-border overflow-hidden transition-all duration-300 hover:border-foreground/40"
-              style={{ "--card-accent": p.accent } as React.CSSProperties}
+              href={`/portfolio/${p.slug}`}
+              className="group relative block border border-border overflow-hidden transition-all duration-300 hover:border-foreground/40"
             >
               {/* Top accent bar */}
               <div className="absolute left-0 top-0 z-20 h-0.5 w-full" style={{ background: p.accent }} />
@@ -93,7 +93,7 @@ export function AlphaPortfolio() {
                 className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
                 style={{ background: `radial-gradient(60% 50% at 50% 50%, ${p.accent}10, transparent 70%)` }}
               />
-            </div>
+            </a>
           ))}
         </div>
 
