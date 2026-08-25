@@ -6,6 +6,9 @@ import { useGSAP } from "@gsap/react";
 import { useSigmaStore } from "@/lib/sigma/store";
 import { getSection, nextSection, prevSection, type SectionId } from "@/lib/sigma/sections";
 import { SigmaHud } from "./shared/SigmaHud";
+import { SigmaCursor } from "./shared/SigmaCursor";
+import { SigmaBoot } from "./shared/SigmaBoot";
+import { SigmaCommand } from "./shared/SigmaCommand";
 import { SigmaMap } from "./SigmaMap";
 import { S01Initializing } from "./sections/S01Initializing";
 import { S02Manifesto } from "./sections/S02Manifesto";
@@ -58,8 +61,11 @@ export function ExperienceShell() {
   const { view, phase, navigate, setPhase, visitToken } = useSigmaStore();
   const [renderedView, setRenderedView] = React.useState<SectionId>(view);
   const [flashAccent, setFlashAccent] = React.useState<string>("#FFFFFF");
+  const [booting, setBooting] = React.useState(false);
+  const [cmdOpen, setCmdOpen] = React.useState(false);
 
   // Deep-link support: ?s=01..11 boots directly to a sector (used for screenshots + sharing)
+  // Also: skip boot screen if a deep-link is present, or if already booted this session
   React.useEffect(() => {
     if (typeof window === "undefined") return;
     const params = new URLSearchParams(window.location.search);
@@ -68,8 +74,37 @@ export function ExperienceShell() {
       const id = `s${s.padStart(2, "0")}` as SectionId;
       useSigmaStore.getState().boot(id);
       setRenderedView(id);
+      return; // deep-links skip the boot screen
+    }
+    // show boot screen only once per session
+    const seen = sessionStorage.getItem("sigma_booted");
+    if (!seen) {
+      setBooting(true);
     }
   }, []);
+
+  const handleBootDone = React.useCallback(() => {
+    sessionStorage.setItem("sigma_booted", "1");
+    setBooting(false);
+  }, []);
+
+  // Command palette: Cmd/Ctrl+K to open, also '/' as a secondary trigger
+  React.useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
+        e.preventDefault();
+        setCmdOpen((o) => !o);
+      } else if (e.key === "/" && !cmdOpen) {
+        // only trigger '/' when not already typing in an input
+        const t = e.target as HTMLElement;
+        if (t && (t.tagName === "INPUT" || t.tagName === "TEXTAREA" || t.isContentEditable)) return;
+        e.preventDefault();
+        setCmdOpen(true);
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [cmdOpen]);
 
   const panelsRef = React.useRef<(HTMLDivElement | null)[]>([]);
   const overlayRef = React.useRef<HTMLDivElement>(null);
@@ -273,6 +308,27 @@ export function ExperienceShell() {
 
       {/* Persistent HUD */}
       <SigmaHud />
+
+      {/* Custom cursor reticle (desktop only) */}
+      <SigmaCursor />
+
+      {/* Command palette (Cmd/Ctrl+K or /) */}
+      <SigmaCommand open={cmdOpen} onClose={() => setCmdOpen(false)} />
+
+      {/* Boot screen (first visit only) */}
+      {booting && <SigmaBoot onDone={handleBootDone} />}
+
+      {/* Cmd+K hint badge (bottom-right, above HUD) */}
+      {!cmdOpen && !booting && (
+        <button
+          onClick={() => setCmdOpen(true)}
+          className="fixed bottom-9 right-9 z-[80] hidden items-center gap-1.5 border border-border bg-background/80 px-2 py-1 font-mono text-[9px] uppercase tracking-[0.18em] text-muted-foreground backdrop-blur-sm transition-colors hover:border-foreground/40 hover:text-foreground md:flex"
+          data-cursor="hover"
+        >
+          <kbd className="text-foreground">⌘K</kbd>
+          JUMP TO SECTOR
+        </button>
+      )}
     </div>
   );
 }

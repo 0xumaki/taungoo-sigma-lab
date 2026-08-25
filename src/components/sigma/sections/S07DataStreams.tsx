@@ -49,7 +49,7 @@ export function S07DataStreams() {
       v: 30 + Math.random() * 60,
     }))
   );
-  const [radar] = React.useState([
+  const [radar, setRadar] = React.useState([
     { axis: "AI", v: 92 },
     { axis: "WEB3", v: 78 },
     { axis: "IOT", v: 71 },
@@ -57,27 +57,56 @@ export function S07DataStreams() {
     { axis: "COMM", v: 90 },
     { axis: "SEC", v: 83 },
   ]);
-  const [counters, setCounters] = React.useState({ ops: 184320, pkts: 8142233, infer: 142 });
+  const [counters, setCounters] = React.useState({
+    ops: 184320,
+    pkts: 8142233,
+    infer: 142,
+    uptimeLabel: "00:00:00",
+  });
+  const [systems, setSystems] = React.useState([
+    { name: "NEURAL FORGE", status: "ONLINE", color: "#00FF94" },
+    { name: "WEB3 RAIL", status: "ONLINE", color: "#00FF94" },
+    { name: "EDGE MESH", status: "ONLINE", color: "#00FF94" },
+    { name: "QUANTUM SIM", status: "CALIBRATING", color: "#FFB300" },
+    { name: "COMMUNITY OS", status: "ONLINE", color: "#00FF94" },
+  ]);
+  const [source, setSource] = React.useState<"LIVE API" | "LOCAL SIM">("LOCAL SIM");
 
-  const tick = React.useCallback(() => {
-    setStream((prev) => {
-      const next = [...prev.slice(1)];
-      const last = prev[prev.length - 1];
-      next.push({
-        t: last.t + 1,
-        neural: Math.max(8, Math.min(98, last.neural + (Math.random() - 0.5) * 22)),
-        infer: Math.max(5, Math.min(95, last.infer + (Math.random() - 0.5) * 18)),
+  // Fetch from /api/sigma/telemetry every 1.2s; fall back to local sim on error
+  const tick = React.useCallback(async () => {
+    try {
+      const res = await fetch("/api/sigma/telemetry?XTransformPort=3000", { cache: "no-store" });
+      if (!res.ok) throw new Error("bad status");
+      const d = await res.json();
+      if (d.stream) setStream(d.stream);
+      if (d.sectors) setBars(d.sectors.map((s: { code: string; v: number }) => ({ sector: s.code, v: s.v })));
+      if (d.radar) setRadar(d.radar);
+      if (d.counters) setCounters(d.counters);
+      if (d.systems) setSystems(d.systems);
+      setSource("LIVE API");
+    } catch {
+      // local sim fallback so the charts never go static
+      setStream((prev) => {
+        const next = [...prev.slice(1)];
+        const last = prev[prev.length - 1];
+        next.push({
+          t: last.t + 1,
+          neural: Math.max(8, Math.min(98, last.neural + (Math.random() - 0.5) * 22)),
+          infer: Math.max(5, Math.min(95, last.infer + (Math.random() - 0.5) * 18)),
+        });
+        return next;
       });
-      return next;
-    });
-    setBars((prev) => prev.map((b) => ({ ...b, v: Math.max(10, Math.min(99, b.v + (Math.random() - 0.5) * 20)) })));
-    setCounters((c) => ({
-      ops: c.ops + Math.floor(Math.random() * 120),
-      pkts: c.pkts + Math.floor(Math.random() * 800),
-      infer: c.infer + (Math.random() > 0.5 ? 1 : 0),
-    }));
+      setBars((prev) => prev.map((b) => ({ ...b, v: Math.max(10, Math.min(99, b.v + (Math.random() - 0.5) * 20)) })));
+      setCounters((c) => ({
+        ...c,
+        ops: c.ops + Math.floor(Math.random() * 120),
+        pkts: c.pkts + Math.floor(Math.random() * 800),
+        infer: c.infer + (Math.random() > 0.5 ? 1 : 0),
+      }));
+      setSource("LOCAL SIM");
+    }
   }, []);
-  useTicker(tick, 900);
+  useTicker(tick, 1200);
 
   useGSAP(
     () => {
@@ -100,13 +129,13 @@ export function S07DataStreams() {
     >
       <div ref={root} className="grid h-full grid-cols-12 grid-rows-6 gap-3">
         {/* big counter row */}
-        <Panel data-ds label="LIVE METRICS" id="RT" accent="#00FF94" className="col-span-12 md:col-span-8">
+        <Panel data-ds label="LIVE METRICS" id={source} accent="#00FF94" className="col-span-12 md:col-span-8">
           <div className="grid grid-cols-2 divide-x divide-border/70 sm:grid-cols-4">
             {[
               ["OPS/SEC", counters.ops.toLocaleString(), "+120", "#00FF94"],
               ["PACKETS", counters.pkts.toLocaleString(), "+800", "#00E5FF"],
               ["INFER", `${counters.infer}k`, "+1", "#C6FF00"],
-              ["UPTIME", "99.2%", "30d", "#FFB300"],
+              ["UPTIME", counters.uptimeLabel ?? "—", "LIVE", "#FFB300"],
             ].map(([k, v, d, c]) => (
               <div key={k} className="p-3">
                 <StatReadout label={k} value={v} accent={c} />
@@ -121,23 +150,19 @@ export function S07DataStreams() {
         <Panel data-ds label="STATUS" id="NOMINAL" accent="#00FF94" className="col-span-12 md:col-span-4">
           <div className="flex h-full flex-col justify-between p-3">
             <div className="space-y-1.5">
-              {[
-                ["NEURAL FORGE", "ONLINE", "#00FF94"],
-                ["WEB3 RAIL", "ONLINE", "#00FF94"],
-                ["EDGE MESH", "ONLINE", "#00FF94"],
-                ["QUANTUM SIM", "CALIBRATING", "#FFB300"],
-                ["COMMUNITY OS", "ONLINE", "#00FF94"],
-              ].map(([k, v, c]) => (
-                <div key={k} className="flex items-center justify-between font-mono text-[10px] uppercase tracking-[0.18em]">
-                  <span className="text-muted-foreground">{k}</span>
+              {systems.map((s) => (
+                <div key={s.name} className="flex items-center justify-between font-mono text-[10px] uppercase tracking-[0.18em]">
+                  <span className="text-muted-foreground">{s.name}</span>
                   <span className="flex items-center gap-1.5">
-                    <span className="sigma-pulse h-1.5 w-1.5" style={{ background: c as string }} />
-                    <span style={{ color: c as string }}>{v}</span>
+                    <span className="sigma-pulse h-1.5 w-1.5" style={{ background: s.color }} />
+                    <span style={{ color: s.color }}>{s.status}</span>
                   </span>
                 </div>
               ))}
             </div>
-            <Tag accent="#00FF94">ALL SYSTEMS NOMINAL</Tag>
+            <Tag accent={source === "LIVE API" ? "#00FF94" : "#FFB300"}>
+              SRC: {source}
+            </Tag>
           </div>
         </Panel>
 
