@@ -13,6 +13,8 @@ import { SigmaShare } from "./shared/SigmaShare";
 import { SigmaKonami } from "./shared/SigmaKonami";
 import { SigmaSoundToggle } from "./shared/SigmaSoundToggle";
 import { SigmaTour } from "./shared/SigmaTour";
+import { SigmaHelp } from "./shared/SigmaHelp";
+import { SigmaBreadcrumb } from "./shared/SigmaBreadcrumb";
 import { sigmaSound } from "@/lib/sigma/sound";
 import { SigmaMap } from "./SigmaMap";
 import { S01Initializing } from "./sections/S01Initializing";
@@ -354,6 +356,12 @@ export function ExperienceShell() {
 
       {/* Tour mode (bottom-right) */}
       <SigmaTour />
+
+      {/* Visited sectors breadcrumb (top-center) */}
+      <SigmaBreadcrumb />
+
+      {/* Help overlay ([H] key) */}
+      <SigmaHelp />
 
       {/* Konami code easter egg */}
       <SigmaKonami />

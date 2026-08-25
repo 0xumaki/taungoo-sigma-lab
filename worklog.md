@@ -281,3 +281,47 @@ The project was stable (29/29 QA pass from previous round). All previous feature
 - Add a "help" overlay ([H] key) showing all keyboard shortcuts
 - Consider adding cursor-following spotlight effect on the map
 - Add a mini-map or breadcrumb showing visited sectors
+
+---
+Task ID: CRON-ROUND-5
+Agent: main (orchestrator)
+Task: Add help overlay, S06 paper modals, breadcrumb, and more maximalist features
+
+## Current Project Status
+The project was stable (34/34 QA pass from previous round). All previous features working. The worklog recommended: OG meta tags, WebSocket for S07, S06 paper detail modals, help overlay, cursor spotlight, mini-map/breadcrumb.
+
+## Completed Modifications / Verification Results
+
+### New Features Added
+1. **Help Overlay** (`shared/SigmaHelp.tsx`) — [H] key opens a full-screen overlay showing all keyboard shortcuts (M, ESC, ←→, 0-9, ⌘K, /, T, H, Konami) + a grid of all 11 sectors with their accent colors. GSAP intro animation (backdrop fade + panel scale + row stagger). Close with H or ESC.
+
+2. **S06 Research Logs Paper Detail Modals** (`sections/S06Research.tsx`)
+   - All 9 research entries now have extended metadata: DOI, citations, downloads, keywords, full abstract, references count, status (PUBLISHED/PREPRINT/PATENTED/OPEN)
+   - Each log row is now clickable → opens a Dialog modal with: spinning icon, identity panel (date/size/cites/downloads/refs/status), full abstract, keywords as tags, DOI, PDF/DOI action buttons
+   - "READ" affordance on hover
+
+3. **Visited Sectors Breadcrumb** (`shared/SigmaBreadcrumb.tsx`) — top-center trail showing all visited sectors as clickable dots with accent colors. Current sector highlighted. Shows "X/11" count. Persists to sessionStorage. Only shows when 2+ sectors visited. Click any dot to navigate back.
+
+4. **Updated HUD** — bottom status bar now shows: `[M] MAP · [←/→] NAV · [⌘K] JUMP · [T] TOUR · [H] HELP · [SFX] SOUND`
+
+### Verification
+- **Quick QA: 11/11 pass, 0 fail**
+  - Map: 11 nodes, sound btn, tour btn, HUD [H] ✅
+  - Help overlay: opens with [H], shows KEYBOARD REFERENCE + SHORTCUTS + 11 SECTORS ✅
+  - Breadcrumb: trail shows after visiting 2+ sectors ✅
+  - S06: 9 logs, paper dossier opens with ABSTRACT + KEYWORDS + DOI ✅
+  - APIs: telemetry ok, transmit ok ✅
+- **Sector sweep: 10/11 pass** (s01 needs 8s for first-compile, all render correctly with adequate wait)
+- **Lint clean**, dev server 200 OK, no runtime errors
+
+## Unresolved Issues / Risks
+- None critical — all features work
+- S01 (first sector) occasionally needs 8s to render on first compile — this is a Next.js dev-mode compilation delay, not a bug
+- Breadcrumb requires 2+ visited sectors to show (by design) — could add a "start trail" hint
+
+## Priority Recommendations for Next Phase
+- Add Open Graph meta tags + dynamic share image generation
+- Add a real-time WebSocket mini-service for S07 data streams
+- Add cursor-following spotlight effect on the map
+- Add more section-specific micro-interactions (e.g. S08 equipment cards could flip to show specs)
+- Consider adding a "first visit" guided tour that auto-plays the first time
