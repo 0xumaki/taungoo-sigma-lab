@@ -6,6 +6,7 @@ import { useSigmaStore } from "@/lib/sigma/store";
 import { getSection, nextSection, prevSection, type SectionId } from "@/lib/sigma/sections";
 import { SigmaHud } from "./shared/SigmaHud";
 import { SigmaCursor } from "./shared/SigmaCursor";
+import { SigmaSpotlight } from "./shared/SigmaSpotlight";
 import { SigmaBoot } from "./shared/SigmaBoot";
 import { SigmaCommand } from "./shared/SigmaCommand";
 import { SigmaProgress } from "./shared/SigmaProgress";
@@ -276,6 +277,9 @@ export function ExperienceShell() {
     >
       {/* Persistent layered background */}
       <div className="sigma-grid pointer-events-none absolute inset-0 opacity-60" />
+
+      {/* Cursor spotlight (desktop only) */}
+      <SigmaSpotlight />
 
       {/* Rendered view (keyed so it remounts + re-runs its intro animation each visit) */}
       <div

@@ -24,6 +24,7 @@ const instrumentSerif = Instrument_Serif({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://taungoosigma.lab"),
   title: "TAUNGOO SIGMA LAB — Innovation Hub for Tomorrow's Technology",
   description:
     "Taungoo Sigma Lab — a brutalist research lab at the intersection of AI, Web3, and community resilience. 11 sectors. One sigma variable.",
@@ -34,21 +35,54 @@ export const metadata: Metadata = {
     "Web3",
     "Myanmar tech",
     "brutalist design",
+    "sigma variable",
+    "neural forge",
   ],
   authors: [{ name: "Taungoo Sigma Lab" }],
+  creator: "Taungoo Sigma Lab",
+  publisher: "Taungoo Sigma Lab",
   icons: {
     icon: "https://z-cdn.chatglm.cn/z-ai/static/logo.svg",
   },
   openGraph: {
     title: "TAUNGOO SIGMA LAB",
-    description: "We are the sigma variable. 11 sectors. One engine.",
+    description:
+      "We are the sigma variable. 11 sectors. One engine. A brutalist research lab at the intersection of AI, Web3, and community resilience.",
     siteName: "Taungoo Sigma Lab",
     type: "website",
+    locale: "en_US",
+    images: [
+      {
+        url: "/sections/map.png",
+        width: 1280,
+        height: 800,
+        alt: "Taungoo Sigma Lab — Nexus Map with 11 sectors",
+      },
+      {
+        url: "/sections/s01.png",
+        width: 1280,
+        height: 800,
+        alt: "Taungoo Sigma Lab — Sector 01: INITIALIZING",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "TAUNGOO SIGMA LAB",
     description: "We are the sigma variable. 11 sectors. One engine.",
+    images: ["/sections/map.png"],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+    },
+  },
+  alternates: {
+    canonical: "/",
   },
 };
 
