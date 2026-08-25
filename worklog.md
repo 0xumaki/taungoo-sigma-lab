@@ -215,3 +215,69 @@ The project was in a partially-broken state from the previous cron round (which 
 - Add more per-section content depth (e.g. S05 Collective could have individual operator profile modals)
 - Consider adding a real-time WebSocket mini-service for the S07 data streams (currently uses HTTP polling every 1.2s)
 - Add Open Graph meta tags + a share image generator for social sharing
+
+---
+Task ID: CRON-ROUND-4
+Agent: main (orchestrator)
+Task: Add sound design, operator modals, tour mode, and more maximalist features
+
+## Current Project Status
+The project was stable (29/29 QA pass from previous round). All previous features (boot screen, cursor, command palette, telemetry API, progress indicator, share button, Konami code) were working. The worklog recommended: sound design, tour mode, per-section content depth, WebSocket for S07, OG meta tags.
+
+## Completed Modifications / Verification Results
+
+### New Features Added
+1. **Sound Design System** (`lib/sigma/sound.ts` + `shared/SigmaSoundToggle.tsx`)
+   - Web Audio API-based synthesized UI sounds: hover (2400Hz tick), click (180Hz square), open/close (frequency sweeps), transition (80→400Hz sweep + noise), boot (220→440→880Hz chord), complete (523→659→784Hz arpeggio), error (150Hz sawtooth)
+   - Gated behind user gesture (first click on SFX toggle button) per browser autoplay policies
+   - `sigmaSound` singleton + `useSigmaSound()` hook
+   - Sounds wired into: map node hover/click, keyboard nav (click/close), transition start, boot completion
+   - Fixed-position SFX toggle button (top-right, shows green when enabled)
+
+2. **Operator Profile Modals** (`sections/S05Collective.tsx`)
+   - All 8 operators now have detailed dossiers: clearance level, join date, location, specialties, project count, bio, signature quote
+   - Clicking any operator card opens a Dialog modal with: spinning glyph avatar, identity panel (code/joined/location/projects/clearance), bio, specialties tags, sigma variable meter, signature quote
+   - "▸ OPEN DOSSIER" hover overlay on each operator card
+   - Fixed Panel component to spread `data-*` attributes (was silently dropping them — this also fixes `[data-proj]` on portfolio cards)
+
+3. **Tour Mode** (`shared/SigmaTour.tsx`)
+   - Auto-plays through all 11 sectors (6s each)
+   - Progress bar + sector dots indicator at bottom-right
+   - Pause/resume/stop controls
+   - [T] keyboard shortcut to toggle
+   - Toast notification on start/complete
+   - Shows current sector code + name + accent-colored progress
+
+4. **Updated HUD** — bottom status bar now shows all shortcuts: `[M] MAP · [ESC] BACK · [←/→] NAV · [⌘K] JUMP · [T] TOUR · [SFX] SOUND`
+
+### Bug Fixes
+1. **Panel component not passing data-* attributes** — added `...props` spread so `data-op`, `data-proj`, `data-ds`, etc. are properly rendered on the DOM (this was causing S05 cards and S04 portfolio cards to not be found by QA selectors)
+2. **SigmaTour useEffect missing dependency array** — was running on every render, causing potential infinite loops; fixed with `[touring]` dependency
+3. **Unused eslint-disable directive** — removed after fixing the dependency array
+
+### Verification
+- **QA v7: 34/34 pass, 0 fail** (up from 29)
+  - Map: 11 nodes, all opacity 1, 11 thumbs, title, kbd hint, sound btn, tour btn ✅
+  - All 11 sectors render correct headers ✅
+  - Transition: Esc→map ✅
+  - Command palette: opens, vault filter→1 result ✅
+  - **S05 operator modal: 8 operators, dossier opens, has bio + signature** ✅ (NEW)
+  - Portfolio modal: 11 cards, opens, shows repo metadata ✅
+  - Telemetry API: ok, 40 stream points ✅
+  - Transmit API: ok ✅
+  - Keyboard: ArrowRight→s02 ✅
+  - Mobile: 390px, 11 nodes, 2-col grid ✅
+- **Lint clean**, dev server 200 OK, no runtime errors
+
+## Unresolved Issues / Risks
+- None critical — all 34 QA checks pass
+- Sound is disabled by default (requires user click to enable) — this is by design per browser autoplay policies
+- Tour mode cycles indefinitely until stopped — could add a "complete after 1 cycle" option
+
+## Priority Recommendations for Next Phase
+- Add Open Graph meta tags + dynamic share image generation for social sharing
+- Add a real-time WebSocket mini-service for S07 data streams (currently HTTP polling every 1.2s)
+- Add more per-section content depth (S06 Research Logs could have individual paper detail modals with abstracts)
+- Add a "help" overlay ([H] key) showing all keyboard shortcuts
+- Consider adding cursor-following spotlight effect on the map
+- Add a mini-map or breadcrumb showing visited sectors

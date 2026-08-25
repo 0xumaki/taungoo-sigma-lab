@@ -5,6 +5,7 @@ import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { SECTIONS, MAP_META, getSection, type SectionMeta } from "@/lib/sigma/sections";
 import { useSigmaStore } from "@/lib/sigma/store";
+import { sigmaSound } from "@/lib/sigma/sound";
 import { cn } from "@/lib/utils";
 import { BrutalButton, Crosshair, Panel, Tag } from "./shared/components";
 
@@ -33,9 +34,9 @@ function MapNode({
     <button
       ref={ref}
       data-node
-      onMouseEnter={() => onHover(section)}
+      onMouseEnter={() => { onHover(section); sigmaSound.play("hover"); }}
       onMouseLeave={() => onHover(null)}
-      onClick={onEnter}
+      onClick={() => { onEnter(); sigmaSound.play("transition"); }}
       className={cn(
         "group relative block w-full overflow-hidden border border-border bg-card text-left transition-[transform,border-color] duration-300 hover:-translate-y-1 hover:border-foreground/60",
         isActive && "border-foreground"

@@ -64,6 +64,7 @@ export function Panel({
   id,
   accent,
   scan,
+  ...props
 }: {
   children?: React.ReactNode;
   className?: string;
@@ -71,6 +72,7 @@ export function Panel({
   id?: string;
   accent?: string;
   scan?: boolean;
+  [key: string]: unknown;
 }) {
   return (
     <div
@@ -79,6 +81,7 @@ export function Panel({
         scan && "sigma-scanlines",
         className
       )}
+      {...props}
     >
       {(label || id) && (
         <div className="flex items-center justify-between border-b border-border/70 px-3 py-1.5">

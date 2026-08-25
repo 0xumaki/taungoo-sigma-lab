@@ -11,6 +11,9 @@ import { SigmaCommand } from "./shared/SigmaCommand";
 import { SigmaProgress } from "./shared/SigmaProgress";
 import { SigmaShare } from "./shared/SigmaShare";
 import { SigmaKonami } from "./shared/SigmaKonami";
+import { SigmaSoundToggle } from "./shared/SigmaSoundToggle";
+import { SigmaTour } from "./shared/SigmaTour";
+import { sigmaSound } from "@/lib/sigma/sound";
 import { SigmaMap } from "./SigmaMap";
 import { S01Initializing } from "./sections/S01Initializing";
 import { S02Manifesto } from "./sections/S02Manifesto";
@@ -128,18 +131,18 @@ export function ExperienceShell() {
       if (useSigmaStore.getState().phase !== "idle") return;
       const cur = useSigmaStore.getState().view;
       if (e.key === "Escape") {
-        if (cur !== "map") navigate("map");
+        if (cur !== "map") { navigate("map"); sigmaSound.play("close"); }
       } else if (e.key === "m" || e.key === "M") {
-        if (cur !== "map") navigate("map");
+        if (cur !== "map") { navigate("map"); sigmaSound.play("close"); }
       } else if (e.key === "ArrowRight") {
-        navigate(nextSection(cur));
+        navigate(nextSection(cur)); sigmaSound.play("click");
       } else if (e.key === "ArrowLeft") {
-        navigate(prevSection(cur));
+        navigate(prevSection(cur)); sigmaSound.play("click");
       } else if (e.key >= "0" && e.key <= "9") {
         const n = parseInt(e.key, 10);
         const target =
           n === 0 ? "map" : (`s${String(n).padStart(2, "0")}` as SectionId);
-        if (target !== cur) navigate(target);
+        if (target !== cur) { navigate(target); sigmaSound.play("click"); }
       }
     };
     window.addEventListener("keydown", onKey);
@@ -163,6 +166,7 @@ export function ExperienceShell() {
     const dest = useSigmaStore.getState().view;
     const destMeta = getSection(dest);
     setFlashAccent(destMeta.accent);
+    sigmaSound.play("transition");
 
     const panels = panelsRef.current.filter(Boolean) as HTMLDivElement[];
     const overlay = overlayRef.current;
@@ -344,6 +348,12 @@ export function ExperienceShell() {
 
       {/* Share button (bottom-left) */}
       <SigmaShare />
+
+      {/* Sound toggle (top-right) */}
+      <SigmaSoundToggle />
+
+      {/* Tour mode (bottom-right) */}
+      <SigmaTour />
 
       {/* Konami code easter egg */}
       <SigmaKonami />

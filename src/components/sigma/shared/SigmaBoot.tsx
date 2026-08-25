@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import gsap from "gsap";
+import { sigmaSound } from "@/lib/sigma/sound";
 
 const BOOT_STEPS = [
   "MOUNT KERNEL",
@@ -78,10 +79,13 @@ export function SigmaBoot({ onDone }: { onDone: () => void }) {
     raf = requestAnimationFrame(tick);
 
     function finish() {
+      // play boot-complete sound
+      sigmaSound.play("boot");
       // exit flash + fade
       const flash = root.querySelector("[data-boot-flash]");
       const tl = gsap.timeline({
         onComplete: () => {
+          sigmaSound.play("complete");
           doneRef.current();
         },
       });
