@@ -1059,3 +1059,34 @@ This forces any `fixed.inset-0` element to fill the viewport, regardless of pare
 - Continue 15-min cron maintenance
 - Monitor for any remaining height issues on different viewport sizes
 - Consider adding `min-height: 100vh` to body as additional safety
+
+---
+Task ID: CRON-ROUND-17 (Batch 1: Text Fixes + Glitch Watermark)
+Agent: main (orchestrator)
+Task: Fix text overlapping, add glitch effect to sector numbers, scan all pages with VLM
+
+## VLM Scan Results (pixel-by-pixel analysis)
+Found these issues:
+1. **NEXT button truncated** — vertically cut off by fixed-position HUD buttons (SFX, DRK, completion ring) overlapping the section header's right edge
+2. **Right vertical rail text overflow** — cursor coordinates text too long for 8px container
+3. **Top status bar marquee cut off** — marquee text items too long ("VOLTAGE NOMINAL · CORE TEMP 41°C")
+4. **Sector number watermark distracting** — too large (28vh), no glitch effect
+
+## Fixes Applied
+1. **Header padding** — added `pr-20` to SectionShell header to leave room for fixed HUD buttons. PREV/MAP/NEXT buttons now fully visible without truncation.
+2. **NavBtn** — added `whitespace-nowrap`, `shrink-0` to nav cluster, reduced padding to `px-2.5 py-1`, reduced tracking to `0.18em`. Added arrow glyphs (◂ PREV, NEXT ▸).
+3. **Right vertical rail** — added `overflow-hidden` to both the aside and inner div. Shortened text from `X#### · Y#### · CURSOR TRACE` to `X#### · Y####`.
+4. **Top status bar** — shortened marquee items: removed "TAUNGOO SIGMA LAB /" prefix, shortened "VOLTAGE NOMINAL ·" to just "CORE TEMP 41°C".
+5. **Sector number watermark** — reduced size from `text-[28vh]` to `text-[20vh]`, moved from `-bottom-6 right-2` to `-bottom-2 right-4`. Added `sigma-glitch` class with `data-text` attribute for the RGB-split glitch effect. Opacity increased slightly from `0.025` to `0.04` so the glitch effect is visible.
+
+## Verification
+- **VLM confirmed**: "PREV, MAP, and NEXT buttons are fully visible and not truncated", "no text overlap", "sector number watermark visible with a glitch effect" ✅
+- **Sector sweep: 10/11 pass** (s01 first-compile delay — known) ✅
+- **All APIs**: telemetry ok, health OPERATIONAL ✅
+- **Lint clean** ✅
+
+## Pending Questions for User (before Batch 2)
+1. Chidori song audio file — need upload or use synthesized alternative
+2. Alpha (Α) mode — confirm it's a traditional scrolling website with nav bar
+3. Service detail pages — modals (A), separate routes (B), or accordions (C)?
+4. Portfolio repos — confirm GitHub account access for screenshots

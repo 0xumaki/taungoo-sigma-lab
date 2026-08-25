@@ -67,8 +67,8 @@ export function SectionShell({
         style={{ background: meta.accent }}
       />
 
-      {/* HEADER ROW */}
-      <header className="relative z-10 flex flex-wrap items-end justify-between gap-3 border-b border-border pb-3">
+      {/* HEADER ROW — extra right padding to avoid overlap with fixed HUD buttons */}
+      <header className="relative z-10 flex flex-wrap items-end justify-between gap-3 border-b border-border pb-3 pr-20">
         <div className="min-w-0">
           <div
             className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.3em] text-muted-foreground"
@@ -95,9 +95,9 @@ export function SectionShell({
         </div>
 
         {/* nav cluster */}
-        <div className="flex items-center gap-2">
+        <div className="flex shrink-0 items-center gap-2">
           <NavBtn
-            label="PREV"
+            label="◂ PREV"
             onClick={() => navigate(prevSection(id))}
             accent={meta.accent}
           />
@@ -108,7 +108,7 @@ export function SectionShell({
             primary
           />
           <NavBtn
-            label="NEXT"
+            label="NEXT ▸"
             onClick={() => navigate(nextSection(id))}
             accent={meta.accent}
           />
@@ -127,9 +127,14 @@ export function SectionShell({
         <span className="hidden sm:inline">SIG=1.00 · BUILD 2.4.SIGMA</span>
       </footer>
 
-      {/* big corner index watermark */}
-      <div className="pointer-events-none absolute -bottom-6 right-2 z-0 select-none font-sans text-[28vh] font-black leading-none text-foreground/[0.025]">
-        {meta.shortCode}
+      {/* big corner index watermark with glitch */}
+      <div className="pointer-events-none absolute -bottom-2 right-4 z-0 select-none font-sans text-[20vh] font-black leading-none">
+        <span
+          className="sigma-glitch text-foreground/[0.04]"
+          data-text={meta.shortCode}
+        >
+          {meta.shortCode}
+        </span>
       </div>
     </div>
   );
@@ -150,7 +155,7 @@ function NavBtn({
     <button
       onClick={onClick}
       className={cn(
-        "border px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.22em] transition-all duration-200 hover:translate-x-[1px] active:translate-x-[2px]",
+        "whitespace-nowrap border px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.18em] transition-all duration-200 hover:translate-x-[1px] active:translate-x-[2px]",
         primary
           ? "text-background"
           : "border-border text-foreground hover:bg-foreground/10"

@@ -62,11 +62,11 @@ export function SigmaHud() {
         </div>
         <div className="hidden flex-1 items-center px-3 md:flex">
           <Marquee duration={40} className="text-muted-foreground">
-            <span className="mr-8">◂ TAUNGOO SIGMA LAB / SECTOR {meta.shortCode} ONLINE</span>
+            <span className="mr-8">◂ SECTOR {meta.shortCode} ONLINE</span>
             <span className="mr-8">▸ 11 SECTORS MAPPED</span>
             <span className="mr-8">▸ NEURAL FORGE ACTIVE</span>
             <span className="mr-8">▸ ACCESS: PUBLIC READ</span>
-            <span className="mr-8">▸ VOLTAGE NOMINAL · CORE TEMP 41°C</span>
+            <span className="mr-8">▸ CORE TEMP 41°C</span>
             <span className="mr-8">◂ DO NOT EXCEED RATED SIGMA</span>
           </Marquee>
         </div>
@@ -91,12 +91,12 @@ export function SigmaHud() {
       </aside>
 
       {/* RIGHT VERTICAL RAIL */}
-      <aside className="pointer-events-none fixed right-0 top-8 bottom-8 z-[70] hidden w-8 border-l border-border/60 bg-background/60 font-mono text-[9px] uppercase tracking-[0.3em] text-muted-foreground lg:flex">
+      <aside className="pointer-events-none fixed right-0 top-8 bottom-8 z-[70] hidden w-8 overflow-hidden border-l border-border/60 bg-background/60 font-mono text-[9px] uppercase tracking-[0.3em] text-muted-foreground lg:flex">
         <div
-          className="flex flex-1 items-center justify-center"
+          className="flex flex-1 items-center justify-center overflow-hidden"
           style={{ writingMode: "vertical-rl", transform: "rotate(180deg)" }}
         >
-          {String(coords.x).padStart(4, "0")} · {String(coords.y).padStart(4, "0")} · CURSOR TRACE
+          X{String(coords.x).padStart(4, "0")} · Y{String(coords.y).padStart(4, "0")}
         </div>
       </aside>
 
