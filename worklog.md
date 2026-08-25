@@ -482,3 +482,50 @@ The project was stable (10/11 sectors, all APIs pass). The worklog recommended: 
 - Consider adding a "deep link share" feature with scroll position
 - Add a /api/sigma/status badge endpoint (SVG badge for README embedding)
 - Consider adding a dark/light theme toggle (currently dark-only)
+
+---
+Task ID: CRON-ROUND-9
+Agent: main (orchestrator)
+Task: Add SVG badge endpoint, theme toggle, S01 particles
+
+## Current Project Status
+The project was stable (11/11 sectors, all APIs pass). The worklog recommended: WebSocket for S07, per-section particles, status badge SVG endpoint, theme toggle.
+
+## Completed Modifications / Verification Results
+
+### New Features Added
+1. **SVG Status Badge Endpoint** (`api/sigma/badge/route.ts`)
+   - Two styles: `?style=brutal` (sharp corners, hazard border, white/black/green, 280×32) and `?style=flat` (shields.io-like, 200×20)
+   - Customizable label and value: `?label=TAUNGOO+SIGMA&value=OPERATIONAL`
+   - Shows live uptime in brutal style
+   - Returns `Content-Type: image/svg+xml` with no-cache headers
+   - Can be embedded in README: `![status](https://taungoosigma.lab/api/sigma/badge?style=brutal)`
+
+2. **Theme Toggle** (`shared/SigmaThemeToggle.tsx`)
+   - Toggles between "SIGMA DARK" (default, brutalist black) and "SIGMA LIGHT" (high-contrast white)
+   - Button fixed below the sound toggle (top-right): shows MOON/DRK (amber) or SUN/LGT (orange)
+   - Applies `.light` or `.dark` class to `<html>` element
+   - Added `.light` CSS variables block in globals.css: inverted palette (white bg, black ink, 92% card, 88% secondary, 22% black borders)
+   - Persists choice in `localStorage("sigma-theme")`
+
+3. **S01 Ambient Particles** — added `SigmaParticles` (16 motes) to the INITIALIZING sector, giving the boot hero a "data in the void" feel with drifting ASCII characters
+
+### Verification
+- **Lint clean**, dev server 200 OK, no runtime errors
+- **Sector sweep: 11/11 pass** ✅ (improved from 10/11)
+- **Badge API**: returns SVG (brutal + flat styles), content-type `image/svg+xml`, HTTP 200 ✅
+- **Theme toggle**: button found, clicking switches `html` class `dark`→`light`→`dark` ✅
+- **S01 particles**: canvas renders (1 canvas element), INITIALIZING renders ✅
+- **All APIs**: telemetry ok, health OPERATIONAL, version 2.7.SIGMA, badge image/svg+xml ✅
+
+## Unresolved Issues / Risks
+- None critical — all features work
+- Light theme is functional but some brutalist effects (scanlines, noise, hazard stripes) are tuned for dark — they still render but with reduced visual impact on white
+
+## Priority Recommendations for Next Phase
+- Add a real-time WebSocket mini-service for S07 data streams
+- Fine-tune light theme: adjust scanline/noise opacity for white background
+- Add per-section particles for S03 (Core Systems) and S09 (Alliances)
+- Consider adding a "deep link share" with scroll position
+- Add a /api/sigma/metrics endpoint for Prometheus-style monitoring
+- Consider adding keyboard shortcut [L] for theme toggle (currently click-only)

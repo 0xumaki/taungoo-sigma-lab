@@ -6,6 +6,7 @@ import { useGSAP } from "@gsap/react";
 import { useSigmaStore } from "@/lib/sigma/store";
 import { SectionShell } from "../shared/SectionShell";
 import { BrutalButton, Crosshair, Panel } from "../shared/components";
+import { SigmaParticles } from "../shared/SigmaParticles";
 
 gsap.registerPlugin(useGSAP);
 
@@ -81,7 +82,9 @@ export function S01Initializing() {
       title="INITIALIZING"
       tagline="Boot sequence. The sigma variable is online and holding at 1.0000."
     >
-      <div ref={root} className="grid h-full grid-cols-12 gap-3 overflow-hidden">
+      <div ref={root} className="relative grid h-full grid-cols-12 gap-3 overflow-hidden">
+        {/* Ambient boot particles */}
+        <SigmaParticles count={16} />
         {/* LEFT VERTICAL PANEL */}
         <Panel
           data-hero-panel

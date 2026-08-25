@@ -17,6 +17,7 @@ import { SigmaSoundToggle } from "./shared/SigmaSoundToggle";
 import { SigmaTour } from "./shared/SigmaTour";
 import { SigmaHelp } from "./shared/SigmaHelp";
 import { SigmaBreadcrumb } from "./shared/SigmaBreadcrumb";
+import { SigmaThemeToggle } from "./shared/SigmaThemeToggle";
 import { sigmaSound } from "@/lib/sigma/sound";
 import { SigmaMap } from "./SigmaMap";
 import { S01Initializing } from "./sections/S01Initializing";
@@ -380,6 +381,9 @@ export function ExperienceShell() {
 
       {/* Sound toggle (top-right) */}
       <SigmaSoundToggle />
+
+      {/* Theme toggle (below sound toggle) */}
+      <SigmaThemeToggle />
 
       {/* Tour mode (bottom-right) */}
       <SigmaTour />
