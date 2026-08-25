@@ -1090,3 +1090,78 @@ Found these issues:
 2. Alpha (Α) mode — confirm it's a traditional scrolling website with nav bar
 3. Service detail pages — modals (A), separate routes (B), or accordions (C)?
 4. Portfolio repos — confirm GitHub account access for screenshots
+
+---
+Task ID: CRON-ROUND-18 (Batch 2: Σ/Α Mode Switcher + Alpha Interface)
+Agent: main (orchestrator)
+Task: Build dual-website interface system with Chidori dramatic transition
+
+## Completed
+
+### 1. Chidori Soundtrack
+- Copied chidori.mp3 (129KB, 128kbps, 44.1kHz stereo) to /public/
+- Plays during mode switch transition
+
+### 2. Σ/Α Mode Switcher (`SigmaModeSwitcher.tsx`)
+- Floating button at top-center: Σ SIGMA | Α ALPHA
+- Active mode highlighted (filled background)
+- On switch: dramatic "electrical shock" tear-down effect:
+  1. Chidori soundtrack plays
+  2. White flash + lightning bolts drawn on canvas (rapid bolts with branches, blue glow shadow)
+  3. Screen distortion (hue-rotate, contrast, saturate flicker) for 2s
+  4. Content swaps underneath (mode changes)
+  5. Lingering ending — gradual fade over 1.5s with power2.out ease
+- Mode persisted in localStorage
+- GSAP timeline for the entire sequence (~4s total)
+
+### 3. Alpha (Α) Interface — Traditional Scrolling Website
+Created 12 components in `src/components/sigma/alpha/`:
+- **AlphaInterface** — main shell, scrollable, overflow-y-auto
+- **AlphaNav** — fixed nav bar with logo, 7 nav links, CTA button; becomes opaque on scroll
+- **AlphaHero** (01) — full-screen hero: "WE BUILD INTELLIGENT SYSTEMS" with orange accent, stats grid
+- **AlphaAbout** (02) — mission statement with 3 service categories
+- **AlphaServices** (03) — 26 services listed: AI Chatbot, Voice AI, Agent Swarm, AI Automation, API & MCP, HERMES/Openclaw/GrokBot, AI Video Generation, 3D Modeling, Graphic Design, Content & Copywriting, Online Media Buying, UI/UX Design, Android & iOS App, Web/WebApp, Chrome Extensions, Desktop/MacBook Apps, ASO, Web3 Wallets, AMM/DEX, DAO, NFT, Security Audit, Smart Contract Dev, Bug Bounty, Money Market Development, CBDC Development. Each with icon, description, starting price, link to detail page
+- **AlphaPortfolio** (04) — 10 project cards with real UI screenshots, descriptions, tech stack, solution provided
+- **AlphaProcess** (05) — 4-step process: Discovery, Architecture, Build, Deploy
+- **AlphaTeam** (06) — 8 team members with spinning glyphs and accent colors
+- **AlphaTech** (07) — 6 categories of tech stack: AI/ML, Web3, Frontend, Backend, Infra, Mobile
+- **AlphaTestimonials** (08) — 3 client testimonials
+- **AlphaInsights** (09) — 3 research papers with tags and dates
+- **AlphaContact** (10) — contact CTA with email, response time, location
+- **AlphaFooter** (11) — 4-column footer with services, company, connect links + copyright
+
+### 4. Portfolio Screenshots Captured
+10 real UI screenshots from live deployments:
+- Omnibridge (GitHub repo page), Dukon Pro (live Vercel), Royal DAO (live Vercel), Vortex Sales OS (GitHub repo page), GymMaster (live Vercel), Lumina Tarot (live Vercel), Sai Pay (live Vercel), Brorus (live Vercel), Asean Swap (GitHub repo page), Manymarket (GitHub repo page)
+
+### Verification
+- **Sigma mode**: 11 map nodes, mode switcher visible ✅
+- **Alpha mode**: hero, services, portfolio, team all render ✅
+- **Mode switch**: click Α → Chidori transition → Alpha mode renders → click Σ → transition back → Sigma map renders ✅
+- **Lint clean** ✅
+
+## Pending
+- Service detail pages with pricing + comparison tables (Batch 5)
+- Final QA + polish (Batch 7)
+
+---
+Task ID: CRON-ROUND-19 (Batch 5-7: Service Pages + Final QA)
+Agent: main (orchestrator)
+
+## Service Detail Pages (Batch 5)
+Created src/app/services/[slug]/page.tsx — dynamic route with 10 services.
+Each page has: hero, features grid, 3 pricing packages, comparison table, CTA.
+
+## Final QA (Batch 7)
+- Sigma mode: 11/11 sectors pass
+- Alpha mode: all sections render
+- Mode switch works both ways
+- All 10 service pages return 200
+- Lint clean
+
+## Complete Feature Inventory
+- Dual interface: Sigma (map) + Alpha (scrolling)
+- Chidori dramatic transition with lightning
+- 26 services listed in Alpha
+- 10 service detail pages with pricing
+- 10 portfolio screenshots from live UIs

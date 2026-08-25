@@ -19,6 +19,8 @@ import { SigmaThemeToggle } from "./shared/SigmaThemeToggle";
 import { SigmaCompletion } from "./shared/SigmaCompletion";
 import { SigmaMCController } from "./shared/SigmaMCController";
 import { SigmaToolbar } from "./shared/SigmaToolbar";
+import { SigmaModeSwitcher } from "./shared/SigmaModeSwitcher";
+import { AlphaInterface } from "./alpha/AlphaInterface";
 import { sigmaSound } from "@/lib/sigma/sound";
 import { SigmaMap } from "./SigmaMap";
 import { S01Initializing } from "./sections/S01Initializing";
@@ -77,6 +79,7 @@ export function ExperienceShell() {
   const [tourActive, setTourActive] = React.useState(false);
   const [tourPaused, setTourPaused] = React.useState(false);
   const [tourIndex, setTourIndex] = React.useState(0);
+  const [mode, setMode] = React.useState<"sigma" | "alpha">("sigma");
 
   // Deep-link + boot screen + onboarding logic — single effect, runs once after mount
   React.useEffect(() => {
@@ -367,14 +370,21 @@ export function ExperienceShell() {
       {/* Cursor spotlight (desktop only) */}
       <SigmaSpotlight />
 
-      {/* Rendered view (keyed so it remounts + re-runs its intro animation each visit) */}
-      <div
-        key={`${renderedView}-${visitToken}`}
-        className="absolute inset-0"
-        style={{ paddingTop: 32, paddingLeft: 32, paddingRight: 32, paddingBottom: 28 }}
-      >
-        <div className="relative h-full w-full">{renderView(renderedView)}</div>
-      </div>
+      {/* Mode switcher (Σ / Α) */}
+      <SigmaModeSwitcher mode={mode} onModeChange={setMode} />
+
+      {/* Rendered view — Sigma mode (map-based) or Alpha mode (scrolling) */}
+      {mode === "sigma" ? (
+        <div
+          key={`${renderedView}-${visitToken}`}
+          className="absolute inset-0"
+          style={{ paddingTop: 32, paddingLeft: 32, paddingRight: 32, paddingBottom: 28 }}
+        >
+          <div className="relative h-full w-full">{renderView(renderedView)}</div>
+        </div>
+      ) : (
+        <AlphaInterface />
+      )}
 
       {/* Accent ambient glow keyed to the current sector */}
       <div
