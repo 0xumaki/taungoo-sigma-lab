@@ -1,8 +1,8 @@
 const STEPS = [
-  { num: "01", title: "DISCOVERY", desc: "We analyze your requirements, constraints, and goals to define the project scope." },
-  { num: "02", title: "ARCHITECTURE", desc: "System design, tech stack selection, and infrastructure planning before a single line of code." },
-  { num: "03", title: "BUILD", desc: "Rapid development with continuous integration, testing, and deployment to staging." },
-  { num: "04", title: "DEPLOY", desc: "Production deployment with monitoring, documentation, and handoff. We don't ship and forget." },
+  { num: "01", title: "DISCOVERY", desc: "Deep dive into your requirements, constraints, and goals. We define scope, timeline, and success metrics before writing a single line of code." },
+  { num: "02", title: "ARCHITECTURE", desc: "System design, tech stack selection, and infrastructure planning. Architecture diagrams, API contracts, and database schemas — all reviewed and approved before build starts." },
+  { num: "03", title: "BUILD", desc: "Rapid development with CI/CD, automated testing, and daily deployments to staging. You see progress every day, not just at the end." },
+  { num: "04", title: "DEPLOY", desc: "Production deployment with monitoring, documentation, and handoff. We don't ship and forget — ongoing support and optimization included." },
 ];
 
 export function AlphaProcess() {
@@ -11,7 +11,7 @@ export function AlphaProcess() {
       <div className="mx-auto max-w-7xl">
         <div className="font-mono text-[10px] uppercase tracking-[0.3em] text-muted-foreground">▸ 05 / PROCESS</div>
         <h2 className="mt-2 font-sans text-4xl font-black uppercase tracking-tight sm:text-5xl">
-          HOW WE WORK.
+          OUR PROCESS.
         </h2>
         
         <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">

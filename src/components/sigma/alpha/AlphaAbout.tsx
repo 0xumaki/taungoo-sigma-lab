@@ -10,10 +10,10 @@ export function AlphaAbout() {
         <div className="mt-8 grid grid-cols-1 gap-8 md:grid-cols-2">
           <div>
             <p className="font-serif text-lg italic leading-relaxed text-muted-foreground">
-              Taungoo Sigma Lab is a full-stack development lab specializing in AI automation, agent swarms, and Web3 infrastructure. We engineer production systems — from multi-model AI agents that handle real workloads, to DeFi protocols that settle on mainnet.
+              We're a full-stack development lab building AI automation, agent swarms, and Web3 infrastructure for consumer and enterprise clients. From multi-model AI agents that handle real workloads, to DeFi protocols that settle on mainnet — every system we build ships to production.
             </p>
             <p className="mt-4 font-serif text-lg italic leading-relaxed text-muted-foreground">
-              We operate as a collective of specialized operators, each with deep expertise in their domain. No black boxes, no vaporware — every system we build ships to production with monitoring, documentation, and support.
+              No black boxes. No vaporware. Every system ships with monitoring, documentation, and support. We operate as a collective of specialized operators — each with deep expertise in their domain.
             </p>
           </div>
           

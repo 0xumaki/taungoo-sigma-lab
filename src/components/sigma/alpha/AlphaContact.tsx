@@ -4,10 +4,10 @@ export function AlphaContact() {
       <div className="mx-auto max-w-4xl text-center">
         <div className="font-mono text-[10px] uppercase tracking-[0.3em] text-muted-foreground">▸ 10 / CONTACT</div>
         <h2 className="mt-2 font-sans text-5xl font-black uppercase tracking-tight sm:text-7xl">
-          START A PROJECT.
+          LET'S BUILD SOMETHING.
         </h2>
         <p className="mt-4 font-serif text-lg italic text-muted-foreground">
-          Have a project in mind? Not sure which service you need? Reach out — we respond within 72 hours.
+          Have a project in mind? Not sure which service fits? Reach out — we respond within 72 hours with a tailored proposal.
         </p>
         
         <div className="mt-8 grid grid-cols-1 gap-3 sm:grid-cols-3">

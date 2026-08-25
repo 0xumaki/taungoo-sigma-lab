@@ -38,10 +38,24 @@ export function AlphaServices() {
           WHAT WE BUILD.
         </h2>
         <p className="mt-2 max-w-2xl font-serif text-lg italic text-muted-foreground">
-          26 services across AI, Web3, and full-stack development. Each with its own detail page, pricing, and comparison tables.
+          26 services across AI, Web3, and full-stack development. Each with its own detail page, pricing packages, and comparison tables.
         </p>
-        
-        <div className="mt-8 grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
+
+        {/* Category filter tabs */}
+        <div className="mt-6 flex flex-wrap gap-1.5">
+          {["ALL", "AI", "WEB3", "FULL-STACK", "DESIGN"].map((cat, i) => (
+            <span
+              key={cat}
+              className={`border px-2.5 py-1 font-mono text-[9px] uppercase tracking-[0.18em] ${
+                i === 0 ? "border-[#FF4500] bg-[#FF4500] text-black" : "border-border text-muted-foreground"
+              }`}
+            >
+              {cat}
+            </span>
+          ))}
+        </div>
+
+        <div className="mt-6 grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
           {SERVICES.map((s, i) => (
             <a
               key={s.name}

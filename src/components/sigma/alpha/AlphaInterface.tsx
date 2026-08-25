@@ -14,6 +14,30 @@ import { AlphaInsights } from "./AlphaInsights";
 import { AlphaContact } from "./AlphaContact";
 import { AlphaFooter } from "./AlphaFooter";
 
+// Scroll progress bar component
+function ScrollProgress() {
+  const [progress, setProgress] = React.useState(0);
+  React.useEffect(() => {
+    const container = document.querySelector("[data-alpha-scroll]");
+    if (!container) return;
+    const onScroll = () => {
+      const scrollTop = container.scrollTop;
+      const scrollHeight = container.scrollHeight - container.clientHeight;
+      setProgress(scrollHeight > 0 ? (scrollTop / scrollHeight) * 100 : 0);
+    };
+    container.addEventListener("scroll", onScroll);
+    return () => container.removeEventListener("scroll", onScroll);
+  }, []);
+  return (
+    <div className="fixed left-0 top-0 z-[86] h-0.5 w-full bg-transparent">
+      <div
+        className="h-full transition-all duration-100"
+        style={{ width: `${progress}%`, background: "#FF4500" }}
+      />
+    </div>
+  );
+}
+
 /**
  * AlphaInterface — the traditional scrolling website interface.
  * Uses scroll-behavior: smooth for anchor navigation.
@@ -48,6 +72,7 @@ export function AlphaInterface() {
       className="absolute inset-0 overflow-y-auto overflow-x-hidden bg-background"
       style={{ scrollBehavior: "smooth" }}
     >
+      <ScrollProgress />
       <AlphaNav />
       <AlphaHero />
       <AlphaAbout />

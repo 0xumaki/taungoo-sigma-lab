@@ -13,40 +13,69 @@ export function AlphaHero() {
       />
 
       <div className="relative z-10 mx-auto w-full max-w-7xl">
-        <div className="font-mono text-[10px] uppercase tracking-[0.3em] text-muted-foreground">
-          <span className="sigma-pulse mr-2 inline-block h-1.5 w-1.5 bg-[#00FF94]" />
-          TAUNGOO SIGMA LAB · AI AUTOMATION & DEVELOPMENT
-        </div>
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:items-center">
+          {/* Left: Content */}
+          <div>
+            <div className="font-mono text-[10px] uppercase tracking-[0.3em] text-muted-foreground">
+              <span className="sigma-pulse mr-2 inline-block h-1.5 w-1.5 bg-[#00FF94]" />
+              TAUNGOO SIGMA LAB · AI AUTOMATION & DEVELOPMENT
+            </div>
 
-        <h1 className="mt-4 font-sans text-5xl font-black uppercase leading-[0.9] tracking-tight sm:text-7xl lg:text-8xl">
-          WE BUILD<br />
-          <span
-            className="sigma-glitch"
-            data-text="INTELLIGENT"
-            style={{ color: "#FF4500" }}
-          >
-            INTELLIGENT
-          </span><br />
-          SYSTEMS.
-        </h1>
+            <h1 className="mt-4 font-sans text-5xl font-black uppercase leading-[0.9] tracking-tight sm:text-7xl">
+              WE BUILD<br />
+              <span
+                className="sigma-glitch"
+                data-text="INTELLIGENT"
+                style={{ color: "#FF4500" }}
+              >
+                INTELLIGENT
+              </span><br />
+              SYSTEMS.
+            </h1>
 
-        <p className="mt-6 max-w-2xl font-serif text-base italic text-muted-foreground sm:text-lg">
-          A full-stack development lab engineering AI services, automation, Web3, and consumer/enterprise applications. From agent swarms to smart contracts — we ship production systems.
-        </p>
+            <p className="mt-6 max-w-xl font-serif text-base italic text-muted-foreground sm:text-lg">
+              A full-stack development lab engineering AI services, automation, Web3, and consumer/enterprise applications. From agent swarms to smart contracts — we ship production systems.
+            </p>
 
-        <div className="mt-8 flex flex-wrap gap-3">
-          <a
-            href="#services"
-            className="border border-foreground bg-foreground px-6 py-3 font-mono text-[11px] uppercase tracking-[0.2em] text-background transition-opacity hover:opacity-80"
-          >
-            EXPLORE SERVICES →
-          </a>
-          <a
-            href="#portfolio"
-            className="border border-border px-6 py-3 font-mono text-[11px] uppercase tracking-[0.2em] text-foreground transition-colors hover:bg-foreground/10"
-          >
-            VIEW WORK →
-          </a>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <a
+                href="#services"
+                className="border border-foreground bg-foreground px-6 py-3 font-mono text-[11px] uppercase tracking-[0.2em] text-background transition-opacity hover:opacity-80"
+              >
+                EXPLORE SERVICES →
+              </a>
+              <a
+                href="#portfolio"
+                className="border border-border px-6 py-3 font-mono text-[11px] uppercase tracking-[0.2em] text-foreground transition-colors hover:bg-foreground/10"
+              >
+                VIEW WORK →
+              </a>
+            </div>
+          </div>
+
+          {/* Right: Visual element */}
+          <div className="hidden lg:flex lg:items-center lg:justify-center">
+            <div className="relative">
+              {/* Spinning sigma glyph */}
+              <div
+                className="sigma-spin-slow flex h-64 w-64 items-center justify-center border-2 border-[#FF4500]/30 font-sans text-[12rem] font-black"
+                style={{ color: "#FF4500" }}
+              >
+                Σ
+              </div>
+              {/* Orbiting dots */}
+              <div className="absolute inset-0 animate-pulse">
+                <span className="absolute left-1/2 top-0 h-2 w-2 -translate-x-1/2 rounded-full bg-[#00FF94]" />
+                <span className="absolute bottom-0 left-1/2 h-2 w-2 -translate-x-1/2 rounded-full bg-[#00E5FF]" />
+                <span className="absolute left-0 top-1/2 h-2 w-2 -translate-y-1/2 rounded-full bg-[#C6FF00]" />
+                <span className="absolute right-0 top-1/2 h-2 w-2 -translate-y-1/2 rounded-full bg-[#FF2D7E]" />
+              </div>
+              {/* Label */}
+              <div className="mt-4 text-center font-mono text-[9px] uppercase tracking-[0.3em] text-muted-foreground">
+                THE SIGMA VARIABLE
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Stats */}
@@ -65,7 +94,7 @@ export function AlphaHero() {
         </div>
 
         {/* Scroll indicator */}
-        <div className="mt-16 flex items-center gap-2 font-mono text-[9px] uppercase tracking-[0.3em] text-muted-foreground">
+        <div className="mt-12 flex items-center gap-2 font-mono text-[9px] uppercase tracking-[0.3em] text-muted-foreground">
           <span className="sigma-blink">▼</span> SCROLL TO EXPLORE
         </div>
       </div>

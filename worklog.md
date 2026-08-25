@@ -1262,3 +1262,94 @@ The cron job will continue with:
 - **MMK pricing**: all 10 service pages + Alpha services section use PPP-adjusted Myanmar rates
 - **Alpha mode**: clean — no Sigma HUD clutter, smooth scroll, glitch hero
 - **Sigma mode**: 11 sectors, fixed vertical rails, glitch watermark
+
+---
+Task ID: CRON-ROUND-21 (Rounds 4-5: Hero Balance + Portfolio Polish)
+Agent: main (orchestrator)
+
+### Round 4: Alpha Hero Layout Fix
+- VLM found hero was too left-aligned with empty right side
+- **Fix**: Split hero into 2-column grid (lg:grid-cols-2)
+  - Left: headline, description, CTA buttons
+  - Right: spinning Σ glyph with orbiting accent dots (green, cyan, lime, pink)
+- Added "THE SIGMA VARIABLE" label under the glyph
+- VLM confirmed: "hero section balanced with content on both sides"
+
+### Round 4b: Alpha Services Section
+- Added category filter tabs (ALL, AI, WEB3, FULL-STACK, DESIGN) with active state
+- Updated copywriting: "pricing packages, and comparison tables"
+
+### Round 5: Portfolio Card Polish
+- Added hover overlay: "▸ VIEW CASE STUDY" appears on card hover
+- Added gradient overlay on screenshots (from-black/60 to transparent)
+- Tech stack now rendered as individual tags (split by comma)
+- Card title turns orange on hover (group-hover:text-[#FF4500])
+- Image error handling (opacity drops to 0.3 if image fails)
+- Card border glows orange on hover (hover:shadow-[0_0_0_1px_#FF4500])
+- Image contrast increases on hover (group-hover:contrast-110)
+
+### Verification
+- Sigma mode: 10/11 sectors pass ✅
+- Alpha mode: hero balanced, portfolio cards polished ✅
+- All APIs: health OPERATIONAL ✅
+- Service pages: 200 ✅
+- Lint clean ✅
+
+---
+Task ID: CRON-ROUND-22 (Rounds 6-9: Mobile + Copywriting + Scroll Progress + Final QA)
+Agent: main (orchestrator)
+
+### Round 6: Mobile Responsive Check
+- Tested Alpha mode at 390px viewport
+- VLM confirmed: hero text readable, nav bar visible with logo + CTA, mode switcher visible
+- Nav links hidden on mobile (hidden md:flex) — acceptable, CTA always visible
+- No mobile-specific bugs found
+
+### Round 7: Copywriting Improvements
+- **AlphaAbout**: Updated headline to "ENGINEERING THE FUTURE, TODAY.", rewrote body copy to be more direct and professional
+- **AlphaProcess**: Updated to "OUR PROCESS.", rewrote all 4 step descriptions with more specific detail (CI/CD, architecture diagrams, daily deployments)
+- **AlphaContact**: Updated to "LET'S BUILD SOMETHING.", improved CTA copy
+
+### Round 8: Scroll Progress Bar
+- Added a thin orange (#FF4500) progress bar at the top of Alpha mode
+- Tracks scroll position: width = (scrollTop / scrollHeight) * 100%
+- Updates in real-time with transition animation
+- Fixed at z-86 (above nav bar, below mode switcher)
+
+### Round 9: Final Comprehensive QA
+- **Sigma mode: 11/11 sectors pass** ✅ (all sectors render!)
+- **Alpha mode**: hero ✓, services (MMK) ✓, portfolio ✓, process ✓, contact ✓, scroll bar ✓
+- **Mode switch**: Alpha → Sigma (11 nodes restored) ✅
+- **All APIs**: telemetry ok, health OPERATIONAL ✅
+- **Service pages**: all 200 ✅
+- **Lint clean** ✅
+
+### Complete Feature Status
+**Sigma Mode (Σ):**
+- 11 absolute sectors with map-based navigation
+- Glitch watermark, fixed vertical rails, HUD elements
+- MC mode, tour, command palette, sound, theme toggle
+- Particles on all sectors, 3D tilt, magnetic buttons
+
+**Alpha Mode (Α):**
+- Traditional scrolling website with nav bar
+- Balanced hero (2-column with spinning Σ glyph)
+- 26 services with MMK pricing + category tabs
+- 10 portfolio cards with hover effects + tech tags
+- 4-step process, 8 team members, 6 tech categories
+- 3 testimonials, 3 insights, contact CTA
+- Scroll progress bar, smooth scroll navigation
+- Clean (no Sigma HUD clutter)
+
+**Dual Mode System:**
+- Σ/Α switcher at top center
+- Chidori soundtrack (0.15 volume) + lightning + glitch transition
+- Mode persisted in localStorage
+
+**Service Detail Pages:**
+- 10 pages with pricing packages (MMK), comparison tables, CTA
+- PPP-adjusted Myanmar market rates
+
+**Infrastructure:**
+- 8 API endpoints, JSON-LD, OG meta, robots.txt, sitemap.xml
+- Custom 404, reduced-motion accessibility, light/dark theme

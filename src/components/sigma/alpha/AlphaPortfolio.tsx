@@ -24,28 +24,36 @@ export function AlphaPortfolio() {
         <p className="mt-2 max-w-2xl font-serif text-lg italic text-muted-foreground">
           10 production projects shipped — real repos, real deployments, real users.
         </p>
-        
+
         <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {PROJECTS.map((p, i) => (
-            <div key={p.name} className="group border border-border overflow-hidden transition-colors hover:border-foreground/40">
+            <div key={p.name} className="group border border-border overflow-hidden transition-all duration-300 hover:border-[#FF4500]/60 hover:shadow-[0_0_0_1px_#FF4500]">
               {/* Screenshot */}
               <div className="relative aspect-video overflow-hidden bg-card">
                 <img
                   src={p.image}
                   alt={p.name}
-                  className="h-full w-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
+                  className="h-full w-full object-cover object-top transition-all duration-500 group-hover:scale-105 group-hover:contrast-110"
+                  onError={(e) => { (e.currentTarget as HTMLImageElement).style.opacity = "0.3"; }}
                 />
                 <div className="sigma-scanlines pointer-events-none absolute inset-0 opacity-30" />
-                <span className="absolute left-2 top-2 font-mono text-[9px] uppercase tracking-[0.18em] text-foreground drop-shadow-lg">
+                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                <span className="absolute left-2 top-2 border border-foreground/30 bg-background/70 px-1.5 py-0.5 font-mono text-[9px] uppercase tracking-[0.18em] text-foreground backdrop-blur-sm">
                   {String(i + 1).padStart(2, "0")} / {String(PROJECTS.length).padStart(2, "0")}
                 </span>
+                {/* Hover overlay */}
+                <div className="pointer-events-none absolute inset-0 flex items-center justify-center bg-black/70 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                  <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-[#FF4500]">▸ VIEW CASE STUDY</span>
+                </div>
               </div>
               {/* Content */}
               <div className="p-4">
-                <h3 className="font-sans text-lg font-bold uppercase tracking-tight">{p.name}</h3>
+                <h3 className="font-sans text-lg font-bold uppercase tracking-tight transition-colors group-hover:text-[#FF4500]">{p.name}</h3>
                 <p className="mt-1 font-serif text-sm italic text-muted-foreground">{p.desc}</p>
-                <div className="mt-2 flex items-center gap-2">
-                  <span className="font-mono text-[9px] uppercase tracking-[0.16em] text-muted-foreground">{p.tech}</span>
+                <div className="mt-3 flex flex-wrap gap-1">
+                  {p.tech.split(", ").map((t) => (
+                    <span key={t} className="border border-border/60 px-1.5 py-0.5 font-mono text-[8px] uppercase tracking-[0.14em] text-muted-foreground">{t}</span>
+                  ))}
                 </div>
                 <div className="mt-1 font-mono text-[9px] uppercase tracking-[0.16em] text-[#00FF94]">
                   ▸ {p.solution}
