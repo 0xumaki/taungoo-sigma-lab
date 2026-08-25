@@ -86,6 +86,41 @@ export const metadata: Metadata = {
   },
 };
 
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: "Taungoo Sigma Lab",
+  alternateName: "TSL",
+  url: "https://taungoosigma.lab",
+  description:
+    "A brutalist research lab at the intersection of AI, Web3, and community resilience. 11 sectors. One sigma variable.",
+  foundingDate: "2024-06-29",
+  slogan: "We are the sigma variable.",
+  knowsAbout: [
+    "Artificial Intelligence",
+    "Web3",
+    "Decentralized Finance",
+    "Internet of Things",
+    "Quantum Computing",
+    "Community Education",
+  ],
+  areaServed: "MM",
+  founder: {
+    "@type": "Person",
+    name: "THE ARCHITECT",
+    jobTitle: "Lab Director",
+  },
+  employee: [
+    { "@type": "Person", name: "NEURAL HAND", jobTitle: "AI Lead" },
+    { "@type": "Person", name: "CHAIN WEAVER", jobTitle: "Web3 Lead" },
+    { "@type": "Person", name: "EDGE RUNNER", jobTitle: "IoT Engineer" },
+    { "@type": "Person", name: "QUANTUM SEER", jobTitle: "Research Scientist" },
+    { "@type": "Person", name: "SIGNAL TENDER", jobTitle: "Community Lead" },
+    { "@type": "Person", name: "NULL CIPHER", jobTitle: "Security" },
+    { "@type": "Person", name: "GHOST PRINTER", jobTitle: "Hardware" },
+  ],
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -97,6 +132,10 @@ export default function RootLayout({
         className={`${spaceGrotesk.variable} ${jetbrainsMono.variable} ${instrumentSerif.variable} antialiased bg-background text-foreground`}
         style={{ fontFamily: "var(--font-sans), system-ui, sans-serif" }}
       >
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
         {children}
         <Toaster />
       </body>

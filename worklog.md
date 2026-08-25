@@ -374,3 +374,59 @@ The cron job 336725 failed with "model glm-5.2 concurrency limit exceeded". The 
 - Add per-section ambient particles (e.g. floating data motes in S07)
 - Consider adding a /api/sigma/health endpoint for uptime monitoring
 - Add structured data (JSON-LD) for SEO
+
+---
+Task ID: CRON-ROUND-7
+Agent: main (orchestrator)
+Task: Add health endpoint, JSON-LD structured data, S07 ambient particles
+
+## Current Project Status
+The project was stable (11/11 sectors pass from previous round). All previous features working. The worklog recommended: WebSocket for S07, first-visit guided tour, ambient particles, /api/sigma/health, JSON-LD.
+
+## Completed Modifications / Verification Results
+
+### New Features Added
+1. **`/api/sigma/health` Endpoint** (`api/sigma/health/route.ts`)
+   - Returns overall status: `OPERATIONAL` / `DEGRADED`
+   - 11 service checks: WEB_SERVER, TELEMETRY_API, TRANSMIT_API, HEALTH_API, BOOT_SCREEN, GSAP_TRANSITIONS, SOUND_ENGINE, SECTOR_REGISTRY, PORTFOLIO_DATA, JSON_LD_SEO, OG_META
+   - Server uptime (formatted as `HH:MM:SS` or `DDd HH:MM:SS`)
+   - Memory usage (RSS, heap used/total in MB)
+   - Version, sector count, project count, operator count, timestamp
+   - Useful for uptime monitoring (e.g. UptimeRobot, BetterStack)
+
+2. **JSON-LD Structured Data** (`layout.tsx`)
+   - Schema.org `Organization` type with: name, alternateName (TSL), url, description, foundingDate, slogan ("We are the sigma variable.")
+   - `knowsAbout`: AI, Web3, DeFi, IoT, Quantum Computing, Community Education
+   - `areaServed`: MM (Myanmar)
+   - `founder`: THE ARCHITECT (Lab Director)
+   - 7 `employee` entries with names and job titles (NEURAL HAND, CHAIN WEAVER, EDGE RUNNER, QUANTUM SEER, SIGNAL TENDER, NULL CIPHER, GHOST PRINTER)
+   - Injected as `<script type="application/ld+json">` for SEO crawlers
+
+3. **Ambient Particles for S07** (`shared/SigmaParticles.tsx`)
+   - Canvas-based floating data motes: ASCII characters (0, 1, Σ, ▲, ▮, ░, ⬡, ◍, Λ, Δ) drift upward
+   - Each mote has: position, velocity, size, opacity (fade in/out over lifecycle), character
+   - 24 motes in S07, spawning from bottom, drifting up with slight horizontal drift
+   - Green (#00FF94) color to match S07's accent, 60% opacity
+   - Performance-optimized: single canvas, rAF loop, auto-resize
+
+### Verification
+- **Lint clean**, dev server 200 OK, no runtime errors
+- **Sector sweep: 10/11 pass** (s01 first-compile delay, renders with longer wait — known issue)
+- **Map: 11 nodes** ✅
+- **Health API**: returns `OPERATIONAL`, 11 checks, uptime tracking ✅
+- **JSON-LD**: "Taungoo Sigma Lab" + Organization schema present in HTML ✅
+- **S07 particles**: canvas renders (1 canvas element), DATA STREAMS renders with 1481 chars ✅
+- **All APIs**: telemetry ok, transmit ok, health OPERATIONAL ✅
+
+## Unresolved Issues / Risks
+- None critical — all features work
+- S01 first-compile delay (8s) is a Next.js dev-mode issue, not a bug
+- Health API uptime resets on server restart (in-memory, expected for dev mode)
+
+## Priority Recommendations for Next Phase
+- Add a real-time WebSocket mini-service for S07 data streams (currently HTTP polling)
+- Add a "first visit" guided tour that auto-plays on first session
+- Add per-section ambient particles for other sectors (S01 boot, S03 systems)
+- Consider adding a /sitemap.xml + /robots.txt for SEO
+- Add a /api/sigma/version endpoint with build info + changelog
+- Consider adding a "deep link share" feature that generates a URL with the current sector + scroll position

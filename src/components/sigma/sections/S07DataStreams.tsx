@@ -22,6 +22,7 @@ import {
 import { useSigmaStore } from "@/lib/sigma/store";
 import { SectionShell } from "../shared/SectionShell";
 import { Panel, StatReadout, Tag } from "../shared/components";
+import { SigmaParticles } from "../shared/SigmaParticles";
 
 gsap.registerPlugin(useGSAP);
 
@@ -135,7 +136,9 @@ export function S07DataStreams() {
       title="DATA STREAMS"
       tagline="Live telemetry from the lab floor. These numbers are moving right now."
     >
-      <div ref={root} className="grid h-full grid-cols-12 grid-rows-6 gap-3">
+      <div ref={root} className="relative grid h-full grid-cols-12 grid-rows-6 gap-3">
+        {/* Ambient floating data motes */}
+        <SigmaParticles count={24} />
         {/* big counter row */}
         <Panel data-ds label="LIVE METRICS" id={source} accent="#00FF94" className="col-span-12 md:col-span-8">
           <div className="grid grid-cols-2 divide-x divide-border/70 sm:grid-cols-4">
