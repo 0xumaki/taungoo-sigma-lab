@@ -125,12 +125,14 @@ export function SigmaMap() {
         duration: 0.6,
         ease: "power3.out",
         stagger: { each: 0.05, from: "random" },
+        clearProps: "opacity,transform",
       });
       gsap.from("[data-map-title]", {
         opacity: 0,
         y: 20,
         duration: 0.7,
         ease: "power3.out",
+        clearProps: "opacity,transform",
       });
     },
     { scope: rootRef }

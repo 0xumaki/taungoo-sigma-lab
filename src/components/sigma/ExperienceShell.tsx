@@ -101,6 +101,17 @@ export function ExperienceShell() {
     return () => window.removeEventListener("keydown", onKey);
   }, [navigate]);
 
+  // Safety: if phase stays "covering" for >4s (e.g. GSAP interrupted), force-reset to idle
+  React.useEffect(() => {
+    if (phase !== "covering") return;
+    const t = setTimeout(() => {
+      if (useSigmaStore.getState().phase === "covering") {
+        setPhase("idle");
+      }
+    }, 4000);
+    return () => clearTimeout(t);
+  }, [phase, setPhase]);
+
   // Run transition timeline on phase change
   useGSAP(
     () => {
@@ -111,6 +122,7 @@ export function ExperienceShell() {
 
       const tl = gsap.timeline({
         onComplete: () => setPhase("idle"),
+        onReverseComplete: () => setPhase("idle"),
       });
 
       // 1. COVER — panels slam down, staggered from top
@@ -178,9 +190,11 @@ export function ExperienceShell() {
         duration: 0.46,
         ease: "power3.out",
         stagger: { each: 0.035, from: "start" },
+        clearProps: "transform,backgroundColor",
       });
 
       tl.set(overlayRef.current, { pointerEvents: "none" });
+      tl.set(labelRef.current, { clearProps: "opacity,transform" });
     },
     { dependencies: [phase], scope: rootRef }
   );

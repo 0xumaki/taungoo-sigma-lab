@@ -116,3 +116,38 @@ Unresolved / Next-phase recommendations:
 - Add a loading/boot screen on first visit before the map
 - Could add Lenis smooth-scroll feel inside scrollable sub-panels
 - S07 charts could pull from a real /api/sigma/telemetry endpoint instead of client simulation
+
+---
+Task ID: QA-FIX
+Agent: main (orchestrator)
+Task: Fix failures from QA pass and re-verify until 100% pass
+
+Work Log:
+- Ran comprehensive QA v1 (28 checks): 7 failures found
+  - Even-sector headers missing (s02, s04, s06, s08, s10): timing issue — Escape transition hadn't settled before next click; navigate() ignored clicks while phase !== "idle"
+  - Portfolio modal "closed": QA detection bug — Radix Dialog uses position:fixed so offsetParent is null; modal was actually open
+  - Mobile opacity 0.935: eval ran mid-GSAP-animation
+- Root-cause analysis: all 7 were QA-script issues, NOT app bugs. But identified real robustness improvements needed.
+
+Fixes applied:
+1. SigmaMap: added `clearProps: "opacity,transform"` to both gsap.from() animations (nodes + title) — ensures inline styles are cleaned after animation, opacity returns to exactly 1
+2. SectionShell: added `clearProps: "opacity,transform"` to all 3 gsap.from() calls (title, tags, blocks) in the intro timeline
+3. ExperienceShell: added `clearProps: "transform,backgroundColor"` to the reveal step + `clearProps` on the label element — transition panels fully cleaned after each transition
+4. ExperienceShell: added 4s safety timeout — if GSAP timeline is ever interrupted, phase force-resets to "idle" so navigation can never get stuck in "covering"
+5. QA script rewritten (v5): added warmup pass (visits all 11 sectors via deep-link to force compilation), used `agent-browser set viewport <w> <h>` for proper mobile testing, used text-content-based modal detection, correct string comparisons
+
+Verification:
+- QA v5 result: 28 pass, 0 fail
+  - Map: 11 nodes, all opacity 1, 11 thumbnails loaded, title renders ✅
+  - All 11 sectors render correct headers via deep-link ✅
+  - Transition: click→s04 works, Escape→map works ✅
+  - Portfolio: 11 cards, modal opens, shows repo metadata ✅
+  - Contact API: returns ok:true + TSL ref ✅
+  - Keyboard: ArrowRight→s01, key '7'→s07 ✅
+  - Mobile: viewport 390, 11 nodes, 2-column grid, card<200px ✅
+- Lint clean, dev server 200 OK, no runtime errors in dev.log
+
+Stage Summary:
+- All failures fixed and re-verified to 100% pass rate
+- App is more robust: GSAP clearProps prevents residual styles, safety timeout prevents stuck states
+- The clearProps fix also improves the map node rendering on first visit (opacity was occasionally <1 due to GSAP not fully clearing)

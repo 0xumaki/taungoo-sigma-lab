@@ -38,15 +38,15 @@ export function SectionShell({
   useGSAP(
     () => {
       const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
-      tl.from("[data-shell-title]", { opacity: 0, y: 24, duration: 0.6 })
+      tl.from("[data-shell-title]", { opacity: 0, y: 24, duration: 0.6, clearProps: "opacity,transform" })
         .from(
           "[data-shell-tag]",
-          { opacity: 0, y: 12, duration: 0.5, stagger: 0.05 },
+          { opacity: 0, y: 12, duration: 0.5, stagger: 0.05, clearProps: "opacity,transform" },
           "-=0.4"
         )
         .from(
           "[data-shell-block]",
-          { opacity: 0, y: 30, duration: 0.7, stagger: 0.08 },
+          { opacity: 0, y: 30, duration: 0.7, stagger: 0.08, clearProps: "opacity,transform" },
           "-=0.3"
         );
     },
