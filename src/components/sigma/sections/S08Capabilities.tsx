@@ -6,6 +6,7 @@ import { useGSAP } from "@gsap/react";
 import { useSigmaStore } from "@/lib/sigma/store";
 import { SectionShell } from "../shared/SectionShell";
 import { BrutalButton, Panel, Tag } from "../shared/components";
+import { SigmaParticles } from "../shared/SigmaParticles";
 import { sigmaSound } from "@/lib/sigma/sound";
 import { Cpu, HardDrive, Radio, Server, Zap, Microscope, RotateCw, MapPin, Thermometer, Wrench } from "lucide-react";
 
@@ -62,7 +63,9 @@ export function S08Capabilities() {
       title="CAPABILITIES"
       tagline="Hardware registry & spec sheets. Click any unit to flip and reveal maintenance details."
     >
-      <div ref={root} className="grid h-full grid-cols-12 gap-3 overflow-y-auto sigma-scroll-hidden">
+      <div ref={root} className="relative grid h-full grid-cols-12 gap-3 overflow-y-auto sigma-scroll-hidden">
+        {/* Ambient particles */}
+        <SigmaParticles count={14} />
         {GEAR.map((g) => {
           const Icon = g.icon;
           const isFlipped = flipped === g.code;

@@ -6,6 +6,7 @@ import { useGSAP } from "@gsap/react";
 import { useSigmaStore } from "@/lib/sigma/store";
 import { SectionShell } from "../shared/SectionShell";
 import { Panel, Tag } from "../shared/components";
+import { SigmaParticles } from "../shared/SigmaParticles";
 import { sigmaSound } from "@/lib/sigma/sound";
 import {
   Dialog,
@@ -69,7 +70,9 @@ export function S05Collective() {
       title="COLLECTIVE"
       tagline="Eight operators behind the sigma variable. No egos, only handles. Click any operator for their dossier."
     >
-      <div ref={root} className="grid h-full grid-cols-12 gap-3">
+      <div ref={root} className="relative grid h-full grid-cols-12 gap-3">
+        {/* Ambient particles */}
+        <SigmaParticles count={12} />
         {/* intro panel */}
         <Panel
           label="THE SIGMA COLLECTIVE"

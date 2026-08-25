@@ -18,6 +18,7 @@ import { SigmaTour } from "./shared/SigmaTour";
 import { SigmaHelp } from "./shared/SigmaHelp";
 import { SigmaBreadcrumb } from "./shared/SigmaBreadcrumb";
 import { SigmaThemeToggle } from "./shared/SigmaThemeToggle";
+import { SigmaRandom } from "./shared/SigmaRandom";
 import { sigmaSound } from "@/lib/sigma/sound";
 import { SigmaMap } from "./SigmaMap";
 import { S01Initializing } from "./sections/S01Initializing";
@@ -378,6 +379,9 @@ export function ExperienceShell() {
 
       {/* Share button (bottom-left) */}
       <SigmaShare />
+
+      {/* Random sector button (bottom-left, above share) */}
+      <SigmaRandom />
 
       {/* Sound toggle (top-right) */}
       <SigmaSoundToggle />

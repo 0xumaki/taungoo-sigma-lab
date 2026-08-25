@@ -7,6 +7,7 @@ import { SECTIONS, MAP_META } from "@/lib/sigma/sections";
 import { useSigmaStore } from "@/lib/sigma/store";
 import { SectionShell } from "../shared/SectionShell";
 import { BrutalButton, Panel, Tag } from "../shared/components";
+import { SigmaParticles } from "../shared/SigmaParticles";
 
 gsap.registerPlugin(useGSAP);
 
@@ -48,7 +49,9 @@ export function S11Status() {
       title="SYSTEM STATUS"
       tagline="All systems nominal. End of line. Return to the map to begin again."
     >
-      <div ref={root} className="grid h-full grid-cols-12 gap-3">
+      <div ref={root} className="relative grid h-full grid-cols-12 gap-3">
+        {/* Ambient particles */}
+        <SigmaParticles count={12} />
         {/* status grid — all 11 sectors */}
         <Panel data-st label="SECTOR STATUS GRID" id="11/11" accent="#2979FF" className="col-span-12 lg:col-span-8">
           <div className="grid grid-cols-2 gap-px border border-border/70 bg-border/40 sm:grid-cols-3 lg:grid-cols-4">

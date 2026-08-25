@@ -6,6 +6,7 @@ import { useGSAP } from "@gsap/react";
 import { useSigmaStore } from "@/lib/sigma/store";
 import { SectionShell } from "../shared/SectionShell";
 import { BrutalButton, Panel, Tag } from "../shared/components";
+import { SigmaParticles } from "../shared/SigmaParticles";
 import { sigmaSound } from "@/lib/sigma/sound";
 import {
   Dialog,
@@ -84,7 +85,9 @@ export function S06Research() {
       title="RESEARCH LOGS"
       tagline="Field notes, papers, datasets, and blueprints. Click any entry for the full dossier."
     >
-      <div ref={root} className="flex h-full flex-col gap-3">
+      <div ref={root} className="relative flex h-full flex-col gap-3">
+        {/* Ambient particles */}
+        <SigmaParticles count={10} />
         {/* tabs */}
         <div className="flex flex-wrap items-center gap-1.5">
           <button

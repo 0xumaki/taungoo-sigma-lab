@@ -6,6 +6,7 @@ import { useGSAP } from "@gsap/react";
 import { useSigmaStore } from "@/lib/sigma/store";
 import { SectionShell } from "../shared/SectionShell";
 import { BrutalButton, Panel, StatReadout, Tag } from "../shared/components";
+import { SigmaParticles } from "../shared/SigmaParticles";
 
 gsap.registerPlugin(useGSAP);
 
@@ -44,6 +45,8 @@ export function S02Manifesto() {
       tagline="We are the sigma variable — the unknown that shifts every equation we enter."
     >
       <div ref={root} className="relative grid h-full grid-cols-12 gap-3">
+        {/* Ambient particles */}
+        <SigmaParticles count={12} />
         {/* THE GIANT ORANGE CIRCLE */}
         <div className="pointer-events-none absolute inset-0 z-0 flex items-center">
           <div

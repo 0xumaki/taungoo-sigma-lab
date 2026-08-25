@@ -7,6 +7,7 @@ import { PROJECTS, type Project } from "@/lib/sigma/projects";
 import { useSigmaStore } from "@/lib/sigma/store";
 import { SectionShell } from "../shared/SectionShell";
 import { BrutalButton, Crosshair, Panel, Tag } from "../shared/components";
+import { SigmaParticles } from "../shared/SigmaParticles";
 import {
   Dialog,
   DialogContent,
@@ -74,7 +75,9 @@ export function S04Projects() {
       title="PROJECT VAULT"
       tagline="11 deployed artifacts pulled live from the field. Real repos, real screenshots."
     >
-      <div ref={root} className="flex h-full flex-col gap-3">
+      <div ref={root} className="relative flex h-full flex-col gap-3">
+        {/* Ambient particles */}
+        <SigmaParticles count={11} />
         {/* toolbar */}
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex flex-wrap gap-1.5">

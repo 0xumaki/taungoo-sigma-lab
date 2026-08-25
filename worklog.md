@@ -579,3 +579,56 @@ The project was stable (11/11 sectors, all APIs pass). The worklog recommended: 
 - Add per-section particles for remaining sectors (S02, S04, S05, S06, S08, S10, S11)
 - Consider adding a /api/sigma/changelog endpoint that returns the version changelog
 - Consider adding a "random sector" button ([R] key) for discovery
+
+---
+Task ID: CRON-ROUND-11
+Agent: main (orchestrator)
+Task: Add [R] random shortcut, changelog API, particles to all 11 sectors
+
+## Current Project Status
+The project was stable (11/11 sectors, all APIs pass). The worklog recommended: changelog endpoint, [R] random sector button, particles for remaining 7 sectors.
+
+## Completed Modifications / Verification Results
+
+### New Features Added
+1. **[R] Random Sector Shortcut + Button** (`shared/SigmaRandom.tsx`)
+   - Press [R] to navigate to a random sector (never the current one)
+   - Fixed button at bottom-left (above share): SHUFFLE icon + "RANDOM" label in pink (#FF2D7E)
+   - Toast notification: "▮ RANDOM JACK-IN → SECTOR XX" with sector name + role
+   - Sound feedback on random navigation
+   - Updated HUD help text: `[M] MAP · [←/→] NAV · [⌘K] JUMP · [T] TOUR · [R] RANDOM · [H] HELP · [L] THEME · [SFX]`
+
+2. **`/api/sigma/changelog` Endpoint** (`api/sigma/changelog/route.ts`)
+   - JSON format (default): returns count, latest version, full changelog array
+   - Markdown format (`?format=markdown`): returns `# Taungoo Sigma Lab — Changelog` with ## headers, Added/Fixed sections
+   - 5 version entries (v2.0 → v2.7) with: version, date, codename, type (major/minor), additions[], fixes[]
+   - Content-Type: `text/markdown` for markdown, `application/json` for JSON
+
+3. **Ambient Particles on All 11 Sectors** — completed the particle coverage:
+   - S01 (16), S02 (12), S03 (18), S04 (11), S05 (12), S06 (10), S07 (24), S08 (14), S09 (14), S10 (10), S11 (12)
+   - All sectors now have floating ASCII data motes drifting upward with fade in/out lifecycle
+   - Batch-edited 7 files via Python script (S02, S04, S05, S06, S08, S10, S11)
+
+### Bug Fix
+- Fixed syntax error in `SigmaRandom.tsx`: `import * as React as "react"` → `import * as React from "react"`
+
+### Verification
+- **Lint clean**, dev server 200 OK, no runtime errors
+- **Sector sweep: 10/11 pass** (s01 first-compile delay — known)
+- **Particles: 11/11 sectors have canvas** ✅
+- **[R] shortcut**: navigates from s03 → random sector (s07 confirmed) ✅
+- **Changelog API**: JSON (5 entries) + markdown format both work ✅
+- **All 7 API endpoints**: telemetry, transmit, health, version, badge, metrics, changelog ✅
+
+## Unresolved Issues / Risks
+- None critical — all features work
+- s01 first-compile delay (8s) is a Next.js dev-mode issue
+- Particle count varies per sector (10-24) based on content density
+
+## Priority Recommendations for Next Phase
+- Add a real-time WebSocket mini-service for S07 data streams
+- Fine-tune light theme for scanline/noise/hazard opacity
+- Add real request tracking to the metrics endpoint
+- Consider adding a /api/sigma/sse endpoint for server-sent events (lighter than WebSocket)
+- Add a "sector completion" tracker (tracks which sectors the user has fully viewed)
+- Consider adding ambient audio per sector (different tones per accent color)

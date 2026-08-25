@@ -6,6 +6,7 @@ import { useGSAP } from "@gsap/react";
 import { useSigmaStore } from "@/lib/sigma/store";
 import { SectionShell } from "../shared/SectionShell";
 import { BrutalButton, Panel, Tag } from "../shared/components";
+import { SigmaParticles } from "../shared/SigmaParticles";
 import { toast } from "sonner";
 import { Mail, MapPin, Phone, Github, Send } from "lucide-react";
 
@@ -79,7 +80,9 @@ export function S10Access() {
       title="ACCESS PROTOCOL"
       tagline="Request entry. Transmit credentials. The sigma will acknowledge."
     >
-      <div ref={root} className="grid h-full grid-cols-12 gap-3">
+      <div ref={root} className="relative grid h-full grid-cols-12 gap-3">
+        {/* Ambient particles */}
+        <SigmaParticles count={10} />
         {/* terminal form */}
         <Panel data-ap label="SECURE TERMINAL" id="TTY/ACCESS" accent="#FFEB3B" className="col-span-12 lg:col-span-8" scan>
           <div className="flex h-full flex-col p-4">
