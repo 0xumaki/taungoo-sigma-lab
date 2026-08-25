@@ -1353,3 +1353,39 @@ Agent: main (orchestrator)
 **Infrastructure:**
 - 8 API endpoints, JSON-LD, OG meta, robots.txt, sitemap.xml
 - Custom 404, reduced-motion accessibility, light/dark theme
+
+---
+Task ID: CRON-ROUND-23 (User-Provided Images + Ongoing Polish)
+Agent: main (orchestrator)
+
+## Images Added
+
+### 1. Alpha Hero Background (`public/alpha-hero-bg.png`)
+- User-provided Gemini-generated image (1.4MB) — 3D rendering of East Asian warrior armor
+- Added as background in AlphaHero section with 30% opacity
+- Dark gradient overlays (left-to-right + top-to-bottom) ensure text readability
+- Grid + scanline overlays reduced to 15%/20% opacity (from 20%/30%) to let bg show through
+- VLM confirmed: "background image visible, text highly readable"
+
+### 2. Omnibridge Screenshot (`public/portfolio/ominibridge.png`)
+- User-provided actual UI screenshot (555KB) — Omnibridge V2.0 MCP & A2A Server dashboard
+- Replaced previous GitHub repo page screenshot
+- Shows real dark-themed dashboard with lime/green accents
+- VLM confirmed: "dashboard UI with charts, metrics"
+
+### 3. Vortex Sales OS Screenshot (`public/portfolio/vortex-sales-os.png`)
+- User-provided actual UI screenshot (302KB) — Taungoo UAC Autonomous Sales OS
+- Replaced previous GitHub repo page screenshot
+- Shows real AI-powered sales automation platform UI
+- VLM confirmed visible in portfolio section
+
+## Verification
+- All 3 images load (HTTP 200)
+- Sigma mode: 10/11 sectors pass
+- Alpha mode: hero with bg image, portfolio with real UI screenshots
+- Health API: OPERATIONAL
+- Lint clean
+
+## Cron Job Status
+- Job #337053 continues running every 15 minutes
+- Next run will assess and continue polish

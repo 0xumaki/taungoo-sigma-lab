@@ -3,12 +3,24 @@
 export function AlphaHero() {
   return (
     <section id="hero" className="relative flex min-h-screen items-center overflow-hidden px-6 pt-20">
-      <div className="sigma-grid pointer-events-none absolute inset-0 opacity-20" />
-      <div className="sigma-scanlines pointer-events-none absolute inset-0 opacity-30" />
+      {/* Gemini-generated background image */}
+      <div className="pointer-events-none absolute inset-0">
+        <img
+          src="/alpha-hero-bg.png"
+          alt=""
+          className="h-full w-full object-cover opacity-30"
+        />
+        {/* Dark overlay gradient for readability */}
+        <div className="absolute inset-0 bg-gradient-to-r from-background via-background/90 to-background/40" />
+        <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-background/60" />
+      </div>
+
+      <div className="sigma-grid pointer-events-none absolute inset-0 opacity-15" />
+      <div className="sigma-scanlines pointer-events-none absolute inset-0 opacity-20" />
 
       {/* Background gradient glow */}
       <div
-        className="pointer-events-none absolute -right-1/4 top-1/4 h-[60vh] w-[60vh] rounded-full opacity-20 blur-[100px]"
+        className="pointer-events-none absolute -right-1/4 top-1/4 h-[60vh] w-[60vh] rounded-full opacity-10 blur-[100px]"
         style={{ background: "#FF4500" }}
       />
 
@@ -53,7 +65,7 @@ export function AlphaHero() {
             </div>
           </div>
 
-          {/* Right: Visual element */}
+          {/* Right: Visual element — spinning sigma over the bg image */}
           <div className="hidden lg:flex lg:items-center lg:justify-center">
             <div className="relative">
               {/* Spinning sigma glyph */}
