@@ -101,7 +101,7 @@ export function AlphaProcess() {
                 <div className="mt-3 space-y-3">
                   {[
                     ["4-11", "WEEKS TYPICAL", "#FF4500"],
-                    ["16", "DELIVERABLES", "#00E5FF"],
+                    ["27", "SERVICES OFFERED", "#00E5FF"],
                     ["100%", "TRANSPARENT", "#C6FF00"],
                     ["30D", "SUPPORT INCLUDED", "#00FF94"],
                     ["0", "BLACK BOXES", "#FF2D7E"],

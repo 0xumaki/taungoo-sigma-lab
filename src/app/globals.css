@@ -507,3 +507,90 @@
   width: 12px;
   height: 12px;
 }
+
+/* ============================================================
+   SIGMA PROJECT CARD — award-winning premium hover system
+   Wrapper lifts, frame border adopts accent, glow blooms behind.
+   The article carries clip-path so the glow lives on a sibling
+   div (clip-path would clip a box-shadow).
+   ============================================================ */
+.sigma-card {
+  transition: transform 0.35s cubic-bezier(0.2, 0.7, 0.2, 1);
+  will-change: transform;
+  isolation: isolate;
+}
+.sigma-card:hover {
+  transform: translateY(-4px);
+}
+.sigma-card .sigma-card-frame {
+  transition: border-color 0.3s ease;
+}
+.sigma-card:hover .sigma-card-frame {
+  border-color: var(--card-accent, oklch(1 0 0 / 40%));
+}
+.sigma-card .sigma-card-glow {
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+.sigma-card:hover .sigma-card-glow {
+  opacity: 1;
+}
+/* Image zoom inside card */
+.sigma-card .sigma-card-img {
+  transition: transform 0.8s cubic-bezier(0.2, 0.7, 0.2, 1);
+  will-change: transform;
+}
+.sigma-card:hover .sigma-card-img {
+  transform: scale(1.08);
+}
+/* Cinematic hover overlay (fade + scan-line) */
+.sigma-card .sigma-card-overlay {
+  opacity: 0;
+  transition: opacity 0.45s ease;
+}
+.sigma-card:hover .sigma-card-overlay {
+  opacity: 1;
+}
+.sigma-card .sigma-card-scanline {
+  width: 0;
+  transition: width 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.sigma-card:hover .sigma-card-scanline {
+  width: 75%;
+}
+/* Corner brackets expand on hover */
+.sigma-card .sigma-card-corner {
+  transition: width 0.35s ease, height 0.35s ease;
+  width: 12px;
+  height: 12px;
+}
+.sigma-card:hover .sigma-card-corner {
+  width: 20px;
+  height: 20px;
+}
+/* Arrow nudge */
+.sigma-card .sigma-card-arrow {
+  transition: transform 0.3s ease;
+}
+.sigma-card:hover .sigma-card-arrow {
+  transform: translateX(4px);
+}
+/* Accent strips intensify */
+.sigma-card .sigma-card-strip {
+  transition: opacity 0.35s ease;
+}
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .sigma-card,
+  .sigma-card .sigma-card-frame,
+  .sigma-card .sigma-card-img,
+  .sigma-card .sigma-card-overlay,
+  .sigma-card .sigma-card-scanline,
+  .sigma-card .sigma-card-corner,
+  .sigma-card .sigma-card-arrow,
+  .sigma-card .sigma-card-strip {
+    transition: opacity 0.2s ease, border-color 0.2s ease;
+  }
+  .sigma-card:hover { transform: none; }
+  .sigma-card:hover .sigma-card-img { transform: none; }
+}

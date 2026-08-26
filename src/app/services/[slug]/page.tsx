@@ -7,6 +7,7 @@ import { AlphaNav } from "@/components/sigma/alpha/AlphaNav";
 import { AlphaFooter } from "@/components/sigma/alpha/AlphaFooter";
 import { ADDONS, SERVICE_PRICES, ServiceBasket } from "@/components/sigma/alpha/ServiceBasket";
 import { useBasketStore, parsePrice, formatMMK } from "@/lib/sigma/basket";
+import { SERVICE_ADDONS, type AddOn } from "@/lib/sigma/addons-data";
 import { toast } from "sonner";
 import { Plus, Check } from "lucide-react";
 import { usePageReveal } from "@/lib/sigma/use-page-reveal";
@@ -49,6 +50,7 @@ const SERVICES: ServiceDetail[] = [
   { slug:"bug-bounty",name:"Bug Bounty",icon:"▣",tagline:"Security testing and vulnerability assessment programs",description:"Bug bounty program setup, management, and vulnerability assessment for DeFi and web applications.",features:["Bug bounty program setup","Triage + vulnerability assessment","Reward management","Hall of fame page","Integration with Immunefi","Continuous security testing"],packages:[{name:"STARTER",price:"3,620,000 MMK",features:["1 program","Basic triage","Reward pool management","Email support"]},{name:"PRO",price:"9,660,000 MMK",features:["3 programs","Full triage","Hall of fame","Immunefi integration","Priority support"],popular:true},{name:"ENTERPRISE",price:"custom",features:["Unlimited programs","Dedicated triage team","Custom rewards","Full integration","SLA + 24/7"]}],comparison:[{feature:"Programs",starter:"1",pro:"3",enterprise:"unlimited"},{feature:"Triage",starter:"basic",pro:"full",enterprise:"dedicated team"},{feature:"Hall of fame",starter:"—",pro:"✓",enterprise:"✓"},{feature:"Immunefi",starter:"—",pro:"✓",enterprise:"✓"},{feature:"SLA",starter:"—",pro:"—",enterprise:"✓"}]},
   { slug:"money-market-development",name:"Money Market Development",icon:"$",tagline:"DeFi lending, borrowing, and yield protocols",description:"DeFi money market protocols — lending, borrowing, yield farming, and interest rate models. Production-ready and audited.",features:["Lending + borrowing pools","Variable interest rate models","Liquidation engine","Yield farming","Flash loans","Cross-chain lending"],packages:[{name:"STARTER",price:"30,190,000 MMK",features:["1 asset","Basic lending","Liquidation","Security review"]},{name:"PRO",price:"60,370,000 MMK",features:["5 assets","Full lending + borrowing","Yield farming","Full audit","Priority support"],popular:true},{name:"ENTERPRISE",price:"custom",features:["Unlimited assets","Custom interest models","Cross-chain","Full audit + bounty","SLA + 24/7"]}],comparison:[{feature:"Assets",starter:"1",pro:"5",enterprise:"unlimited"},{feature:"Borrowing",starter:"—",pro:"✓",enterprise:"✓"},{feature:"Yield farming",starter:"—",pro:"✓",enterprise:"✓"},{feature:"Audit",starter:"review",pro:"full",enterprise:"full + bounty"},{feature:"SLA",starter:"—",pro:"—",enterprise:"✓"}]},
   { slug:"cbdc-development",name:"CBDC Development",icon:"₵",tagline:"Central bank digital currency infrastructure",description:"Central Bank Digital Currency (CBDC) infrastructure — issuance, distribution, and settlement systems for government and institutional clients.",features:["CBDC issuance system","Distribution network","Settlement layer","KYC/AML integration","Privacy-preserving transactions","Regulatory compliance framework"],packages:[{name:"STARTER",price:"custom",features:["Consultation","Architecture design","Proof of concept","Email support"]},{name:"PRO",price:"custom",features:["Full design","Pilot deployment","Regulatory framework","Priority support"],popular:true},{name:"ENTERPRISE",price:"custom",features:["Production deployment","Full infrastructure","Government integration","Dedicated team","SLA + 24/7"]}],comparison:[{feature:"Phase",starter:"consultation",pro:"pilot",enterprise:"production"},{feature:"Deployment",starter:"—",pro:"pilot",enterprise:"full"},{feature:"Regulatory",starter:"—",pro:"✓",enterprise:"✓"},{feature:"Government",starter:"—",pro:"—",enterprise:"✓"},{feature:"SLA",starter:"—",pro:"—",enterprise:"✓"}]},
+  { slug:"mobile-web-game-development",name:"Mobile/Web Game Development",icon:"◆",tagline:"Mobile and web-based game development",description:"Mobile and web-based game development using Unity, Phaser, Three.js, and WebGL. From casual games to complex multiplayer experiences with backend infrastructure.",features:["Unity + Phaser + WebGL","2D and 3D game engines","Multiplayer backend (Socket.io)","In-app purchase integration","Ad SDK integration","Cross-platform deployment"],packages:[{name:"STARTER",price:"7,240,000 MMK",features:["1 game (casual)","Single platform","Basic art assets","Leaderboard","Email support"]},{name:"PRO",price:"18,110,000 MMK",features:["1 game (mid-core)","Multi-platform","Custom art + audio","Multiplayer + IAP","Analytics dashboard","Priority support"],popular:true},{name:"ENTERPRISE",price:"custom",features:["Multiple games","All platforms","AAA art + audio","Custom backend","LiveOps + analytics","SLA + 24/7"]}],comparison:[{feature:"Game type",starter:"casual",pro:"mid-core",enterprise:"AAA"},{feature:"Platforms",starter:"1",pro:"multi",enterprise:"all"},{feature:"Multiplayer",starter:"—",pro:"✓",enterprise:"✓"},{feature:"IAP + Ads",starter:"—",pro:"✓",enterprise:"✓"},{feature:"LiveOps",starter:"—",pro:"—",enterprise:"✓"}]},
 ];
 
 export default function ServiceDetailPage() {
@@ -101,14 +103,15 @@ export default function ServiceDetailPage() {
       </section>
       <section className="px-3 py-8">
         <div className="mx-auto w-full max-w-[1600px]">
-          <h2 className="font-mono text-[10px] uppercase tracking-[0.3em] text-muted-foreground">▸ PRICING</h2>
+          <h2 className="font-mono text-[10px] uppercase tracking-[0.3em] text-muted-foreground">▸ PRICING — ADD ANY PACKAGE TO BASKET</h2>
+          <p className="mt-1 font-serif text-sm italic text-muted-foreground">Each package is a standalone main service. Add multiple packages to qualify for bulk discounts.</p>
           <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-3">
             {service.packages.map((pkg) => (
-              <div key={pkg.name} className={`border p-4 ${pkg.popular ? "border-[#FF4500] bg-[#FF4500]/5" : "border-border"}`} style={pkg.popular ? { boxShadow: "0 0 0 1px #FF4500" } : undefined}>
-                {pkg.popular && <div className="mb-2 inline-block bg-[#FF4500] px-2 py-0.5 font-mono text-[9px] uppercase tracking-[0.18em] text-white">MOST POPULAR</div>}
+              <div key={pkg.name} className={`relative flex flex-col border p-4 transition-all ${pkg.popular ? "border-[#FF4500] bg-[#FF4500]/5" : "border-border hover:border-foreground/40"}`} style={pkg.popular ? { boxShadow: "0 0 0 1px #FF4500" } : undefined}>
+                {pkg.popular && <div className="mb-2 inline-block self-start bg-[#FF4500] px-2 py-0.5 font-mono text-[9px] uppercase tracking-[0.18em] text-white">MOST POPULAR</div>}
                 <h3 className="font-sans text-xl font-bold uppercase">{pkg.name}</h3>
                 <div className="mt-1 font-sans text-3xl font-black">{pkg.price}</div>
-                <div className="mt-3 space-y-1">
+                <div className="mt-3 flex-1 space-y-1">
                   {pkg.features.map((f) => (
                     <div key={f} className="flex items-center gap-1.5">
                       <span className="text-[#00FF94]">✓</span>
@@ -116,6 +119,13 @@ export default function ServiceDetailPage() {
                     </div>
                   ))}
                 </div>
+                <PackageAddButton
+                  slug={`${service.slug}-${pkg.name.toLowerCase()}`}
+                  name={`${service.name} — ${pkg.name}`}
+                  icon={service.icon}
+                  price={pkg.price}
+                  popular={pkg.popular}
+                />
               </div>
             ))}
           </div>
@@ -149,31 +159,49 @@ export default function ServiceDetailPage() {
         </div>
       </section>
 
-      {/* Add-ons & Compatible Services — upselling */}
-      {ADDONS[service.slug] && ADDONS[service.slug].length > 0 && (
+      {/* ADD-ONS & EXTRAS — researched upsell add-ons for this specific service */}
+      {SERVICE_ADDONS[service.slug] && SERVICE_ADDONS[service.slug].length > 0 && (
         <section className="border-t border-border px-3 py-8">
           <div className="mx-auto w-full max-w-[1600px]">
-            <h2 className="font-mono text-[10px] uppercase tracking-[0.3em] text-muted-foreground">▸ COMPATIBLE ADD-ONS</h2>
-            <p className="mt-1 font-serif text-sm italic text-muted-foreground">Services that pair perfectly with {service.name}. Add them to your basket.</p>
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="font-mono text-[10px] uppercase tracking-[0.3em] text-[#00FF94]">▸ ADD-ONS &amp; EXTRAS</h2>
+                <p className="mt-1 font-serif text-sm italic text-muted-foreground">Enhance {service.name} with these researched add-ons. Add-on prices are not discounted.</p>
+              </div>
+              <span className="hidden shrink-0 font-mono text-[9px] uppercase tracking-[0.2em] text-muted-foreground sm:block">
+                <span className="text-[#00FF94]">{SERVICE_ADDONS[service.slug].length}</span> ADD-ONS
+              </span>
+            </div>
             <div className="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
-              {ADDONS[service.slug].map((addon) => (
-                <AddOnCard key={addon.slug} addon={addon} />
+              {SERVICE_ADDONS[service.slug].map((addon) => (
+                <AddOnCard key={addon.id} addon={addon} />
               ))}
             </div>
           </div>
         </section>
       )}
 
-      {/* Add to basket bar */}
-      <section className="border-t border-border px-3 py-8">
-        <div className="mx-auto flex w-full max-w-[1600px] items-center justify-between gap-4">
-          <div>
-            <div className="font-mono text-[10px] uppercase tracking-[0.3em] text-[#FF4500]">▸ ADD TO BASKET</div>
-            <p className="mt-1 font-serif text-sm italic text-muted-foreground">Add this service to your quotation request.</p>
+      {/* COMPATIBLE SERVICES — other main services that pair well */}
+      {ADDONS[service.slug] && ADDONS[service.slug].length > 0 && (
+        <section className="border-t border-border px-3 py-8">
+          <div className="mx-auto w-full max-w-[1600px]">
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="font-mono text-[10px] uppercase tracking-[0.3em] text-[#FF4500]">▸ COMPATIBLE SERVICES</h2>
+                <p className="mt-1 font-serif text-sm italic text-muted-foreground">Other main services that pair perfectly with {service.name}. Add them to qualify for bulk discounts.</p>
+              </div>
+              <span className="hidden shrink-0 font-mono text-[9px] uppercase tracking-[0.2em] text-muted-foreground sm:block">
+                <span className="text-[#FF4500]">{ADDONS[service.slug].length}</span> COMPATIBLE
+              </span>
+            </div>
+            <div className="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
+              {ADDONS[service.slug].map((cs) => (
+                <CompatibleServiceCard key={cs.slug} cs={cs} />
+              ))}
+            </div>
           </div>
-          <AddToBasketButton slug={service.slug} name={service.name} icon={service.icon} price={service.packages[1].price} />
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* CTA */}
       <section className="border-t border-border px-3 py-16 text-center">
@@ -223,14 +251,61 @@ function AddToBasketButton({ slug, name, icon, price }: { slug: string; name: st
   );
 }
 
-// Add-on card for compatible services
-function AddOnCard({ addon }: { addon: { slug: string; name: string; icon: string; price: string; reason: string } }) {
+// Per-package add-to-basket button — each of STARTER/PRO/ENTERPRISE can be added individually.
+// Adding STARTER of AI Chatbot + ENTERPRISE of Voice AI = 2 main services = 7% discount.
+function PackageAddButton({ slug, name, icon, price, popular }: { slug: string; name: string; icon: string; price: string; popular?: boolean }) {
   const { items, addItem } = useBasketStore();
-  const inBasket = items.some((i) => i.slug === addon.slug);
+  const inBasket = items.some((i) => i.slug === slug);
+  const priceNum = parsePrice(price);
+  const isCustom = price === "custom";
+
+  const handleAdd = () => {
+    if (isCustom) {
+      toast.info("▮ CUSTOM PRICING — CONTACT OUR TEAM");
+      return;
+    }
+    addItem({ slug, name, type: "service", price: priceNum, icon });
+    toast.success(`▮ ${name} ADDED TO BASKET`);
+  };
+
+  return (
+    <button
+      onClick={handleAdd}
+      disabled={inBasket}
+      className={`mt-4 flex w-full items-center justify-center gap-2 border py-2.5 font-mono text-[10px] uppercase tracking-[0.18em] transition-all ${
+        inBasket
+          ? "border-[#00FF94] bg-[#00FF94]/10 text-[#00FF94]"
+          : popular
+            ? "border-[#FF4500] bg-[#FF4500] text-black hover:opacity-80"
+            : "border-foreground/60 text-foreground hover:border-[#FF4500] hover:text-[#FF4500]"
+      }`}
+    >
+      {inBasket ? (
+        <>
+          <Check className="h-3 w-3" /> IN BASKET
+        </>
+      ) : isCustom ? (
+        <>
+          <Plus className="h-3 w-3" /> REQUEST QUOTE
+        </>
+      ) : (
+        <>
+          <Plus className="h-3 w-3" /> ADD TO BASKET
+        </>
+      )}
+    </button>
+  );
+}
+
+// Add-on card for real add-ons (extra screens, E2E testing, extra features, etc.)
+// These are type "addon" — they do NOT count toward the bulk discount.
+function AddOnCard({ addon }: { addon: AddOn }) {
+  const { items, addItem } = useBasketStore();
+  const inBasket = items.some((i) => i.slug === addon.id);
   const priceNum = parsePrice(addon.price);
 
   const handleAdd = () => {
-    addItem({ slug: addon.slug, name: addon.name, type: "addon", price: priceNum, icon: addon.icon });
+    addItem({ slug: addon.id, name: addon.name, type: "addon", price: priceNum, icon: "+" });
     toast.success(`▮ ${addon.name} ADDED AS ADD-ON`);
   };
 
@@ -239,15 +314,59 @@ function AddOnCard({ addon }: { addon: { slug: string; name: string; icon: strin
       className="group relative border border-border bg-card/30 transition-all hover:border-[#00FF94]/40"
       style={{ clipPath: "polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px)" }}
     >
-      <div className="h-0.5 w-full bg-[#00FF94]/40" />
+      <div className="flex items-center justify-between border-b border-border/40 px-2 py-1">
+        <span className={`font-mono text-[7px] uppercase tracking-[0.14em] ${addon.type === "ongoing" ? "text-[#FFB300]" : "text-[#00FF94]"}`}>
+          {addon.type === "ongoing" ? "◈ ONGOING" : "▸ ONE-TIME"}
+        </span>
+      </div>
+      <div className="h-0.5 w-full bg-[#00FF94]/30" />
+      <div className="p-3">
+        <h4 className="font-sans text-xs font-bold uppercase tracking-tight">{addon.name}</h4>
+        <p className="mt-0.5 font-serif text-[10px] italic text-muted-foreground line-clamp-2">{addon.description}</p>
+        <div className="mt-2 flex items-center justify-between">
+          <span className="font-mono text-[8px] uppercase tracking-[0.12em] text-[#00FF94]">{addon.price}</span>
+          <button
+            onClick={handleAdd}
+            disabled={inBasket}
+            className={`flex items-center gap-1 border px-2 py-1 font-mono text-[8px] uppercase tracking-[0.14em] transition-all ${
+              inBasket ? "border-[#00FF94]/40 text-[#00FF94]" : "border-border text-muted-foreground hover:border-[#00FF94] hover:text-[#00FF94]"
+            }`}
+          >
+            {inBasket ? <Check className="h-2.5 w-2.5" /> : <Plus className="h-2.5 w-2.5" />}
+            {inBasket ? "ADDED" : "ADD"}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// Add-on card for compatible services
+function CompatibleServiceCard({ cs }: { cs: { slug: string; name: string; icon: string; price: string; reason: string } }) {
+  const { items, addItem } = useBasketStore();
+  const inBasket = items.some((i) => i.slug === cs.slug);
+  const priceNum = parsePrice(cs.price);
+
+  const handleAdd = () => {
+    // Compatible services are OTHER MAIN SERVICES — added as type "service" so they count toward bulk discount
+    addItem({ slug: cs.slug, name: cs.name, type: "service", price: priceNum, icon: cs.icon });
+    toast.success(`▮ ${cs.name} ADDED TO BASKET`);
+  };
+
+  return (
+    <div
+      className="group relative border border-border bg-card/30 transition-all hover:border-[#FF4500]/40"
+      style={{ clipPath: "polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px)" }}
+    >
+      <div className="h-0.5 w-full bg-[#FF4500]/40" />
       <div className="p-3">
         <div className="flex items-start gap-3">
-          <span className="font-sans text-xl text-[#00FF94]">{addon.icon}</span>
+          <span className="font-sans text-xl text-[#FF4500]">{cs.icon}</span>
           <div className="flex-1">
-            <h4 className="font-sans text-xs font-bold uppercase tracking-tight">{addon.name}</h4>
-            <p className="mt-0.5 font-serif text-[10px] italic text-muted-foreground">{addon.reason}</p>
+            <h4 className="font-sans text-xs font-bold uppercase tracking-tight">{cs.name}</h4>
+            <p className="mt-0.5 font-serif text-[10px] italic text-muted-foreground">{cs.reason}</p>
             <div className="mt-2 flex items-center justify-between">
-              <span className="font-mono text-[8px] uppercase tracking-[0.12em] text-[#00FF94]">{addon.price}</span>
+              <span className="font-mono text-[8px] uppercase tracking-[0.12em] text-[#FF4500]">{cs.price}</span>
               <button
                 onClick={handleAdd}
                 disabled={inBasket}

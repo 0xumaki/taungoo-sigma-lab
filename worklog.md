@@ -2035,3 +2035,412 @@ User confirmed:
 - Insights (research blog posts) currently use a popup modal (not separate routes), so they don't trigger the page transition. Per user's earlier explicit request, insights stay as modal popups. The KIND_PREFIX for "INSIGHT" is defined and ready if insights are ever converted to separate routes.
 - The "ADD TO BASKET" button on detail pages uses the PRO package price (`service.packages[1].price`) as the basket item price.
 - Modifier-clicks (cmd/ctrl/shift+click, middle-click) bypass the transition and open in a new tab natively (preserving the page transition for normal clicks).
+
+---
+
+Task ID: 4
+Agent: add-ons-research-subagent
+Task: Research real-world add-ons for each of the 27 services and produce a TypeScript data file
+
+Work Log:
+Researched realistic agency/freelancer upsell offerings per service category (Upwork, Fiverr Pro, Toptal, BairesDev, Intellectsoft, thoughtbot, Dockyard, Web3 boutique studios, SaaS add-on marketplaces). Converted USD pricing to MMK using the project PPP factor (USD × 3,450 × 0.35). Per-service add-on counts:
+
+1.  ai-chatbot                       — 7 add-ons  (NLP fine-tune, multi-lang, flow redesign, analytics, WhatsApp, live agent handoff, 24/7 monitoring retainer)
+2.  voice-ai                         — 6 add-ons  (voice cloning, multi-lang TTS, wake word, PSTN/telephony, analytics, accent tuning)
+3.  agent-swarm                      — 6 add-ons  (extra agent role, shared memory, tool integration, observability, vector tuning, multi-tenant)
+4.  ai-automation                    — 6 add-ons  (extra workflow, Slack/Teams, Zapier/Make, custom connectors, error retry, monitoring retainer)
+5.  api-mcp                          — 6 add-ons  (extra MCP server, tool schema, OAuth/SSO, rate-limiting, OpenAPI docs, hosted gateway)
+6.  hermes-openclaw-grokbot          — 6 add-ons  (KB ingestion, RAG tuning, multi-source connectors, memory expansion, citation module, hallucination guard)
+7.  ai-video-generation              — 6 add-ons  (extra render minutes, LoRA training, brand style pack, multi-aspect export, lip-sync, priority render queue)
+8.  3d-modeling                      — 6 add-ons  (extra revisions, PBR textures, rigging/skinning, animation cycles, LOD optimization, source handover)
+9.  graphic-design                   — 6 add-ons  (extra revisions, social asset pack, CMYK export, brand style guide, motion graphics, source handover)
+10. content-copywriting              — 6 add-ons  (extra revisions, SEO keyword pack, translation, long-form pack, tone-of-voice guide, monthly retainer)
+11. online-media-buying              — 6 add-ons  (extra platform, A/B variants, pixel setup, weekly report, audience segmentation, monthly management)
+12. ui-ux-design                     — 6 add-ons  (extra screen, design system docs, interactive prototype, usability testing, design tokens, accessibility audit)
+13. android-ios-app                  — 6 add-ons  (cross-platform port, push notifications, IAP, offline mode, store submission, maintenance retainer)
+14. web-webapp                       — 6 add-ons  (extra page, e-commerce, CMS, auth/RBAC, perf audit, E2E testing suite)
+15. chrome-extensions                — 6 add-ons  (extra browser, MV3 migration, side panel, content scripts, store submission, analytics)
+16. desktop-macbook-apps             — 6 add-ons  (Windows port, notarization, auto-update, iCloud sync, menu bar pack, crash reporting)
+17. aso                              — 6 add-ons  (language localization, A/B experiment, keyword refresh, screenshot redesign, competitor report, monthly monitoring)
+18. web3-wallets                     — 6 add-ons  (extra chain, hardware wallet, biometric auth, NFT gallery, multi-sig, security audit)
+19. amm-dex                          — 6 add-ons  (extra pool, custom router, concentrated liquidity, yield farming, bridge integration, analytics)
+20. dao-governance                   — 6 add-ons  (custom voting strategy, quadratic voting, treasury dashboard, discussion forum, Snapshot/Tally, on-chain reputation)
+21. nft-systems                     — 6 add-ons  (extra marketplace chain, lazy minting, royalty enforcement, dynamic NFT, airdrop tooling, analytics)
+22. security-audit                   — 6 add-ons  (extra contract scope, pen-test, formal verification, remediation re-audit, threat modeling, 24/7 IR)
+23. smart-contract-development       — 6 add-ons  (extra contract, upgradeable proxy, gas optimization, multi-sig deployment, on-chain monitoring, formal verification)
+24. bug-bounty                       — 6 add-ons  (extra scope, hunter triage, severity refinement, private cohort, PoC lab, post-fix re-audit)
+25. money-market-development         — 6 add-ons  (extra asset, custom rate model, cross-chain, liquidation bot, risk dashboard, safety module)
+26. cbdc-development                 — 6 add-ons  (extra settlement currency, KYC/AML, privacy transactions [custom], cross-border bridge [custom], pilot sandbox, 24/7 SLA [custom])
+27. mobile-web-game-development (NEW) — 7 add-ons  (extra levels pack, IAP module, multiplayer backend, leaderboard & achievements, ad network integration, localization pack, LiveOps event system)
+
+Stage Summary:
+- Total add-ons: 164 across 27 services (6–7 per service, average 6.1)
+- File path: src/lib/sigma/addons-data.ts
+- Exports: `AddOn` interface, `SERVICE_ADDONS` Record<string, AddOn[]>, `ALL_ADDONS` flat list, `getAddOnsForService(slug)`, `findAddonById(id)`
+- All add-on IDs are unique (prefixed with service slug)
+- All price/priceNum pairs verified consistent (3 "custom" entries with priceNum: 0 for CBDC's variable-scope items; all other 161 numeric)
+- Lint status: ✅ clean (`bun run lint` → 0 errors)
+- TypeScript check: ✅ no errors in addons-data.ts (pre-existing errors in unrelated files only)
+- Pricing tier adherence: simple 482k–966k, medium 1.21M–2.41M, large 3.62M–6.04M, premium 6.04M+ (incl. one 7.25M premium for 24/7 incident response)
+- No detail pages created — add-ons live only as data (cards to be rendered on service detail pages by future tasks)
+
+---
+Task ID: 6-A
+Agent: subagent-A (add-ons research)
+Task: Research and create 5-7 real-world add-ons per service for all 27 services
+
+Work Log:
+- Researched add-on pricing patterns across 27 service categories (Upwork, Fiverr Pro, Toptal, BairesDev, Intellectsoft, Web3 boutique studios, SaaS add-on marketplaces, OpenZeppelin, Trail of Bits, Hacken, Certora, post-mortem patterns from real agency quote line items)
+- Created 189 total add-ons across all 27 services (7 per service — every service has exactly 7 add-ons)
+- Each service has 6 one-time add-ons + 1 ongoing add-on (mix guaranteed)
+- IDs prefixed with service slug for uniqueness — verified all 189 IDs are unique across the file
+- Pricing follows project PPP factor (USD × 3,450 × 0.35), rounded to nice MMK numbers
+  - One-time range: 483,000 – 3,620,000 MMK (within the 483K–6.04M guideline)
+  - Ongoing range: 241,000 – 1,810,000 MMK/mo (within the 241K–1.81M guideline)
+- All descriptions are single sentences, professionally worded, and specific (no fluff)
+- Exported helper functions alongside the data:
+  - `AddOn` interface
+  - `SERVICE_ADDONS: Record<string, AddOn[]>` (the 27-service catalog)
+  - `ALL_ADDONS: AddOn[]` (flat list — 189 entries)
+  - `getAddOnsForService(slug): AddOn[]`
+  - `findAddonById(id): AddOn | undefined`
+- All add-ons have concrete MMK prices (no "custom" entries — kept the format simple per the new AddOn interface that drops `priceNum`)
+- Validated via bun inline script: 27 services, 189 add-ons, all unique IDs, all prices in range, all single-sentence descriptions
+
+Stage Summary:
+- File created: src/lib/sigma/addons-data.ts
+- Total add-ons: 189 (7 per service × 27 services)
+- Mix per service: 6 one-time + 1 ongoing (every service has at least one ongoing)
+- Lint: clean (`bun run lint` → 0 errors)
+- TypeScript: no errors in addons-data.ts
+- No detail pages created — data file only, ready to be consumed by `/src/app/services/[slug]/page.tsx` AddOnCard component
+- Backward compatible with existing `parsePrice()` util (handles "X,XXX,XXX MMK" and "X,XXX,XXX MMK/mo" formats)
+
+---
+Task ID: 7-B
+Agent: subagent-B (hero card design)
+Task: Research and build award-winning hero card with integrated nav
+
+Work Log:
+- Researched 16 award-winning hero designs from Awwwards (Site of the Day winners, Interactive Hero Card, Hero Intro + Navigation CARBO, Hero Slider Maxima Therapy, Brutalist Design inspiration), Pinterest (brutalist cyberpunk boards), Dribbble (cyberpunk interface), Reddit (cyberpunk/brutalism web design), UX Planet (hero images in web design)
+- Key patterns identified from research:
+  * Navigation integrated INTO the hero card chrome (not floating separately) — seen in CARBO, Maxima Therapy, Awwwards "Hero Intro + Navigation"
+  * Cut-corner clip-path frames (chamfered) — common in cyberpunk/sci-fi brutalist works
+  * Layered "frame within frame" — outer card with corner markers + inner content panel
+  * Hazard stripe edges, scanlines, crosshair marks = signature sci-fi HUD aesthetic
+  * Monospace data labels at edges (SIG=1.0000, NODES: 11, etc.) — terminal/telemetry feel
+  * Asymmetric grid: large heading on left, glyph/visual on right (lg+ only)
+- Redesigned AlphaHero.tsx as a SINGLE MASSIVE hero card filling the viewport:
+  * Cut-corner clip-path on top-left + bottom-right (22px chamfers)
+  * 2px border in #FF4500/40 (orange) — primary accent
+  * Layered structure (top to bottom):
+    1. Top hazard stripe edge (orange/black diagonal 8px stripes)
+    2. Integrated NAV HEADER (<AlphaNav /> rendered INSIDE the card)
+    3. DATA STRIP — system readouts: SYSTEM ONLINE | EST. 2016 | NODES: 11 | SIG=1.0000 | V2.7.SIGMA | DUAL MODE: Σ/Α
+    4. MAIN CONTENT GRID (lg:grid-cols-[1.55fr_1fr])
+       - Left col: status badges, HUGE heading "WE BUILD / INTELLIGENT / SYSTEMS.", subtitle, feature pills, 3 CTA buttons
+       - Right col (lg+ only): Σ glyph in cut-corner frame, orbiting dots (4 accent colors), floating data labels (SIG, NODES, etc.)
+    5. STATS GRID (4 cols): 50+ PROJECTS SHIPPED, 8 ENGINEERS, 27 SERVICES, 99.9% UPTIME — each with colored hazard strip
+    6. FOOTER STRIP: SCROLL TO EXPLORE ▼ | BUILD 2.7.SIGMA · DUAL MODE: Σ/Α · SINCE 2016 · ▮ NOMINAL
+    7. Bottom hazard stripe edge
+  * Sci-fi framing: 4 corner brackets at chamfer positions (SVG paths + dots), card edge labels (NODE_01, ▮ NOMINAL)
+  * Side accent stripes: vertical hazard stripes on left (orange) and right (cyan) edges (sm+ only)
+  * Background: bg-card/70 backdrop-blur + radial gradient accents (orange top-right, cyan bottom-left)
+  * Scanlines + fine grid overlays for terminal aesthetic
+  * Heading uses `clamp(2.75rem, 7vw, 5.5rem)` for fluid scaling — huge on desktop, balanced on mobile
+  * All accent colors use existing palette (#FF4500, #00FF94, #00E5FF, #C6FF00, #FF2D7E) — no indigo/blue
+- Redesigned AlphaNav.tsx:
+  * Now renders as the INTEGRATED HEADER STRIP of the hero card (no longer fixed top-0)
+  * Layout: [Σ TAUNGOO SIGMA LAB / AI · WEB3 · FULL-STACK] | [01 ABOUT · 02 SERVICES · 03 WORK · 04 PROCESS · 05 TEAM · 06 TECH · 07 CONTACT] | [ONLINE pill] [▸ START A PROJECT →]
+  * Σ logo in tiny cut-corner frame with #FF4500/60 border
+  * Nav links prefixed with numbered index (01, 02, ...) in #FF4500 — sci-fi HUD telemetry feel
+  * CTA button uses #FF4500 bg + black text + hover shadow-[5px_5px_0_0_#FF4500]
+  * Mobile: logo collapses to "Σ LAB", nav links hidden (accessible via footer or scroll), CTA becomes "START"
+  * Exports NAV_ITEMS array (still preserved for re-use)
+- Created new AlphaMiniNav component (in AlphaNav.tsx):
+  * Slim floating mini-nav that appears when user scrolls past 70vh of the hero card
+  * Preserves nav-link accessibility without breaking the integrated hero-card design
+  * Uses translate-y + opacity transition for smooth slide-down appearance
+  * When visible: pointer-events-auto, opacity-100, translate-y-0
+  * When hidden: pointer-events-none, -translate-y-full, opacity-0
+  * Fixed top-0 z-[85] (below SigmaModeSwitcher at z-[95], above ScrollProgress at z-[86])
+  * Compact: Σ logo | nav links (md+) | START → CTA
+- Updated AlphaInterface.tsx:
+  * Removed standalone <AlphaNav /> render (was at top of scroll container, before <AlphaHero />)
+  * Now renders <AlphaMiniNav /> (which only appears after scroll past hero)
+  * <AlphaHero /> itself renders <AlphaNav /> integrated as its top header strip
+  * ScrollProgress component unchanged (z-[86] — works alongside both AlphaNav inside hero and AlphaMiniNav floating)
+- Preserved all critical functionality:
+  * SigmaModeSwitcher still floats at top-9 z-[95] (above hero card at z-10)
+  * ScrollProgress bar still works at z-[86]
+  * All nav links still use href="#section" for smooth scroll
+  * "START A PROJECT" / "CONTACT" CTA still links to #contact
+  * Page transition links (PageTransitionLink component) untouched
+  * Basket system untouched
+  * Section id="hero" preserved on outer section element
+  * Dark + light mode verified via VLM analysis — both render with excellent contrast, all accent colors visible
+
+VLM (vision model) verification:
+- Dark mode: "high-caliber, Award-Winning tier work", "flawless execution of the prompt's requirements", "visually striking, technically detailed, professionally polished"
+- Light mode: "successfully translates the brutalist sci-fi aesthetic to light mode with high readability and vibrant accent visibility"
+
+Stage Summary:
+- Files modified:
+  * /home/z/my-project/src/components/sigma/alpha/AlphaHero.tsx (full redesign — massive hero card with integrated nav)
+  * /home/z/my-project/src/components/sigma/alpha/AlphaNav.tsx (redesigned as integrated header strip + new AlphaMiniNav export)
+  * /home/z/my-project/src/components/sigma/alpha/AlphaInterface.tsx (swapped standalone AlphaNav for AlphaMiniNav)
+- Design highlights:
+  * Single massive hero card filling the viewport — the FIRST thing user sees
+  * Cut-corner clip-path chamfers (22px) at top-left + bottom-right
+  * Layered structure: hazard stripe → nav header → data strip → main content → stats grid → footer strip → hazard stripe
+  * Σ glyph in cut-corner frame on right (lg+ only) with 4 orbiting accent-color dots + floating data labels
+  * 4 sci-fi corner brackets (SVG paths + dots) at chamfer positions
+  * Top + bottom hazard stripe edges (orange/black diagonal)
+  * Side accent stripes (orange left, cyan right) — vertical hazard pattern
+  * Background: card/70 backdrop-blur + radial gradient glows (orange + cyan)
+  * Scanlines + fine grid overlays
+  * Heading uses fluid clamp() sizing for responsive impact
+  * Numbered nav links (01-07) in accent color for HUD telemetry feel
+  * 3 CTA buttons with hover shadow-[5px_5px_0_0_#FF4500] brutalist treatment
+  * Stats grid: 4 cells with colored hazard strips (orange/cyan/lime/green)
+  * Footer strip with scroll cue + build info
+- Lint: clean (exit 0)
+- Page renders: 200 OK, no compile errors
+- Mode switcher verified: floats above hero card at z-[95]
+- Mini-nav: hidden at scroll=0 (opacity 0, pointer-events none), visible + clickable after scrolling past 70vh
+
+---
+Task ID: 8-C
+Agent: subagent-C (portfolio card redesign)
+Task: Redesign Section 4 portfolio cards to global top-10 award-winning quality
+
+Work Log:
+- Researched 22 award-winning portfolio card designs via z-ai web_search across Awwwards (Site of the Day winners, Fooror event design, Hisami Kurita, Alex Frison de Isla, Evan Fasquelle card interactions), Pinterest (cyberpunk brutalism boards, futuristic UI inspiration), Dribbble (cyberpunk interface), Reddit (cyberpunk/brutalism web design), UX Planet, Mobbin/Behance patterns, and yodezeen.com/CodyHouse asymmetric masonry references
+- Key patterns identified from research:
+  * Asymmetric grid with FEATURED cards spanning 2x regular width (top-row hierarchy pattern from yodezeen, Awwwards "Hero Intro")
+  * Cinematic hover overlays with corner brackets + scan-lines (Alex Frison de Isla "Image Hover" pattern)
+  * Image zoom on hover (scale 1.05-1.10) — universal pattern across all top-tier portfolio sites
+  * Per-project accent color used for: top stripe, category badge, status indicator, tech tag borders, hover overlay text, animated corner brackets
+  * Cut-corner clip-path frames — signature sci-fi HUD aesthetic (matches existing AlphaServices vocabulary)
+  * Telemetry-style status bars (CAT | IDX/10 | STATUS LIVE) — terminal feel
+  * Bottom gradient + scanlines on image for text legibility
+  * "View Case Study" revealed via cinematic fade-in overlay with animated scan-line + corner brackets that expand from 12px to 20px on hover
+- Redesigned AlphaPortfolio.tsx with:
+  * ASYMMETRIC BENTO GRID: 2 featured cards (first 2 projects: Omnibridge, Dukon Pro) span 2x regular width on every breakpoint
+    - xl: 12-col grid → featured col-span-6, regular col-span-3 (2 featured in row 1, 4 regular per row in rows 2-3)
+    - lg: 8-col grid → featured col-span-4, regular col-span-2
+    - md: 4-col grid → featured col-span-2, regular col-span-1 (featured + 2 regulars per row → rhythmic asymmetry)
+    - sm: 2-col grid → featured col-span-2 (full width), regular col-span-1 (split 2-up)
+    - mobile: 1-col stacked
+  * CARD STRUCTURE (4 layers):
+    1. ACCENT GLOW (sibling div, OUTSIDE clip-path so it isn't clipped) — radial-gradient blur-2xl, opacity 0→1 on hover
+    2. ARTICLE FRAME with cut-corner clip-path (16px chamfer top-right + bottom-left) — sigma-card-frame border color transitions to project accent on hover
+    3. TOP ACCENT STRIPE — gradient from solid accent → transparent, opacity 0.7→1 on hover
+    4. CONTENT LAYERS:
+       - TOP STATUS BAR: pulsing accent dot + CAT label (in accent color) + IDX/10 + ●LIVE indicator
+       - HERO IMAGE ZONE (aspect-16/10): img with sigma-card-img class (scale 1.08 on hover via CSS), bottom gradient (rgba(0,0,0,0.55)), scanlines (opacity 0.30), hazard corner top-right, crosshair mark top-left, solution badge bottom-left (with backdrop-blur), /slug label bottom-right (sm+)
+       - CINEMATIC HOVER OVERLAY (sigma-card-overlay): bg-background/85 backdrop-blur-[2px], opacity 0→1 on hover, contains 4 animated corner brackets (sigma-card-corner: 12px→20px on hover), center text stack ("▸ ACCESS CASE FILE" / "View Case Study" / "▸ ENTER DEBRIEF ▸"), horizontal accent scan-line that grows from 0 to 75% width on hover
+       - CONTENT BLOCK: project name (text-base/lg/xl font-black uppercase) + → arrow (sigma-card-arrow: translateX(4px) on hover) + description (italic serif text-xs/sm) + tech tags (mono text-[8px]/[9px] uppercase, border in accent/33 color, bg-background/40)
+       - BOTTOM ACCENT STRIPE: gradient transparent→accent→transparent, opacity 0.3→0.9 on hover
+  * PREMIUM HOVER MICRO-INTERACTIONS (all CSS-only, no GSAP):
+    - Wrapper lifts: translateY(-4px) on hover (sigma-card class)
+    - Border adopts accent color: var(--card-accent) on hover
+    - Accent glow blooms: opacity 0→1 with blur-2xl
+    - Image zoom: scale(1.08) with cubic-bezier easing
+    - Cinematic overlay fades in: opacity 0→1
+    - Scan-line grows: width 0→75%
+    - Corner brackets expand: 12px→20px
+    - Arrow nudges right: translateX(4px)
+    - Top + bottom accent strips intensify: opacity 0.7→1 / 0.3→0.9
+  * POLISHED HEADER:
+    - Top telemetry strip: "▸ 04 / PORTFOLIO · SECTOR VLT · VAULT ACCESS: PUBLIC · ●LIVE FEED" (with pulsing green dot)
+    - Heading "SELECTED WORK." with #FF4500 "WORK." accent (clamp fluid: text-4xl/6xl/7xl)
+    - Subtitle italic serif
+    - Right-side stats block: 10 PROJECTS (orange) | 100% DEPLOYED (lime) | 42 STACKS (cyan)
+  * POLISHED BOTTOM CTA:
+    - "▸ ARCHIVE" / "WANT TO SEE MORE?" heading + description
+    - GITHUB button with brutalist hover shadow-[5px_5px_0_0_#FF4500]
+    - Bottom hazard stripe (orange/black diagonal 8px pattern)
+- Added 80 lines of new CSS utilities to globals.css (.sigma-card system):
+  * .sigma-card (wrapper transition)
+  * .sigma-card-frame (border transition to var(--card-accent))
+  * .sigma-card-glow (opacity transition)
+  * .sigma-card-img (transform transition for zoom)
+  * .sigma-card-overlay (opacity transition for cinematic reveal)
+  * .sigma-card-scanline (width transition for scan-line growth)
+  * .sigma-card-corner (width/height transition for bracket expansion)
+  * .sigma-card-arrow (transform transition for arrow nudge)
+  * .sigma-card-strip (opacity transition for accent strips)
+  * Reduced-motion media query: disables transforms, keeps opacity transitions
+- CRITICAL PRESERVATIONS:
+  * All 10 PageTransitionLink components intact with href, label, kind="project", accent props
+  * All 10 projects with their data (name, desc, tech, solution, image, accent, slug, cat)
+  * Section structure preserved: <section id="portfolio"> with header, grid, bottom CTA
+  * Page navigation flow unchanged
+- VLM (vision model) verification — 3 separate analyses:
+  * Dark mode: "Awwwards/SOTD-caliber work", "agency-grade production quality", "asymmetric 2x width top row is functioning correctly, all screenshots are crisp and thematic, polished enough for a top-tier portfolio showcase"
+  * Light mode: "Excellent readability & contrast", "Accent colors highly visible and meaningful", "All dashboard/UI screenshots displayed with good fidelity", "Polished and accessible"
+  * Mobile (390px): "Single column layout", "Screenshots inside cards visible", "Project names, tech tags, and accent colors all readable"
+  * Hover state comparison: "Cinematic/premium looking", "High-end HUD style", "Card border transforms into bright glowing neon color", "ENTER DEBRIEF sub-text visible", "Corner brackets create targeting/selection effect"
+
+Stage Summary:
+- File modified: /home/z/my-project/src/components/sigma/alpha/AlphaPortfolio.tsx (full card redesign)
+- File modified: /home/z/my-project/src/app/globals.css (added .sigma-card* utility system at end of file, ~80 lines)
+- Design highlights:
+  * Asymmetric bento grid — 2 featured cards (col-span-2) + 8 regular cards (col-span-1) per breakpoint
+  * Cut-corner clip-path (16px chamfer top-right + bottom-left) on every card
+  * Hero screenshot as visual anchor — aspect-16/10, zoom 1.08x on hover
+  * Cinematic hover overlay: backdrop-blur + 4 animated corner brackets + scan-line grows 0→75% + "View Case Study" + "▸ ENTER DEBRIEF ▸"
+  * Per-card accent color used in: top stripe, status bar dot, CAT label, ●LIVE indicator, hazard corner, crosshair mark, solution badge, hover overlay text, scan-line, corner brackets, tech tag borders, arrow, bottom stripe, glow bloom
+  * Premium hover micro-interactions: card lift (translateY -4px), border color shift, accent glow bloom, image zoom, corner bracket expansion, scan-line growth, arrow nudge, strip intensification
+  * Telemetry-style header: "▸ 04 / PORTFOLIO · SECTOR VLT · VAULT ACCESS: PUBLIC · ●LIVE FEED"
+  * Right-side stats block: 10 PROJECTS / 100% DEPLOYED / 42 STACKS in colored mono numerals
+  * Polished bottom CTA with hazard stripe + brutalist GITHUB button
+- Lint: clean (exit 0)
+- Dev server: 200 OK, no compile errors, all 10 cards rendered (DOM-verified), overlay correctly hidden by default (opacity=0) and visible on hover (opacity=1)
+- Works in dark mode, light mode, and mobile (390px) — VLM verified across all three
+
+---
+Task ID: CRON-ROUND-35 (Scroll Fix + Slam-Cover Contrast + 27th Service + Add-ons Catalog + Hero Card + Portfolio Redesign + S10 Fix)
+Agent: main (orchestrator) + subagents A/B/C
+
+## User Feedback Addressed
+1. "Sigma→Alpha mode lands on section 3" — STILL BROKEN, now fixed
+2. "Slam-cover text color and background almost same" — fixed with black text
+3. "Service detail page packages are static, can't be added to basket individually" — now each STARTER/PRO/ENTERPRISE has its own ADD TO BASKET
+4. "Add-ons should be real incremental features (extra screens, E2E testing, etc.) not other main services" — 189 real add-ons created
+5. "COMPATIBLE ADD-ONS → COMPATIBLE SERVICES" — renamed
+6. "Discount counts only main services, not add-ons" — verified working
+7. "Section 5 deliverables should be 27" — updated, game dev added
+8. "Sigma S10 cards unequal height" — fixed
+9. "Section 4 portfolio cards ugly" — redesigned by subagent C
+10. "Add huge hero card with integrated nav" — built by subagent B
+
+## Changes
+
+### 1. Scroll-to-Top Fix (CRITICAL — was still broken)
+- Root cause: `scroll-behavior: smooth` CSS on the container was animating scroll-to-top from a non-zero position (browser scroll restoration), making it look like the page was scrolling DOWN to section 3
+- Fix in AlphaInterface.tsx:
+  - Changed initial `scrollBehavior` from "smooth" to "auto"
+  - Added `history.scrollRestoration = "manual"` to prevent browser scroll restoration
+  - Direct `scrollTop = 0` property assignment (bypasses CSS smooth-scroll)
+  - Used `scrollRef` instead of `querySelector` for reliable access
+  - 7 timer passes (0ms, rAF, 50ms, 150ms, 300ms, 600ms, 1200ms, 2000ms, 3500ms)
+  - Re-enables smooth-scroll after 4s for anchor navigation
+- Verified: hero section at rectTop: 0, about at 924, services at 1723
+
+### 2. Slam-Cover Text Contrast Fix
+- Was: white text (`text-white`) with `mixBlendMode: "overlay"` — invisible on lime green (#00FF94) and yellow (#C6FF00) panels
+- Now: solid BLACK text (`text-black`) with subtle white text-shadow for pop
+- Prefix chip: `bg-white text-black` (was `bg-black text-white`)
+- Accent dot row: `bg-black` (was `bg-black/80`)
+- All 3 accent colors (orange/lime/yellow) are bright enough that black text = max contrast
+
+### 3. 27th Service: Mobile/Web Game Development
+- Already added to AlphaServices.tsx, SERVICE_PRICES, ADDONS map, and service detail page
+- Updated all "26" references to "27":
+  - AlphaHero.tsx: ["27", "SERVICES"] + "27 SERVICES" CTA label
+  - AlphaAbout.tsx: { v: "27", k: "SERVICES" }
+  - AlphaTeam.tsx: { v: "27", k: "SERVICES" }
+- AlphaServices grid now shows "ALL 27", "FULL-STACK 6" (was 5)
+
+### 4. Section 5 (Process) Deliverables Update
+- Changed ["16", "DELIVERABLES"] → ["27", "SERVICES OFFERED"] in AlphaProcess stats
+
+### 5. Sigma S10 Card Height Fix
+- Added `h-full` to right column div
+- Added `flex-1` to both DIRECT CHANNELS and ACCESS TIER panels
+- Added `shrink-0` to hazard stripe and footer text
+- Added extra paragraph to ACCESS TIER for content balance
+- Both columns now stretch to equal height
+
+### 6. Real Add-ons Catalog (Subagent A — 189 add-ons)
+- File: `src/lib/sigma/addons-data.ts`
+- 7 add-ons per service × 27 services = 189 total
+- Each add-on: id, name, type (one-time/ongoing), description, MMK price
+- One-time: 483,000 – 3,620,000 MMK range
+- Ongoing: 241,000 – 1,810,000 MMK/mo range
+- Exported: AddOn interface, SERVICE_ADDONS, ALL_ADDONS, getAddOnsForService(), findAddonById()
+
+### 7. Service Detail Page Updates
+- Fixed broken `CompatibleServiceCard` component reference (previous cron left it undefined)
+- Fixed broken `PackageAddButton` component reference (previous cron left it undefined)
+- Fixed broken `AddOnCard` component reference (previous cron left it undefined)
+- `PackageAddButton`: each of STARTER/PRO/ENTERPRISE gets its own ADD TO BASKET button
+  - Custom price → "REQUEST QUOTE" button (shows toast)
+  - Popular package → orange filled button
+  - Non-popular → outlined button
+  - Added as type "service" (counts toward discount)
+- `AddOnCard`: displays real add-ons with type badge (▸ ONE-TIME / ◈ ONGOING)
+  - Added as type "addon" (does NOT count toward discount)
+- `CompatibleServiceCard`: renamed from AddOnCard, uses `cs` prop
+  - Added as type "service" (counts toward discount — these are other main services)
+
+### 8. Hero Card Redesign (Subagent B)
+- AlphaHero.tsx: Full redesign as a single MASSIVE hero card
+  - Cut-corner clip-path (22px chamfers top-left + bottom-right)
+  - Integrated nav header strip (AlphaNav renders inside the hero card)
+  - Data strip: SYSTEM ONLINE | EST. 2016 | NODES: 11 | SIG=1.0000 | V2.7.SIGMA
+  - Asymmetric grid: heading + CTAs left, Σ glyph right
+  - Stats grid (50+/8/27/99.9%) with colored hazard strips
+  - 4 SVG corner brackets, side hazard stripes, scanlines
+  - Fluid heading with clamp(2.75rem, 7vw, 5.5rem)
+- AlphaNav.tsx: Redesigned as integrated header of hero card
+  - Layout: [Σ TAUNGOO SIGMA LAB] | [numbered nav links] | [ONLINE] [START →]
+  - New AlphaMiniNav export: slim floating mini-nav after scrolling past 70vh
+- AlphaInterface.tsx: Swapped standalone AlphaNav for AlphaMiniNav
+
+### 9. Portfolio Card Redesign (Subagent C)
+- AlphaPortfolio.tsx: Full redesign with asymmetric bento grid
+  - Featured (first 2) cards span 2x width
+  - Hero image as visual anchor (aspect-[16/10], image zoom on hover)
+  - Per-card accent color used meaningfully throughout
+  - Cinematic hover overlay with 4 expanding corner brackets
+  - "▸ ACCESS CASE FILE" / "View Case Study" / "▸ ENTER DEBRIEF ▸"
+  - All CSS-only micro-interactions (lift, glow, zoom, scan-line)
+  - Reduced-motion media query
+- globals.css: Added `.sigma-card*` utility system (~80 lines)
+
+### 10. Basket UI Updates (by subagent A)
+- Basket now shows separate sections:
+  - "▸ MAIN SERVICES (N) — DISCOUNT ELIGIBLE"
+  - "▸ ADD-ONS (N) — NO DISCOUNT"
+- Discount tier label: "BULK DISCOUNT TIERS (MAIN SERVICES ONLY)"
+- Price breakdown: SERVICES SUBTOTAL + ADD-ONS SUBTOTAL + TOTAL
+- Incentive: "▸ ADD N MORE MAIN SERVICE FOR X% OFF"
+
+## Verification (agent-browser)
+1. ✅ Sigma→Alpha lands on hero (scrollTop=0, rectTop=0)
+2. ✅ Overlay text: rgb(0,0,0) black, no mixBlendMode
+3. ✅ 3 ADD TO BASKET buttons on service detail page (STARTER/PRO/ENTERPRISE)
+4. ✅ 7 real add-ons per service (verified: Extra Conversation Flow, Additional Language Pack, etc.)
+5. ✅ COMPATIBLE SERVICES section (renamed)
+6. ✅ Basket separates MAIN SERVICES (discount) from ADD-ONS (no discount)
+7. ✅ 27 services in grid (ALL 27, FULL-STACK 6)
+8. ✅ Section 5: "27 SERVICES OFFERED"
+9. ✅ Hero card with integrated nav
+10. ✅ Portfolio cards with asymmetric bento grid
+11. ✅ S10 cards equal height
+12. ✅ Lint clean
+13. ✅ No console errors
+
+## Files Modified
+- src/components/sigma/alpha/AlphaInterface.tsx (scroll fix + AlphaMiniNav)
+- src/components/sigma/PageTransitionOverlay.tsx (black text contrast)
+- src/components/sigma/alpha/AlphaProcess.tsx (27 SERVICES OFFERED)
+- src/components/sigma/sections/S10Access.tsx (equal height)
+- src/components/sigma/alpha/AlphaHero.tsx (26→27, hero card redesign by subagent B)
+- src/components/sigma/alpha/AlphaNav.tsx (integrated nav + AlphaMiniNav by subagent B)
+- src/components/sigma/alpha/AlphaAbout.tsx (26→27)
+- src/components/sigma/alpha/AlphaTeam.tsx (26→27)
+- src/components/sigma/alpha/AlphaPortfolio.tsx (card redesign by subagent C)
+- src/components/sigma/alpha/AlphaServices.tsx (already had 27th service)
+- src/components/sigma/alpha/ServiceBasket.tsx (basket UI updates by subagent A)
+- src/app/services/[slug]/page.tsx (PackageAddButton, AddOnCard, CompatibleServiceCard)
+- src/app/globals.css (sigma-card utilities by subagent C)
+
+## Files Created
+- src/lib/sigma/addons-data.ts (189 add-ons by subagent A)
+
+## Cron
+- Job #338235 continues every 15 min (webDevReview)

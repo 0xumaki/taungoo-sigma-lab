@@ -11,7 +11,7 @@ const capabilityData: { label: string; pct: number; color: string }[] = [
 ];
 
 const statData: { v: string; k: string; c: string }[] = [
-  { v: "26", k: "SERVICES", c: "#FF4500" },
+  { v: "27", k: "SERVICES", c: "#FF4500" },
   { v: "10", k: "PROJECTS", c: "#00FF94" },
   { v: "8", k: "OPERATORS", c: "#00E5FF" },
   { v: "11", k: "SECTORS", c: "#C6FF00" },

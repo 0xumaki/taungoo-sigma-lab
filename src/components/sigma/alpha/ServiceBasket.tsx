@@ -137,6 +137,11 @@ export const ADDONS: Record<string, { slug: string; name: string; icon: string; 
     { slug: "smart-contract-development", name: "Smart Contract Dev", icon: "∎", price: "from 9,660,000 MMK", reason: "Core infrastructure contracts" },
     { slug: "web-webapp", name: "Web / WebApp", icon: "▣", price: "from 6,040,000 MMK", reason: "Admin and user portals" },
   ],
+  "mobile-web-game-development": [
+    { slug: "ui-ux-design", name: "UI/UX Design", icon: "◡", price: "from 2,415,000 MMK", reason: "Game UI/UX and level design" },
+    { slug: "3d-modeling", name: "3D Modeling", icon: "◈", price: "from 1,810,000 MMK", reason: "Game assets and environments" },
+    { slug: "android-ios-app", name: "Android & iOS App", icon: "▣", price: "from 12,080,000 MMK", reason: "Native mobile game port" },
+  ],
 };
 
 // Main service prices for basket
@@ -167,10 +172,11 @@ export const SERVICE_PRICES: Record<string, { name: string; icon: string; price:
   "bug-bounty": { name: "Bug Bounty", icon: "▣", price: "from 3,620,000 MMK" },
   "money-market-development": { name: "Money Market Development", icon: "$", price: "from 30,190,000 MMK" },
   "cbdc-development": { name: "CBDC Development", icon: "₵", price: "custom" },
+  "mobile-web-game-development": { name: "Mobile/Web Game Dev", icon: "◆", price: "from 7,240,000 MMK" },
 };
 
 export function ServiceBasket() {
-  const { items, isOpen, toggleOpen, removeItem, clearBasket, getTotal, getDiscount, getDiscountedTotal, getServiceCount } = useBasketStore();
+  const { items, isOpen, toggleOpen, removeItem, clearBasket, getTotal, getServicesTotal, getAddonsTotal, getDiscount, getDiscountedTotal, getServiceCount, getAddonCount } = useBasketStore();
   const [submitting, setSubmitting] = React.useState(false);
 
   const submitRFQ = async () => {
@@ -185,11 +191,14 @@ export function ServiceBasket() {
           channel: "RFQ",
           message: JSON.stringify({
             type: "quotation_request",
-            items: items.map((i) => ({ slug: i.slug, name: i.name, type: i.type, price: i.price })),
+            items: items.map((i) => ({ slug: i.slug, name: i.name, type: i.type, addonType: i.addonType, price: i.price })),
+            servicesTotal: getServicesTotal(),
+            addonsTotal: getAddonsTotal(),
             total: getTotal(),
             discount: getDiscount(),
             final: getDiscountedTotal(),
             serviceCount: getServiceCount(),
+            addonCount: getAddonCount(),
           }),
         }),
       });
@@ -205,6 +214,9 @@ export function ServiceBasket() {
       setSubmitting(false);
     }
   };
+
+  const services = items.filter((i) => i.type === "service");
+  const addons = items.filter((i) => i.type === "addon");
 
   return (
     <>
@@ -245,7 +257,7 @@ export function ServiceBasket() {
               </button>
             </div>
 
-            {/* Items list */}
+            {/* Items list — grouped by type */}
             <div className="max-h-[50vh] overflow-y-auto p-4 sigma-scroll-hidden">
               {items.length === 0 ? (
                 <div className="py-12 text-center">
@@ -253,21 +265,58 @@ export function ServiceBasket() {
                   <p className="mt-2 font-serif text-sm italic text-muted-foreground">Browse services and add them to your basket.</p>
                 </div>
               ) : (
-                <div className="space-y-1.5">
-                  {items.map((item) => (
-                    <div key={item.slug} className="flex items-center gap-3 border border-border/40 bg-background/40 p-2">
-                      <span className="font-sans text-lg" style={{ color: item.type === "service" ? "#FF4500" : "#00FF94" }}>{item.icon}</span>
-                      <div className="flex-1">
-                        <div className="font-sans text-xs font-bold uppercase tracking-tight">{item.name}</div>
-                        <div className="font-mono text-[8px] uppercase tracking-[0.14em] text-muted-foreground">
-                          {item.type === "service" ? "MAIN SERVICE" : "ADD-ON"} · {item.price === 0 ? "custom" : formatMMK(item.price)}
-                        </div>
+                <div className="space-y-3">
+                  {/* Main services section */}
+                  {services.length > 0 && (
+                    <div>
+                      <div className="mb-1.5 flex items-center gap-2 border-b border-[#FF4500]/30 pb-1">
+                        <span className="font-mono text-[8px] uppercase tracking-[0.14em] text-[#FF4500]">▸ MAIN SERVICES</span>
+                        <span className="font-mono text-[7px] text-muted-foreground">({services.length}) — DISCOUNT ELIGIBLE</span>
                       </div>
-                      <button onClick={() => removeItem(item.slug)} className="border border-border/40 p-1 text-muted-foreground transition-colors hover:border-[#FF3D3D] hover:text-[#FF3D3D]">
-                        <Trash2 className="h-3 w-3" />
-                      </button>
+                      <div className="space-y-1.5">
+                        {services.map((item) => (
+                          <div key={item.slug} className="flex items-center gap-3 border border-border/40 bg-background/40 p-2">
+                            <span className="font-sans text-lg" style={{ color: "#FF4500" }}>{item.icon}</span>
+                            <div className="flex-1">
+                              <div className="font-sans text-xs font-bold uppercase tracking-tight">{item.name}</div>
+                              <div className="font-mono text-[8px] uppercase tracking-[0.14em] text-muted-foreground">
+                                MAIN SERVICE · {item.price === 0 ? "custom" : formatMMK(item.price)}
+                              </div>
+                            </div>
+                            <button onClick={() => removeItem(item.slug)} className="border border-border/40 p-1 text-muted-foreground transition-colors hover:border-[#FF3D3D] hover:text-[#FF3D3D]">
+                              <Trash2 className="h-3 w-3" />
+                            </button>
+                          </div>
+                        ))}
+                      </div>
                     </div>
-                  ))}
+                  )}
+
+                  {/* Add-ons section */}
+                  {addons.length > 0 && (
+                    <div>
+                      <div className="mb-1.5 flex items-center gap-2 border-b border-[#00FF94]/30 pb-1">
+                        <span className="font-mono text-[8px] uppercase tracking-[0.14em] text-[#00FF94]">▸ ADD-ONS</span>
+                        <span className="font-mono text-[7px] text-muted-foreground">({addons.length}) — NO DISCOUNT</span>
+                      </div>
+                      <div className="space-y-1.5">
+                        {addons.map((item) => (
+                          <div key={item.slug} className="flex items-center gap-3 border border-border/40 bg-background/40 p-2">
+                            <span className="font-sans text-lg" style={{ color: "#00FF94" }}>{item.icon}</span>
+                            <div className="flex-1">
+                              <div className="font-sans text-xs font-bold uppercase tracking-tight">{item.name}</div>
+                              <div className="font-mono text-[8px] uppercase tracking-[0.14em] text-muted-foreground">
+                                ADD-ON · {item.addonType === "ongoing" ? "ONGOING · " : ""}{item.price === 0 ? "custom" : formatMMK(item.price)}
+                              </div>
+                            </div>
+                            <button onClick={() => removeItem(item.slug)} className="border border-border/40 p-1 text-muted-foreground transition-colors hover:border-[#FF3D3D] hover:text-[#FF3D3D]">
+                              <Trash2 className="h-3 w-3" />
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
               )}
             </div>
@@ -279,10 +328,10 @@ export function ServiceBasket() {
                 <div className="mb-3">
                   <div className="mb-1.5 flex items-center justify-between">
                     <span className="font-mono text-[8px] uppercase tracking-[0.14em] text-muted-foreground">
-                      BULK DISCOUNT TIERS
+                      BULK DISCOUNT TIERS (MAIN SERVICES ONLY)
                     </span>
                     <span className="font-mono text-[9px] text-[#00FF94]">
-                      ACTIVE: -{getDiscount() > 0 ? Math.round((getDiscount() / Math.max(getTotal(), 1)) * 100) + "%" : "0%"}
+                      ACTIVE: -{getDiscount() > 0 ? Math.round((getDiscount() / Math.max(getServicesTotal(), 1)) * 100) + "%" : "0%"}
                     </span>
                   </div>
                   <div className="grid grid-cols-4 gap-0.5">
@@ -319,7 +368,7 @@ export function ServiceBasket() {
                       <div className="mt-1.5 border border-[#FFB300]/40 bg-[#FFB300]/5 px-2 py-1">
                         <div className="flex items-center justify-between">
                           <span className="font-mono text-[7px] uppercase tracking-[0.12em] text-[#FFB300]">
-                            ▸ ADD {next.count - svcCount} MORE FOR {Math.round(next.rate * 100)}% OFF
+                            ▸ ADD {next.count - svcCount} MORE MAIN SERVICE FOR {Math.round(next.rate * 100)}% OFF
                           </span>
                           <span className="font-mono text-[7px] text-muted-foreground">{svcCount}/{next.count}</span>
                         </div>
@@ -328,15 +377,23 @@ export function ServiceBasket() {
                   })()}
                 </div>
 
-                {/* Price breakdown */}
+                {/* Price breakdown — services vs add-ons */}
                 <div className="space-y-1 font-mono text-[10px] uppercase tracking-[0.14em]">
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">SUBTOTAL</span>
-                    <span className="text-foreground">{formatMMK(getTotal())}</span>
-                  </div>
+                  {services.length > 0 && (
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">SERVICES SUBTOTAL</span>
+                      <span className="text-foreground">{formatMMK(getServicesTotal())}</span>
+                    </div>
+                  )}
+                  {addons.length > 0 && (
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">ADD-ONS SUBTOTAL</span>
+                      <span className="text-foreground">{formatMMK(getAddonsTotal())}</span>
+                    </div>
+                  )}
                   {getDiscount() > 0 && (
                     <div className="flex justify-between">
-                      <span className="text-[#00FF94]">DISCOUNT</span>
+                      <span className="text-[#00FF94]">DISCOUNT (ON SERVICES)</span>
                       <span className="text-[#00FF94]">-{formatMMK(getDiscount())}</span>
                     </div>
                   )}

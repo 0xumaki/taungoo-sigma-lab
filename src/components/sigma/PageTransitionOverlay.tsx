@@ -266,34 +266,37 @@ export function PageTransitionOverlay() {
 
         {/* Label fly-through — destination NAME (Service/Project/Blog title) */}
         <div className="absolute inset-0 flex flex-col items-center justify-center gap-3">
-          {/* Prefix chip — "SERVICE" / "PROJECT" / "INSIGHT" */}
+          {/* Prefix chip — "SERVICE" / "PROJECT" / "INSIGHT" — high-contrast pill on white bg */}
           <div
             ref={prefixRef}
-            className="font-mono text-[10px] uppercase tracking-[0.4em] text-black/70 sm:text-[12px]"
+            className="rounded-full border-2 border-black bg-white px-4 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.4em] text-black shadow-lg sm:text-[12px]"
             style={{ opacity: 0 }}
           >
             ▸ {KIND_PREFIX[kind]}
           </div>
 
-          {/* Main label — the destination name */}
+          {/* Main label — BLACK text on bright accent panels = max contrast on all 3 accent colors */}
+          {/* Accent colors: service=#FF4500 (orange), project=#00FF94 (lime), insight=#C6FF00 (yellow) */}
+          {/* Black text is high-contrast on ALL of these — white text was invisible on lime/yellow */}
           <div className="overflow-hidden px-4">
             <div
               ref={labelRef}
-              className="font-sans text-[6vw] font-black uppercase leading-none text-black/90 sm:text-[5vw] md:text-[4vw]"
+              className="font-sans text-[6vw] font-black uppercase leading-none text-black sm:text-[5vw] md:text-[4vw]"
               style={{
                 opacity: 0,
-                mixBlendMode: "overlay",
                 maxWidth: "90vw",
                 textAlign: "center",
                 lineHeight: 0.95,
                 letterSpacing: "-0.02em",
+                textShadow:
+                  "0 0 4px rgba(255,255,255,0.3), 2px 2px 0 rgba(255,255,255,0.15), -2px -2px 0 rgba(255,255,255,0.15)",
               }}
             >
               {label}
             </div>
           </div>
 
-          {/* Subtle accent dot row for cinematic feel */}
+          {/* Accent dot row — black dots for visibility on bright panels */}
           <div
             className="mt-4 flex gap-1"
             style={{ opacity: 0 }}
@@ -301,20 +304,20 @@ export function PageTransitionOverlay() {
             {Array.from({ length: 5 }).map((_, i) => (
               <span
                 key={i}
-                className="block h-1 w-1 rounded-full bg-black/60"
+                className="block h-1.5 w-1.5 rounded-full bg-black"
               />
             ))}
           </div>
         </div>
 
-        {/* Corner brackets — sci-fi framing */}
-        <div className="absolute left-6 top-6 h-8 w-8 border-l-2 border-t-2 border-black/60" />
-        <div className="absolute right-6 top-6 h-8 w-8 border-r-2 border-t-2 border-black/60" />
-        <div className="absolute bottom-6 left-6 h-8 w-8 border-b-2 border-l-2 border-black/60" />
-        <div className="absolute bottom-6 right-6 h-8 w-8 border-b-2 border-r-2 border-black/60" />
+        {/* Corner brackets — sci-fi framing (darker for contrast) */}
+        <div className="absolute left-6 top-6 h-8 w-8 border-l-2 border-t-2 border-black/80" />
+        <div className="absolute right-6 top-6 h-8 w-8 border-r-2 border-t-2 border-black/80" />
+        <div className="absolute bottom-6 left-6 h-8 w-8 border-b-2 border-l-2 border-black/80" />
+        <div className="absolute bottom-6 right-6 h-8 w-8 border-b-2 border-r-2 border-black/80" />
 
-        {/* Bottom status line */}
-        <div className="absolute bottom-3 left-1/2 -translate-x-1/2 font-mono text-[9px] uppercase tracking-[0.3em] text-black/50">
+        {/* Bottom status line — dark text on accent bg */}
+        <div className="absolute bottom-3 left-1/2 -translate-x-1/2 font-mono text-[9px] font-bold uppercase tracking-[0.3em] text-black/80">
           ▸ LOADING NODE…
         </div>
       </div>

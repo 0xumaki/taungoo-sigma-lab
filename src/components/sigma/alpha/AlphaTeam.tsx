@@ -96,7 +96,7 @@ export function AlphaTeam() {
           {[
             { v: "8/8", k: "ACTIVE NODES", c: "#00FF94", icon: "◉" },
             { v: "3", k: "TIME ZONES", c: "#00E5FF", icon: "◐" },
-            { v: "26", k: "SERVICES", c: "#FF4500", icon: "⚙" },
+            { v: "27", k: "SERVICES", c: "#FF4500", icon: "⚙" },
             { v: "100%", k: "NO EGOS", c: "#C6FF00", icon: "✦" },
           ].map((s) => (
             <SciFiCard key={s.k} accent={s.c} label={s.k} id={s.v}>

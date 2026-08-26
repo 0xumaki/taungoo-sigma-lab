@@ -30,6 +30,7 @@ const SERVICES = [
   { name: "Bug Bounty", icon: "▣", desc: "Security testing and vulnerability assessment programs", price: "from 3,620,000 MMK", cat: "WEB3", slug: "bug-bounty" },
   { name: "Money Market Development", icon: "$", desc: "DeFi lending, borrowing, and yield protocols", price: "from 30,190,000 MMK", cat: "WEB3", slug: "money-market-development" },
   { name: "CBDC Development", icon: "₵", desc: "Central bank digital currency infrastructure", price: "custom", cat: "WEB3", slug: "cbdc-development" },
+  { name: "Mobile/Web Game Dev", icon: "◆", desc: "Mobile and web-based game development with Unity, Phaser, and WebGL", price: "from 7,240,000 MMK", cat: "FULL-STACK", slug: "mobile-web-game-development" },
 ];
 
 const CATEGORIES = [
@@ -55,6 +56,7 @@ const DETAIL_SLUGS = new Set([
   "android-ios-app", "web-webapp", "chrome-extensions", "desktop-macbook-apps", "aso",
   "web3-wallets", "amm-dex", "dao-governance", "nft-systems", "security-audit",
   "smart-contract-development", "bug-bounty", "money-market-development", "cbdc-development",
+  "mobile-web-game-development",
 ]);
 
 export function AlphaServices() {
@@ -79,11 +81,11 @@ export function AlphaServices() {
               WHAT WE <span style={{ color: "#FF4500" }}>BUILD.</span>
             </h2>
             <p className="mt-2 font-serif text-base italic text-muted-foreground">
-              26 services across AI, Web3, and full-stack development. Each with detail pages, pricing packages, and comparison tables.
+              27 services across AI, Web3, and full-stack development. Each with detail pages, pricing packages, and comparison tables.
             </p>
           </div>
           <div className="hidden shrink-0 font-mono text-[9px] uppercase tracking-[0.2em] text-muted-foreground sm:block">
-            <span className="text-[#FF4500]">26</span> SERVICES · <span className="text-[#00FF94]">{filtered.length}</span> SHOWN
+            <span className="text-[#FF4500]">27</span> SERVICES · <span className="text-[#00FF94]">{filtered.length}</span> SHOWN
           </div>
         </div>
 

@@ -167,9 +167,9 @@ export function S10Access() {
           </div>
         </Panel>
 
-        {/* contact info */}
-        <div className="col-span-12 flex flex-col gap-3 lg:col-span-4">
-          <Panel data-ap label="DIRECT CHANNELS" id="OPEN" accent="#FFEB3B">
+        {/* contact info — flex column with h-full to match the terminal panel height */}
+        <div className="col-span-12 flex h-full flex-col gap-3 lg:col-span-4">
+          <Panel data-ap label="DIRECT CHANNELS" id="OPEN" accent="#FFEB3B" className="flex-1">
             <div className="divide-y divide-border/70">
               {[
                 { icon: MapPin, k: "LOCATION", v: "Taungoo, Bago Region, MM" },
@@ -193,7 +193,7 @@ export function S10Access() {
             </div>
           </Panel>
 
-          <Panel data-ap label="ACCESS TIER" id="PUBLIC" accent="#FFEB3B">
+          <Panel data-ap label="ACCESS TIER" id="PUBLIC" accent="#FFEB3B" className="flex-1">
             <div className="p-3">
               <Tag accent="#00FF94">PUBLIC READ</Tag>
               <p className="mt-2 font-serif text-sm italic text-foreground/80">
@@ -201,11 +201,14 @@ export function S10Access() {
                 earned through the sigma-review process — submit a credible signal
                 and the collective will respond.
               </p>
+              <p className="mt-2 font-serif text-sm italic text-foreground/80">
+                All channels are monitored. We do not sell, share, or train on your signal.
+              </p>
             </div>
           </Panel>
 
-          <div className="sigma-hazard-orange h-2" />
-          <div className="font-mono text-[9px] uppercase leading-relaxed tracking-[0.18em] text-muted-foreground">
+          <div className="sigma-hazard-orange h-2 shrink-0" />
+          <div className="shrink-0 font-mono text-[9px] uppercase leading-relaxed tracking-[0.18em] text-muted-foreground">
             ▸ Response window: 72h on channels RESEARCH + PARTNERSHIP.
             <br />▸ All transmissions are encrypted in transit.
             <br />▸ We do not sell, share, or train on your signal.

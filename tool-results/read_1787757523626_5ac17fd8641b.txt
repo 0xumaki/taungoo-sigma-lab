@@ -1,0 +1,426 @@
+     1→"use client";
+     2→
+     3→import * as React from "react";
+     4→import { useBasketStore, formatMMK, type BasketItem, DISCOUNT_TIERS, getNextTier } from "@/lib/sigma/basket";
+     5→import { toast } from "sonner";
+     6→import { ShoppingBag, X, Trash2, Send } from "lucide-react";
+     7→
+     8→// Add-on data — researched compatible services for upselling
+     9→export const ADDONS: Record<string, { slug: string; name: string; icon: string; price: string; reason: string }[]> = {
+    10→  "ai-chatbot": [
+    11→    { slug: "voice-ai", name: "Voice AI", icon: "♫", price: "from 6,040,000 MMK", reason: "Add voice capabilities to your chatbot" },
+    12→    { slug: "ai-automation", name: "AI Automation", icon: "⚙", price: "from 3,620,000 MMK", reason: "Automate chatbot-triggered workflows" },
+    13→    { slug: "api-mcp", name: "API & MCP", icon: "⌗", price: "from 4,830,000 MMK", reason: "Expose chatbot via API for integrations" },
+    14→  ],
+    15→  "voice-ai": [
+    16→    { slug: "ai-chatbot", name: "AI Chatbot", icon: "◐", price: "from 3,020,000 MMK", reason: "Text fallback when voice unavailable" },
+    17→    { slug: "ai-automation", name: "AI Automation", icon: "⚙", price: "from 3,620,000 MMK", reason: "Automate post-call workflows" },
+    18→    { slug: "content-copywriting", name: "Content & Copywriting", icon: "✎", price: "from 966,000 MMK", reason: "Call scripts and conversation flows" },
+    19→  ],
+    20→  "agent-swarm": [
+    21→    { slug: "ai-automation", name: "AI Automation", icon: "⚙", price: "from 3,620,000 MMK", reason: "Orchestrate swarm via N8N workflows" },
+    22→    { slug: "api-mcp", name: "API & MCP", icon: "⌗", price: "from 4,830,000 MMK", reason: "Expose swarm via MCP for external triggers" },
+    23→    { slug: "ai-chatbot", name: "AI Chatbot", icon: "◐", price: "from 3,020,000 MMK", reason: "Human-like interface for swarm outputs" },
+    24→  ],
+    25→  "ai-automation": [
+    26→    { slug: "api-mcp", name: "API & MCP", icon: "⌗", price: "from 4,830,000 MMK", reason: "Custom APIs for workflow integrations" },
+    27→    { slug: "web-webapp", name: "Web / WebApp", icon: "▣", price: "from 6,040,000 MMK", reason: "Dashboard for monitoring automations" },
+    28→    { slug: "ai-chatbot", name: "AI Chatbot", icon: "◐", price: "from 3,020,000 MMK", reason: "Chatbot interface for triggering workflows" },
+    29→  ],
+    30→  "api-mcp": [
+    31→    { slug: "ai-automation", name: "AI Automation", icon: "⚙", price: "from 3,620,000 MMK", reason: "Automate API-triggered workflows" },
+    32→    { slug: "web-webapp", name: "Web / WebApp", icon: "▣", price: "from 6,040,000 MMK", reason: "Admin dashboard for API management" },
+    33→    { slug: "security-audit", name: "Security Audit", icon: "⚿", price: "from 6,040,000 MMK", reason: "Audit API for vulnerabilities" },
+    34→  ],
+    35→  "hermes-openclaw-grokbot": [
+    36→    { slug: "agent-swarm", name: "Agent Swarm", icon: "⬡", price: "from 9,660,000 MMK", reason: "Multi-agent orchestration layer" },
+    37→    { slug: "ai-automation", name: "AI Automation", icon: "⚙", price: "from 3,620,000 MMK", reason: "Workflow automation integration" },
+    38→    { slug: "api-mcp", name: "API & MCP", icon: "⌗", price: "from 4,830,000 MMK", reason: "MCP server for external access" },
+    39→  ],
+    40→  "ai-video-generation": [
+    41→    { slug: "graphic-design", name: "Graphic Design", icon: "◆", price: "from 1,210,000 MMK", reason: "Brand-consistent video thumbnails" },
+    42→    { slug: "content-copywriting", name: "Content & Copywriting", icon: "✎", price: "from 966,000 MMK", reason: "Video scripts and descriptions" },
+    43→    { slug: "online-media-buying", name: "Online Media Buying", icon: "▲", price: "from 1,810,000 MMK", reason: "Distribute videos as ad campaigns" },
+    44→  ],
+    45→  "3d-modeling": [
+    46→    { slug: "ui-ux-design", name: "UI/UX Design", icon: "◡", price: "from 2,415,000 MMK", reason: "Integrate 3D assets into product UI" },
+    47→    { slug: "graphic-design", name: "Graphic Design", icon: "◆", price: "from 1,210,000 MMK", reason: "Branded materials with 3D visuals" },
+    48→    { slug: "web-webapp", name: "Web / WebApp", icon: "▣", price: "from 6,040,000 MMK", reason: "WebGL/Three.js integration for 3D" },
+    49→  ],
+    50→  "graphic-design": [
+    51→    { slug: "ui-ux-design", name: "UI/UX Design", icon: "◡", price: "from 2,415,000 MMK", reason: "Apply designs to product interfaces" },
+    52→    { slug: "online-media-buying", name: "Online Media Buying", icon: "▲", price: "from 1,810,000 MMK", reason: "Run ad campaigns with designs" },
+    53→    { slug: "content-copywriting", name: "Content & Copywriting", icon: "✎", price: "from 966,000 MMK", reason: "Copy to accompany designs" },
+    54→  ],
+    55→  "content-copywriting": [
+    56→    { slug: "graphic-design", name: "Graphic Design", icon: "◆", price: "from 1,210,000 MMK", reason: "Visual assets for written content" },
+    57→    { slug: "online-media-buying", name: "Online Media Buying", icon: "▲", price: "from 1,810,000 MMK", reason: "Distribute content via ad campaigns" },
+    58→    { slug: "ai-automation", name: "AI Automation", icon: "⚙", price: "from 3,620,000 MMK", reason: "Automate content publishing pipelines" },
+    59→  ],
+    60→  "online-media-buying": [
+    61→    { slug: "graphic-design", name: "Graphic Design", icon: "◆", price: "from 1,210,000 MMK", reason: "Ad creatives and visuals" },
+    62→    { slug: "content-copywriting", name: "Content & Copywriting", icon: "✎", price: "from 966,000 MMK", reason: "Ad copy and headlines" },
+    63→    { slug: "ai-video-generation", name: "AI Video Generation", icon: "▶", price: "from 2,415,000 MMK", reason: "Video ads for campaigns" },
+    64→  ],
+    65→  "ui-ux-design": [
+    66→    { slug: "web-webapp", name: "Web / WebApp", icon: "▣", price: "from 6,040,000 MMK", reason: "Implement designs in production" },
+    67→    { slug: "android-ios-app", name: "Android & iOS App", icon: "▣", price: "from 12,080,000 MMK", reason: "Mobile implementation of designs" },
+    68→    { slug: "graphic-design", name: "Graphic Design", icon: "◆", price: "from 1,210,000 MMK", reason: "Brand assets to match UI" },
+    69→  ],
+    70→  "android-ios-app": [
+    71→    { slug: "aso", name: "ASO", icon: "⊙", price: "from 1,210,000 MMK", reason: "Optimize app store visibility" },
+    72→    { slug: "web-webapp", name: "Web / WebApp", icon: "▣", price: "from 6,040,000 MMK", reason: "Companion web app" },
+    73→    { slug: "ui-ux-design", name: "UI/UX Design", icon: "◡", price: "from 2,415,000 MMK", reason: "Polished mobile UI/UX" },
+    74→  ],
+    75→  "web-webapp": [
+    76→    { slug: "ai-chatbot", name: "AI Chatbot", icon: "◐", price: "from 3,020,000 MMK", reason: "Add AI support to your web app" },
+    77→    { slug: "ui-ux-design", name: "UI/UX Design", icon: "◡", price: "from 2,415,000 MMK", reason: "Professional design system" },
+    78→    { slug: "security-audit", name: "Security Audit", icon: "⚿", price: "from 6,040,000 MMK", reason: "Security audit before launch" },
+    79→  ],
+    80→  "chrome-extensions": [
+    81→    { slug: "web-webapp", name: "Web / WebApp", icon: "▣", price: "from 6,040,000 MMK", reason: "Companion web dashboard" },
+    82→    { slug: "api-mcp", name: "API & MCP", icon: "⌗", price: "from 4,830,000 MMK", reason: "Backend API for extension" },
+    83→    { slug: "graphic-design", name: "Graphic Design", icon: "◆", price: "from 1,210,000 MMK", reason: "Extension icons and branding" },
+    84→  ],
+    85→  "desktop-macbook-apps": [
+    86→    { slug: "web-webapp", name: "Web / WebApp", icon: "▣", price: "from 6,040,000 MMK", reason: "Web companion" },
+    87→    { slug: "ui-ux-design", name: "UI/UX Design", icon: "◡", price: "from 2,415,000 MMK", reason: "Native desktop UI design" },
+    88→    { slug: "security-audit", name: "Security Audit", icon: "⚿", price: "from 6,040,000 MMK", reason: "Code signing + security review" },
+    89→  ],
+    90→  "aso": [
+    91→    { slug: "android-ios-app", name: "Android & iOS App", icon: "▣", price: "from 12,080,000 MMK", reason: "App development if not yet built" },
+    92→    { slug: "graphic-design", name: "Graphic Design", icon: "◆", price: "from 1,210,000 MMK", reason: "Store screenshots and icons" },
+    93→    { slug: "online-media-buying", name: "Online Media Buying", icon: "▲", price: "from 1,810,000 MMK", reason: "Boost app installs with ads" },
+    94→  ],
+    95→  "web3-wallets": [
+    96→    { slug: "security-audit", name: "Security Audit", icon: "⚿", price: "from 6,040,000 MMK", reason: "Critical for wallet security" },
+    97→    { slug: "smart-contract-development", name: "Smart Contract Dev", icon: "∎", price: "from 9,660,000 MMK", reason: "Wallet smart contracts" },
+    98→    { slug: "web-webapp", name: "Web / WebApp", icon: "▣", price: "from 6,040,000 MMK", reason: "Web interface for wallet" },
+    99→  ],
+   100→  "amm-dex": [
+   101→    { slug: "smart-contract-development", name: "Smart Contract Dev", icon: "∎", price: "from 9,660,000 MMK", reason: "Core DEX contracts" },
+   102→    { slug: "security-audit", name: "Security Audit", icon: "⚿", price: "from 6,040,000 MMK", reason: "Audit before mainnet" },
+   103→    { slug: "web-webapp", name: "Web / WebApp", icon: "▣", price: "from 6,040,000 MMK", reason: "DEX frontend dashboard" },
+   104→  ],
+   105→  "dao-governance": [
+   106→    { slug: "smart-contract-development", name: "Smart Contract Dev", icon: "∎", price: "from 9,660,000 MMK", reason: "Governance contracts" },
+   107→    { slug: "web-webapp", name: "Web / WebApp", icon: "▣", price: "from 6,040,000 MMK", reason: "Governance dashboard" },
+   108→    { slug: "security-audit", name: "Security Audit", icon: "⚿", price: "from 6,040,000 MMK", reason: "Audit governance contracts" },
+   109→  ],
+   110→  "nft-systems": [
+   111→    { slug: "smart-contract-development", name: "Smart Contract Dev", icon: "∎", price: "from 9,660,000 MMK", reason: "Minting contracts" },
+   112→    { slug: "web-webapp", name: "Web / WebApp", icon: "▣", price: "from 6,040,000 MMK", reason: "Marketplace frontend" },
+   113→    { slug: "security-audit", name: "Security Audit", icon: "ʞ", price: "from 6,040,000 MMK", reason: "Audit minting contracts" },
+   114→  ],
+   115→  "security-audit": [
+   116→    { slug: "bug-bounty", name: "Bug Bounty", icon: "▣", price: "from 3,620,000 MMK", reason: "Ongoing security testing" },
+   117→    { slug: "smart-contract-development", name: "Smart Contract Dev", icon: "∎", price: "from 9,660,000 MMK", reason: "Fix vulnerabilities found" },
+   118→    { slug: "web3-wallets", name: "Web3 Wallets", icon: "⬡", price: "from 18,110,000 MMK", reason: "Secure wallet implementation" },
+   119→  ],
+   120→  "smart-contract-development": [
+   121→    { slug: "security-audit", name: "Security Audit", icon: "ʞ", price: "from 6,040,000 MMK", reason: "Audit before deployment" },
+   122→    { slug: "bug-bounty", name: "Bug Bounty", icon: "▣", price: "from 3,620,000 MMK", reason: "Post-deploy vulnerability testing" },
+   123→    { slug: "web-webapp", name: "Web / WebApp", icon: "▣", price: "from 6,040,000 MMK", reason: "DApp frontend" },
+   124→  ],
+   125→  "bug-bounty": [
+   126→    { slug: "security-audit", name: "Security Audit", icon: "ʞ", price: "from 6,040,000 MMK", reason: "Comprehensive security audit" },
+   127→    { slug: "smart-contract-development", name: "Smart Contract Dev", icon: "∎", price: "from 9,660,000 MMK", reason: "Fix found vulnerabilities" },
+   128→    { slug: "web3-wallets", name: "Web3 Wallets", icon: "⬡", price: "from 18,110,000 MMK", reason: "Secure wallet infrastructure" },
+   129→  ],
+   130→  "money-market-development": [
+   131→    { slug: "security-audit", name: "Security Audit", icon: "ʞ", price: "from 6,040,000 MMK", reason: "Critical for DeFi protocols" },
+   132→    { slug: "smart-contract-development", name: "Smart Contract Dev", icon: "∎", price: "from 9,660,000 MMK", reason: "Additional contract modules" },
+   133→    { slug: "amm-dex", name: "AMM / DEX", icon: "⇄", price: "from 24,150,000 MMK", reason: "Integrated swap functionality" },
+   134→  ],
+   135→  "cbdc-development": [
+   136→    { slug: "security-audit", name: "Security Audit", icon: "ʞ", price: "from 6,040,000 MMK", reason: "Government-grade security" },
+   137→    { slug: "smart-contract-development", name: "Smart Contract Dev", icon: "∎", price: "from 9,660,000 MMK", reason: "Core infrastructure contracts" },
+   138→    { slug: "web-webapp", name: "Web / WebApp", icon: "▣", price: "from 6,040,000 MMK", reason: "Admin and user portals" },
+   139→  ],
+   140→  "mobile-web-game-development": [
+   141→    { slug: "ui-ux-design", name: "UI/UX Design", icon: "◡", price: "from 2,415,000 MMK", reason: "Game UI/UX and level design" },
+   142→    { slug: "3d-modeling", name: "3D Modeling", icon: "◈", price: "from 1,810,000 MMK", reason: "Game assets and environments" },
+   143→    { slug: "android-ios-app", name: "Android & iOS App", icon: "▣", price: "from 12,080,000 MMK", reason: "Native mobile game port" },
+   144→  ],
+   145→};
+   146→
+   147→// Main service prices for basket
+   148→export const SERVICE_PRICES: Record<string, { name: string; icon: string; price: string }> = {
+   149→  "ai-chatbot": { name: "AI Chatbot", icon: "◐", price: "from 3,020,000 MMK" },
+   150→  "voice-ai": { name: "Voice AI", icon: "♫", price: "from 6,040,000 MMK" },
+   151→  "agent-swarm": { name: "Agent Swarm", icon: "⬡", price: "from 9,660,000 MMK" },
+   152→  "ai-automation": { name: "AI Automation", icon: "⚙", price: "from 3,620,000 MMK" },
+   153→  "api-mcp": { name: "API & MCP", icon: "⌗", price: "from 4,830,000 MMK" },
+   154→  "hermes-openclaw-grokbot": { name: "HERMES / Openclaw / GrokBot", icon: "⚡", price: "custom" },
+   155→  "ai-video-generation": { name: "AI Video Generation", icon: "▶", price: "from 2,415,000 MMK" },
+   156→  "3d-modeling": { name: "3D Modeling", icon: "◈", price: "from 1,810,000 MMK" },
+   157→  "graphic-design": { name: "Graphic Design", icon: "◆", price: "from 1,210,000 MMK" },
+   158→  "content-copywriting": { name: "Content & Copywriting", icon: "✎", price: "from 966,000 MMK" },
+   159→  "online-media-buying": { name: "Online Media Buying", icon: "▲", price: "from 1,810,000 MMK" },
+   160→  "ui-ux-design": { name: "UI/UX Design", icon: "◡", price: "from 2,415,000 MMK" },
+   161→  "android-ios-app": { name: "Android & iOS App", icon: "▣", price: "from 12,080,000 MMK" },
+   162→  "web-webapp": { name: "Web / WebApp", icon: "▣", price: "from 6,040,000 MMK" },
+   163→  "chrome-extensions": { name: "Chrome Extensions", icon: "⬚", price: "from 2,415,000 MMK" },
+   164→  "desktop-macbook-apps": { name: "Desktop / MacBook Apps", icon: "◱", price: "from 9,660,000 MMK" },
+   165→  "aso": { name: "ASO", icon: "⊙", price: "from 1,210,000 MMK" },
+   166→  "web3-wallets": { name: "Web3 Wallets", icon: "⬡", price: "from 18,110,000 MMK" },
+   167→  "amm-dex": { name: "AMM / DEX", icon: "⇄", price: "from 24,150,000 MMK" },
+   168→  "dao-governance": { name: "DAO Governance", icon: "◍", price: "from 18,110,000 MMK" },
+   169→  "nft-systems": { name: "NFT Systems", icon: "✦", price: "from 12,080,000 MMK" },
+   170→  "security-audit": { name: "Security Audit", icon: "ʞ", price: "from 6,040,000 MMK" },
+   171→  "smart-contract-development": { name: "Smart Contract Dev", icon: "∎", price: "from 9,660,000 MMK" },
+   172→  "bug-bounty": { name: "Bug Bounty", icon: "▣", price: "from 3,620,000 MMK" },
+   173→  "money-market-development": { name: "Money Market Development", icon: "$", price: "from 30,190,000 MMK" },
+   174→  "cbdc-development": { name: "CBDC Development", icon: "₵", price: "custom" },
+   175→  "mobile-web-game-development": { name: "Mobile/Web Game Dev", icon: "◆", price: "from 7,240,000 MMK" },
+   176→};
+   177→
+   178→export function ServiceBasket() {
+   179→  const { items, isOpen, toggleOpen, removeItem, clearBasket, getTotal, getServicesTotal, getAddonsTotal, getDiscount, getDiscountedTotal, getServiceCount, getAddonCount } = useBasketStore();
+   180→  const [submitting, setSubmitting] = React.useState(false);
+   181→
+   182→  const submitRFQ = async () => {
+   183→    if (items.length === 0) return;
+   184→    setSubmitting(true);
+   185→    try {
+   186→      const res = await fetch("/api/sigma/transmit?XTransformPort=3000", {
+   187→        method: "POST",
+   188→        headers: { "Content-Type": "application/json" },
+   189→        body: JSON.stringify({
+   190→          identity: "basket-rfq",
+   191→          channel: "RFQ",
+   192→          message: JSON.stringify({
+   193→            type: "quotation_request",
+   194→            items: items.map((i) => ({ slug: i.slug, name: i.name, type: i.type, addonType: i.addonType, price: i.price })),
+   195→            servicesTotal: getServicesTotal(),
+   196→            addonsTotal: getAddonsTotal(),
+   197→            total: getTotal(),
+   198→            discount: getDiscount(),
+   199→            final: getDiscountedTotal(),
+   200→            serviceCount: getServiceCount(),
+   201→            addonCount: getAddonCount(),
+   202→          }),
+   203→        }),
+   204→      });
+   205→      const data = await res.json();
+   206→      if (data.ok) {
+   207→        toast.success("▮ QUOTATION REQUESTED", { description: `Ref: ${data.ref}` });
+   208→        clearBasket();
+   209→        toggleOpen();
+   210→      }
+   211→    } catch {
+   212→      toast.error("SUBMISSION FAILED");
+   213→    } finally {
+   214→      setSubmitting(false);
+   215→    }
+   216→  };
+   217→
+   218→  const services = items.filter((i) => i.type === "service");
+   219→  const addons = items.filter((i) => i.type === "addon");
+   220→
+   221→  return (
+   222→    <>
+   223→      {/* Floating basket button */}
+   224→      <button
+   225→        onClick={toggleOpen}
+   226→        className="fixed bottom-9 left-9 z-[85] flex items-center gap-2 border border-[#FF4500] bg-background/90 px-3 py-2 font-mono text-[9px] uppercase tracking-[0.18em] text-[#FF4500] backdrop-blur-sm transition-all hover:bg-[#FF4500] hover:text-black"
+   227→      >
+   228→        <ShoppingBag className="h-3.5 w-3.5" />
+   229→        BASKET
+   230→        {items.length > 0 && (
+   231→          <span className="flex h-4 min-w-4 items-center justify-center bg-[#FF4500] px-1 text-[8px] text-black">
+   232→            {items.length}
+   233→          </span>
+   234→        )}
+   235→      </button>
+   236→
+   237→      {/* Basket panel — sci-fi loot box style */}
+   238→      {isOpen && (
+   239→        <div className="fixed inset-0 z-[140] flex items-center justify-center p-4" onClick={toggleOpen}>
+   240→          <div className="absolute inset-0 bg-background/90 backdrop-blur-md" />
+   241→          <div
+   242→            className="relative z-10 w-full max-w-2xl border border-[#FF4500]/40 bg-card"
+   243→            style={{ clipPath: "polygon(16px 0, 100% 0, 100% calc(100% - 16px), calc(100% - 16px) 100%, 0 100%, 0 16px)" }}
+   244→            onClick={(e) => e.stopPropagation()}
+   245→          >
+   246→            {/* Top accent bar */}
+   247→            <div className="h-1 w-full bg-[#FF4500]" />
+   248→
+   249→            {/* Header */}
+   250→            <div className="flex items-center justify-between border-b border-border px-6 py-3">
+   251→              <div className="flex items-center gap-2">
+   252→                <ShoppingBag className="h-4 w-4 text-[#FF4500]" />
+   253→                <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-[#FF4500]">▸ SERVICE BASKET</span>
+   254→              </div>
+   255→              <button onClick={toggleOpen} className="border border-border px-2 py-1 font-mono text-[9px] uppercase tracking-[0.18em] text-muted-foreground transition-colors hover:bg-foreground/10">
+   256→                <X className="h-3 w-3" />
+   257→              </button>
+   258→            </div>
+   259→
+   260→            {/* Items list — grouped by type */}
+   261→            <div className="max-h-[50vh] overflow-y-auto p-4 sigma-scroll-hidden">
+   262→              {items.length === 0 ? (
+   263→                <div className="py-12 text-center">
+   264→                  <div className="font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">▮ BASKET EMPTY</div>
+   265→                  <p className="mt-2 font-serif text-sm italic text-muted-foreground">Browse services and add them to your basket.</p>
+   266→                </div>
+   267→              ) : (
+   268→                <div className="space-y-3">
+   269→                  {/* Main services section */}
+   270→                  {services.length > 0 && (
+   271→                    <div>
+   272→                      <div className="mb-1.5 flex items-center gap-2 border-b border-[#FF4500]/30 pb-1">
+   273→                        <span className="font-mono text-[8px] uppercase tracking-[0.14em] text-[#FF4500]">▸ MAIN SERVICES</span>
+   274→                        <span className="font-mono text-[7px] text-muted-foreground">({services.length}) — DISCOUNT ELIGIBLE</span>
+   275→                      </div>
+   276→                      <div className="space-y-1.5">
+   277→                        {services.map((item) => (
+   278→                          <div key={item.slug} className="flex items-center gap-3 border border-border/40 bg-background/40 p-2">
+   279→                            <span className="font-sans text-lg" style={{ color: "#FF4500" }}>{item.icon}</span>
+   280→                            <div className="flex-1">
+   281→                              <div className="font-sans text-xs font-bold uppercase tracking-tight">{item.name}</div>
+   282→                              <div className="font-mono text-[8px] uppercase tracking-[0.14em] text-muted-foreground">
+   283→                                MAIN SERVICE · {item.price === 0 ? "custom" : formatMMK(item.price)}
+   284→                              </div>
+   285→                            </div>
+   286→                            <button onClick={() => removeItem(item.slug)} className="border border-border/40 p-1 text-muted-foreground transition-colors hover:border-[#FF3D3D] hover:text-[#FF3D3D]">
+   287→                              <Trash2 className="h-3 w-3" />
+   288→                            </button>
+   289→                          </div>
+   290→                        ))}
+   291→                      </div>
+   292→                    </div>
+   293→                  )}
+   294→
+   295→                  {/* Add-ons section */}
+   296→                  {addons.length > 0 && (
+   297→                    <div>
+   298→                      <div className="mb-1.5 flex items-center gap-2 border-b border-[#00FF94]/30 pb-1">
+   299→                        <span className="font-mono text-[8px] uppercase tracking-[0.14em] text-[#00FF94]">▸ ADD-ONS</span>
+   300→                        <span className="font-mono text-[7px] text-muted-foreground">({addons.length}) — NO DISCOUNT</span>
+   301→                      </div>
+   302→                      <div className="space-y-1.5">
+   303→                        {addons.map((item) => (
+   304→                          <div key={item.slug} className="flex items-center gap-3 border border-border/40 bg-background/40 p-2">
+   305→                            <span className="font-sans text-lg" style={{ color: "#00FF94" }}>{item.icon}</span>
+   306→                            <div className="flex-1">
+   307→                              <div className="font-sans text-xs font-bold uppercase tracking-tight">{item.name}</div>
+   308→                              <div className="font-mono text-[8px] uppercase tracking-[0.14em] text-muted-foreground">
+   309→                                ADD-ON · {item.addonType === "ongoing" ? "ONGOING · " : ""}{item.price === 0 ? "custom" : formatMMK(item.price)}
+   310→                              </div>
+   311→                            </div>
+   312→                            <button onClick={() => removeItem(item.slug)} className="border border-border/40 p-1 text-muted-foreground transition-colors hover:border-[#FF3D3D] hover:text-[#FF3D3D]">
+   313→                              <Trash2 className="h-3 w-3" />
+   314→                            </button>
+   315→                          </div>
+   316→                        ))}
+   317→                      </div>
+   318→                    </div>
+   319→                  )}
+   320→                </div>
+   321→              )}
+   322→            </div>
+   323→
+   324→            {/* Summary + checkout */}
+   325→            {items.length > 0 && (
+   326→              <div className="border-t border-border p-4">
+   327→                {/* Discount tier ladder — shows all 4 tiers, highlights current */}
+   328→                <div className="mb-3">
+   329→                  <div className="mb-1.5 flex items-center justify-between">
+   330→                    <span className="font-mono text-[8px] uppercase tracking-[0.14em] text-muted-foreground">
+   331→                      BULK DISCOUNT TIERS (MAIN SERVICES ONLY)
+   332→                    </span>
+   333→                    <span className="font-mono text-[9px] text-[#00FF94]">
+   334→                      ACTIVE: -{getDiscount() > 0 ? Math.round((getDiscount() / Math.max(getServicesTotal(), 1)) * 100) + "%" : "0%"}
+   335→                    </span>
+   336→                  </div>
+   337→                  <div className="grid grid-cols-4 gap-0.5">
+   338→                    {DISCOUNT_TIERS.map((tier) => {
+   339→                      const svcCount = getServiceCount();
+   340→                      const isActive = svcCount >= tier.count && (tier.count === DISCOUNT_TIERS[DISCOUNT_TIERS.length - 1].count
+   341→                        ? svcCount >= tier.count
+   342→                        : svcCount >= tier.count && svcCount < (DISCOUNT_TIERS.find((t) => t.count > tier.count)?.count ?? Infinity));
+   343→                      return (
+   344→                        <div
+   345→                          key={tier.count}
+   346→                          className={`border px-1.5 py-1 text-center transition-colors ${
+   347→                            isActive
+   348→                              ? "border-[#00FF94] bg-[#00FF94]/15"
+   349→                              : "border-border/40 opacity-50"
+   350→                          }`}
+   351→                        >
+   352→                          <div className="font-mono text-[7px] uppercase tracking-[0.1em] text-muted-foreground">
+   353→                            {tier.label}
+   354→                          </div>
+   355→                          <div className={`font-sans text-xs font-black ${isActive ? "text-[#00FF94]" : "text-foreground"}`}>
+   356→                            {Math.round(tier.rate * 100)}%
+   357→                          </div>
+   358→                        </div>
+   359→                      );
+   360→                    })}
+   361→                  </div>
+   362→                  {/* Next tier incentive */}
+   363→                  {(() => {
+   364→                    const next = getNextTier(getServiceCount());
+   365→                    if (!next) return null;
+   366→                    const svcCount = getServiceCount();
+   367→                    return (
+   368→                      <div className="mt-1.5 border border-[#FFB300]/40 bg-[#FFB300]/5 px-2 py-1">
+   369→                        <div className="flex items-center justify-between">
+   370→                          <span className="font-mono text-[7px] uppercase tracking-[0.12em] text-[#FFB300]">
+   371→                            ▸ ADD {next.count - svcCount} MORE MAIN SERVICE FOR {Math.round(next.rate * 100)}% OFF
+   372→                          </span>
+   373→                          <span className="font-mono text-[7px] text-muted-foreground">{svcCount}/{next.count}</span>
+   374→                        </div>
+   375→                      </div>
+   376→                    );
+   377→                  })()}
+   378→                </div>
+   379→
+   380→                {/* Price breakdown — services vs add-ons */}
+   381→                <div className="space-y-1 font-mono text-[10px] uppercase tracking-[0.14em]">
+   382→                  {services.length > 0 && (
+   383→                    <div className="flex justify-between">
+   384→                      <span className="text-muted-foreground">SERVICES SUBTOTAL</span>
+   385→                      <span className="text-foreground">{formatMMK(getServicesTotal())}</span>
+   386→                    </div>
+   387→                  )}
+   388→                  {addons.length > 0 && (
+   389→                    <div className="flex justify-between">
+   390→                      <span className="text-muted-foreground">ADD-ONS SUBTOTAL</span>
+   391→                      <span className="text-foreground">{formatMMK(getAddonsTotal())}</span>
+   392→                    </div>
+   393→                  )}
+   394→                  {getDiscount() > 0 && (
+   395→                    <div className="flex justify-between">
+   396→                      <span className="text-[#00FF94]">DISCOUNT (ON SERVICES)</span>
+   397→                      <span className="text-[#00FF94]">-{formatMMK(getDiscount())}</span>
+   398→                    </div>
+   399→                  )}
+   400→                  <div className="flex justify-between border-t border-border/40 pt-1">
+   401→                    <span className="text-[#FF4500]">TOTAL</span>
+   402→                    <span className="font-sans text-lg font-black text-[#FF4500]">{formatMMK(getDiscountedTotal())}</span>
+   403→                  </div>
+   404→                </div>
+   405→
+   406→                {/* RFQ button */}
+   407→                <button
+   408→                  onClick={submitRFQ}
+   409→                  disabled={submitting}
+   410→                  className="mt-4 w-full border border-[#FF4500] bg-[#FF4500] py-3 font-mono text-[11px] uppercase tracking-[0.2em] text-black transition-opacity hover:opacity-80 disabled:opacity-50"
+   411→                >
+   412→                  <Send className="mr-2 inline h-3 w-3" />
+   413→                  {submitting ? "▮ SUBMITTING..." : "REQUEST QUOTATION →"}
+   414→                </button>
+   415→                <p className="mt-2 text-center font-mono text-[8px] uppercase tracking-[0.14em] text-muted-foreground">
+   416→                  ▸ THIS IS A QUOTATION REQUEST, NOT A PURCHASE. PAYMENT HAPPENS OFF-PLATFORM.
+   417→                </p>
+   418→              </div>
+   419→            )}
+   420→          </div>
+   421→        </div>
+   422→      )}
+   423→    </>
+   424→  );
+   425→}
+   426→
