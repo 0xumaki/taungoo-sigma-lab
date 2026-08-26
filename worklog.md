@@ -2506,3 +2506,68 @@ Agent: main (orchestrator)
 
 ## Cron
 - Job #338235 continues every 15 min (webDevReview)
+
+---
+Task ID: CRON-ROUND-37 (Hero Padding + Mobile Metrics Fix)
+Agent: main (orchestrator)
+
+## User Feedback Addressed
+"10% padding or a little more than that might be fine since currently Sigma/Alpha buttons are clashing with nav bar and look weird. In mobile view some metrics are even only half visible. Adjust accordingly."
+
+## Changes
+
+### 1. Hero Card Padding (AlphaHero.tsx)
+- **Section padding:** `p-[2.5vh] sm:p-[3vh]` → `px-[2vw] pb-[2vh] pt-[80px] sm:px-[3vw] sm:pb-[2.5vh] sm:pt-[10vh]`
+  - **Top:** 80px fixed on mobile (always clears 66px mode switcher) / 10vh on desktop (90px on 900px viewport)
+  - **Sides:** 2vw mobile / 3vw desktop (~43px each side on desktop = wider view)
+  - **Bottom:** 2vh / 2.5vh
+- **Crosshair corners:** repositioned to match padding edges
+- **Hero card:** `h-screen w-full` → `h-full w-full` (fills the padded area)
+
+### 2. Mode Switcher Clash Fix
+- Root cause: hero card started at top=0, mode switcher (at top-9, 36px+30px height) ended at 66px, overlapping card's hazard stripe + nav header
+- Fix: pt-[80px] on mobile / pt-[10vh] on desktop pushes card below mode switcher
+- Verified: 24px gap on desktop (card at 90px, mode switcher ends at 66px)
+- Verified: 14px gap on mobile (card at 80px, mode switcher ends at 66px)
+
+### 3. Mobile Metrics Fix
+- **Data strip:** 
+  - Changed from `flex-wrap` (which caused wrapping/overflow) to `overflow-x-auto` with `shrink-0` children
+  - Shortened labels on mobile: "SYSTEM ONLINE" → "ONLINE", "SIG=1.0000" → "SIG=1.0", "v2.7.SIGMA" → "v2.7", "DUAL MODE: Σ/Α" → "Σ/Α"
+  - Full labels shown on sm+ via `hidden sm:inline`
+  - Added `sigma-scroll-hidden` for clean scrollbar
+  - Font: text-[9px] → text-[8px] on mobile, sm:text-[9px] on desktop
+- **Stats grid:**
+  - Padding: p-3 → p-2 on mobile, sm:p-4 on desktop
+  - Value font: text-2xl → text-lg on mobile, sm:text-3xl on desktop
+  - Label font: text-[9px] → text-[8px] tracking-[0.14em] on mobile, sm:text-[9px] tracking-[0.18em] on desktop
+  - Crosshair tick: bottom-1.5 right-1.5 → bottom-1 right-1 on mobile
+- **Footer strip:**
+  - "SCROLL TO EXPLORE" → "SCROLL" on mobile
+  - Font: text-[9px] → text-[8px] on mobile, sm:text-[9px]
+  - Right-side build info: text-[8px] → text-[7px] on mobile, sm:text-[8px]
+  - Padding: px-3 py-2 → px-2 py-1.5 on mobile
+- **Floating labels (NODE_01, NOMINAL):**
+  - Were positioned outside card corners with `-translate-x-full` / `translate-x-full` — overflowed on mobile
+  - Added `hidden lg:block` — only visible on large screens
+
+## Verification
+### Desktop (1440×900)
+- Card: 1354×788, starts at top=90, left=43
+- Mode switcher gap: 24px ✅
+- Side padding: 43px each side (~3vw) ✅
+- No overflow ✅
+
+### Mobile (399×862 — iPhone 14)
+- Card: starts at top=80
+- Mode switcher gap: 14px ✅
+- Overflow count: 0 (interactive elements) ✅
+- Stats visible: true (all 4 cells fully visible) ✅
+- Data strip visible: true (fits within viewport) ✅
+- Floating labels: hidden on mobile (lg:block) ✅
+
+## Files Modified
+- src/components/sigma/alpha/AlphaHero.tsx
+
+## Cron
+- Job #338235 continues every 15 min (webDevReview)

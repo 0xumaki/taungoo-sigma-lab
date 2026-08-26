@@ -43,7 +43,7 @@ export function AlphaHero() {
   return (
     <section
       id="hero"
-      className="relative h-screen min-h-screen w-full overflow-hidden"
+      className="relative h-screen min-h-screen w-full overflow-hidden px-[2vw] pb-[2vh] pt-[80px] sm:px-[3vw] sm:pb-[2.5vh] sm:pt-[10vh]"
     >
       {/* ============================================================
           BACKGROUND LAYER (full-bleed, behind hero card)
@@ -70,18 +70,18 @@ export function AlphaHero() {
       />
 
       {/* ============================================================
-          OUTER CROSSHAIR CORNERS (page-level framing) — inset slightly
+          OUTER CROSSHAIR CORNERS (page-level framing) — at padding edge
          ============================================================ */}
-      <span className="pointer-events-none absolute left-2 top-2 z-40 h-5 w-5 border-l border-t border-[#FF4500]/60 sm:h-6 sm:w-6" />
-      <span className="pointer-events-none absolute right-2 top-2 z-40 h-5 w-5 border-r border-t border-[#FF4500]/60 sm:h-6 sm:w-6" />
-      <span className="pointer-events-none absolute bottom-2 left-2 z-40 h-5 w-5 border-b border-l border-[#FF4500]/60 sm:h-6 sm:w-6" />
-      <span className="pointer-events-none absolute bottom-2 right-2 z-40 h-5 w-5 border-b border-r border-[#FF4500]/60 sm:h-6 sm:w-6" />
+      <span className="pointer-events-none absolute left-[2vw] top-[80px] z-40 h-5 w-5 border-l border-t border-[#FF4500]/60 sm:left-[3vw] sm:top-[10vh] sm:h-6 sm:w-6" />
+      <span className="pointer-events-none absolute right-[2vw] top-[80px] z-40 h-5 w-5 border-r border-t border-[#FF4500]/60 sm:right-[3vw] sm:top-[10vh] sm:h-6 sm:w-6" />
+      <span className="pointer-events-none absolute bottom-[2vh] left-[2vw] z-40 h-5 w-5 border-b border-l border-[#FF4500]/60 sm:bottom-[2.5vh] sm:left-[3vw] sm:h-6 sm:w-6" />
+      <span className="pointer-events-none absolute bottom-[2vh] right-[2vw] z-40 h-5 w-5 border-b border-r border-[#FF4500]/60 sm:bottom-[2.5vh] sm:right-[3vw] sm:h-6 sm:w-6" />
 
       {/* ============================================================
-          THE HERO CARD — FULL-SCREEN, NO PADDING, FULL-WIDTH
-          Fills entire viewport (h-screen w-screen, no max-width)
+          THE HERO CARD — fills the padded area (10% padding around)
+          Inset from viewport so Σ/Α mode switcher doesn't clash with nav
          ============================================================ */}
-      <div className="relative z-10 flex h-screen w-full flex-col">
+      <div className="relative z-10 flex h-full w-full flex-col">
         <div
           className="relative flex flex-1 flex-col overflow-hidden border-2 border-[#FF4500]/40 bg-card/40 backdrop-blur-[2px]"
           style={{
@@ -134,24 +134,25 @@ export function AlphaHero() {
 
           {/* ============================================================
               2) DATA STRIP — system readouts (mono, like HUD telemetry)
+              Compact on mobile, full on desktop. No overflow.
              ============================================================ */}
-          <div className="relative z-10 flex flex-wrap items-center justify-between gap-2 border-b border-border/40 bg-background/40 px-3 py-1.5 font-mono text-[9px] uppercase tracking-[0.18em] text-muted-foreground sm:px-5">
-            <div className="flex items-center gap-3">
+          <div className="relative z-10 flex items-center justify-between gap-2 overflow-x-auto border-b border-border/40 bg-background/40 px-2 py-1 font-mono text-[8px] uppercase tracking-[0.16em] text-muted-foreground sm:px-4 sm:text-[9px] sm:tracking-[0.18em] sigma-scroll-hidden">
+            <div className="flex shrink-0 items-center gap-2 sm:gap-3">
               <span className="flex items-center gap-1.5">
                 <span className="sigma-pulse h-1.5 w-1.5 bg-[#00FF94]" />
-                <span className="text-[#00FF94]">SYSTEM ONLINE</span>
+                <span className="text-[#00FF94]">ONLINE</span>
               </span>
               <span className="hidden text-border sm:inline">│</span>
-              <span className="hidden sm:inline">EST. 2016 · YANGON, MM</span>
+              <span className="hidden sm:inline">EST. 2016</span>
               <span className="hidden text-border lg:inline">│</span>
               <span className="hidden lg:inline text-[#00E5FF]">NODES: 11</span>
             </div>
-            <div className="flex items-center gap-3">
-              <span className="text-[#C6FF00]">SIG=1.0000</span>
+            <div className="flex shrink-0 items-center gap-2 sm:gap-3">
+              <span className="text-[#C6FF00]">SIG=1.0</span>
               <span className="hidden text-border sm:inline">│</span>
-              <span className="text-[#FF4500]">v2.7.SIGMA</span>
+              <span className="text-[#FF4500]">v2.7</span>
               <span className="hidden text-border sm:inline">│</span>
-              <span className="hidden sm:inline">▸ DUAL MODE: Σ/Α</span>
+              <span className="hidden sm:inline">Σ/Α</span>
             </div>
           </div>
 
@@ -345,12 +346,13 @@ export function AlphaHero() {
 
           {/* ============================================================
               4) STATS GRID — integrated at bottom of card
+              2 cols on mobile (fully visible), 4 cols on desktop
              ============================================================ */}
           <div className="relative z-10 grid grid-cols-2 gap-px border-t border-border/40 bg-border/30 sm:grid-cols-4">
             {HERO_STATS.map(([v, k, c]) => (
               <div
                 key={k}
-                className="relative bg-card/70 p-3 backdrop-blur-sm transition-colors hover:bg-card sm:p-4"
+                className="relative bg-card/70 p-2 backdrop-blur-sm transition-colors hover:bg-card sm:p-4"
               >
                 {/* Top hazard strip — colored per stat */}
                 <div
@@ -360,17 +362,17 @@ export function AlphaHero() {
                   }}
                 />
                 <div
-                  className="mt-1 font-sans text-2xl font-black sm:text-3xl"
+                  className="mt-1 font-sans text-lg font-black sm:text-3xl"
                   style={{ color: c }}
                 >
                   {v}
                 </div>
-                <div className="mt-0.5 font-mono text-[9px] uppercase tracking-[0.18em] text-muted-foreground">
+                <div className="mt-0.5 font-mono text-[8px] uppercase tracking-[0.14em] text-muted-foreground sm:text-[9px] sm:tracking-[0.18em]">
                   {k}
                 </div>
                 {/* Bottom-right crosshair tick */}
                 <span
-                  className="absolute bottom-1.5 right-1.5 h-2 w-2 border-b border-r opacity-50"
+                  className="absolute bottom-1 right-1 h-2 w-2 border-b border-r opacity-50 sm:bottom-1.5 sm:right-1.5"
                   style={{ borderColor: c }}
                 />
               </div>
@@ -379,13 +381,14 @@ export function AlphaHero() {
 
           {/* ============================================================
               5) FOOTER STRIP — scroll cue + build info
+              Compact on mobile, full on desktop
              ============================================================ */}
-          <div className="relative z-10 flex items-center justify-between gap-3 border-t border-border/40 bg-background/40 px-3 py-2 font-mono text-[9px] uppercase tracking-[0.3em] text-muted-foreground sm:px-5">
-            <div className="flex items-center gap-2">
+          <div className="relative z-10 flex items-center justify-between gap-2 border-t border-border/40 bg-background/40 px-2 py-1.5 font-mono text-[8px] uppercase tracking-[0.2em] text-muted-foreground sm:px-5 sm:text-[9px] sm:tracking-[0.3em]">
+            <div className="flex shrink-0 items-center gap-1.5">
               <span className="sigma-blink text-[#FF4500]">▼</span>
-              <span>SCROLL TO EXPLORE</span>
+              <span>SCROLL</span>
             </div>
-            <div className="hidden items-center gap-3 text-[8px] tracking-[0.2em] sm:flex">
+            <div className="hidden items-center gap-2 text-[7px] tracking-[0.16em] sm:flex sm:text-[8px] sm:tracking-[0.2em]">
               <span>BUILD 2.7.SIGMA</span>
               <span className="text-border">·</span>
               <span>DUAL MODE: Σ/Α</span>
@@ -438,11 +441,11 @@ export function AlphaHero() {
             <circle cx="22" cy="0" r="2" fill="currentColor" />
           </svg>
 
-          {/* Floating card edge labels — outside the chamfered corners */}
-          <div className="pointer-events-none absolute -left-1 top-7 z-30 -translate-x-full whitespace-nowrap font-mono text-[7px] uppercase tracking-[0.22em] text-muted-foreground sm:top-10">
+          {/* Floating card edge labels — outside the chamfered corners (hidden on mobile to prevent overflow) */}
+          <div className="pointer-events-none absolute -left-1 top-7 z-30 hidden -translate-x-full whitespace-nowrap font-mono text-[7px] uppercase tracking-[0.22em] text-muted-foreground sm:top-10 lg:block">
             <span className="text-[#FF4500]">▸</span> NODE_01
           </div>
-          <div className="pointer-events-none absolute -right-1 bottom-7 z-30 translate-x-full whitespace-nowrap font-mono text-[7px] uppercase tracking-[0.22em] text-muted-foreground sm:bottom-10">
+          <div className="pointer-events-none absolute -right-1 bottom-7 z-30 hidden translate-x-full whitespace-nowrap font-mono text-[7px] uppercase tracking-[0.22em] text-muted-foreground sm:bottom-10 lg:block">
             <span className="text-[#00FF94]">▮</span> NOMINAL
           </div>
         </div>
