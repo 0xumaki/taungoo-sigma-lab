@@ -4156,3 +4156,42 @@ Agent: main (orchestrator)
 
 ## Cron
 - Job #338235 continues every 15 min (webDevReview)
+
+---
+Task ID: CRON-ROUND-52 (SFX Auto-Enable + Server Restart)
+Agent: main (orchestrator)
+
+## User Feedback Addressed
+1. "Enable the SFX as default"
+2. "Now server is dead again I guess"
+
+## Changes
+
+### 1. SFX Auto-Enabled by Default (sound.ts + ExperienceShell.tsx)
+**Root cause:** The sound engine had `enabled = false` by default and only initialized when the user explicitly clicked the "SFX" toggle button. Browser autoplay policies prevent audio from starting without a user gesture.
+
+**Fix:** Added an auto-enable mechanism:
+- Added a `useEffect` in `useSigmaSound()` hook that listens for the FIRST user interaction (click or keydown) anywhere on the document
+- On first interaction: `sigmaSound.init()` is called automatically, enabling the sound engine
+- Uses `{ once: true }` event listeners (auto-removed after first fire)
+- The hook is now called in `ExperienceShell` (both Sigma and Alpha modes) — previously only called inside `SigmaSoundToggle` which only renders in Sigma mode
+
+**Flow:**
+1. Page loads → boot screen plays (no sound yet — browser blocks autoplay)
+2. User clicks/presses any key (e.g., SKIP button, navigation) → sound engine auto-initializes
+3. All subsequent sound effects (clicks, transitions, opens, closes) play automatically
+4. User can still toggle SFX off via the SFX button if desired
+
+**Verified:** `sfxHasGreen: true` after first click — sound engine is enabled
+
+### 2. Server Restart
+- Dev server was OOM-killed (recurring sandbox memory issue)
+- Restarted with `setsid bash -c 'exec bun run dev'`
+- Verified: HTTP 200, all pages accessible
+
+## Files Modified
+- src/lib/sigma/sound.ts (auto-enable useEffect in useSigmaSound hook)
+- src/components/sigma/ExperienceShell.tsx (import useSigmaSound + call in component)
+
+## Cron
+- Job #338235 continues every 15 min (webDevReview)

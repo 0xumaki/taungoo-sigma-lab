@@ -170,6 +170,30 @@ export function useSigmaSound() {
     sigmaSound.play("boot");
   }, []);
 
+  // Auto-enable SFX on first user interaction (click or keydown).
+  // Browser autoplay policies require a user gesture before audio can play,
+  // so we listen for the first interaction and auto-init the sound engine.
+  React.useEffect(() => {
+    if (sigmaSound.enabled) {
+      setEnabled(true);
+      return;
+    }
+    const onFirstInteraction = () => {
+      if (!sigmaSound.enabled) {
+        sigmaSound.init();
+        setEnabled(sigmaSound.enabled);
+      }
+      document.removeEventListener("click", onFirstInteraction);
+      document.removeEventListener("keydown", onFirstInteraction);
+    };
+    document.addEventListener("click", onFirstInteraction, { once: true });
+    document.addEventListener("keydown", onFirstInteraction, { once: true });
+    return () => {
+      document.removeEventListener("click", onFirstInteraction);
+      document.removeEventListener("keydown", onFirstInteraction);
+    };
+  }, []);
+
   const play = React.useCallback((type: SoundType) => {
     if (!sigmaSound.enabled) return;
     sigmaSound.play(type);

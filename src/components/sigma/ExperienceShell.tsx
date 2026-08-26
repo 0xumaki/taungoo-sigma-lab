@@ -21,7 +21,7 @@ import { SigmaMCController } from "./shared/SigmaMCController";
 import { SigmaToolbar } from "./shared/SigmaToolbar";
 import { SigmaModeSwitcher } from "./shared/SigmaModeSwitcher";
 import { AlphaInterface } from "./alpha/AlphaInterface";
-import { sigmaSound } from "@/lib/sigma/sound";
+import { sigmaSound, useSigmaSound } from "@/lib/sigma/sound";
 import { SigmaMap } from "./SigmaMap";
 import { S01Initializing } from "./sections/S01Initializing";
 import { S02Manifesto } from "./sections/S02Manifesto";
@@ -70,6 +70,8 @@ function renderView(view: SectionId) {
 
 export function ExperienceShell() {
   const { view, phase, navigate, setPhase, visitToken } = useSigmaStore();
+  // Auto-enable SFX on first user interaction (both Sigma and Alpha modes)
+  useSigmaSound();
   const [renderedView, setRenderedView] = React.useState<SectionId>(view);
   const [flashAccent, setFlashAccent] = React.useState<string>("#FFFFFF");
   const [booting, setBooting] = React.useState(false);
