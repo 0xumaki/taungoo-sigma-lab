@@ -63,7 +63,7 @@ export function S08Capabilities() {
       title="CAPABILITIES"
       tagline="Sector 08 is the hardware lab — compute, sensors, and infrastructure. Click any unit to flip and see maintenance logs."
     >
-      <div ref={root} className="relative grid h-full grid-cols-12 gap-3 overflow-y-auto sigma-scroll-hidden">
+      <div ref={root} className="relative grid h-full grid-cols-12 gap-3 overflow-y-auto sigma-scroll-hidden lg:grid-rows-[repeat(6,minmax(min-content,1fr))]">
         {/* Ambient particles */}
         <SigmaParticles count={14} color="#FF3D3D" />
         {GEAR.map((g, i) => {
@@ -73,10 +73,22 @@ export function S08Capabilities() {
             <div
               data-gear
               key={g.code}
-              className="col-span-12 sm:col-span-6 lg:col-span-4"
+              className="col-span-12 row-span-3 sm:col-span-6 lg:col-span-4"
+              style={{ perspective: "1200px" } as React.CSSProperties}
             >
-              {/* FRONT FACE — shown when not flipped */}
-              {!isFlipped && (
+              {/* FLIP CONTAINER — 3D flip animation */}
+              <div
+                className="relative h-full transition-transform duration-700"
+                style={{
+                  transformStyle: "preserve-3d",
+                  transform: isFlipped ? "rotateY(180deg)" : "rotateY(0deg)",
+                }}
+              >
+              {/* FRONT FACE */}
+              <div
+                className={isFlipped ? "hidden" : "block h-full"}
+                style={{ backfaceVisibility: "hidden" }}
+              >
                 <Panel
                   label={g.code}
                   id={g.serial}
@@ -131,10 +143,13 @@ export function S08Capabilities() {
                     </button>
                   </div>
                 </Panel>
-              )}
+              </div>
 
-              {/* BACK FACE — shown when flipped (simple show/hide, no 3D transform) */}
-              {isFlipped && (
+              {/* BACK FACE — rotated 180deg, visible when flipped */}
+              <div
+                className={isFlipped ? "block h-full" : "hidden"}
+                style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}
+              >
                 <Panel
                   label={`${g.code} · DETAIL`}
                   id={g.serial}
@@ -203,7 +218,8 @@ export function S08Capabilities() {
                     </div>
                   </div>
                 </Panel>
-              )}
+              </div>
+              </div>
             </div>
           );
         })}

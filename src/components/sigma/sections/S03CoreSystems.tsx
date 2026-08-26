@@ -121,17 +121,17 @@ export function S03CoreSystems() {
       title="CORE SYSTEMS"
       tagline="Sector 03 is the core systems map — six verticals we ship to right now, from AI automation to edge IoT for operations."
     >
-      <div ref={root} className="relative grid h-full grid-cols-12 gap-3 overflow-y-auto sigma-scroll-hidden lg:grid-rows-[repeat(6,minmax(min-content,1fr))]">
+      <div ref={root} className="relative grid h-full grid-cols-12 gap-3 overflow-y-auto sigma-scroll-hidden lg:grid-rows-[repeat(12,minmax(min-content,1fr))]">
         {/* Ambient system particles */}
         <SigmaParticles count={18} color="#00E5FF" />
 
-        {/* featured market 1 — large */}
-        <MarketCard market={MARKETS[0]} className="col-span-12 row-span-3 md:col-span-5" featured />
-        {/* featured market 2 */}
-        <MarketCard market={MARKETS[1]} className="col-span-12 row-span-3 md:col-span-4" featured />
+        {/* featured market 1 — large (taller) */}
+        <MarketCard market={MARKETS[0]} className="col-span-12 row-span-6 md:col-span-5" featured />
+        {/* featured market 2 (taller) */}
+        <MarketCard market={MARKETS[1]} className="col-span-12 row-span-6 md:col-span-4" featured />
 
-        {/* market load monitor */}
-        <Panel label="MARKET LOAD" id="LIVE" accent="#00E5FF" className="col-span-12 row-span-3 md:col-span-3">
+        {/* market load monitor (taller) */}
+        <Panel label="MARKET LOAD" id="LIVE" accent="#00E5FF" className="col-span-12 row-span-6 md:col-span-3">
           <div className="flex h-full flex-col justify-between p-3">
             <div className="space-y-2">
               {MARKETS.map((m) => (
@@ -153,14 +153,14 @@ export function S03CoreSystems() {
           </div>
         </Panel>
 
-        {/* market 3 */}
-        <MarketCard market={MARKETS[2]} className="col-span-12 row-span-3 md:col-span-3" />
-        {/* market 4 */}
-        <MarketCard market={MARKETS[3]} className="col-span-12 row-span-3 md:col-span-3" />
-        {/* market 5 */}
-        <MarketCard market={MARKETS[4]} className="col-span-12 row-span-3 md:col-span-3" />
-        {/* market 6 */}
-        <MarketCard market={MARKETS[5]} className="col-span-12 row-span-3 md:col-span-3" />
+        {/* market 3 (taller) */}
+        <MarketCard market={MARKETS[2]} className="col-span-12 row-span-6 md:col-span-3" />
+        {/* market 4 (taller) */}
+        <MarketCard market={MARKETS[3]} className="col-span-12 row-span-6 md:col-span-3" />
+        {/* market 5 (taller) */}
+        <MarketCard market={MARKETS[4]} className="col-span-12 row-span-6 md:col-span-3" />
+        {/* market 6 (taller) */}
+        <MarketCard market={MARKETS[5]} className="col-span-12 row-span-6 md:col-span-3" />
       </div>
     </SectionShell>
   );

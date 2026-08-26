@@ -106,9 +106,9 @@ export function S04Projects() {
           </div>
         </div>
 
-        {/* grid */}
+        {/* grid — curated spacing, not claustrophobic. 2 cols mobile, 3 cols tablet, 3 cols desktop (wider cards). */}
         <div className="min-h-0 flex-1 overflow-y-auto sigma-scroll-hidden">
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 xl:grid-cols-4">
+          <div className="grid grid-cols-1 gap-4 p-1 sm:grid-cols-2 lg:grid-cols-3">
             {filtered.map((p) => (
               <ProjectCard key={p.id} project={p} onOpen={() => setActiveProject(p.id)} />
             ))}
@@ -147,8 +147,8 @@ function ProjectCard({ project, onOpen }: { project: Project; onOpen: () => void
     <button
       data-proj
       onClick={onOpen}
-      className="group relative block w-full overflow-hidden border border-border bg-card text-left transition-all duration-300 hover:-translate-y-1 hover:border-[#C6FF00]"
-      style={{ aspectRatio: "4 / 3" } as React.CSSProperties}
+      className="group relative block w-full overflow-hidden border border-border bg-card text-left transition-all duration-300 hover:-translate-y-1 hover:border-[#C6FF00] hover:shadow-[0_8px_30px_-8px_rgba(198,255,0,0.3)]"
+      style={{ aspectRatio: "16 / 10" } as React.CSSProperties}
     >
       {project.image ? (
         <img

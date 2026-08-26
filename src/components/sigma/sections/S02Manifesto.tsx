@@ -27,6 +27,7 @@ const STATS = [
 export function S02Manifesto() {
   const { navigate } = useSigmaStore();
   const root = React.useRef<HTMLDivElement>(null);
+  const manifestoRef = React.useRef<HTMLDivElement>(null);
 
   useGSAP(
     () => {
@@ -35,21 +36,50 @@ export function S02Manifesto() {
         .from("[data-m-line]", { opacity: 0, y: 30, duration: 0.6, stagger: 0.08 }, 0.2)
         .from("[data-m-stat]", { opacity: 0, y: 20, duration: 0.5, stagger: 0.06 }, 0.5)
         .from("[data-m-panel]", { opacity: 0, x: 40, duration: 0.6, stagger: 0.1 }, 0.4);
-
-      // Manifesto text — slow continuous scroll like a live terminal feed
-      const manifesto = root.current?.querySelector("[data-m-manifesto]");
-      if (manifesto) {
-        gsap.to(manifesto, {
-          scrollTop: manifesto.scrollHeight,
-          duration: 60,
-          ease: "none",
-          repeat: -1,
-          yoyo: true,
-        });
-      }
     },
     { scope: root }
   );
+
+  // Infinite typewriter effect for manifesto background text.
+  // Types out the manifesto, then clears and types again — never-ending work.
+  React.useEffect(() => {
+    const el = manifestoRef.current;
+    if (!el) return;
+    const fullText = MANIFESTO_TEXT;
+    let charIdx = 0;
+    let cycle = 0;
+    let active = true;
+
+    const typeNext = () => {
+      if (!active || !el) return;
+      // Type 5 chars per tick for speed (maximalist density)
+      const chunk = fullText.slice(0, charIdx + 5);
+      el.textContent = chunk + "▮";
+      charIdx += 5;
+
+      if (charIdx >= fullText.length) {
+        // Cycle complete — pause, then restart
+        cycle++;
+        setTimeout(() => {
+          if (!active) return;
+          charIdx = 0;
+          el.textContent = "";
+          // Pre-fill with the full text so it looks like continuous streaming
+          el.textContent = fullText;
+          setTimeout(() => {
+            if (!active) return;
+            charIdx = 0;
+            typeNext();
+          }, 800);
+        }, 2000);
+        return;
+      }
+      setTimeout(typeNext, 12);
+    };
+    typeNext();
+
+    return () => { active = false; };
+  }, []);
 
   return (
     <SectionShell
@@ -61,20 +91,26 @@ export function S02Manifesto() {
         {/* Ambient particles */}
         <SigmaParticles count={12} color="#FF4500" />
 
-        {/* MANIFESTO TEXT — fills the void space with green hacker terminal text.
-            Alien vs Predator vibe: small green monospace, glitch effect, auto-scroll.
-            Sits behind the main content at z-0, visible in negative space. */}
+        {/* MANIFESTO TEXT — infinite typewriter effect.
+            Never-ending work happening in the background. Maximalist terminal vibe.
+            Alien vs Predator: green monospace, glitch, auto-scroll, loops forever.
+            Multiple columns for density. */}
         <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
           <div
             data-m-manifesto
-            className="sigma-glitch absolute left-0 top-0 h-full w-full overflow-y-auto whitespace-pre-wrap break-words p-4 font-mono text-[8px] leading-[1.3] text-[#00FF94]/12"
+            ref={manifestoRef}
+            className="sigma-glitch absolute left-0 top-0 h-full w-full overflow-hidden whitespace-pre-wrap break-words p-3 font-mono text-[7px] leading-[1.25] text-[#00FF94]/15"
             data-text="MANIFESTO"
             style={{
-              maskImage: "linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.4) 10%, rgba(0,0,0,0.8) 30%, rgba(0,0,0,0.8) 70%, rgba(0,0,0,0.4) 90%, transparent 100%)",
-              WebkitMaskImage: "linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.4) 10%, rgba(0,0,0,0.8) 30%, rgba(0,0,0,0.8) 70%, rgba(0,0,0,0.4) 90%, transparent 100%)",
+              maskImage: "linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.5) 8%, rgba(0,0,0,0.9) 25%, rgba(0,0,0,0.9) 75%, rgba(0,0,0,0.5) 92%, transparent 100%)",
+              WebkitMaskImage: "linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.5) 8%, rgba(0,0,0,0.9) 25%, rgba(0,0,0,0.9) 75%, rgba(0,0,0,0.5) 92%, transparent 100%)",
+              columnCount: 2,
+              columnGap: "1rem",
             }}
-          >
-            {MANIFESTO_TEXT}
+          />
+          {/* Cursor blink overlay */}
+          <div className="absolute bottom-3 left-3 font-mono text-[8px] text-[#00FF94]/40">
+            <span className="sigma-blink">▮</span> STREAMING...
           </div>
         </div>
 
@@ -118,7 +154,7 @@ export function S02Manifesto() {
             </span>
           </h2>
           <p data-m-line className="mt-5 max-w-md font-serif text-lg italic text-foreground/80">
-            A research lab rooted in the Taungoo Empire (medieval Myanmar), building at the intersection of AI, Web3,
+            A research lab in Taungoo building at the intersection of AI, Web3,
             and community resilience. We treat the lab itself as a sigma — the
             unmeasured deviation that bends the curve.
           </p>

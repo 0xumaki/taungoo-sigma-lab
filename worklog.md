@@ -3863,3 +3863,84 @@ Agent: main (orchestrator)
 
 ## Cron
 - Job #338235 continues every 15 min (webDevReview)
+
+---
+Task ID: CRON-ROUND-48 (S07 + S02 Copy + Manifesto Loop + S03/S08 Taller + S04 Spacious + Flip Animation)
+Agent: main (orchestrator)
+
+## User Feedback Addressed (6 items)
+1. "Data Streams page also has overlapping and overflowing issues fix it professionally and add more animated data visualizations"
+2. "Restore the copy of the 'We are variable card in the manifesto as the previous one'"
+3. "Background typing should be loop infinitely, like never ending works are happening back there"
+4. "Make the card longer in Core System pages since you cannot fix the bug yet"
+5. "I want card flipping animation in capabilities when I click flip for Details button and make card longer there as well"
+6. "Project vault feels like not properly maximalist but the poorly positioned cards are almost squeeze my heart from a claustrophobic perspective"
+
+## Changes
+
+### 1. S07 Data Streams — Fixed overflow + added 3 new animated visualizations
+- Layout: `grid-rows-6` → flexible auto rows (prevents chart height collapse)
+- Chart heights: `h-[240px] md:h-full` → `h-[220px] md:h-full` (more stable)
+- NEW: Service Distribution Pie Chart (6 sectors with per-sector colors)
+- NEW: Resource Usage Radial Bar Chart (4 cores: CPU/MEM/NET/GPU with animated bars)
+- NEW: System Load Monitor (live progress bars with glow for each core)
+- Added `web3` data series to the neural activity area chart (3 streams instead of 2)
+- Added `Cell` + `Pie` + `PieChart` + `RadialBar` + `RadialBarChart` imports from recharts
+
+### 2. S02 — Restored previous copy
+- "A research lab rooted in the Taungoo Empire (medieval Myanmar), building..." → "A research lab in Taungoo building..."
+- Original copy restored per user request
+
+### 3. S02 — Manifesto background infinite typewriter loop
+- Replaced static text + GSAP scroll with INFINITE TYPEWRITER effect
+- Types 5 chars per tick (12ms interval) — fast, maximalist density
+- When complete: pauses 2s, pre-fills full text, pauses 800ms, then clears and types again
+- Never-ending work vibe: text is always streaming, always moving
+- Added 2-column layout (columnCount: 2) for density
+- Added "▮ STREAMING..." cursor blink overlay
+- Text size: 7px (smaller for more density), opacity 15%
+- Mask gradient: fade top/bottom for cinematic depth
+
+### 4. S03 Core Systems — Cards made longer
+- Grid: `grid-rows-[repeat(6,minmax(min-content,1fr))]` → `grid-rows-[repeat(12,minmax(min-content,1fr))]`
+- Featured cards: `row-span-3` → `row-span-6` (double height)
+- Standard cards: `row-span-3` → `row-span-6` (double height)
+- Market load monitor: `row-span-3` → `row-span-6`
+- Verified: card heights = 343px (much taller)
+
+### 5. S08 Capabilities — Flip animation restored + cards longer
+- RESTORED 3D flip animation: `perspective: 1200px` + `transformStyle: preserve-3d` + `rotateY(180deg)`
+- Duration: 700ms smooth flip (was instant show/hide)
+- `backfaceVisibility: hidden` on both faces (proper card flip)
+- Grid: added `lg:grid-rows-[repeat(6,minmax(min-content,1fr))]` for taller cards
+- Cards: `col-span-12 sm:col-span-6 lg:col-span-4` → `col-span-12 row-span-3 sm:col-span-6 lg:col-span-4` (taller)
+- Verified: clicking FLIP shows detail content (FIELD NOTES, POWER DRAW) with smooth 3D flip ✅
+
+### 6. S04 Project Vault — Fixed claustrophobic layout
+- Grid: `grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-3` → `grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-1`
+  - Fewer columns = wider cards (445px vs ~300px before)
+  - More gap (16px vs 12px) = breathing room
+  - Added p-1 padding
+- Card aspect ratio: `4/3` → `16/10` (wider, less cramped)
+- Added hover shadow: `hover:shadow-[0_8px_30px_-8px_rgba(198,255,0,0.3)]` (premium depth)
+- Verified: cards are 445×278px in 3-column grid — no longer claustrophobic
+
+## Verification
+- S07: 3 new visualizations present (SERVICE DISTRIBUTION, RESOURCE USAGE, SYSTEM LOAD) ✅
+- S02: copy restored ("A research lab in Taungoo") ✅
+- S02: infinite typewriter loop active ✅
+- S03: card heights = 343px (taller) ✅
+- S08: 3D flip animation works, detail content shows ✅
+- S04: cards 445×278px in 3-col grid (spacious) ✅
+- Lint: clean ✅
+- No errors ✅
+
+## Files Modified
+- src/components/sigma/sections/S07DataStreams.tsx (overflow fix + 3 new charts)
+- src/components/sigma/sections/S02Manifesto.tsx (copy restored + infinite typewriter)
+- src/components/sigma/sections/S03CoreSystems.tsx (taller cards)
+- src/components/sigma/sections/S08Capabilities.tsx (3D flip restored + taller cards)
+- src/components/sigma/sections/S04Projects.tsx (spacious layout)
+
+## Cron
+- Job #338235 continues every 15 min (webDevReview)
