@@ -1,0 +1,92 @@
+[
+  {
+    "url": "https://gsap.com/community/forums/topic/40686-scrolltrigger-and-cards-animating-vertically",
+    "name": "ScrollTrigger and cards animating vertically - GSAP",
+    "snippet": "May 9, 2024 · Hi, I think you should simplify your approach a little bit, get the animation with ScrollTrigger working first and then add snapping to the mix.",
+    "host_name": "gsap.com",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://github.com/freshtechbro/claudedesignskills/blob/main/plugins/individual/gsap-scrolltrigger/skills/gsap-scrolltrigger/references/easing_guide.md",
+    "name": "GSAP Easing Functions - Visual Guide - GitHub",
+    "snippet": "Example: // Element drops in gsap.from(\".card\", { y: -200, duration: 1, ease: \"bounce.out\" }); // Multiple cards with stagger gsap.from(\".card\", { y ...",
+    "host_name": "github.com",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://gsap.com/docs/v3/Plugins/ScrollTrigger",
+    "name": "ScrollTrigger | GSAP | Docs & Learning",
+    "snippet": "ScrollTrigger enables anyone to create jaw-dropping scroll-based animations with minimal code. Scrub, pin, snap, or just trigger ... fire a staggered animation",
+    "host_name": "gsap.com",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://lab.good-fella.com/blog/gsap-scrolltrigger-examples",
+    "name": "GSAP ScrollTrigger Examples: 10 Scroll Animations You Can Use",
+    "snippet": "Apr 18, 2026 · Ten production-ready GSAP ScrollTrigger patterns: fade reveals, Copy-paste code for each. This post covers ten patterns you'll actually use. ...",
+    "host_name": "lab.good-fella.com",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://gsap.com/community/forums/topic/39367-scrolltrigger-stacking-cards-animation-logic-to-create-any-effect-yes-even-yours",
+    "name": "ScrollTrigger stacking cards animation logic to create any effect, yes even",
+    "snippet": "Dec 20, 2023 · GSAP code we can drastically change how the animation looks and feels. GSAP uses a default ease: “power1.out”, which gives you animation a etc. ...",
+    "host_name": "gsap.com",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=y_q1NoiUpWU&vl=en",
+    "name": "Is GSAP ScrollTrigger the EASIEST Way to Create Scroll Animations?",
+    "snippet": "Dec 4, 2025 · Watch as a single image transforms into three perfectly flipping cards with smooth scroll animations! In this tutorial, I'll show you how to ...",
+    "host_name": "www.youtube.com",
+    "rank": 5,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://gsapify.com/gsap-animations",
+    "name": "GSAP Animations | 100+ Effects & Examples - GSAPify",
+    "snippet": "Explore 100+ GSAP animation effects : \"power3.out\" “fade in cards from the left with a stagger and bounce” ScrollTrigger configurations for scroll-driven ...",
+    "host_name": "gsapify.com",
+    "rank": 6,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://gsap.com/community/forums/topic/32640-stack-cards-on-top-of-each-other-with-scroll-trigger",
+    "name": "Stack cards on top of each other with scroll Trigger. - GSAP",
+    "snippet": "Jun 8, 2022 · I've been trying to use Scrolltrigger to scroll cards horizontally. I want my cards to stack on top of each other in the center of the ...",
+    "host_name": "gsap.com",
+    "rank": 7,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://css-tricks.com/going-meta-gsap-the-quest-for-perfect-infinite-scrolling",
+    "name": "Going “Meta GSAP”: The Quest for “Perfect” Infinite Scrolling | CSS-Tricks",
+    "snippet": "Apr 14, 2021 · This article is more about grokking a concept, one that's going to help you think about your animations in a different way. It so happens that ...",
+    "host_name": "css-tricks.com",
+    "rank": 8,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=UTiCHu55ECg",
+    "name": "Awwwards-Winning 3D Reveal Animation | GSAP ScrollTrigger",
+    "snippet": "Jan 18, 2026 · This advanced GSAP tutorial shows you how to build smooth, cinematic team member cards that transform in 3D space as you scroll. What You ...",
+    "host_name": "www.youtube.com",
+    "rank": 9,
+    "date": "",
+    "favicon": ""
+  }
+]

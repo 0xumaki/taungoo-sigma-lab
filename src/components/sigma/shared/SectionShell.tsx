@@ -127,14 +127,9 @@ export function SectionShell({
         <span className="hidden sm:inline">SIG=1.00 · BUILD 2.4.SIGMA</span>
       </footer>
 
-      {/* big corner index watermark with glitch */}
-      <div className="pointer-events-none absolute -bottom-2 right-4 z-0 select-none font-sans text-[12vh] font-black leading-none">
-        <span
-          className="sigma-glitch text-foreground/[0.02]"
-          data-text={meta.shortCode}
-        >
-          {meta.shortCode}
-        </span>
+      {/* corner index watermark — small and subtle, bottom-right (was huge 12vh, disturbing content) */}
+      <div className="pointer-events-none absolute bottom-1 right-3 z-0 select-none font-mono text-[9px] font-bold uppercase tracking-[0.3em] text-foreground/[0.15]">
+        {meta.shortCode} / {meta.code}
       </div>
     </div>
   );

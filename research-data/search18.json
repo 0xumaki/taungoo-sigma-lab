@@ -1,0 +1,74 @@
+[
+  {
+    "url": "https://freefrontend.com/css-glitch-effects",
+    "name": "20+ CSS Glitch Effects: Free Code Snippets & Examples",
+    "snippet": "Jul 1, 2026 — This layout uses mix-blend-mode to blend transparent text and video files in the browser. Using a text-shadow layer and asynchronous transform ... Read more",
+    "host_name": "freefrontend.com",
+    "rank": 0,
+    "date": "Jul 1, 2026",
+    "favicon": ""
+  },
+  {
+    "url": "https://deloughry.co.uk/field-notes/building-glitch-effects-with-css",
+    "name": "Building Glitch Effects with Pure CSS - A Deep Dive into Neo",
+    "snippet": "Feb 6, 2026 — A comprehensive guide to creating CRT scan lines, chromatic aberration, oscilloscope waveforms, and glitch animations using pure CSS .",
+    "host_name": "deloughry.co.uk",
+    "rank": 1,
+    "date": "Feb 6, 2026",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.reddit.com/r/css/comments/1ag0mac/how_to_apply_mixblendmode_on_the_text_only_while",
+    "name": "How to apply mix-blend-mode on the text only, while",
+    "snippet": "Here's an example where the text takes the background color of the p element (and a pseudo element behind it to add some background imagery). Read more",
+    "host_name": "www.reddit.com",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://css-tricks.com/taming-blend-modes-difference-and-exclusion",
+    "name": "Taming Blend Modes: `difference` and `exclusion`",
+    "snippet": "Mar 22, 2021 — Blending means combining two layers (that are stacked one on top of the other) and getting a single layer. blending an element with the pseudo - ...",
+    "host_name": "css-tricks.com",
+    "rank": 3,
+    "date": "Mar 22, 2021",
+    "favicon": ""
+  },
+  {
+    "url": "https://forum.wixstudio.com/t/how-to-create-mix-blend-mode-with-css-for-text/65216",
+    "name": "How to create \"mix-blend-mode\" with css for text?",
+    "snippet": "Nov 30, 2024 — I want to create a mix - blend - mode for my pinned text in the header. Is this possible with css ? Im new to coding , grateful for any tips! Product: Read more",
+    "host_name": "forum.wixstudio.com",
+    "rank": 4,
+    "date": "Nov 30, 2024",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/mix-blend-mode",
+    "name": "mix-blend-mode CSS property - MDN Web Docs",
+    "snippet": "Jun 8, 2026 — The mix-blend-mode CSS property sets how an element's content should blend with its backdrop — the content rendered behind the element ...",
+    "host_name": "developer.mozilla.org",
+    "rank": 5,
+    "date": "Jun 8, 2026",
+    "favicon": ""
+  },
+  {
+    "url": "https://dev.to/afif/comment/1dj9i",
+    "name": "mix-blend-mode won't work because I am using on",
+    "snippet": "Apr 20, 2021 — mix - blend - mode won't work because I am using only one element but yes if you consider an extra wrapper for the text then it can work but in ... Read more",
+    "host_name": "dev.to",
+    "rank": 6,
+    "date": "Apr 20, 2021",
+    "favicon": ""
+  },
+  {
+    "url": "https://daily.dev/posts/a4ldqfael",
+    "name": "building a glitch text effect with nothing but css",
+    "snippet": "Jul 3, 2026 — A walkthrough of building a pure CSS glitch text effect using three stacked techniques: chromatic aberration via text - shadow offsets, ...",
+    "host_name": "daily.dev",
+    "rank": 7,
+    "date": "Jul 3, 2026",
+    "favicon": ""
+  }
+]

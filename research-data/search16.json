@@ -1,0 +1,74 @@
+[
+  {
+    "url": "https://egghead.io/lessons/css-add-a-cutout-notch-to-an-html-element-with-a-css-polygon-clip-path",
+    "name": "Add a Cutout Notch to an HTML Element with a CSS Polygon Clip",
+    "snippet": "Jul 27, 2020 · In this lesson, we'll learn how to use CSS Clip Path to add a notch to our grid layout. We'll walk through understanding how the clip-path ...",
+    "host_name": "egghead.io",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://css-tricks.com/cut-corners-using-css-mask-and-clip-path-properties",
+    "name": "Tricks to Cut Corners Using CSS Mask and Clip-Path Properties",
+    "snippet": "Mar 30, 2022 · We recently covered creating fancy borders with CSS mask properties, and now we are going to cut the corners with CSS mask and clip-path !",
+    "host_name": "css-tricks.com",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=oWXm5n-Zi38",
+    "name": "Master CSS Clip-Path: Create Custom Shapes with One Line of Code!",
+    "snippet": "Apr 24, 2025 · In this video, I'll show you how to use clip-path to create awesome shapes, effects, and even smooth animations - all without using SVGs or ...",
+    "host_name": "www.youtube.com",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/clip-path",
+    "name": "clip-path CSS property - MDN Web Docs",
+    "snippet": "Apr 20, 2026 · The clip-path CSS property creates a clipping region that sets what part of an element should be shown. Parts that are inside the region are ...",
+    "host_name": "developer.mozilla.org",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://stackoverflow.com/questions/31765345/how-to-round-out-corners-when-using-css-clip-path",
+    "name": "How to round out corners when using CSS clip-path - Stack Overflow",
+    "snippet": "Aug 1, 2015 · CSS only clip-path supports only basic shapes (like polygon, circle). It does not support a combination of shapes or paths and you would have ... How to make radial corners in `clip-path` look clean? Cut Corners using CSS - html - Stack Overflow More results from stackoverflow.com",
+    "host_name": "stackoverflow.com",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://codehelper.me/articles/css-clip-path-examples",
+    "name": "CSS Clip-Path: 10 Copy-Paste Examples with Live Previews",
+    "snippet": "Jul 2, 2026 · The CSS clip-path property cuts any HTML element into a custom shape: triangles, hexagons, diagonal sections, notched cards, animated reveals.",
+    "host_name": "codehelper.me",
+    "rank": 5,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://bennettfeely.com/clippy",
+    "name": "Clippy — CSS clip-path maker - Bennett Feely",
+    "snippet": "The clip-path property allows you to make complex shapes in CSS by clipping an element to a basic shape (circle, ellipse, polygon, or inset), or to an SVG ...",
+    "host_name": "bennettfeely.com",
+    "rank": 6,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=sGQrGxdxgiQ",
+    "name": "Skew instead of Clip-Path: Polygon to create an Angled Section - YouTube",
+    "snippet": "Aug 10, 2024 · For More Training on ClickFunnels 1.0 and 2.0, Membership Sites, Courses and Custom Code Hacks - Go To https://CFninjas.com Check out the ...",
+    "host_name": "www.youtube.com",
+    "rank": 7,
+    "date": "",
+    "favicon": ""
+  }
+]

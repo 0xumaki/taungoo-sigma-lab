@@ -2571,3 +2571,33 @@ Agent: main (orchestrator)
 
 ## Cron
 - Job #338235 continues every 15 min (webDevReview)
+
+---
+Task ID: 3-RESEARCH
+Agent: research-subagent
+Task: Research Awwwards SOTD + FWA patterns for brutalist sci-fi card animations + brand treatment (RESEARCH ONLY — no source files modified)
+
+Work Log:
+- Read worklog.md (2573 lines) for context — confirmed Taungoo Sigma Lab is built (11 sections + SigmaMap hub + GSAP transitions + 34 QA checks passing)
+- Researched 32 sources via web-search (z-ai web_search) — Awwwards SOTD/SOTY, GSAP forum/docs, Mobbin, CodePen, FreeFrontend, CSS-Tricks, MDN, designmd.app, deloughry.co.uk, lab.good-fella.com, subframe, Pinterest
+- Deep-read 6 authoritative pages via z-ai page_reader: GSAP Staggers doc, lab.good-fella ScrollTrigger guide, designmd chromatic aberration guide, deloughry CSS glitch deep-dive, subframe glitch examples, Active Theory studio
+- Analyzed 10 specific award-winning sites: OPTIKKA (SOTD Jun 2025), Depo Studio (SOTD Oct 2023), Active Theory v5, Lusion, CrowdStrike Adversary Universe, Brilliant Digital 404, Dipsy Studio, Houkago Calpis, Awwwards Brutalism Collection (83 sites), Mobbin Neo Brutalism + Cyberpunk Design
+- Compiled findings report at /home/z/my-project/research-findings.md (~600 lines, 5 sections + appendix)
+- CRITICAL RULES obeyed: research only — NO source files modified, no code edits, only created research-findings.md (new file)
+
+Stage Summary:
+- Report file: /home/z/my-project/research-findings.md
+- Key findings:
+  * BRAND TREATMENT: Pure-CSS chromatic aberration via stacked text-shadow (2px rest / 6px hover); two-layer glitch via ::before/::after + clip-path + mix-blend-mode:screen; one-shot glitch-in on mount (0.6–0.8s, NOT permanent — designmd.app explicitly warns against continuous glitch); Σ glyph pulse (scale 1→1.06 over 2.4s, NO rotation per user spec); text shimmer via linear-gradient + background-clip:text + 200% background-size; colors = white text + #FF0050 (R) + #00FFC8 (B) for classic CRT, or orange + cyan to tie to TSL palette
+  * CARD ANIMATION: Authoritative SOTD params — y:60 / opacity:0→1 / duration:0.8s / ease:power3.out / start:"top 85%" / once:true / stagger 0.08s (cards) or 0.12–0.15s (hero stats); hover stack = lift 6px (0.4s) + image zoom 1.08 (0.6s) + border-to-accent (0.3s) + accent glow (0.4s) + overlay fade (0.3s + 0.05s delay); all using power3.out (cubic-bezier(0.22,1,0.36,1))
+  * MAXIMALIST SCI-FI: Layer-limit rule — pick MAX 4 of 7 chrome layers per card (scanlines/hazard-stripe/corner-brackets/accent-border/HUD-label/notched-clip-path/glitch-overlay); 18px chamfer clip-path on 2 opposite corners; scanlines 1px+1px @ opacity 0.4–0.6 mix-blend-mode:multiply; corner brackets 14px→20px hover with back.out(1.56) easing; HUD label = 10px mono / 0.14em letter-spacing / accent ID + muted status + blinking ▸ cursor
+  * SPECIFIC SITES: OPTIKKA (giant cursors + acid hovers), Depo Studio (restrained brutalism), Active Theory v5 (cinematic glitch-in), Lusion (particle text + CA), CrowdStrike (HUD + glitch-on-data-change), Brilliant Digital 404 (cleanest chromatic aberration), Dipsy Studio (logo-as-state-machine)
+- Recommended patterns for Taungoo Sigma Lab:
+  1. Apply RGB-split text-shadow + Σ pulse + shimmer to hero brand wordmark (per §5.1 — full CSS provided)
+  2. Replace card reveals with y:60/duration:0.8/power3.out/start:top 85%/once:true/stagger 0.08 (per §5.2 — hook provided)
+  3. Stack hover effects: lift 6px + image zoom 1.08 + border-to-accent + accent glow + overlay fade (per §5.3)
+  4. Pick 4 of 7 brutalist chrome layers per card, by section (per §5.3 table)
+  5. Wrap all infinite animations in prefers-reduced-motion:reduce — Awwwards juror accessibility check
+- No source files modified; ready for implementation subagent to apply findings
+- All findings cite real URLs; code snippets are production-ready and can be copy-pasted
+

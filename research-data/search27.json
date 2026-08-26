@@ -1,0 +1,74 @@
+[
+  {
+    "url": "https://gsap.com/community/forums/topic/29529-scrolltrigger-batch-and-timeline-how-to-consider-each-to-accomplish-this-task",
+    "name": "ScrollTrigger, batch and timeline - how to consider each to accomplish this",
+    "snippet": "Sep 23, 2021 · I'm stuck on how to add to the timeline that enables a combination of sequence (e.g., change scale of elements 2 & 3 following my taking element ... ScrollTrigger.batch() + staggering the animation of cards - GSAP ScrollTrigger - Start staggering from elements in viewport - GSAP More results from gsap.com",
+    "host_name": "gsap.com",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=KCgJDg6lxl0&vl=en",
+    "name": "AWWWARDS Style Section Showcase | GSAP & Scroll Trigger - YouTube",
+    "snippet": "Dec 7, 2025 · Learn how to create stunning pinned card animations using GSAP ScrollTrigger! In this comprehensive tutorial, we'll build a professional ...",
+    "host_name": "www.youtube.com",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=y_q1NoiUpWU&vl=en",
+    "name": "Is GSAP ScrollTrigger the EASIEST Way to Create Scroll Animations?",
+    "snippet": "Dec 4, 2025 · Watch as a single image transforms into three perfectly flipping cards with smooth scroll animations! In this tutorial, I'll show you how to ...",
+    "host_name": "www.youtube.com",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://lab.good-fella.com/blog/gsap-scrolltrigger-examples",
+    "name": "GSAP ScrollTrigger Examples: 10 Scroll Animations You Can Use",
+    "snippet": "Apr 18, 2026 · The start: \"top 85%\" means the animation fires when the top of the trigger element hits 85% down the viewport. Adjust this number to control ...",
+    "host_name": "lab.good-fella.com",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://github.com/freshtechbro/claudedesignskills/blob/main/plugins/individual/gsap-scrolltrigger/skills/gsap-scrolltrigger/SKILL.md",
+    "name": "freshtechbro/claudedesignskills - gsap-scrolltrigger - GitHub",
+    "snippet": "Comprehensive skill for GSAP (GreenSock Animation Platform) and ScrollTrigger plugin. Use this skill when creating web animations, scroll-driven experiences, ...",
+    "host_name": "github.com",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://dev.to/vishwark/mastering-gsap-scrolltrigger-a-complete-practical-guide-5bi3",
+    "name": "Mastering GSAP ScrollTrigger — A Complete Practical Guide",
+    "snippet": "Jan 9, 2026 · In this article, we'll deeply understand what ScrollTrigger is, how it works, its core configurations, and the most commonly used effects in ...",
+    "host_name": "dev.to",
+    "rank": 5,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=mKXRtvGuhjU",
+    "name": "Every Card Takes Its Turn on Scroll (Directed with GSAP) - YouTube",
+    "snippet": "May 25, 2025 · Learn how to build a scroll-driven card stack animation using HTML, CSS, and JavaScript with GSAP and ScrollTrigger.",
+    "host_name": "www.youtube.com",
+    "rank": 6,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://mcpservers.org/agent-skills/greensock/gsap-scrolltrigger",
+    "name": "gsap-scrolltrigger | Claude Skills & Agent Skills Library",
+    "snippet": "Official GSAP skill for ScrollTrigger — scroll-linked animations, pinning, scrub, triggers. Use when building or recommending scroll-based animation,...",
+    "host_name": "mcpservers.org",
+    "rank": 7,
+    "date": "",
+    "favicon": ""
+  }
+]

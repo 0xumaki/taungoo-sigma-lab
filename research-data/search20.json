@@ -1,0 +1,74 @@
+[
+  {
+    "url": "https://gsap.com/community/forums/topic/29529-scrolltrigger-batch-and-timeline-how-to-consider-each-to-accomplish-this-task",
+    "name": "ScrollTrigger, batch and timeline - how to consider each to",
+    "snippet": "Sep 23, 2021 — I'm stuck on how to add to the timeline that enables a combination of sequence (e.g., change scale of elements 2 & 3 following my taking element ... Read more",
+    "host_name": "gsap.com",
+    "rank": 0,
+    "date": "Sep 23, 2021",
+    "favicon": ""
+  },
+  {
+    "url": "https://gsap.com/docs/v3/Plugins/ScrollTrigger",
+    "name": "ScrollTrigger | GSAP | Docs & Learning",
+    "snippet": "ScrollTrigger enables anyone to create jaw-dropping scroll-based animations with minimal code. Infinitely flexible. Scrub, pin, snap, or just trigger ...",
+    "host_name": "gsap.com",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://gsap.com/community/forums/topic/31827-scrolltrigger-start-staggering-from-elements-in-viewport",
+    "name": "ScrollTrigger - Start staggering from elements in viewport",
+    "snippet": "Apr 12, 2022 — Hello. I have a grid of, let's say 100 items (.grid-post) and I use the batch () method of scrollTrigger this way:. Read more",
+    "host_name": "gsap.com",
+    "rank": 2,
+    "date": "Apr 12, 2022",
+    "favicon": ""
+  },
+  {
+    "url": "https://github.com/freshtechbro/claudedesignskills/blob/main/plugins/individual/gsap-scrolltrigger/skills/gsap-scrolltrigger/references/api_reference.md",
+    "name": "GSAP & ScrollTrigger API Quick Reference",
+    "snippet": "A comprehensive collection of Claude Code skills for modern web development, specializing in 3D graphics, animation, and interactive web experiences.",
+    "host_name": "github.com",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://gsap.com/community/forums/topic/24288-staggered-animations-in-scrolltrigger",
+    "name": "Staggered Animations in ScrollTrigger",
+    "snippet": "Jun 2, 2020 — Are there any plans for adding stagger in ScrollTrigger ? Would be really useful for reveals on a grid, where you'd want to stagger the reveal ...",
+    "host_name": "gsap.com",
+    "rank": 4,
+    "date": "Jun 2, 2020",
+    "favicon": ""
+  },
+  {
+    "url": "https://mcpservers.org/agent-skills/greensock/gsap-scrolltrigger",
+    "name": "gsap-scrolltrigger | Claude Skills & Agent Skills Library",
+    "snippet": "Official GSAP skill for ScrollTrigger — scroll-linked animations, pinning, scrub, triggers. start : \" top 80 %\", end: duration , stagger , defaults,",
+    "host_name": "mcpservers.org",
+    "rank": 5,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://lab.good-fella.com/blog/gsap-scrolltrigger-examples",
+    "name": "GSAP ScrollTrigger Examples: 10 Scroll Animations You Can",
+    "snippet": "Apr 18, 2026 — Ten production-ready GSAP ScrollTrigger patterns: fade reveals , batch , snap, refresh. This post covers ten patterns you'll actually use.  ...",
+    "host_name": "lab.good-fella.com",
+    "rank": 6,
+    "date": "Apr 18, 2026",
+    "favicon": ""
+  },
+  {
+    "url": "https://gsap.com/community/forums/topic/41004-how-to-combine-stagger-batch-and-foreach-or-do-it-differently",
+    "name": "How to combine stagger / batch and forEach? Or do it",
+    "snippet": "Jun 17, 2024 — timeline({ scrollTrigger : { trigger: item, start : \" top 80 %\", end: \"bottom 20%\", toggleActions: 'play reverse play reverse', markers:false } }); ... Read more",
+    "host_name": "gsap.com",
+    "rank": 7,
+    "date": "Jun 17, 2024",
+    "favicon": ""
+  }
+]
