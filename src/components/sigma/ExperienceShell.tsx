@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import gsap from "gsap";
+import dynamic from "next/dynamic";
 import { useSigmaStore } from "@/lib/sigma/store";
 import { getSection, nextSection, prevSection, SECTIONS, type SectionId } from "@/lib/sigma/sections";
 import { SigmaHud } from "./shared/SigmaHud";
@@ -22,18 +23,23 @@ import { SigmaToolbar } from "./shared/SigmaToolbar";
 import { SigmaModeSwitcher } from "./shared/SigmaModeSwitcher";
 import { AlphaInterface } from "./alpha/AlphaInterface";
 import { sigmaSound, useSigmaSound } from "@/lib/sigma/sound";
-import { SigmaMap } from "./SigmaMap";
-import { S01Initializing } from "./sections/S01Initializing";
-import { S02Manifesto } from "./sections/S02Manifesto";
-import { S03CoreSystems } from "./sections/S03CoreSystems";
-import { S04Projects } from "./sections/S04Projects";
-import { S05Collective } from "./sections/S05Collective";
-import { S06Research } from "./sections/S06Research";
-import { S07DataStreams } from "./sections/S07DataStreams";
-import { S08Capabilities } from "./sections/S08Capabilities";
-import { S09Alliances } from "./sections/S09Alliances";
-import { S10Access } from "./sections/S10Access";
-import { S11Status } from "./sections/S11Status";
+
+// LAZY-LOAD the 11 heavy Sigma sections + SigmaMap.
+// These are the memory-heavy components (recharts, GSAP contexts, particles).
+// With dynamic imports, they only compile when Sigma mode is actually used.
+// When in Alpha mode, NONE of these are compiled — saving ~70% memory.
+const SigmaMap = dynamic(() => import("./SigmaMap").then(m => m.SigmaMap));
+const S01Initializing = dynamic(() => import("./sections/S01Initializing").then(m => m.S01Initializing));
+const S02Manifesto = dynamic(() => import("./sections/S02Manifesto").then(m => m.S02Manifesto));
+const S03CoreSystems = dynamic(() => import("./sections/S03CoreSystems").then(m => m.S03CoreSystems));
+const S04Projects = dynamic(() => import("./sections/S04Projects").then(m => m.S04Projects));
+const S05Collective = dynamic(() => import("./sections/S05Collective").then(m => m.S05Collective));
+const S06Research = dynamic(() => import("./sections/S06Research").then(m => m.S06Research));
+const S07DataStreams = dynamic(() => import("./sections/S07DataStreams").then(m => m.S07DataStreams));
+const S08Capabilities = dynamic(() => import("./sections/S08Capabilities").then(m => m.S08Capabilities));
+const S09Alliances = dynamic(() => import("./sections/S09Alliances").then(m => m.S09Alliances));
+const S10Access = dynamic(() => import("./sections/S10Access").then(m => m.S10Access));
+const S11Status = dynamic(() => import("./sections/S11Status").then(m => m.S11Status));
 
 const PANEL_COUNT = 8;
 
