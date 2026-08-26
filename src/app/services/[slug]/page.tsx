@@ -5,6 +5,10 @@ import { useParams } from "next/navigation";
 import Link from "next/link";
 import { AlphaNav } from "@/components/sigma/alpha/AlphaNav";
 import { AlphaFooter } from "@/components/sigma/alpha/AlphaFooter";
+import { ADDONS, SERVICE_PRICES, ServiceBasket } from "@/components/sigma/alpha/ServiceBasket";
+import { useBasketStore, parsePrice, formatMMK } from "@/lib/sigma/basket";
+import { toast } from "sonner";
+import { Plus, Check } from "lucide-react";
 
 interface ServiceDetail {
   slug: string;
@@ -141,6 +145,34 @@ export default function ServiceDetailPage() {
           </div>
         </div>
       </section>
+
+      {/* Add-ons & Compatible Services — upselling */}
+      {ADDONS[service.slug] && ADDONS[service.slug].length > 0 && (
+        <section className="border-t border-border px-3 py-8">
+          <div className="mx-auto w-full max-w-[1600px]">
+            <h2 className="font-mono text-[10px] uppercase tracking-[0.3em] text-muted-foreground">▸ COMPATIBLE ADD-ONS</h2>
+            <p className="mt-1 font-serif text-sm italic text-muted-foreground">Services that pair perfectly with {service.name}. Add them to your basket.</p>
+            <div className="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
+              {ADDONS[service.slug].map((addon) => (
+                <AddOnCard key={addon.slug} addon={addon} />
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Add to basket bar */}
+      <section className="border-t border-border px-3 py-8">
+        <div className="mx-auto flex w-full max-w-[1600px] items-center justify-between gap-4">
+          <div>
+            <div className="font-mono text-[10px] uppercase tracking-[0.3em] text-[#FF4500]">▸ ADD TO BASKET</div>
+            <p className="mt-1 font-serif text-sm italic text-muted-foreground">Add this service to your quotation request.</p>
+          </div>
+          <AddToBasketButton slug={service.slug} name={service.name} icon={service.icon} price={service.packages[1].price} />
+        </div>
+      </section>
+
+      {/* CTA */}
       <section className="border-t border-border px-3 py-16 text-center">
         <div className="mx-auto max-w-2xl">
           <h2 className="font-sans text-3xl font-black uppercase tracking-tight">NOT SURE WHICH PACKAGE?</h2>
@@ -149,6 +181,84 @@ export default function ServiceDetailPage() {
         </div>
       </section>
       <AlphaFooter />
+      <ServiceBasket />
+    </div>
+  );
+}
+
+// Add-to-basket button for the main service
+function AddToBasketButton({ slug, name, icon, price }: { slug: string; name: string; icon: string; price: string }) {
+  const { items, addItem } = useBasketStore();
+  const inBasket = items.some((i) => i.slug === slug);
+  const priceNum = parsePrice(price);
+
+  const handleAdd = () => {
+    addItem({ slug, name, type: "service", price: priceNum, icon });
+    toast.success(`▮ ${name} ADDED TO BASKET`);
+  };
+
+  return (
+    <button
+      onClick={handleAdd}
+      disabled={inBasket}
+      className={`flex items-center gap-2 border px-6 py-3 font-mono text-[11px] uppercase tracking-[0.2em] transition-all ${
+        inBasket
+          ? "border-[#00FF94] bg-[#00FF94]/10 text-[#00FF94]"
+          : "border-[#FF4500] bg-[#FF4500] text-black hover:opacity-80"
+      }`}
+    >
+      {inBasket ? (
+        <>
+          <Check className="h-3.5 w-3.5" /> IN BASKET
+        </>
+      ) : (
+        <>
+          <Plus className="h-3.5 w-3.5" /> ADD TO BASKET
+        </>
+      )}
+    </button>
+  );
+}
+
+// Add-on card for compatible services
+function AddOnCard({ addon }: { addon: { slug: string; name: string; icon: string; price: string; reason: string } }) {
+  const { items, addItem } = useBasketStore();
+  const inBasket = items.some((i) => i.slug === addon.slug);
+  const priceNum = parsePrice(addon.price);
+
+  const handleAdd = () => {
+    addItem({ slug: addon.slug, name: addon.name, type: "addon", price: priceNum, icon: addon.icon });
+    toast.success(`▮ ${addon.name} ADDED AS ADD-ON`);
+  };
+
+  return (
+    <div
+      className="group relative border border-border bg-card/30 transition-all hover:border-[#00FF94]/40"
+      style={{ clipPath: "polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px)" }}
+    >
+      <div className="h-0.5 w-full bg-[#00FF94]/40" />
+      <div className="p-3">
+        <div className="flex items-start gap-3">
+          <span className="font-sans text-xl text-[#00FF94]">{addon.icon}</span>
+          <div className="flex-1">
+            <h4 className="font-sans text-xs font-bold uppercase tracking-tight">{addon.name}</h4>
+            <p className="mt-0.5 font-serif text-[10px] italic text-muted-foreground">{addon.reason}</p>
+            <div className="mt-2 flex items-center justify-between">
+              <span className="font-mono text-[8px] uppercase tracking-[0.12em] text-[#00FF94]">{addon.price}</span>
+              <button
+                onClick={handleAdd}
+                disabled={inBasket}
+                className={`flex items-center gap-1 border px-2 py-1 font-mono text-[8px] uppercase tracking-[0.14em] transition-all ${
+                  inBasket ? "border-[#00FF94]/40 text-[#00FF94]" : "border-border text-muted-foreground hover:border-[#00FF94] hover:text-[#00FF94]"
+                }`}
+              >
+                {inBasket ? <Check className="h-2.5 w-2.5" /> : <Plus className="h-2.5 w-2.5" />}
+                {inBasket ? "ADDED" : "ADD"}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

@@ -1860,3 +1860,52 @@ Agent: main (orchestrator)
 - Insights popup: confirmed working ✅
 - Lint clean ✅
 - Cron #337053 continues every 15 min
+
+---
+Task ID: CRON-ROUND-33 (Basket System + Add-ons + RFQ)
+Agent: main (orchestrator)
+
+## New Features
+
+### 1. Service Basket System (sci-fi loot box)
+- **Basket store** (`src/lib/sigma/basket.ts`): Zustand store with add/remove/clear, price parsing, bulk discount calculation
+  - Discount tiers: 1 service: 0%, 2: 5%, 3-4: 10%, 5+: 15%
+  - `parsePrice()`: converts "from 3,020,000 MMK" → 3020000
+  - `formatMMK()`: converts 3020000 → "3,020,000 MMK"
+- **ServiceBasket component** (`src/components/sigma/alpha/ServiceBasket.tsx`):
+  - Floating "BASKET" button at bottom-left with item count badge
+  - Click opens sci-fi loot box modal with cut-corner clip-path
+  - Items list with type labels (MAIN SERVICE / ADD-ON)
+  - Price breakdown: SUBTOTAL → DISCOUNT → TOTAL
+  - "REQUEST QUOTATION →" button sends basket to /api/sigma/transmit API
+  - "THIS IS A QUOTATION REQUEST, NOT A PURCHASE" disclaimer
+
+### 2. Add-ons & Compatible Services (upselling)
+- **26 add-on mappings** (`ADDONS` object in ServiceBasket.tsx):
+  - Each service has 3 compatible add-ons with reason text
+  - Researched real service pairings (e.g., Android/iOS → ASO, Web3 Wallets → Security Audit, AI Chatbot → Voice AI)
+- **AddOnCard component**: cut-corner card with icon, name, reason, price, "ADD" button
+- **AddToBasketButton**: "ADD TO BASKET" on each service detail page, turns green "IN BASKET" when added
+
+### 3. Service Detail Page Updates
+- Added "COMPATIBLE ADD-ONS" section showing 3 add-ons
+- Added "ADD TO BASKET" bar with the main service
+- ServiceBasket component added to service detail pages
+- All add-ons can be added to basket from the detail page
+
+### 4. Basket on Alpha Interface
+- ServiceBasket added to AlphaInterface.tsx (shows on all Alpha pages)
+
+## Verification
+- Sigma: 10/11 sectors ✅
+- Service pages: all 200 ✅
+- Case study: 200 ✅
+- Basket: add items → open basket → see subtotal/discount/total → RFQ button ✅
+- Add-ons: "COMPATIBLE ADD-ONS" section visible with 3 add-on cards ✅
+- Health API: OPERATIONAL ✅
+- Lint clean ✅
+- Cron #337053 continues every 15 min
+
+## Pending (from user's request)
+- GSAP page transition with service/project/blog names (instead of numbers) — not yet implemented
+- This requires modifying the Next.js navigation to intercept clicks and play the GSAP transition before route change

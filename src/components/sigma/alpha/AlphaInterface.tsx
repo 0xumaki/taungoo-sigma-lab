@@ -13,6 +13,7 @@ import { AlphaTestimonials } from "./AlphaTestimonials";
 import { AlphaInsights } from "./AlphaInsights";
 import { AlphaContact } from "./AlphaContact";
 import { AlphaFooter } from "./AlphaFooter";
+import { ServiceBasket } from "./ServiceBasket";
 
 // Scroll progress bar component
 function ScrollProgress() {
@@ -87,6 +88,7 @@ export function AlphaInterface() {
       <AlphaInsights />
       <AlphaContact />
       <AlphaFooter />
+      <ServiceBasket />
     </div>
   );
 }
