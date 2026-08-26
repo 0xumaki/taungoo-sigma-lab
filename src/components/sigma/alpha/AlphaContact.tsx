@@ -5,10 +5,12 @@ import { toast } from "sonner";
 
 const CHANNELS = ["RESEARCH", "PARTNERSHIP", "CAREER", "PRESS", "OTHER"];
 const SERVICES = ["AI Chatbot", "Voice AI", "Agent Swarm", "AI Automation", "Web3 Wallets", "Smart Contract", "Web/WebApp", "Mobile App", "Other"];
+const BUDGETS = ["< 3M MMK", "3M - 10M MMK", "10M - 30M MMK", "30M+ MMK", "CUSTOM"];
 
 export function AlphaContact() {
   const [channel, setChannel] = React.useState("RESEARCH");
   const [service, setService] = React.useState("AI Chatbot");
+  const [budget, setBudget] = React.useState("3M - 10M MMK");
   const [identity, setIdentity] = React.useState("");
   const [message, setMessage] = React.useState("");
   const [transmitting, setTransmitting] = React.useState(false);
@@ -36,7 +38,7 @@ export function AlphaContact() {
       const res = await fetch("/api/sigma/transmit?XTransformPort=3000", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ identity, channel, message }),
+        body: JSON.stringify({ identity, channel, service, budget, message }),
       });
       const data = await res.json();
       if (data.ok) {
@@ -52,11 +54,11 @@ export function AlphaContact() {
   };
 
   return (
-    <section id="contact" className="relative border-t border-border px-6 py-20">
+    <section id="contact" className="relative border-t border-border px-3 py-20">
       <div className="sigma-grid pointer-events-none absolute inset-0 opacity-10" />
       <div className="sigma-scanlines pointer-events-none absolute inset-0 opacity-15" />
 
-      <div className="relative z-10 mx-auto max-w-7xl">
+      <div className="relative z-10 mx-auto w-full max-w-[1600px]">
         {/* Header */}
         <div className="flex items-end justify-between gap-4 border-b border-border pb-4">
           <div>
@@ -136,6 +138,28 @@ export function AlphaContact() {
                       }`}
                     >
                       {s}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Budget range selector */}
+              <div>
+                <label className="mb-1 block font-mono text-[9px] uppercase tracking-[0.22em] text-muted-foreground">
+                  ▸ BUDGET RANGE
+                </label>
+                <div className="flex flex-wrap gap-1">
+                  {BUDGETS.map((b) => (
+                    <button
+                      key={b}
+                      onClick={() => setBudget(b)}
+                      className={`border px-2.5 py-1 font-mono text-[9px] uppercase tracking-[0.18em] transition ${
+                        budget === b
+                          ? "border-[#FFB300] bg-[#FFB300] text-black"
+                          : "border-border text-muted-foreground hover:text-foreground"
+                      }`}
+                    >
+                      {b}
                     </button>
                   ))}
                 </div>

@@ -55,11 +55,11 @@ export function AlphaServices() {
   }, [activeCat]);
 
   return (
-    <section id="services" className="relative border-t border-border px-6 py-20">
+    <section id="services" className="relative border-t border-border px-3 py-20">
       <div className="sigma-grid pointer-events-none absolute inset-0 opacity-10" />
       <div className="sigma-scanlines pointer-events-none absolute inset-0 opacity-15" />
 
-      <div className="relative z-10 mx-auto max-w-7xl">
+      <div className="relative z-10 mx-auto w-full max-w-[1600px]">
         {/* Header */}
         <div className="flex items-end justify-between gap-4 border-b border-border pb-4">
           <div>
@@ -67,14 +67,12 @@ export function AlphaServices() {
             <h2 className="mt-2 font-sans text-4xl font-black uppercase tracking-tight sm:text-6xl">
               WHAT WE <span style={{ color: "#FF4500" }}>BUILD.</span>
             </h2>
-            <p className="mt-2 max-w-2xl font-serif text-base italic text-muted-foreground">
+            <p className="mt-2 font-serif text-base italic text-muted-foreground">
               26 services across AI, Web3, and full-stack development. Each with detail pages, pricing packages, and comparison tables.
             </p>
           </div>
           <div className="hidden shrink-0 font-mono text-[9px] uppercase tracking-[0.2em] text-muted-foreground sm:block">
-            <span className="text-[#FF4500]">26</span> SERVICES<br />
-            <span className="text-[#00FF94]">{filtered.length}</span> SHOWN<br />
-            <span className="text-[#00E5FF]">10</span> DETAIL PAGES
+            <span className="text-[#FF4500]">26</span> SERVICES · <span className="text-[#00FF94]">{filtered.length}</span> SHOWN
           </div>
         </div>
 
@@ -88,23 +86,19 @@ export function AlphaServices() {
                 key={cat.id}
                 onClick={() => setActiveCat(cat.id)}
                 className={`flex items-center gap-1.5 border px-3 py-1.5 font-mono text-[9px] uppercase tracking-[0.18em] transition-all ${
-                  isActive
-                    ? "text-black"
-                    : "border-border text-muted-foreground hover:border-foreground/40 hover:text-foreground"
+                  isActive ? "text-black" : "border-border text-muted-foreground hover:border-foreground/40 hover:text-foreground"
                 }`}
                 style={isActive ? { background: cat.color, borderColor: cat.color } : undefined}
               >
                 {cat.label}
-                <span className={`flex h-4 min-w-4 items-center justify-center px-1 text-[8px] ${isActive ? "bg-black/20" : "bg-foreground/10"}`}>
-                  {count}
-                </span>
+                <span className={`flex h-4 min-w-4 items-center justify-center px-1 text-[8px] ${isActive ? "bg-black/20" : "bg-foreground/10"}`}>{count}</span>
               </button>
             );
           })}
         </div>
 
-        {/* Sci-fi service cards */}
-        <div className="mt-6 grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
+        {/* Vertical sci-fi service cards — reference-inspired design */}
+        <div className="mt-6 grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {filtered.map((s, i) => {
             const catColor = CAT_COLORS[s.cat] || "#FF4500";
             const hasDetailPage = ["ai-chatbot", "voice-ai", "agent-swarm", "ai-automation", "api-mcp", "web3-wallets", "smart-contract-development", "amm-dex", "web-webapp", "android-ios-app"].includes(s.slug);
@@ -112,50 +106,41 @@ export function AlphaServices() {
               <a
                 key={s.name}
                 href={hasDetailPage ? `/services/${s.slug}` : "#contact"}
-                className="group relative overflow-hidden border border-border bg-card/30 transition-all hover:border-foreground/40"
+                className="group relative block overflow-hidden border border-border bg-card/30 transition-all hover:border-foreground/40"
+                style={{ clipPath: "polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px))" }}
               >
-                {/* Sci-fi card structure: header bar + body + footer */}
-                {/* Header bar */}
-                <div className="flex items-center justify-between border-b border-border/40 px-3 py-1.5">
-                  <span className="font-mono text-[8px] uppercase tracking-[0.18em]" style={{ color: catColor }}>
-                    {s.cat}
-                  </span>
-                  <span className="font-mono text-[8px] uppercase tracking-[0.14em] text-muted-foreground">
-                    {String(i + 1).padStart(2, "0")} / {String(filtered.length).padStart(2, "0")}
-                  </span>
+                {/* Top section — icon in large area with accent bg */}
+                <div className="relative flex flex-col items-center justify-center border-b border-border/40 py-5" style={{ background: `linear-gradient(180deg, ${catColor}11, transparent)` }}>
+                  {/* Hazard stripe top-left */}
+                  <div className="absolute left-0 top-0 h-5 w-5" style={{ background: `repeating-linear-gradient(45deg, ${catColor} 0, ${catColor} 2px, transparent 2px, transparent 4px)` }} />
+                  {/* Index number */}
+                  <span className="absolute right-2 top-1.5 font-mono text-[7px] uppercase tracking-[0.14em] text-muted-foreground">{String(i + 1).padStart(2, "0")}</span>
+
+                  {/* Large icon */}
+                  <span className="font-sans text-4xl font-black transition-transform group-hover:scale-110" style={{ color: catColor }}>{s.icon}</span>
+                  {/* Category label */}
+                  <span className="mt-1 font-mono text-[7px] uppercase tracking-[0.18em]" style={{ color: catColor }}>{s.cat}</span>
                 </div>
 
-                {/* Body */}
-                <div className="relative p-3">
-                  {/* Accent strip on left */}
-                  <div className="absolute left-0 top-0 h-full w-0.5 transition-all group-hover:w-1" style={{ background: catColor }} />
-
-                  <div className="flex items-start gap-3">
-                    {/* Icon in bordered box */}
-                    <div className="flex h-10 w-10 shrink-0 items-center justify-center border" style={{ borderColor: `${catColor}55` }}>
-                      <span className="font-sans text-xl transition-transform group-hover:scale-110" style={{ color: catColor }}>{s.icon}</span>
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <h3 className="font-sans text-sm font-bold uppercase tracking-tight">{s.name}</h3>
-                      <p className="mt-0.5 font-serif text-xs italic text-muted-foreground line-clamp-2">{s.desc}</p>
-                    </div>
-                  </div>
-
-                  {/* Corner accents — sci-fi */}
-                  <span className="absolute right-2 top-2 h-2 w-2 border-r border-t opacity-30" style={{ borderColor: catColor }} />
-                  <span className="absolute bottom-2 left-2 h-2 w-2 border-b border-l opacity-30" style={{ borderColor: catColor }} />
+                {/* Middle — title + description */}
+                <div className="p-3">
+                  <h3 className="font-sans text-sm font-bold uppercase tracking-tight transition-colors group-hover:text-[#FF4500]">{s.name}</h3>
+                  <p className="mt-1 font-serif text-xs italic text-muted-foreground line-clamp-2">{s.desc}</p>
                 </div>
 
-                {/* Footer */}
-                <div className="flex items-center justify-between border-t border-border/40 px-3 py-1.5">
+                {/* Bottom — price + link */}
+                <div className="flex items-center justify-between border-t border-border/40 px-3 py-2">
                   <span className="font-mono text-[9px] uppercase tracking-[0.14em] text-[#00FF94]">{s.price}</span>
                   <span className="font-mono text-[8px] uppercase tracking-[0.14em] text-muted-foreground transition-colors group-hover:text-foreground">
                     {hasDetailPage ? "DETAILS →" : "INQUIRE →"}
                   </span>
                 </div>
 
+                {/* Scanline overlay */}
+                <div className="pointer-events-none absolute inset-0 z-0 opacity-15" style={{ background: "repeating-linear-gradient(0deg, transparent 0px, transparent 2px, rgba(0,0,0,0.15) 3px, rgba(0,0,0,0.15) 4px)" }} />
+
                 {/* Hover glow */}
-                <div className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100" style={{ background: `radial-gradient(60% 50% at 50% 50%, ${catColor}08, transparent 70%)` }} />
+                <div className="pointer-events-none absolute inset-0 z-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100" style={{ background: `radial-gradient(60% 50% at 50% 50%, ${catColor}08, transparent 70%)` }} />
               </a>
             );
           })}
@@ -163,12 +148,8 @@ export function AlphaServices() {
 
         {/* Bottom CTA */}
         <div className="mt-6 flex items-center justify-between border border-border/60 bg-card/30 p-4">
-          <div className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
-            ▸ NOT SURE WHICH SERVICE YOU NEED?
-          </div>
-          <a href="#contact" className="border border-foreground bg-foreground px-4 py-2 font-mono text-[10px] uppercase tracking-[0.2em] text-background transition-opacity hover:opacity-80">
-            CONTACT OUR TEAM →
-          </a>
+          <div className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground">▸ NOT SURE WHICH SERVICE YOU NEED?</div>
+          <a href="#contact" className="border border-foreground bg-foreground px-4 py-2 font-mono text-[10px] uppercase tracking-[0.2em] text-background transition-opacity hover:opacity-80">CONTACT OUR TEAM →</a>
         </div>
       </div>
     </section>

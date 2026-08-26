@@ -7,7 +7,7 @@ const INSIGHTS = [
 export function AlphaInsights() {
   return (
     <section id="insights" className="border-t border-border px-6 py-20">
-      <div className="mx-auto max-w-7xl">
+      <div className="mx-auto w-full max-w-[1600px]">
         <div className="font-mono text-[10px] uppercase tracking-[0.3em] text-muted-foreground">▸ 09 / INSIGHTS</div>
         <h2 className="mt-2 font-sans text-4xl font-black uppercase tracking-tight sm:text-5xl">
           RESEARCH LOGS.

@@ -16,7 +16,7 @@ export function AlphaFooter() {
       {/* Hazard stripe top */}
       <div className="sigma-hazard-orange absolute inset-x-0 top-0 h-1" />
 
-      <div className="relative z-10 mx-auto max-w-7xl">
+      <div className="relative z-10 mx-auto w-full max-w-[1600px]">
         {/* Top section: logo + links grid */}
         <div className="grid grid-cols-2 gap-8 sm:grid-cols-3 lg:grid-cols-5">
           {/* Logo + tagline */}

@@ -15,11 +15,11 @@ const PROJECTS = [
 
 export function AlphaPortfolio() {
   return (
-    <section id="portfolio" className="relative border-t border-border px-6 py-20">
+    <section id="portfolio" className="relative border-t border-border px-3 py-20">
       <div className="sigma-grid pointer-events-none absolute inset-0 opacity-10" />
       <div className="sigma-scanlines pointer-events-none absolute inset-0 opacity-15" />
 
-      <div className="relative z-10 mx-auto max-w-7xl">
+      <div className="relative z-10 mx-auto w-full max-w-[1600px]">
         {/* Header — maximalist */}
         <div className="flex items-end justify-between gap-4 border-b border-border pb-4">
           <div>
