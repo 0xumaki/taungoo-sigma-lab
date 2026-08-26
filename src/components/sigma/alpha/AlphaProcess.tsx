@@ -41,7 +41,7 @@ export function AlphaProcess() {
           </div>
         </div>
 
-        {/* === PRINCIPLES BAR — maximalist, fills negative space === */}
+        {/* Principles bar */}
         <div className="mt-4 flex flex-wrap gap-1">
           {PRINCIPLES.map((p) => (
             <div key={p.text} className="flex items-center gap-1.5 border border-border/40 bg-card/20 px-2 py-1">
@@ -51,74 +51,91 @@ export function AlphaProcess() {
           ))}
         </div>
 
-        {/* === PROCESS CARDS — horizontal sci-fi, tight spacing === */}
-        <div className="mt-4 space-y-2">
-          {STEPS.map((s, idx) => (
-            <div
-              key={s.num}
-              className="group relative flex border border-border bg-card/30 transition-all hover:border-foreground/40"
-              style={{ clipPath: "polygon(20px 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%, 0 20px)" }}
-            >
-              {/* Left: Number + accent */}
-              <div className="relative flex w-24 shrink-0 flex-col items-center justify-center border-r border-border/40" style={{ background: `linear-gradient(135deg, ${s.color}15, transparent)` }}>
-                <span className="sigma-glitch font-sans text-4xl font-black leading-none" data-text={s.num} style={{ color: s.color }}>{s.num}</span>
-                <span className="mt-0.5 font-mono text-[6px] uppercase tracking-[0.14em] text-muted-foreground">{s.duration}</span>
-                <div className="absolute bottom-0 left-0 h-1 w-full" style={{ background: `repeating-linear-gradient(45deg, ${s.color} 0, ${s.color} 3px, transparent 3px, transparent 6px)` }} />
-              </div>
-
-              {/* Middle: Title + desc + deliverables inline */}
-              <div className="flex-1 p-3">
-                <div className="flex items-center gap-2">
-                  <h3 className="font-sans text-sm font-bold uppercase tracking-tight">{s.title}</h3>
-                  <span className="font-mono text-[7px] uppercase tracking-[0.14em]" style={{ color: s.color }}>PHASE {s.num}</span>
-                  {/* Phase connector inline */}
-                  {idx < STEPS.length - 1 && <span className="font-mono text-xs text-muted-foreground/30">→</span>}
-                  {idx === STEPS.length - 1 && <span className="font-mono text-xs" style={{ color: s.color }}>✓ SHIPPED</span>}
+        {/* Process cards + Maximalist panel in a grid */}
+        <div className="mt-4 grid grid-cols-1 gap-3 lg:grid-cols-[1fr_320px]">
+          {/* Left: 4 process cards — no right tail */}
+          <div className="space-y-2">
+            {STEPS.map((s, idx) => (
+              <div
+                key={s.num}
+                className="group relative flex border border-border bg-card/30 transition-all hover:border-foreground/40"
+                style={{ clipPath: "polygon(20px 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%, 0 20px)" }}
+              >
+                {/* Left: number */}
+                <div className="relative flex w-24 shrink-0 flex-col items-center justify-center border-r border-border/40" style={{ background: `linear-gradient(135deg, ${s.color}15, transparent)` }}>
+                  <span className="sigma-glitch font-sans text-4xl font-black leading-none" data-text={s.num} style={{ color: s.color }}>{s.num}</span>
+                  <span className="mt-0.5 font-mono text-[6px] uppercase tracking-[0.14em] text-muted-foreground">{s.duration}</span>
+                  <div className="absolute bottom-0 left-0 h-1 w-full" style={{ background: `repeating-linear-gradient(45deg, ${s.color} 0, ${s.color} 3px, transparent 3px, transparent 6px)` }} />
                 </div>
-                <p className="mt-1 font-serif text-xs italic text-muted-foreground">{s.desc}</p>
-                {/* Deliverables — inline tags */}
-                <div className="mt-2 flex flex-wrap gap-0.5">
-                  {s.deliverables.map((d) => (
-                    <span key={d} className="border px-1.5 py-0.5 font-mono text-[7px] uppercase tracking-[0.1em] text-muted-foreground" style={{ borderColor: `${s.color}33` }}>
-                      <span style={{ color: s.color }}>▸</span> {d}
-                    </span>
+
+                {/* Middle: title + desc + deliverables */}
+                <div className="flex-1 p-3">
+                  <div className="flex items-center gap-2">
+                    <h3 className="font-sans text-sm font-bold uppercase tracking-tight">{s.title}</h3>
+                    <span className="font-mono text-[7px] uppercase tracking-[0.14em]" style={{ color: s.color }}>PHASE {s.num}</span>
+                    {idx < STEPS.length - 1 && <span className="font-mono text-xs text-muted-foreground/30">→</span>}
+                    {idx === STEPS.length - 1 && <span className="font-mono text-xs" style={{ color: s.color }}>✓</span>}
+                  </div>
+                  <p className="mt-1 font-serif text-xs italic text-muted-foreground">{s.desc}</p>
+                  <div className="mt-2 flex flex-wrap gap-0.5">
+                    {s.deliverables.map((d) => (
+                      <span key={d} className="border px-1.5 py-0.5 font-mono text-[7px] uppercase tracking-[0.1em] text-muted-foreground" style={{ borderColor: `${s.color}33` }}>
+                        <span style={{ color: s.color }}>▸</span> {d}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="pointer-events-none absolute inset-0 z-0 opacity-10" style={{ background: "repeating-linear-gradient(0deg, transparent 0px, transparent 2px, rgba(0,0,0,0.15) 3px, rgba(0,0,0,0.15) 4px)" }} />
+              </div>
+            ))}
+          </div>
+
+          {/* Right: Maximalist stats panel */}
+          <div className="space-y-3">
+            {/* Stats panel */}
+            <div className="border border-border bg-card/30" style={{ clipPath: "polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px)" }}>
+              <div className="h-1 w-full bg-[#FF4500]" />
+              <div className="p-4">
+                <div className="font-mono text-[9px] uppercase tracking-[0.2em] text-[#FF4500]">▸ DELIVERY STATS</div>
+                <div className="mt-3 space-y-3">
+                  {[
+                    ["4-11", "WEEKS TYPICAL", "#FF4500"],
+                    ["16", "DELIVERABLES", "#00E5FF"],
+                    ["100%", "TRANSPARENT", "#C6FF00"],
+                    ["30D", "SUPPORT INCLUDED", "#00FF94"],
+                    ["0", "BLACK BOXES", "#FF2D7E"],
+                    ["24/7", "MONITORING", "#FFB300"],
+                  ].map(([v, k, c]) => (
+                    <div key={k} className="flex items-center justify-between border-b border-border/30 pb-1.5">
+                      <span className="font-mono text-[8px] uppercase tracking-[0.14em] text-muted-foreground">{k}</span>
+                      <span className="font-sans text-lg font-black" style={{ color: c }}>{v}</span>
+                    </div>
                   ))}
                 </div>
               </div>
-
-              {/* Scanlines */}
               <div className="pointer-events-none absolute inset-0 z-0 opacity-10" style={{ background: "repeating-linear-gradient(0deg, transparent 0px, transparent 2px, rgba(0,0,0,0.15) 3px, rgba(0,0,0,0.15) 4px)" }} />
-              {/* Hover glow */}
-              <div className="pointer-events-none absolute inset-0 z-0 opacity-0 transition-opacity group-hover:opacity-100" style={{ background: `radial-gradient(60% 50% at 50% 50%, ${s.color}08, transparent 70%)` }} />
             </div>
-          ))}
-        </div>
 
-        {/* === STATS ROW — fills bottom negative space === */}
-        <div className="mt-4 grid grid-cols-2 gap-px border border-border/40 bg-border/40 sm:grid-cols-4">
-          {[
-            ["4-11", "WEEKS TYPICAL", "#FF4500"],
-            ["16", "DELIVERABLES", "#00E5FF"],
-            ["100%", "TRANSPARENT", "#C6FF00"],
-            ["30D", "SUPPORT", "#00FF94"],
-          ].map(([v, k, c]) => (
-            <div key={k} className="bg-card/40 p-3">
-              {/* Hazard top strip */}
-              <div className="mb-1 h-0.5 w-full" style={{ background: `repeating-linear-gradient(45deg, ${c} 0, ${c} 3px, transparent 3px, transparent 6px)` }} />
-              <div className="font-sans text-xl font-black" style={{ color: c }}>{v}</div>
-              <div className="font-mono text-[8px] uppercase tracking-[0.16em] text-muted-foreground">{k}</div>
+            {/* ASCII timeline */}
+            <div className="border border-border/40 bg-black/40 p-3 font-mono text-[7px] leading-tight text-muted-foreground/50">
+              <div>┌─ DISCOVERY ─┬─ ARCH ─┬─ BUILD ─┬─ DEPLOY ─┐</div>
+              <div>│  ████████   │ ████   │ ██████  │ ████████ │</div>
+              <div>│  Week 1-2   │ Wk 3   │ Wk 4-10 │ Wk 11+   │</div>
+              <div>│  SCOPE      │ DESIGN │ CODE    │ SHIP      │</div>
+              <div>└─────────────┴────────┴─────────┴──────────┘</div>
+              <div className="mt-1 text-[#00FF94]">▶ 100% DELIVERY · 0 BLACK BOXES</div>
             </div>
-          ))}
-        </div>
 
-        {/* === ASCII TIMELINE — maximalist text decoration === */}
-        <div className="mt-4 border border-border/40 bg-black/40 p-3 font-mono text-[8px] leading-tight text-muted-foreground/40">
-          <div>┌─ DISCOVERY ─┬─ ARCHITECTURE ─┬─ BUILD ─┬─ DEPLOY ─┐</div>
-          <div>│  ████████   │  ████████████   │ ██████████████ │ ████████████ │</div>
-          <div>│  Week 1-2   │  Week 3        │ Week 4-10     │ Week 11+     │</div>
-          <div>│  SCOPE      │  DESIGN        │ CODE          │ SHIP         │</div>
-          <div>└─────────────┴────────────────┴───────────────┴─────────────┘</div>
-          <div className="mt-1 text-[#00FF94]">▶ STATUS: ALL PHASES COMPLETE · 100% DELIVERY RATE · 0 BLACK BOXES</div>
+            {/* Sigma stamp */}
+            <div className="flex items-center justify-center border border-border/40 p-4" style={{ clipPath: "polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px)" }}>
+              <span className="font-sans text-4xl font-black text-[#FF4500]">Σ</span>
+              <div className="ml-3">
+                <div className="font-sans text-sm font-black uppercase">THE SIGMA VARIABLE</div>
+                <div className="font-mono text-[7px] uppercase tracking-[0.16em] text-muted-foreground">HOLDING AT 1.0000</div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>

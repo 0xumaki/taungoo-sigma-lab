@@ -89,7 +89,7 @@ export function S08Capabilities() {
                   id={g.serial}
                   accent={g.accent}
                   scan
-                  className="absolute inset-0 h-full"
+                  className={isFlipped ? "hidden" : "block h-full"}
                 >
                   <div className="flex h-full flex-col p-3">
                     <div className="flex items-start justify-between">
@@ -145,7 +145,7 @@ export function S08Capabilities() {
                   id={g.serial}
                   accent={g.accent}
                   scan
-                  className="absolute inset-0 h-full"
+                  className={isFlipped ? "block h-full" : "hidden"}
                 >
                   <div
                     className="flex h-full flex-col p-3"

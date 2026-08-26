@@ -151,6 +151,22 @@
 .light .text-foreground\/15 { color: oklch(0.40 0 0) !important; }
 .light .text-foreground\/\[0\.025\] { color: oklch(0.50 0 0) !important; }
 .light .text-foreground\/\[0\.04\] { color: oklch(0.55 0 0) !important; }
+.light .text-\[\#00FF94\] { color: oklch(0.40 0.18 145) !important; }
+.light .text-\[\#FF4500\] { color: oklch(0.45 0.20 30) !important; }
+.light .text-\[\#00E5FF\] { color: oklch(0.40 0.15 195) !important; }
+.light .text-\[\#C6FF00\] { color: oklch(0.42 0.18 125) !important; }
+.light .text-\[\#FF2D7E\] { color: oklch(0.45 0.20 345) !important; }
+.light .text-\[\#FFB300\] { color: oklch(0.45 0.16 65) !important; }
+.light .text-\[\#FF3D3D\] { color: oklch(0.45 0.20 20) !important; }
+.light .text-\[\#B388FF\] { color: oklch(0.40 0.16 285) !important; }
+.light .text-\[\#FFEB3B\] { color: oklch(0.42 0.17 85) !important; }
+.light .text-\[\#2979FF\] { color: oklch(0.40 0.18 250) !important; }
+.light .bg-\[\#00FF94\] { background-color: oklch(0.55 0.18 145) !important; }
+.light .bg-\[\#FF4500\] { background-color: oklch(0.50 0.20 30) !important; }
+.light .bg-\[\#00E5FF\] { background-color: oklch(0.60 0.15 195) !important; }
+.light .bg-\[\#FF4500\]\/5 { background-color: oklch(0.50 0.20 30 / 5%) !important; }
+.light .border-\[\#FF4500\] { border-color: oklch(0.45 0.20 30) !important; }
+.light .border-\[\#00FF94\]\/40 { border-color: oklch(0.40 0.18 145 / 40%) !important; }
 
 @layer base {
   * {

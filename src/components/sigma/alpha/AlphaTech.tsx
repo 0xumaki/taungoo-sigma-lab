@@ -9,7 +9,7 @@ const TECH_DATA: { category: string; items: string[]; color: string; icon: strin
     category: "AI / ML",
     color: "#00FF94",
     icon: "◴",
-    items: ["Zai", "Kimi K3", "Fable 5", "GPT-5 Sol", "Google A2A", "Omnibridge", "DeepSeek V4", "OxAlpha", "ElevenLabs", "Whisper", "MCP", "LangChain", "Vercel AI SDK"],
+    items: ["Zai", "Kimi K3", "Fable 5", "GPT-5.6 Sol", "Google A2A", "Omnibridge", "DeepSeek V4", "OxAlpha", "ElevenLabs", "Whisper", "MCP", "LangChain", "Vercel AI SDK"],
   },
   {
     category: "WEB3",

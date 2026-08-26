@@ -14,7 +14,7 @@ const PROJECTS: Record<string, {
   image: string;
   tech: string[];
   category: string;
-  commits: number;
+  loc: string;
   size: string;
   features: string[];
   challenge: string;
@@ -29,12 +29,12 @@ const PROJECTS: Record<string, {
     image: "/portfolio/ominibridge.png",
     tech: ["TypeScript", "Solidity", "Express", "GraphQL", "React", "MySQL", "Redis", "SQLite", "Python", "Docker"],
     category: "WEB3",
-    commits: 113,
+    loc: "~48,000 LOC",
     size: "49.2 MB",
     features: ["Cross-chain asset bridging", "MCP server for AI agents", "A2A protocol support", "GraphQL API layer", "Multi-database support (MySQL, Redis, SQLite)", "Docker deployment"],
     challenge: "Building a bridge protocol that supports both traditional asset transfers and AI agent communication via MCP, across multiple chains with different finality windows.",
     approach: "Designed a modular architecture with Express API servers, GraphQL for flexible queries, Solidity bridge contracts, and a Python-based MCP server layer. Used Redis for caching and MySQL for persistent state.",
-    outcome: "Deployed with 113 commits across the codebase. Supports EVM chain bridging with MCP integration for autonomous AI agent operations.",
+    outcome: "Deployed with ~48,000 lines of code across the codebase. Supports EVM chain bridging with MCP integration for autonomous AI agent operations.",
     created: "2026-08-17",
   },
   "dukon-pro": {
@@ -44,7 +44,7 @@ const PROJECTS: Record<string, {
     image: "/portfolio/dukon-pro.png",
     tech: ["Next.js", "TypeScript", "Prisma", "NextAuth", "Radix UI", "Tailwind CSS", "Recharts", "Framer Motion", "React Hook Form", "Zod"],
     category: "FULL-STACK",
-    commits: 1,
+    loc: "~12,000 LOC",
     size: "12.1 MB",
     features: ["Fractional property ownership", "Investor portal with dashboards", "NextAuth authentication", "Prisma ORM database", "Recharts analytics", "Multi-language (next-intl)", "Responsive design system"],
     challenge: "Creating a compliant real estate investment platform that handles legal requirements, investor onboarding, and portfolio management in one unified interface.",
@@ -59,7 +59,7 @@ const PROJECTS: Record<string, {
     image: "/portfolio/royaldao.png",
     tech: ["Next.js", "TypeScript", "Framer Motion", "Tailwind CSS", "Tabler Icons", "Next Themes", "React Swipeable"],
     category: "WEB3",
-    commits: 1,
+    loc: "~12,000 LOC",
     size: "25.6 MB",
     features: ["Proposal creation and voting", "Treasury visualization", "Dark/light theme support", "Swipeable mobile interface", "Animated transitions", "Responsive governance UI"],
     challenge: "Making on-chain governance accessible and visually engaging for non-technical DAO members while maintaining security.",
@@ -74,12 +74,12 @@ const PROJECTS: Record<string, {
     image: "/portfolio/vortex-sales-os.png",
     tech: ["Next.js", "TypeScript", "Prisma", "NextAuth", "Socket.io", "Radix UI", "Tailwind CSS", "Recharts", "Framer Motion", "Zod"],
     category: "AI",
-    commits: 16,
+    loc: "~8,500 LOC",
     size: "2.1 MB",
     features: ["Real-time CRM with Socket.io", "Multi-model AI orchestration", "Sales analytics dashboard", "Automated follow-up pipelines", "NextAuth authentication", "Prisma database layer", "Recharts performance metrics"],
     challenge: "Building a sales OS that combines real-time communication (Socket.io), AI orchestration, and CRM functionality without performance degradation.",
     approach: "Used Next.js with Socket.io for real-time features, Prisma for data management, and a comprehensive Radix UI component system. The AI layer orchestrates multiple models for different sales tasks.",
-    outcome: "16 commits building a full sales automation platform with real-time features, AI orchestration, and complete CRM functionality. Socket.io enables live agent communication.",
+    outcome: "~8,500 lines of code building a full sales automation platform with real-time features, AI orchestration, and complete CRM functionality. Socket.io enables live agent communication.",
     created: "2026-08-11",
   },
   "gymmaster": {
@@ -89,7 +89,7 @@ const PROJECTS: Record<string, {
     image: "/portfolio/gymmaster.png",
     tech: ["Next.js", "TypeScript", "Prisma", "NextAuth", "QRCode React", "Radix UI", "Tailwind CSS", "Recharts", "Framer Motion", "Zod"],
     category: "FULL-STACK",
-    commits: 2,
+    loc: "~4,200 LOC",
     size: "1.3 MB",
     features: ["Member management", "QR code check-in system", "Class scheduling", "Automated billing", "Attendance analytics", "Equipment tracking", "Recharts dashboards"],
     challenge: "Building a gym management system that handles member check-ins via QR codes, class scheduling, and billing in one cohesive platform.",
@@ -104,12 +104,12 @@ const PROJECTS: Record<string, {
     image: "/portfolio/lumina-tarot.png",
     tech: ["Next.js", "TypeScript", "Prisma", "Tone.js", "Socket.io", "Radix UI", "Tailwind CSS", "Recharts", "Framer Motion", "Zod"],
     category: "DESIGN",
-    commits: 91,
+    loc: "~210,000 LOC",
     size: "212 MB",
     features: ["Daily tarot draws with animations", "Web Audio API sound therapy (Tone.js)", "Real-time features (Socket.io)", "Mood tracking and journaling", "Custom card spreads", "Reading history with analytics"],
     challenge: "Combining mystical tarot readings with precise Web Audio API sound frequencies while maintaining a beautiful, performant user experience.",
     approach: "Used Tone.js for Web Audio API sound generation, Socket.io for real-time features, and Framer Motion for card flip animations. Built on Next.js with Prisma for data persistence.",
-    outcome: "91 commits building a feature-rich lifestyle app with 212MB of assets. The Tone.js integration enables precise sound frequency therapy alongside tarot readings.",
+    outcome: "~210,000 lines of code building a feature-rich lifestyle app with 212MB of assets. The Tone.js integration enables precise sound frequency therapy alongside tarot readings.",
     created: "2026-07-31",
   },
   "sai-pay": {
@@ -119,7 +119,7 @@ const PROJECTS: Record<string, {
     image: "/portfolio/sai-pay.png",
     tech: ["Next.js", "TypeScript", "Radix UI", "Tailwind CSS", "Recharts", "React Hook Form", "Zod", "Framer Motion", "Embla Carousel"],
     category: "FULL-STACK",
-    commits: 6,
+    loc: "~3,800 LOC",
     size: "1.2 MB",
     features: ["Transaction management", "Balance dashboard", "Recharts analytics", "Carousel onboarding", "Form validation (Zod)", "Responsive mobile design"],
     challenge: "Creating a secure, intuitive payment wallet that handles transactions while maintaining a smooth user experience on mobile devices.",
@@ -134,7 +134,7 @@ const PROJECTS: Record<string, {
     image: "/portfolio/brorus.png",
     tech: ["React", "Vite", "TypeScript", "Solidity", "Hardhat", "Ethers.js", "Web3.js", "Tailwind CSS", "Framer Motion", "QRCode React"],
     category: "WEB3",
-    commits: 8,
+    loc: "~2,500 LOC",
     size: "748 KB",
     features: ["Solidity smart contracts", "Hardhat development environment", "Ethers.js + Web3.js integration", "QR code wallet connections", "DeFi staking interface", "Animated transitions"],
     challenge: "Building a DeFi protocol that's both secure (audited smart contracts) and usable (clean React interface with Web3 wallet integration).",
@@ -149,7 +149,7 @@ const PROJECTS: Record<string, {
     image: "/portfolio/asean-swap.png",
     tech: ["React", "Vite", "TypeScript", "Tailwind CSS", "TanStack Query", "React Router", "Recharts", "Framer Motion", "Zod", "React Transition Group"],
     category: "WEB3",
-    commits: 2,
+    loc: "~4,200 LOC",
     size: "960 KB",
     features: ["Multi-chain swap interface", "TanStack Query for data fetching", "React Router navigation", "Recharts price charts", "Animated transitions", "Form validation"],
     challenge: "Building a DEX interface that handles real-time price data, multi-chain support, and smooth user experience without performance issues.",
@@ -164,7 +164,7 @@ const PROJECTS: Record<string, {
     image: "/portfolio/manymarket.png",
     tech: ["Next.js", "TypeScript", "Three.js", "React Three Fiber", "Three Globe", "tsParticles", "Framer Motion", "Tailwind CSS", "Tabler Icons"],
     category: "FULL-STACK",
-    commits: 1,
+    loc: "~12,000 LOC",
     size: "114 MB",
     features: ["3D globe visualization (Three.js)", "React Three Fiber integration", "Particle effects (tsParticles)", "Animated marketplace UI", "Immersive scroll experience", "Responsive design"],
     challenge: "Creating a marketplace that stands out visually with 3D globe visualization and particle effects while maintaining performance and usability.",
@@ -229,8 +229,8 @@ export default function PortfolioCaseStudy() {
         <div className="mx-auto max-w-5xl">
           <div className="grid grid-cols-3 gap-px border border-border bg-border/40">
             <div className="bg-card/60 p-4 text-center">
-              <div className="font-sans text-3xl font-black text-[#FF4500]">{project.commits}</div>
-              <div className="font-mono text-[9px] uppercase tracking-[0.18em] text-muted-foreground">COMMITS</div>
+              <div className="font-sans text-3xl font-black text-[#FF4500]">{project.loc}</div>
+              <div className="font-mono text-[9px] uppercase tracking-[0.18em] text-muted-foreground">LINES OF CODE</div>
             </div>
             <div className="bg-card/60 p-4 text-center">
               <div className="font-sans text-3xl font-black text-[#00FF94]">{project.tech.length}</div>
