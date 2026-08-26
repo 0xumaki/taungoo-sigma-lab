@@ -314,14 +314,25 @@ export function ExperienceShell() {
       ">-0.05"
     );
 
-    // sector label flies through during slam cover transition (01, 02, etc.)
+    // sector label flies through during slam cover transition.
+    // Set the label TEXT dynamically so it shows the DESTINATION sector code
+    // (including "00" for map — which wasn't showing before because the label
+    // was bound to the rendered view's meta, not the destination's).
     if (label) {
-      tl.set(label, { opacity: 0, x: -120 }, "<");
+      // Step 1: Set the text content to the destination sector code
+      tl.call(() => {
+        label.textContent = destMeta.shortCode;
+      }, [], "<");
+      // Step 2: Set visibility:visible + initial position (BEFORE animating opacity,
+      // so the element is visible when opacity starts increasing)
+      tl.set(label, { visibility: "visible", opacity: 0, x: -120 }, "<");
+      // Step 3: Animate opacity 0→1 + x: -120→0 (fly in from left)
       tl.to(
         label,
         { opacity: 1, x: 0, duration: 0.28, ease: "power3.out" },
         "<"
       );
+      // Step 4: Animate opacity 1→0 + x: 0→120 (fly out to right)
       tl.to(
         label,
         { opacity: 0, x: 120, duration: 0.28, ease: "power3.in" },
@@ -340,7 +351,14 @@ export function ExperienceShell() {
     });
 
     tl.set(overlay, { pointerEvents: "none" });
-    if (label) tl.set(label, { clearProps: "opacity,transform" });
+    // CRITICAL: explicitly set opacity to 0 AND visibility to hidden (do NOT use clearProps — clearProps
+    // reverts to CSS default opacity:1, which makes the number persist on screen).
+    // visibility:hidden is the FINAL safety net — even if opacity fails for any reason,
+    // the element will still be completely invisible and non-interactive.
+    // This was the root cause of the "center number keeps displaying" bug.
+    if (label) {
+      tl.set(label, { opacity: 0, x: 0, visibility: "hidden" });
+    }
 
     // Safety: if timeline doesn't complete in 3s, force-finish
     const safety = setTimeout(() => {
@@ -425,13 +443,17 @@ export function ExperienceShell() {
         />
 
         {/* sector label fly-through — shows "01"/"02" ONLY during slam cover transition.
-            NO mixBlendMode (was causing the number to render even at opacity 0).
-            After transition completes, opacity returns to 0 = truly invisible. */}
-        <div className="absolute inset-0 flex items-center justify-center">
+            CRITICAL FIX:
+            1. No mixBlendMode (was causing rendering at opacity 0)
+            2. visibility:hidden by default (extra safety — even if opacity fails, element is invisible)
+            3. z-index: 1 (behind content but above panels — so it shows during transition but not after)
+            4. GSAP sets visibility:visible during animation, then back to hidden after
+            After transition: opacity=0 + visibility=hidden = truly invisible (no persistence bug). */}
+        <div className="absolute inset-0 flex items-center justify-center" style={{ zIndex: 1 }}>
           <div
             ref={labelRef}
             className="font-mono text-[11vw] font-black leading-none text-black/85"
-            style={{ opacity: 0, pointerEvents: "none" }}
+            style={{ opacity: 0, visibility: "hidden", pointerEvents: "none" }}
           >
             {meta.shortCode}
           </div>

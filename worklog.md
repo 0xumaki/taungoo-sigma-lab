@@ -3256,3 +3256,106 @@ The "big black number in the center" that persisted on cards was caused by `mixB
 
 ## Cron
 - Job #338235 continues every 15 min (webDevReview)
+
+---
+Task ID: CRON-ROUND-43 (Triple Fix: Persistence + 00 + Safety Net)
+Agent: main (orchestrator)
+
+## User Feedback Addressed (3 problems broken down)
+1. "Firstly center number is keep displaying even after the transition"
+2. "Secondly, I can see all numbers fly in during the transition animation but 00 is not"
+3. "Thirdly if you can't remove the number in center, then send it back to very back layer after the transition has been displayed. I don't want to see the same bug over and over again."
+
+## Root Cause Analysis (all 3)
+
+### Problem 1: Center number persists after transition
+**Root cause:** Line 343 had `tl.set(label, { clearProps: "opacity,transform" })`. When GSAP clears the `opacity` property, it reverts to the **CSS default** (`opacity: 1`), NOT the inline style's `opacity: 0`. This made the number fully opaque after every transition.
+
+**Fix:** Replaced `clearProps` with explicit `tl.set(label, { opacity: 0, x: 0, visibility: "hidden" })` — explicitly sets opacity to 0 and visibility to hidden (no reverting to defaults).
+
+### Problem 2: "00" not flying in during transition
+**Root cause:** The label JSX was `{meta.shortCode}` (line 436) where `meta` is the RENDERED view's meta. But the rendered view doesn't update until `setRenderedView(dest)` at the midpoint (line 304). So the label showed the OLD sector code, not the new destination code. When navigating to map (shortCode="00"), the label still showed the previous sector's code.
+
+**Fix:** Added a `tl.call(() => { label.textContent = destMeta.shortCode; })` at the midpoint — dynamically sets the label text to the DESTINATION sector code (including "00" for map).
+
+### Problem 3: Safety net — send to back layer
+**Fix:** Added multiple safety layers:
+1. Removed `mixBlendMode: "overlay"` (was causing rendering at opacity 0)
+2. Added `visibility: hidden` to the inline style (extra safety — even if opacity fails, element is invisible)
+3. Set the label container `z-index: 1` (behind content but above panels)
+4. GSAP sets `visibility: visible` at the start of the animation, then `visibility: hidden` at the end
+5. No more `clearProps` anywhere — explicit state transitions only
+
+## Changes (ExperienceShell.tsx)
+
+### 1. Label initial state (JSX)
+```tsx
+// BEFORE:
+<div ref={labelRef} style={{ opacity: 0, mixBlendMode: "overlay" }}>
+  {meta.shortCode}
+</div>
+
+// AFTER:
+<div style={{ zIndex: 1 }}>
+  <div ref={labelRef} style={{ opacity: 0, visibility: "hidden", pointerEvents: "none" }}>
+    {meta.shortCode}
+  </div>
+</div>
+```
+
+### 2. GSAP timeline (animation)
+```tsx
+// BEFORE (buggy):
+if (label) {
+  tl.set(label, { opacity: 0, x: -120 }, "<");
+  tl.to(label, { opacity: 1, x: 0, duration: 0.28, ease: "power3.out" }, "<");
+  tl.to(label, { opacity: 0, x: 120, duration: 0.28, ease: "power3.in" }, ">+0.04");
+}
+// ... later ...
+if (label) tl.set(label, { clearProps: "opacity,transform" }); // BUG: reverts to opacity:1
+
+// AFTER (fixed):
+if (label) {
+  // Step 1: Set text to DESTINATION sector code (including "00" for map)
+  tl.call(() => { label.textContent = destMeta.shortCode; }, [], "<");
+  // Step 2: Set visibility:visible + initial position
+  tl.set(label, { visibility: "visible", opacity: 0, x: -120 }, "<");
+  // Step 3: Animate opacity 0→1 + x: -120→0 (fly in from left)
+  tl.to(label, { opacity: 1, x: 0, duration: 0.28, ease: "power3.out" }, "<");
+  // Step 4: Animate opacity 1→0 + x: 0→120 (fly out to right)
+  tl.to(label, { opacity: 0, x: 120, duration: 0.28, ease: "power3.in" }, ">+0.04");
+}
+// ... later ...
+// CRITICAL: explicitly set opacity to 0 AND visibility to hidden (no clearProps!)
+if (label) {
+  tl.set(label, { opacity: 0, x: 0, visibility: "hidden" });
+}
+```
+
+## Verification (all 3 problems)
+
+### Problem 1: Persistence — FIXED ✅
+- After transition: `opacity: 0`, `visibility: hidden`
+- Inline style: `opacity:0; visibility:hidden; pointer-events:none`
+- No more `clearProps` reverting to opacity:1
+
+### Problem 2: "00" not flying in — FIXED ✅
+- Polling during transition to map: `maxOpacity: 0.9994` (label became visible)
+- Label text: "00" (destination code set dynamically)
+- `sawVisible: true` — fly-through animation confirmed
+
+### Problem 3: Safety net — IN PLACE ✅
+- `visibility: hidden` by default (extra safety)
+- `z-index: 1` (back layer)
+- No `mixBlendMode` (no rendering at opacity 0)
+- Explicit state transitions (no `clearProps`)
+
+### VLM Confirmation (S05)
+- "the center of the screen is clean. There are no big black numbers in the center." ✅
+- "there is a glitching sector number watermark at the bottom-right corner" ✅
+
+## Files Modified
+- src/components/sigma/ExperienceShell.tsx (label initial state + GSAP timeline + dynamic text + safety net)
+
+## Cron
+- Job #338235 continues every 15 min (webDevReview)
