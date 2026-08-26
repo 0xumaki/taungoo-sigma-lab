@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { SigmaBrand } from "@/components/sigma/shared/SigmaBrand";
 
 export const NAV_ITEMS = [
   { label: "ABOUT", target: "about" },
@@ -15,44 +16,20 @@ export const NAV_ITEMS = [
 /**
  * AlphaNav — INTEGRATED hero-card navigation strip.
  *
- * Designed to render INSIDE the AlphaHero hero card (not as a separate
- * fixed top bar). It forms the top "header strip" of the hero card,
- * visually anchored to the card's cut-corner frame.
+ * Renders INSIDE the AlphaHero hero card (not a separate fixed bar).
+ * Uses SigmaBrand (hybrid C+D: Σ pulse + shimmer + RGB-split glitch)
+ * for the wordmark in the upper-left.
  *
  * Layout (desktop):
  *   [ Σ  TAUNGOO SIGMA LAB ]  [ ABOUT · SERVICES · WORK · … ]  [ START A PROJECT → ]
- *
- * Mobile: logo + CTA only (links collapse — full nav available via footer)
  */
 export function AlphaNav() {
   return (
     <header
       className="relative z-30 flex items-center justify-between gap-3 border-b border-border/40 bg-card/40 px-3 py-2 backdrop-blur-sm sm:px-5 sm:py-3"
     >
-      {/* Left: logo cluster */}
-      <a href="#hero" className="group flex items-center gap-2.5">
-        {/* Σ glyph in a tiny cut-corner frame */}
-        <span
-          className="flex h-7 w-7 items-center justify-center border border-[#FF4500]/60 bg-[#FF4500]/10 transition-colors group-hover:border-[#FF4500] group-hover:bg-[#FF4500]/20"
-          style={{
-            clipPath:
-              "polygon(6px 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%, 0 6px)",
-          }}
-        >
-          <span className="font-sans text-base font-black text-[#FF4500]">Σ</span>
-        </span>
-        <div className="hidden flex-col leading-none sm:flex">
-          <span className="font-sans text-[11px] font-black uppercase tracking-[0.12em]">
-            TAUNGOO SIGMA LAB
-          </span>
-          <span className="mt-0.5 font-mono text-[8px] uppercase tracking-[0.22em] text-muted-foreground">
-            AI · WEB3 · FULL-STACK
-          </span>
-        </div>
-        <span className="font-sans text-base font-black uppercase tracking-[0.1em] sm:hidden">
-          Σ LAB
-        </span>
-      </a>
+      {/* Left: SigmaBrand wordmark with hybrid C+D treatment */}
+      <SigmaBrand size="md" subLabel="AI · WEB3 · FULL-STACK" />
 
       {/* Center: nav links — compact brutalist tabs */}
       <nav className="hidden items-center gap-0.5 lg:flex">
@@ -94,12 +71,8 @@ export function AlphaNav() {
 }
 
 /**
- * AlphaMiniNav — a slim sticky mini-nav that appears when the user
- * scrolls past the hero card. Preserves nav-link accessibility
- * without breaking the integrated hero-card design.
- *
- * Shows: logo (compact) | key nav links | START A PROJECT CTA.
- * Slides down from top when triggered.
+ * AlphaMiniNav — slim sticky mini-nav that appears when scrolling past hero.
+ * Uses SigmaBrand (compact size) for the wordmark.
  */
 export function AlphaMiniNav() {
   const [visible, setVisible] = React.useState(false);
@@ -108,7 +81,6 @@ export function AlphaMiniNav() {
     const container = document.querySelector("[data-alpha-scroll]");
     if (!container) return;
     const onScroll = () => {
-      // Show after scrolling past 70vh (well past the hero card)
       const heroH = window.innerHeight * 0.7;
       setVisible(container.scrollTop > heroH);
     };
@@ -123,20 +95,7 @@ export function AlphaMiniNav() {
       }`}
     >
       <div className="mx-auto flex max-w-[1600px] items-center justify-between gap-3 border-b border-border bg-background/95 px-4 py-2 backdrop-blur-md">
-        <a href="#hero" className="flex items-center gap-2">
-          <span
-            className="flex h-6 w-6 items-center justify-center border border-[#FF4500]/60 bg-[#FF4500]/10"
-            style={{
-              clipPath:
-                "polygon(5px 0, 100% 0, 100% calc(100% - 5px), calc(100% - 5px) 100%, 0 100%, 0 5px)",
-            }}
-          >
-            <span className="font-sans text-sm font-black text-[#FF4500]">Σ</span>
-          </span>
-          <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
-            TAUNGOO SIGMA LAB
-          </span>
-        </a>
+        <SigmaBrand size="sm" showSubLabel={false} />
         <nav className="hidden items-center gap-0.5 md:flex">
           {NAV_ITEMS.map((item) => (
             <a

@@ -1,6 +1,7 @@
 "use client";
 
 import { SciFiCard } from "./SciFiCard";
+import { useCardReveal } from "@/lib/sigma/use-card-reveal";
 
 // Tech stack researched from actual GitHub repos (package.json analysis)
 // + updated to 2025/2026 current tools
@@ -51,12 +52,13 @@ const INFRA_STATS: { v: string; k: string; c: string }[] = [
 ];
 
 export function AlphaTech() {
+  const cardsRef = useCardReveal<HTMLDivElement>({ stagger: true });
   return (
     <section id="tech" className="relative border-t border-border px-3 py-20">
       <div className="sigma-grid pointer-events-none absolute inset-0 opacity-10" />
       <div className="sigma-scanlines pointer-events-none absolute inset-0 opacity-15" />
 
-      <div className="relative z-10 mx-auto w-full max-w-[1600px]">
+      <div ref={cardsRef} className="relative z-10 mx-auto w-full max-w-[1600px]">
         {/* Header */}
         <div className="flex items-end justify-between gap-4 border-b border-border pb-4">
           <div>
@@ -75,8 +77,8 @@ export function AlphaTech() {
 
         {/* Tech grid — SciFiCard */}
         <div className="mt-8 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {TECH_DATA.map((t) => (
-            <SciFiCard key={t.category} accent={t.color} label={t.category} id={`${t.items.length} TOOLS`}>
+          {TECH_DATA.map((t, i) => (
+            <SciFiCard key={t.category} accent={t.color} label={t.category} id={`${t.items.length} TOOLS`} className="sigma-card-reveal sigma-hover-card" style={{ "--sigma-hover-accent": t.color, transitionDelay: `${i * 0.08}s` } as React.CSSProperties}>
               <div className="p-4">
                 {/* Icon + hazard stripe */}
                 <div className="flex items-center gap-3 border-b border-border/40 pb-2">
@@ -110,8 +112,8 @@ export function AlphaTech() {
 
         {/* Infrastructure stats — SciFiCard row */}
         <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
-          {INFRA_STATS.map((s) => (
-            <SciFiCard key={s.k} accent={s.c} label={s.k}>
+          {INFRA_STATS.map((s, i) => (
+            <SciFiCard key={s.k} accent={s.c} label={s.k} className="sigma-card-reveal sigma-hover-card" style={{ "--sigma-hover-accent": s.c, transitionDelay: `${(i + TECH_DATA.length) * 0.08}s` } as React.CSSProperties}>
               <div className="p-3 text-center">
                 <div className="font-sans text-xl font-black" style={{ color: s.c }}>{s.v}</div>
                 <div className="font-mono text-[8px] uppercase tracking-[0.16em] text-muted-foreground">{s.k}</div>

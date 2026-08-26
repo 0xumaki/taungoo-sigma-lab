@@ -8,12 +8,13 @@ import { useSigmaStore } from "@/lib/sigma/store";
 import { SectionShell } from "../shared/SectionShell";
 import { BrutalButton, Panel, Tag } from "../shared/components";
 import { SigmaParticles } from "../shared/SigmaParticles";
+import { useCardReveal } from "@/lib/sigma/use-card-reveal";
 
 gsap.registerPlugin(useGSAP);
 
 export function S11Status() {
   const { navigate } = useSigmaStore();
-  const root = React.useRef<HTMLDivElement>(null);
+  const cardsRef = useCardReveal<HTMLDivElement>({ stagger: true });
   const [uptime, setUptime] = React.useState(0);
 
   React.useEffect(() => {
@@ -32,7 +33,7 @@ export function S11Status() {
         stagger: 0.05,
       });
     },
-    { scope: root }
+    { scope: cardsRef }
   );
 
   const fmt = (ms: number) => {
@@ -49,17 +50,18 @@ export function S11Status() {
       title="SYSTEM STATUS"
       tagline="Sector 11 is the ops dashboard — uptime, build info, and the full sector map. All systems nominal."
     >
-      <div ref={root} className="relative grid h-full grid-cols-12 gap-3">
+      <div ref={cardsRef} className="relative grid h-full grid-cols-12 gap-3">
         {/* Ambient particles */}
         <SigmaParticles count={12} color="#2979FF" />
         {/* status grid — all 11 sectors */}
-        <Panel data-st label="SECTOR STATUS GRID" id="11/11" accent="#2979FF" className="col-span-12 lg:col-span-8">
+        <Panel data-st label="SECTOR STATUS GRID" id="11/11" accent="#2979FF" className="sigma-card-reveal sigma-hover-card col-span-12 lg:col-span-8" style={{ "--sigma-hover-accent": "#2979FF" } as React.CSSProperties}>
           <div className="grid grid-cols-2 gap-px border border-border/70 bg-border/40 sm:grid-cols-3 lg:grid-cols-4">
-            {SECTIONS.map((s) => (
+            {SECTIONS.map((s, i) => (
               <button
                 key={s.id}
                 onClick={() => navigate(s.id)}
-                className="group flex flex-col gap-1 bg-card p-3 text-left transition hover:bg-foreground/[0.05]"
+                className="sigma-card-reveal sigma-hover-card group flex flex-col gap-1 bg-card p-3 text-left transition hover:bg-foreground/[0.05]"
+                style={{ "--sigma-hover-accent": s.accent, transitionDelay: `${i * 0.08}s` } as React.CSSProperties}
               >
                 <div className="flex items-center justify-between">
                   <span className="font-mono text-2xl font-black" style={{ color: s.accent }}>
@@ -84,7 +86,7 @@ export function S11Status() {
 
         {/* uptime + signature */}
         <div className="col-span-12 flex flex-col gap-3 lg:col-span-4">
-          <Panel data-st label="SESSION UPTIME" id="LIVE" accent="#2979FF" scan>
+          <Panel data-st label="SESSION UPTIME" id="LIVE" accent="#2979FF" className="sigma-card-reveal sigma-hover-card" style={{ "--sigma-hover-accent": "#2979FF", transitionDelay: "0.08s" } as React.CSSProperties} scan>
             <div className="p-4 text-center">
               <div className="font-mono text-[10px] uppercase tracking-[0.3em] text-muted-foreground">
                 ▸ NOMINAL FOR
@@ -98,7 +100,7 @@ export function S11Status() {
             </div>
           </Panel>
 
-          <Panel data-st label="BUILD MANIFEST" id="2.4.SIGMA" accent="#2979FF">
+          <Panel data-st label="BUILD MANIFEST" id="2.4.SIGMA" accent="#2979FF" className="sigma-card-reveal sigma-hover-card" style={{ "--sigma-hover-accent": "#2979FF", transitionDelay: "0.16s" } as React.CSSProperties}>
             <div className="space-y-1.5 p-3 font-mono text-[10px] uppercase tracking-[0.18em]">
               {[
                 ["BUILD", "2.4.SIGMA"],
@@ -116,7 +118,7 @@ export function S11Status() {
             </div>
           </Panel>
 
-          <Panel data-st label="SIGNATURE" id="0114071813" accent="#2979FF">
+          <Panel data-st label="SIGNATURE" id="0114071813" accent="#2979FF" className="sigma-card-reveal sigma-hover-card" style={{ "--sigma-hover-accent": "#2979FF", transitionDelay: "0.24s" } as React.CSSProperties}>
             <div className="p-3">
               <div className="sigma-spin-slow mx-auto mb-2 flex h-16 w-16 items-center justify-center border border-[#2979FF]/40 text-4xl text-[#2979FF]">
                 Σ

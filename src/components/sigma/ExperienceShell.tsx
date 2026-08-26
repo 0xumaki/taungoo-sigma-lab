@@ -442,8 +442,8 @@ export function ExperienceShell() {
       {/* Persistent HUD — Sigma mode only */}
       {mode === "sigma" && <SigmaHud />}
 
-      {/* Custom cursor reticle (desktop only, Sigma mode only — clashes with Alpha nav) */}
-      {mode === "sigma" && <SigmaCursor />}
+      {/* Custom cursor reticle (desktop only, both modes — X/Y readout attaches to ring to avoid nav clash) */}
+      <SigmaCursor />
 
       {/* Sector progress indicator (right edge, Sigma mode only) */}
       {mode === "sigma" && <SigmaProgress />}

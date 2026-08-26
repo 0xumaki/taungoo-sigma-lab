@@ -9,6 +9,7 @@ import { BrutalButton, Panel, Tag } from "../shared/components";
 import { SigmaParticles } from "../shared/SigmaParticles";
 import { toast } from "sonner";
 import { Mail, MapPin, Phone, Github, Send } from "lucide-react";
+import { useCardReveal } from "@/lib/sigma/use-card-reveal";
 
 gsap.registerPlugin(useGSAP);
 
@@ -21,7 +22,7 @@ const TRANSMIT_LOG = [
 
 export function S10Access() {
   const { navigate } = useSigmaStore();
-  const root = React.useRef<HTMLDivElement>(null);
+  const cardsRef = useCardReveal<HTMLDivElement>({ stagger: true });
   const [identity, setIdentity] = React.useState("");
   const [channel, setChannel] = React.useState("RESEARCH");
   const [message, setMessage] = React.useState("");
@@ -38,7 +39,7 @@ export function S10Access() {
         stagger: 0.08,
       });
     },
-    { scope: root }
+    { scope: cardsRef }
   );
 
   const transmit = async () => {
@@ -80,11 +81,11 @@ export function S10Access() {
       title="ACCESS PROTOCOL"
       tagline="Sector 10 is the intake form — pitch us a project, join the team, or request a deploy. The sigma will acknowledge."
     >
-      <div ref={root} className="relative grid h-full grid-cols-12 gap-3">
+      <div ref={cardsRef} className="relative grid h-full grid-cols-12 gap-3">
         {/* Ambient particles */}
         <SigmaParticles count={10} color="#FFEB3B" />
         {/* terminal form */}
-        <Panel data-ap label="SECURE TERMINAL" id="TTY/ACCESS" accent="#FFEB3B" className="col-span-12 lg:col-span-8" scan>
+        <Panel data-ap label="SECURE TERMINAL" id="TTY/ACCESS" accent="#FFEB3B" className="sigma-card-reveal sigma-hover-card col-span-12 lg:col-span-8" style={{ "--sigma-hover-accent": "#FFEB3B" } as React.CSSProperties} scan>
           <div className="flex h-full flex-col p-4">
             {/* field: identity */}
             <label className="mb-2 block">
@@ -169,7 +170,7 @@ export function S10Access() {
 
         {/* contact info */}
         <div className="col-span-12 flex flex-col gap-3 lg:col-span-4">
-          <Panel data-ap label="DIRECT CHANNELS" id="OPEN" accent="#FFEB3B">
+          <Panel data-ap label="DIRECT CHANNELS" id="OPEN" accent="#FFEB3B" className="sigma-card-reveal sigma-hover-card" style={{ "--sigma-hover-accent": "#FFEB3B", transitionDelay: "0.08s" } as React.CSSProperties}>
             <div className="divide-y divide-border/70">
               {[
                 { icon: MapPin, k: "LOCATION", v: "Taungoo, Bago Region, MM" },
@@ -193,7 +194,7 @@ export function S10Access() {
             </div>
           </Panel>
 
-          <Panel data-ap label="ACCESS TIER" id="PUBLIC" accent="#FFEB3B">
+          <Panel data-ap label="ACCESS TIER" id="PUBLIC" accent="#FFEB3B" className="sigma-card-reveal sigma-hover-card" style={{ "--sigma-hover-accent": "#FFEB3B", transitionDelay: "0.16s" } as React.CSSProperties}>
             <div className="p-3">
               <Tag accent="#00FF94">PUBLIC READ</Tag>
               <p className="mt-2 font-serif text-sm italic text-foreground/80">

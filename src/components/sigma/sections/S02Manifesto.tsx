@@ -7,6 +7,7 @@ import { useSigmaStore } from "@/lib/sigma/store";
 import { SectionShell } from "../shared/SectionShell";
 import { BrutalButton, Panel, StatReadout, Tag } from "../shared/components";
 import { SigmaParticles } from "../shared/SigmaParticles";
+import { useCardReveal } from "@/lib/sigma/use-card-reveal";
 
 gsap.registerPlugin(useGSAP);
 
@@ -25,7 +26,7 @@ const STATS = [
 
 export function S02Manifesto() {
   const { navigate } = useSigmaStore();
-  const root = React.useRef<HTMLDivElement>(null);
+  const cardsRef = useCardReveal<HTMLDivElement>({ stagger: true });
 
   useGSAP(
     () => {
@@ -35,7 +36,7 @@ export function S02Manifesto() {
         .from("[data-m-stat]", { opacity: 0, y: 20, duration: 0.5, stagger: 0.06 }, 0.5)
         .from("[data-m-panel]", { opacity: 0, x: 40, duration: 0.6, stagger: 0.1 }, 0.4);
     },
-    { scope: root }
+    { scope: cardsRef }
   );
 
   return (
@@ -44,7 +45,7 @@ export function S02Manifesto() {
       title="MANIFESTO"
       tagline="Sector 02 is the mission statement — we build AI, Web3, and community tech that ships to production."
     >
-      <div ref={root} className="relative grid h-full grid-cols-12 gap-3">
+      <div ref={cardsRef} className="relative grid h-full grid-cols-12 gap-3">
         {/* Ambient particles */}
         <SigmaParticles count={12} color="#FF4500" />
         {/* THE GIANT ORANGE CIRCLE */}
@@ -118,7 +119,8 @@ export function S02Manifesto() {
         <div className="relative z-10 col-span-12 flex flex-col gap-3 md:col-span-5 md:items-end">
           <div
             data-circle
-            className="flex flex-col items-end border border-foreground/30 bg-background/70 p-3 backdrop-blur-sm"
+            className="sigma-card-reveal sigma-hover-card flex flex-col items-end border border-foreground/30 bg-background/70 p-3 backdrop-blur-sm"
+            style={{ "--sigma-hover-accent": "#FF4500" } as React.CSSProperties}
           >
             <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-muted-foreground">
               FOUNDED
@@ -135,7 +137,8 @@ export function S02Manifesto() {
               <Panel
                 key={s.label}
                 data-m-stat
-                className="bg-background/70 backdrop-blur-sm"
+                className="sigma-card-reveal sigma-hover-card bg-background/70 backdrop-blur-sm"
+                style={{ "--sigma-hover-accent": i % 2 === 0 ? "#FF4500" : "#FFFFFF", transitionDelay: `${i * 0.08}s` } as React.CSSProperties}
               >
                 <div className="p-3">
                   <StatReadout
@@ -149,7 +152,7 @@ export function S02Manifesto() {
             ))}
           </div>
 
-          <Panel data-m-panel className="max-w-xs bg-background/70 backdrop-blur-sm">
+          <Panel data-m-panel className="sigma-card-reveal sigma-hover-card max-w-xs bg-background/70 backdrop-blur-sm" style={{ "--sigma-hover-accent": "#FF4500" } as React.CSSProperties}>
             <div className="p-3 font-mono text-[10px] uppercase leading-relaxed tracking-[0.2em] text-muted-foreground">
               ▸ Located in <span className="text-foreground">Taungoo, Bago Region</span>
               <br />▸ Operating across <span className="text-foreground">11 sectors</span>

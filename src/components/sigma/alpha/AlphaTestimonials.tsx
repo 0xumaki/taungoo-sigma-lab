@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { useCardReveal } from "@/lib/sigma/use-card-reveal";
 
 // Inline SciFiAvatar component
 function SciFiAvatar({ color, seed }: { color: string; seed: number }) {
@@ -51,6 +52,7 @@ function SciFiAvatarInline({ color, seed }: { color: string; seed: number }) {
 export { SciFiAvatarInline as SciFiAvatar };
 
 export function AlphaTestimonials() {
+  const cardsRef = useCardReveal<HTMLDivElement>({ stagger: true });
   return (
     <section id="testimonials" className="relative border-t border-border px-3 py-20">
       <div className="sigma-grid pointer-events-none absolute inset-0 opacity-10" />
@@ -70,12 +72,12 @@ export function AlphaTestimonials() {
           </div>
         </div>
 
-        <div className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-3">
+        <div ref={cardsRef} className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-3">
           {TESTIMONIALS.map((t, i) => (
             <div
               key={i}
-              className="group relative border border-border bg-card/30 transition-all hover:border-foreground/40"
-              style={{ clipPath: "polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px)" }}
+              className="sigma-card-reveal sigma-hover-card group relative border border-border bg-card/30 transition-all hover:border-foreground/40"
+              style={{ "--sigma-hover-accent": t.accent, transitionDelay: `${i * 0.08}s`, clipPath: "polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px)" } as React.CSSProperties}
             >
               <div className="h-1 w-full" style={{ background: t.accent }} />
               <div className="relative overflow-hidden border-b border-border/40">
@@ -155,6 +157,7 @@ const INSIGHTS_DATA: { title: string; date: string; tag: string; desc: string; c
 ];
 
 export function AlphaInsights() {
+  const cardsRef = useCardReveal<HTMLDivElement>({ stagger: true });
   const [selected, setSelected] = React.useState<number | null>(null);
   const tagColors: Record<string, string> = { AI: "#00FF94", Web3: "#C6FF00", NLP: "#00E5FF" };
 
@@ -163,7 +166,7 @@ export function AlphaInsights() {
       <div className="sigma-grid pointer-events-none absolute inset-0 opacity-10" />
       <div className="sigma-scanlines pointer-events-none absolute inset-0 opacity-15" />
 
-      <div className="relative z-10 mx-auto w-full max-w-[1600px]">
+      <div ref={cardsRef} className="relative z-10 mx-auto w-full max-w-[1600px]">
         <div className="flex items-end justify-between gap-4 border-b border-border pb-4">
           <div>
             <div className="font-mono text-[10px] uppercase tracking-[0.3em] text-[#FF4500]">▸ 09 / INSIGHTS</div>
@@ -184,8 +187,8 @@ export function AlphaInsights() {
               <button
                 key={i}
                 onClick={() => setSelected(i)}
-                className="group relative flex flex-col border border-border bg-card/30 text-left transition-all hover:border-foreground/40"
-                style={{ clipPath: "polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px)" }}
+                className="sigma-card-reveal sigma-hover-card group relative flex flex-col border border-border bg-card/30 text-left transition-all hover:border-foreground/40"
+                style={{ "--sigma-hover-accent": color, transitionDelay: `${i * 0.08}s`, clipPath: "polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px)" } as React.CSSProperties}
               >
                 <div className="h-1 w-full" style={{ background: color }} />
                 <div className="p-4">

@@ -3,9 +3,17 @@
 import * as React from "react";
 
 /**
- * SigmaCursor — a cursor-following targeting reticle (awwwards-style).
- * Renders a fixed crosshair + coordinate readout that lags slightly behind
- * the cursor for an inertial, "tracked target" feel. Hidden on touch devices.
+ * SigmaCursor — a cursor-following targeting reticle (Awwwards SOTD style).
+ *
+ * Renders a fixed crosshair + inertial targeting ring that lags slightly behind
+ * the cursor. The X/Y coordinate readout floats BELOW the ring (attached to it,
+ * not fixed to viewport) so it never clashes with the AlphaMiniNav or any other
+ * fixed UI element. Hidden on touch devices.
+ *
+ * Design references (battle-tested):
+ *  - OPTIKKA (Awwwards SOTD Jun 2025) — cursor reticle with floating data label
+ *  - CrowdStrike Adversary Universe — targeting ring with coordinate chip
+ *  - Active Theory v5 — inertial crosshair HUD
  */
 export function SigmaCursor() {
   const dotRef = React.useRef<HTMLDivElement>(null);
@@ -20,6 +28,9 @@ export function SigmaCursor() {
     // Only enable on devices with a fine pointer (mouse)
     const mq = window.matchMedia("(pointer: fine)");
     if (!mq.matches) return;
+    // Skip if user prefers reduced motion (cursor reticle is decorative)
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
+    if (reduced.matches) return;
     setEnabled(true);
 
     let mouseX = window.innerWidth / 2;
@@ -42,11 +53,12 @@ export function SigmaCursor() {
       if (yLineRef.current) {
         yLineRef.current.style.left = `${mouseX}px`;
       }
-      // readout
+      // readout — positioned relative to ring (updated in loop, not here, so it
+      // tracks the inertial ring position rather than the instant cursor pos)
       if (readoutRef.current) {
         const nx = Math.round((mouseX / window.innerWidth) * 1000);
         const ny = Math.round((mouseY / window.innerHeight) * 1000);
-        readoutRef.current.textContent = `X${String(nx).padStart(4, "0")} Y${String(ny).padStart(4, "0")}`;
+        readoutRef.current.textContent = `X${String(nx).padStart(4, "0")} · Y${String(ny).padStart(4, "0")}`;
       }
       // detect hover over interactive elements
       const target = e.target as HTMLElement;
@@ -63,6 +75,10 @@ export function SigmaCursor() {
       if (ringRef.current) {
         ringRef.current.style.transform = `translate3d(${ringX}px, ${ringY}px, 0)`;
       }
+      // readout follows the ring (offset below + right of ring)
+      if (readoutRef.current) {
+        readoutRef.current.style.transform = `translate3d(${ringX + 22}px, ${ringY + 22}px, 0)`;
+      }
       raf = requestAnimationFrame(loop);
     };
     raf = requestAnimationFrame(loop);
@@ -77,16 +93,16 @@ export function SigmaCursor() {
   if (!enabled) return null;
 
   return (
-    <div className="pointer-events-none fixed inset-0 z-[95]" aria-hidden>
-      {/* full-width crosshair lines */}
+    <div className="sigma-cursor-layer pointer-events-none fixed inset-0 z-[88]" aria-hidden>
+      {/* full-width crosshair lines — very subtle */}
       <div
         ref={xLineRef}
-        className="absolute inset-x-0 h-px bg-foreground/15"
+        className="absolute inset-x-0 h-px bg-foreground/10"
         style={{ top: "50%" }}
       />
       <div
         ref={yLineRef}
-        className="absolute inset-y-0 w-px bg-foreground/15"
+        className="absolute inset-y-0 w-px bg-foreground/10"
         style={{ left: "50%" }}
       />
 
@@ -98,7 +114,7 @@ export function SigmaCursor() {
         <div className="h-1.5 w-1.5 bg-[#FF4500]" />
       </div>
 
-      {/* targeting ring (inertial) */}
+      {/* targeting ring (inertial) + floating coordinate readout */}
       <div
         ref={ringRef}
         className="absolute left-0 top-0 -ml-[16px] -mt-[16px] transition-[width,height,margin] duration-200"
@@ -121,12 +137,14 @@ export function SigmaCursor() {
         </div>
       </div>
 
-      {/* coordinate readout */}
+      {/* coordinate readout — floats below+right of the ring (not fixed to viewport)
+          so it never clashes with the AlphaMiniNav or any other fixed top-left UI.
+          Hidden when ring is near bottom-right edge to prevent overflow. */}
       <span
         ref={readoutRef}
-        className="absolute left-0 top-0 ml-4 mt-4 font-mono text-[9px] uppercase tracking-[0.2em] text-muted-foreground"
+        className="sigma-cursor-readout absolute left-0 top-0 whitespace-nowrap border border-border/60 bg-background/80 px-1.5 py-0.5 font-mono text-[8px] uppercase tracking-[0.16em] text-muted-foreground backdrop-blur-sm"
       >
-        X0000 Y0000
+        X0000 · Y0000
       </span>
     </div>
   );

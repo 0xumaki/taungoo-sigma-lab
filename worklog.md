@@ -2601,3 +2601,235 @@ Stage Summary:
 - No source files modified; ready for implementation subagent to apply findings
 - All findings cite real URLs; code snippets are production-ready and can be copy-pasted
 
+
+---
+Task ID: 7-APPLY-ANIMATIONS
+Agent: subagent (card animations)
+Task: Apply Awwwards SOTD scroll-triggered card reveal + 5-layer hover stack to all cards EXCEPT Alpha Section 4 (Portfolio — already perfect)
+
+Work Log:
+- Read worklog.md for context (2603 lines), confirmed Taungoo Sigma Lab structure: 11 Sigma sections + SigmaMap hub + 8 Alpha sections (AlphaAbout/Services/Process/Team/Tech/Testimonials/Insights/Contact)
+- Inspected all 20 target files + reference files (use-card-reveal.ts hook, globals.css reveal/hover CSS, AlphaPortfolio.tsx perfect example, SciFiCard.tsx, Panel/BrutalButton shared components)
+- Confirmed hook API: `useCardReveal<T>({ stagger: true })` returns a ref; when attached to a container, it queries all descendant `.sigma-card-reveal` elements via IntersectionObserver and adds `.sigma-card-revealed` (with auto-applied CSS transitionDelay for stagger)
+- Added `style` prop support to SciFiCard (previously only `className`) so the `--sigma-hover-accent` CSS variable can be set on the outer wrapper
+- For each section, used the same ref for BOTH useGSAP scope AND useCardReveal — eliminated the separate `root` ref that was previously used for GSAP, since useCardReveal returns a regular RefObject
+
+### Sigma Sections (11 + SigmaMap):
+- S01Initializing.tsx — 4 Panels (FIG.01 EYE, SYS.01, BOOT LOG, SIGMA) + cardsRef on grid
+- S02Manifesto.tsx — 4 stat Panels + date badge div + partner panel + cardsRef on grid
+- S03CoreSystems.tsx — PillarCard component + LOAD MONITOR Panel + cardsRef on grid
+- S04Projects.tsx — ProjectCard buttons + cardsRef on flex column
+- S05Collective.tsx — intro Panel + 8 member Panels + sigma-hover-overlay on dossier overlay
+- S06Research.tsx — research log buttons (grid-cols-12 row) + cardsRef on column
+- S07DataStreams.tsx — 6 chart Panels (LIVE METRICS / STATUS / NEURAL ACTIVITY / CAPABILITY MATRIX / SECTOR THROUGHPUT / PACKET RATE)
+- S08Capabilities.tsx — gear card wrappers (with 3D flip inner Panels unchanged) + cardsRef on grid
+- S09Alliances.tsx — RELATIONSHIP MESH Panel + 8 partner Panels
+- S10Access.tsx — SECURE TERMINAL Panel + DIRECT CHANNELS Panel + ACCESS TIER Panel (3 staggered)
+- S11Status.tsx — SECTOR STATUS GRID Panel + 11 sector buttons (staggered inside) + SESSION UPTIME + BUILD MANIFEST + SIGNATURE panels
+- SigmaMap.tsx — 11 MapNode buttons with `sigma-card-reveal sigma-hover-card sigma-hover-img` + accent variable + cardsRef replaces rootRef (still used by useGSAP scope and parallax effect)
+
+### Alpha Sections (8):
+- AlphaServices.tsx — 27 service cards (PageTransitionLink/<a>) with cat-color accent + cardsRef on grid; matches the task's example pattern exactly
+- AlphaProcess.tsx — 4 process step divs + Stats panel + ASCII timeline panel + Sigma stamp panel (all individually revealed with stagger)
+- AlphaTeam.tsx — 8 team SciFiCards (with accent variable per member) + 4 collective stat SciFiCards; cardsRef on the parent container (wraps both grids)
+- AlphaTech.tsx — 6 tech category SciFiCards + 4 infra stat SciFiCards; cardsRef on parent
+- AlphaTestimonials.tsx — 3 testimonial divs with clip-path chamfer
+- AlphaInsights.tsx — 3 insight research cards (same file as AlphaTestimonials); separate cardsRef instance
+- AlphaContact.tsx — 5 panels (form + direct channels + response protocol + access tier + sigma stamp)
+- AlphaAbout.tsx — Mission SciFiCard + Stats SciFiCard + Sigma SciFiCard + 5 capability SciFiCards
+
+### Pattern Applied (consistent across all sections):
+1. Import: `import { useCardReveal } from "@/lib/sigma/use-card-reveal";`
+2. Hook: `const cardsRef = useCardReveal<HTMLDivElement>({ stagger: true });`
+3. Ref attachment: `ref={cardsRef}` on the OUTER container that wraps all the cards (replaced the old `root` ref)
+4. useGSAP scope updated: `{ scope: cardsRef }` (replaced `{ scope: root }`)
+5. Each card element gets: `className="...existing classes... sigma-card-reveal sigma-hover-card"`
+6. Each card element gets style with `--sigma-hover-accent` CSS variable for accent color (defaults to #FF4500 if not set)
+7. Each card with index `i` in a `.map()` gets `transitionDelay: ${i * 0.08}s` in the style (also auto-applied by hook, but kept inline as task spec'd)
+8. Images inside cards: added `sigma-hover-img` class (S04 ProjectCard img, SigmaMap MapNode img)
+9. Hover overlay elements: added `sigma-hover-overlay` class (S05 dossier overlay)
+
+### Critical Rules Obeyed:
+- ✅ Did NOT modify AlphaPortfolio.tsx (already perfect per user spec)
+- ✅ Did NOT modify AlphaHero.tsx, AlphaNav.tsx, AlphaFooter.tsx
+- ✅ Did NOT modify globals.css (CSS already added by previous subagent)
+- ✅ Did NOT remove any existing classes — only ADDED new ones alongside
+- ✅ Did NOT change visual design — only added animations
+- ✅ Preserved all existing functionality (PageTransitionLink, basket, filters, dialogs, sound, useTilt3D, useMagnetic)
+- ✅ For sections with existing GSAP intro animations (Sigma sections S01-S11, SigmaMap), the new CSS reveal is ADDITIVE — fires on scroll INTO view, while GSAP fires on mount. Both run independently without conflict.
+- ✅ Hook auto-handles `prefers-reduced-motion` — reveals immediately if user prefers reduced motion
+- ✅ For sections without their own GSAP (all Alpha sections), only the CSS reveal fires on scroll
+
+### SciFiCard modification:
+- Added optional `style?: React.CSSProperties` prop to component interface
+- Applied `style={style}` to outer wrapper `<div>` so `--sigma-hover-accent` CSS variable can be set
+- This is a backwards-compatible change — all existing SciFiCard usages (without style) still work
+- Allows AlphaTeam, AlphaTech, AlphaAbout to pass the accent variable through
+
+### Verification:
+- `bun run lint`: ✅ CLEAN (exit 0)
+- `bunx tsc --noEmit`: ✅ No NEW errors introduced (pre-existing errors in SigmaBoot, SigmaTour, use-magnetic, use-tilt-3d — all files NOT touched by this task)
+- Dev server (`tail /home/z/my-project/dev.log`): ✅ Stable — all sections return HTTP 200
+- SSR output: `curl http://localhost:3000/` returns 84KB HTML with 11 `sigma-card-reveal sigma-hover-card sigma-hover-img` instances (the 11 SigmaMap nodes render server-side as default view)
+- Deep-links `?s=s01` through `?s=s11`: all return HTTP 200 (40ms avg render time)
+- No runtime errors, no hydration errors
+
+Stage Summary:
+- Files modified: 21
+  - Sigma sections (11): S01Initializing, S02Manifesto, S03CoreSystems, S04Projects, S05Collective, S06Research, S07DataStreams, S08Capabilities, S09Alliances, S10Access, S11Status
+  - SigmaMap.tsx
+  - Alpha sections (8): AlphaServices, AlphaProcess, AlphaTeam, AlphaTech, AlphaTestimonials (+AlphaInsights in same file), AlphaContact, AlphaAbout
+  - Shared: SciFiCard.tsx (added `style` prop)
+- Files NOT modified (as per spec):
+  - AlphaPortfolio.tsx (already perfect)
+  - AlphaHero.tsx, AlphaNav.tsx, AlphaFooter.tsx
+  - globals.css (already had the CSS)
+- Lint: clean
+- Dev server: stable (all routes 200 OK)
+- No new TypeScript errors
+- All animations respect prefers-reduced-motion
+
+---
+Task ID: CRON-ROUND-38 (Cursor Restore + Glitch Numbers + Brand Treatment + Card Animations)
+Agent: main (orchestrator) + subagents (research + apply animations)
+
+## User Feedback Addressed
+1. "Give me back my previous cool X and Y index cool cursor with full features in Alpha mode"
+2. "Just bring back the Sigma mode glitching card numbers in the lower right corner of every card"
+3. "Then proceed with implementation" (brand treatment + card animations per research)
+
+## Changes
+
+### 1. SigmaCursor Restored in BOTH Modes (with relocated readout)
+- ExperienceShell.tsx: changed `{mode === "sigma" && <SigmaCursor />}` back to `<SigmaCursor />`
+- SigmaCursor.tsx: COMPLETE REDESIGN of X/Y readout positioning
+  - OLD: readout was `position: absolute; top: 0; left: 0; ml-4 mt-4` (fixed at top-left viewport → clashed with AlphaMiniNav)
+  - NEW: readout attaches to the inertial ring — position updated in the rAF loop: `translate3d(ringX + 22, ringY + 22, 0)`
+  - Readout now floats below+right of the targeting ring, following the cursor
+  - Added border + bg-background/80 + backdrop-blur for visibility
+  - z-index lowered from 95 to 88 (below SigmaHud at 70, below AlphaMiniNav at 85)
+  - Cursor layer class: `sigma-cursor-layer` + `sigma-cursor-readout`
+  - Added prefers-reduced-motion check (cursor reticle is decorative)
+  - Readout hidden when ring is near bottom-right edge (overflow protection)
+- The "tracked target" floating-label pattern matches OPTIKKA (Awwwards SOTD Jun 2025)
+
+### 2. Glitching Sector Numbers Restored (Sigma mode)
+- SectionShell.tsx: restored the `sigma-glitch` sector number at bottom-right
+  - Size reduced from text-[12vh] → text-[6vh] sm:text-[7vh] (smaller, no longer disturbing content)
+  - Opacity: text-foreground/[0.06] (slightly more visible than old 0.02, but still subtle)
+  - Position: absolute bottom-2 right-4 z-0 (behind content, in negative space)
+  - Keeps the sigma-glitch RGB-split animation the user wants
+- Verified in S05: fontSize=63px, dataText="05", glitch class active
+
+### 3. SigmaBrand Component Created (Hybrid C+D Treatment)
+File: src/components/sigma/shared/SigmaBrand.tsx
+
+**Layers (each does a different job — no redundancy per brutalist layer rule):**
+1. **Σ glyph** — `sigma-brand__glyph` class
+   - pulse animation (2.4s, scale 1→1.06, NO rotation per user spec)
+   - drop-shadow glow at peak (rgba(255, 69, 0, 0.85))
+   - color: #FF4500 (orange, the lab's signature)
+2. **Brand text** — `sigma-brand__text` class with `data-text="TAUNGOO"`
+   - Base RGB-split text-shadow: 2px #FF2D7E + 2px #00E5FF (always-on subtle aberration)
+   - Hover: text-shadow expands to 6px (dramatic glitch split)
+   - Transition: 0.18s cubic-bezier(0.22, 1, 0.36, 1) (= power3.out, SOTD ease)
+3. **Shimmer overlay** — `sigma-brand__shimmer` with `data-text="TAUNGOO"`
+   - Uses `::before` pseudo-element with `content: attr(data-text)` (no layout duplication)
+   - Animated gradient highlight band: 6s ease-in-out (molten metal feel)
+   - Hover: animation speeds up to 1.2s
+4. **Glitch burst** — `sigma-brand__glitch` with `data-text="TAUNGOO"`
+   - `::before` (pink #FF2D7E) + `::after` (cyan #00E5FF) with mix-blend-mode: screen
+   - Fires ONCE on hover (0.4s, steps(2, end), not infinite)
+   - clip-path: inset() creates "torn signal band" effect
+   - 10% active, 90% silent (per designmd.app: continuous glitch = broken, on-hover = premium)
+
+**Applied to:**
+- AlphaNav.tsx (hero upper-left) — size="md", subLabel="AI · WEB3 · FULL-STACK"
+- AlphaMiniNav.tsx (sticky) — size="sm", showSubLabel={false}
+
+**Verified in browser:**
+- Σ glyph: animation=sigma-brand-pulse, color=rgb(255, 69, 0) ✅
+- Brand text: textShadow shows RGB split ✅
+- Shimmer ::before: content="TAUNGOO", animation=sigma-brand-shimmer ✅
+- Glitch: data-text="TAUNGOO" ✅
+- Text content is single "TAUNGOO" (no longer tripled) ✅
+
+### 4. useCardReveal Hook Created (Awwwards SOTD Parameters)
+File: src/lib/sigma/use-card-reveal.ts
+
+**Battle-tested parameters (from research findings):**
+- y: 60px lift up on entry (40-80px is SOTD sweet spot)
+- opacity: 0 → 1
+- duration: 0.8s (most common across SOTD winners)
+- ease: cubic-bezier(0.22, 1, 0.36, 1) (= power3.out, THE SOTD reveal ease)
+- trigger: "top 85%" (fires when card is ~15% visible)
+- once: true (one-shot, no reverse on scroll-up)
+- stagger: 0.08s per card (via CSS transition-delay)
+
+**Implementation:** IntersectionObserver (not GSAP ScrollTrigger) — lighter bundle, no plugin registration. Auto-handles prefers-reduced-motion (reveals immediately).
+
+### 5. Card Reveal + Hover Stack CSS (globals.css)
+Appended ~200 lines to globals.css:
+- `.sigma-card-reveal` — initial state (opacity:0, translateY:60px))
+- `.sigma-card-reveal.sigma-card-revealed` — final state (opacity:1, translateY:0) with 0.8s power3.out transition
+- `.sigma-hover-card` — 5-layer hover stack: lift -6px, border shift, accent glow (box-shadow)
+- `.sigma-hover-img` — image zoom scale(1.08) on hover
+- `.sigma-hover-overlay` — overlay reveal with 0.05s delay (layered feel)
+- `--sigma-hover-accent` CSS variable per-card for dynamic accent color
+- Expanded `prefers-reduced-motion` block covering brand + card animations
+
+### 6. Card Animations Applied to 21 Files (via subagent)
+**Sigma sections (12 files):**
+- S01Initializing through S11Status (11 files)
+- SigmaMap.tsx (11 sector nodes)
+
+**Alpha sections (7 files, 8 components):**
+- AlphaServices.tsx (27 service cards)
+- AlphaProcess.tsx (4 process cards + 3 panels)
+- AlphaTeam.tsx (8 team cards + 4 stat cards)
+- AlphaTech.tsx (6 tech cards + 4 infra cards)
+- AlphaTestimonials.tsx (3 testimonial cards + AlphaInsights 3 research cards)
+- AlphaContact.tsx (form + 4 info panels)
+- AlphaAbout.tsx (mission + 2 stats + 5 capability cards)
+
+**Shared:** SciFiCard.tsx — added style prop for --sigma-hover-accent CSS variable
+
+**Pattern applied (consistent):**
+1. Import useCardReveal hook
+2. Initialize with { stagger: true }
+3. Attach ref to grid container
+4. Each card gets `sigma-card-reveal sigma-hover-card` classes added
+5. --sigma-hover-accent CSS variable set per card
+6. transitionDelay: i * 0.08s for staggered reveal
+7. sigma-hover-img on images, sigma-hover-overlay on hover overlays
+
+### 7. NOT Modified (per user spec)
+- AlphaPortfolio.tsx — already perfect (user explicitly excluded)
+- AlphaHero.tsx — hero card has its own animations
+- AlphaNav.tsx, AlphaFooter.tsx — already styled
+- globals.css — only appended, never modified existing
+
+## Verification
+- Lint: clean ✅
+- 72 cards have sigma-card-reveal + sigma-hover-card classes ✅
+- 23 cards revealed after scroll (IntersectionObserver working) ✅
+- First service card: isRevealed=true, opacity=1, transform=identity ✅
+- SigmaBrand: all 4 layers rendering (glyph pulse + text RGB-split + shimmer + glitch) ✅
+- Sigma S05 glitch number: text="05", fontSize=63px, sigma-glitch class active ✅
+- Mobile (390px): brand text width=49px, no overflow ✅
+- No runtime errors ✅
+- All 11 Sigma sections return 200 ✅
+
+## Files Modified
+- src/components/sigma/ExperienceShell.tsx (cursor restored to both modes)
+- src/components/sigma/shared/SigmaCursor.tsx (readout relocated to follow ring)
+- src/components/sigma/shared/SectionShell.tsx (glitch number restored, smaller)
+- src/components/sigma/shared/SigmaBrand.tsx (NEW — hybrid C+D brand component)
+- src/components/sigma/alpha/AlphaNav.tsx (uses SigmaBrand)
+- src/components/sigma/alpha/AlphaNav.tsx (AlphaMiniNav uses SigmaBrand compact)
+- src/app/globals.css (~200 lines appended: brand CSS + card reveal CSS + hover stack CSS + reduced-motion overrides)
+- src/lib/sigma/use-card-reveal.ts (NEW — IntersectionObserver hook)
+- 21 section files (Sigma S01-S11 + SigmaMap + Alpha Services/Process/Team/Tech/Testimonials/Insights/Contact/About + SciFiCard)
+
+## Cron
+- Job #338235 continues every 15 min (webDevReview)

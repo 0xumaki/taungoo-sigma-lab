@@ -7,6 +7,7 @@ import { useSigmaStore } from "@/lib/sigma/store";
 import { SectionShell } from "../shared/SectionShell";
 import { BrutalButton, Crosshair, Panel } from "../shared/components";
 import { SigmaParticles } from "../shared/SigmaParticles";
+import { useCardReveal } from "@/lib/sigma/use-card-reveal";
 
 gsap.registerPlugin(useGSAP);
 
@@ -22,7 +23,7 @@ const BOOT_LINES = [
 
 export function S01Initializing() {
   const { navigate } = useSigmaStore();
-  const root = React.useRef<HTMLDivElement>(null);
+  const cardsRef = useCardReveal<HTMLDivElement>({ stagger: true });
   const logRef = React.useRef<HTMLDivElement>(null);
 
   useGSAP(
@@ -51,7 +52,7 @@ export function S01Initializing() {
         )
         .from("[data-hero-cta]", { opacity: 0, y: 16, duration: 0.5 }, "-=0.3");
     },
-    { scope: root }
+    { scope: cardsRef }
   );
 
   // typewriter boot log
@@ -82,7 +83,7 @@ export function S01Initializing() {
       title="INITIALIZING"
       tagline="Sector 01 is the boot kernel — the sigma variable goes live and the lab comes online. Sigma holds at 1.0000."
     >
-      <div ref={root} className="relative grid h-full grid-cols-12 gap-3 overflow-hidden">
+      <div ref={cardsRef} className="relative grid h-full grid-cols-12 gap-3 overflow-hidden">
         {/* Ambient boot particles */}
         <SigmaParticles count={16} color="#FFFFFF" />
         {/* LEFT VERTICAL PANEL */}
@@ -90,7 +91,8 @@ export function S01Initializing() {
           data-hero-panel
           label="FIG.01 / EYE"
           id="RETICLE"
-          className="col-span-12 md:col-span-2 flex flex-col"
+          className="sigma-card-reveal sigma-hover-card col-span-12 md:col-span-2 flex flex-col"
+          style={{ "--sigma-hover-accent": "#FFFFFF" } as React.CSSProperties}
         >
           <div className="flex flex-1 items-center justify-center p-3">
             {/* eye + reticle SVG */}
@@ -203,7 +205,7 @@ export function S01Initializing() {
 
         {/* RIGHT DATA PANELS */}
         <div className="col-span-12 flex flex-col gap-3 md:col-span-2">
-          <Panel data-hero-panel label="SYS.01" id="T·S·G·M·A">
+          <Panel data-hero-panel label="SYS.01" id="T·S·G·M·A" className="sigma-card-reveal sigma-hover-card" style={{ "--sigma-hover-accent": "#FFFFFF" } as React.CSSProperties}>
             <div className="grid grid-cols-2 gap-px bg-border/60">
               {["T", "S", "G", "M", "A", "L"].map((c, i) => (
                 <div key={i} className="bg-card p-2 text-center font-mono text-xl font-bold">
@@ -216,7 +218,7 @@ export function S01Initializing() {
             </div>
           </Panel>
 
-          <Panel data-hero-panel label="BOOT LOG" id="TTY/0">
+          <Panel data-hero-panel label="BOOT LOG" id="TTY/0" className="sigma-card-reveal sigma-hover-card" style={{ "--sigma-hover-accent": "#00FF94" } as React.CSSProperties}>
             <div
               ref={logRef}
               className="sigma-scroll-hidden h-40 overflow-y-auto whitespace-pre-wrap p-2 font-mono text-[10px] leading-relaxed text-[#00FF94]"
@@ -225,7 +227,7 @@ export function S01Initializing() {
             </div>
           </Panel>
 
-          <Panel data-hero-panel label="SIGMA" id="1.0000">
+          <Panel data-hero-panel label="SIGMA" id="1.0000" className="sigma-card-reveal sigma-hover-card" style={{ "--sigma-hover-accent": "#00FF94" } as React.CSSProperties}>
             <div className="p-3">
               <div className="font-mono text-3xl font-black text-foreground">1.0000</div>
               <div className="mt-1 font-mono text-[9px] uppercase tracking-[0.2em] text-muted-foreground">

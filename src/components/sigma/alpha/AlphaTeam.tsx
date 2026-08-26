@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { SciFiCard } from "./SciFiCard";
+import { useCardReveal } from "@/lib/sigma/use-card-reveal";
 
 const TEAM: { name: string; role: string; glyph: string; accent: string; skills: string[] }[] = [
   { name: "THE ARCHITECT", role: "Lab Director", glyph: "Σ", accent: "#FF4500", skills: ["Strategy", "Architecture", "Partnerships"] },
@@ -15,12 +16,13 @@ const TEAM: { name: string; role: string; glyph: string; accent: string; skills:
 ];
 
 export function AlphaTeam() {
+  const cardsRef = useCardReveal<HTMLDivElement>({ stagger: true });
   return (
     <section id="team" className="relative border-t border-border px-3 py-20">
       <div className="sigma-grid pointer-events-none absolute inset-0 opacity-10" />
       <div className="sigma-scanlines pointer-events-none absolute inset-0 opacity-15" />
 
-      <div className="relative z-10 mx-auto w-full max-w-[1600px]">
+      <div ref={cardsRef} className="relative z-10 mx-auto w-full max-w-[1600px]">
         {/* Header */}
         <div className="flex items-end justify-between gap-4 border-b border-border pb-4">
           <div>
@@ -38,7 +40,7 @@ export function AlphaTeam() {
         {/* Team grid — SciFiCard dossier style */}
         <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-4">
           {TEAM.map((m, i) => (
-            <SciFiCard key={m.name} accent={m.accent} label={`OP·${String(i + 1).padStart(2, "0")}`} id={m.role}>
+            <SciFiCard key={m.name} accent={m.accent} label={`OP·${String(i + 1).padStart(2, "0")}`} id={m.role} className="sigma-card-reveal sigma-hover-card" style={{ "--sigma-hover-accent": m.accent, transitionDelay: `${i * 0.08}s` } as React.CSSProperties}>
               <div className="p-3">
                 {/* Glyph in cut-corner box with background glow + hazard */}
                 <div className="relative mb-3 overflow-hidden border border-border/50">
@@ -98,8 +100,8 @@ export function AlphaTeam() {
             { v: "3", k: "TIME ZONES", c: "#00E5FF", icon: "◐" },
             { v: "27", k: "SERVICES", c: "#FF4500", icon: "⚙" },
             { v: "100%", k: "NO EGOS", c: "#C6FF00", icon: "✦" },
-          ].map((s) => (
-            <SciFiCard key={s.k} accent={s.c} label={s.k} id={s.v}>
+          ].map((s, i) => (
+            <SciFiCard key={s.k} accent={s.c} label={s.k} id={s.v} className="sigma-card-reveal sigma-hover-card" style={{ "--sigma-hover-accent": s.c, transitionDelay: `${(i + TEAM.length) * 0.08}s` } as React.CSSProperties}>
               <div className="flex items-center justify-center gap-3 p-3">
                 <span className="font-sans text-2xl" style={{ color: s.c }}>{s.icon}</span>
                 <div>

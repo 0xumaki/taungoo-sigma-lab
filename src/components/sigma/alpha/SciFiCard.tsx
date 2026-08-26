@@ -18,6 +18,7 @@ import * as React from "react";
 export function SciFiCard({
   children,
   className = "",
+  style,
   accent = "#FF4500",
   label,
   id,
@@ -26,6 +27,7 @@ export function SciFiCard({
 }: {
   children: React.ReactNode;
   className?: string;
+  style?: React.CSSProperties;
   accent?: string;
   label?: string;
   id?: string;
@@ -35,6 +37,7 @@ export function SciFiCard({
   return (
     <div
       className={`group relative ${hover ? "transition-all hover:border-foreground/40" : ""} ${className}`}
+      style={style}
     >
       {/* Cut-corner border via clip-path */}
       <div

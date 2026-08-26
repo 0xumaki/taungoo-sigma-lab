@@ -7,6 +7,7 @@ import { useSigmaStore } from "@/lib/sigma/store";
 import { SectionShell } from "../shared/SectionShell";
 import { Panel, Tag } from "../shared/components";
 import { SigmaParticles } from "../shared/SigmaParticles";
+import { useCardReveal } from "@/lib/sigma/use-card-reveal";
 
 gsap.registerPlugin(useGSAP);
 
@@ -75,7 +76,7 @@ const PILLARS = [
 
 export function S03CoreSystems() {
   const { navigate } = useSigmaStore();
-  const root = React.useRef<HTMLDivElement>(null);
+  const cardsRef = useCardReveal<HTMLDivElement>({ stagger: true });
 
   useGSAP(
     () => {
@@ -87,7 +88,7 @@ export function S03CoreSystems() {
         stagger: 0.1,
       });
     },
-    { scope: root }
+    { scope: cardsRef }
   );
 
   return (
@@ -96,7 +97,7 @@ export function S03CoreSystems() {
       title="CORE SYSTEMS"
       tagline="Sector 03 is the tech stack — five research pillars from neural orchestration to edge IoT, each deployed."
     >
-      <div ref={root} className="relative grid h-full grid-cols-12 grid-rows-6 gap-3">
+      <div ref={cardsRef} className="relative grid h-full grid-cols-12 grid-rows-6 gap-3">
         {/* Ambient system particles */}
         <SigmaParticles count={18} color="#00E5FF" />
         {/* featured pillar 1 — large */}
@@ -104,7 +105,7 @@ export function S03CoreSystems() {
         {/* featured pillar 2 */}
         <PillarCard pillar={PILLARS[1]} className="col-span-12 row-span-3 md:col-span-4" featured />
         {/* load monitor */}
-        <Panel label="LOAD MONITOR" id="LIVE" accent="#00E5FF" className="col-span-12 row-span-3 md:col-span-3">
+        <Panel label="LOAD MONITOR" id="LIVE" accent="#00E5FF" className="sigma-card-reveal sigma-hover-card col-span-12 row-span-3 md:col-span-3" style={{ "--sigma-hover-accent": "#00E5FF" } as React.CSSProperties}>
           <div className="flex h-full flex-col justify-between p-3">
             <div className="space-y-2">
               {PILLARS.map((p) => (
@@ -155,7 +156,8 @@ function PillarCard({
       id={pillar.name}
       accent="#00E5FF"
       scan
-      className={`group relative overflow-hidden ${className ?? ""}`}
+      className={`sigma-card-reveal sigma-hover-card group relative overflow-hidden ${className ?? ""}`}
+      style={{ "--sigma-hover-accent": "#00E5FF" } as React.CSSProperties}
     >
       <div className="flex h-full flex-col p-4">
         {/* glyph + name */}

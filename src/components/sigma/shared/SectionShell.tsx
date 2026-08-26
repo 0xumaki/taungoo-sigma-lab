@@ -127,9 +127,17 @@ export function SectionShell({
         <span className="hidden sm:inline">SIG=1.00 · BUILD 2.4.SIGMA</span>
       </footer>
 
-      {/* corner index watermark — small and subtle, bottom-right (was huge 12vh, disturbing content) */}
-      <div className="pointer-events-none absolute bottom-1 right-3 z-0 select-none font-mono text-[9px] font-bold uppercase tracking-[0.3em] text-foreground/[0.15]">
-        {meta.shortCode} / {meta.code}
+      {/* Glitching sector number — lower-right corner of every card.
+          Smaller than the old 12vh watermark (was disturbing content) but keeps
+          the sigma-glitch RGB-split animation the user wants. Sits at z-0 so it
+          sits behind content but is visible in the card's negative space. */}
+      <div className="pointer-events-none absolute bottom-2 right-4 z-0 select-none font-sans text-[6vh] font-black leading-none text-foreground/[0.06] sm:text-[7vh]">
+        <span
+          className="sigma-glitch"
+          data-text={meta.shortCode}
+        >
+          {meta.shortCode}
+        </span>
       </div>
     </div>
   );

@@ -594,3 +594,258 @@
   .sigma-card:hover { transform: none; }
   .sigma-card:hover .sigma-card-img { transform: none; }
 }
+
+/* ============================================================
+   SIGMA BRAND — hybrid C+D treatment (TAUNGOO SIGMA LAB wordmark)
+   C = RGB-split chromatic aberration + on-hover one-shot glitch
+   D = Σ glyph pulse (NO rotation) + text shimmer gradient
+   Battle-tested values from Awwwards SOTD research:
+   - Rest RGB offset: 2px (subtle "always-on" aberration)
+   - Hover RGB offset: 6px (dramatic glitch split)
+   - Glitch cadence: 90% silent, 10% active (per designmd.app)
+   - Shimmer period: 6s (molten metal, ease-in-out)
+   - Σ pulse: 2.4s, scale 1→1.06 (NO rotation per user spec)
+   ============================================================ */
+.sigma-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  position: relative;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* Σ glyph — pulse + drop-shadow glow at peak (NO rotation) */
+.sigma-brand__glyph {
+  font-family: var(--font-sans), system-ui, sans-serif;
+  font-weight: 900;
+  color: #FF4500;
+  display: inline-block;
+  animation: sigma-brand-pulse 2.4s ease-in-out infinite;
+  will-change: transform, filter;
+}
+@keyframes sigma-brand-pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+    filter: drop-shadow(0 0 0 rgba(255, 69, 0, 0));
+  }
+  50% {
+    opacity: 0.92;
+    transform: scale(1.06);
+    filter: drop-shadow(0 0 6px rgba(255, 69, 0, 0.85));
+  }
+}
+
+/* Brand text container — holds the shimmer + glitch layers via pseudo-elements */
+.sigma-brand__text {
+  position: relative;
+  display: inline-block;
+  font-family: var(--font-sans), system-ui, sans-serif;
+  font-weight: 900;
+  letter-spacing: -0.01em;
+  /* Base RGB-split text-shadow (always-on, subtle) */
+  color: var(--color-foreground, #fff);
+  text-shadow:
+    2px 0 0 rgba(255, 45, 126, 0.75),   /* R channel — uses existing #FF2D7E */
+    -2px 0 0 rgba(0, 229, 255, 0.75);   /* B channel — uses existing #00E5FF */
+  transition: text-shadow 0.18s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: text-shadow;
+}
+
+/* Shimmer overlay — uses ::before pseudo-element with content from data-text attr.
+   This avoids layout duplication (no visible text in the shimmer span itself). */
+.sigma-brand__shimmer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+.sigma-brand__shimmer::before {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    100deg,
+    transparent 0%,
+    transparent 40%,
+    rgba(255, 255, 255, 0.55) 50%,
+    transparent 60%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  background-position: 100% 0;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-family: inherit;
+  font-weight: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  animation: sigma-brand-shimmer 6s ease-in-out infinite;
+  will-change: background-position;
+}
+@keyframes sigma-brand-shimmer {
+  0%, 100% { background-position: 100% 0; }
+  50% { background-position: 0% 0; }
+}
+
+/* Hover state — dramatic RGB split + speed up shimmer */
+.sigma-brand:hover .sigma-brand__text {
+  text-shadow:
+    6px 0 0 rgba(255, 45, 126, 0.95),
+    -6px 0 0 rgba(0, 229, 255, 0.95);
+}
+.sigma-brand:hover .sigma-brand__shimmer::before {
+  animation-duration: 1.2s; /* speed up shimmer on hover */
+}
+
+/* One-shot glitch burst on hover — fires once, doesn't loop.
+   Uses ::before + ::after with clip-path inset to create "torn signal band" effect.
+   Colors: pink (#FF2D7E) + cyan (#00E5FF) — matches existing sigma-glitch palette. */
+.sigma-brand__glitch {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+}
+.sigma-brand__glitch::before,
+.sigma-brand__glitch::after {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  font-family: inherit;
+  font-weight: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+.sigma-brand__glitch::before {
+  color: #FF2D7E;
+}
+.sigma-brand__glitch::after {
+  color: #00E5FF;
+}
+.sigma-brand:hover .sigma-brand__glitch {
+  opacity: 1;
+}
+.sigma-brand:hover .sigma-brand__glitch::before {
+  animation: sigma-brand-glitch-burst 0.4s steps(2, end) 1;
+}
+.sigma-brand:hover .sigma-brand__glitch::after {
+  animation: sigma-brand-glitch-burst-2 0.4s steps(2, end) 1;
+}
+@keyframes sigma-brand-glitch-burst {
+  0% { transform: translate(0); clip-path: inset(0 0 0 0); }
+  20% { transform: translate(-3px, 1px); clip-path: inset(20% 0 60% 0); }
+  40% { transform: translate(2px, -1px); clip-path: inset(40% 0 30% 0); }
+  60% { transform: translate(-1px, 0); clip-path: inset(70% 0 5% 0); }
+  80% { transform: translate(1px, 1px); clip-path: inset(10% 0 70% 0); }
+  100% { transform: translate(0); clip-path: inset(0 0 0 0); }
+}
+
+/* Sub-label — "SIGMA LAB" or "AI · WEB3 · FULL-STACK" */
+.sigma-brand__sub {
+  font-family: var(--font-mono), monospace;
+  font-size: 0.625rem;
+  letter-spacing: 0.22em;
+  color: var(--color-muted-foreground, #888);
+  text-transform: uppercase;
+  align-self: center;
+  white-space: nowrap;
+}
+
+/* ============================================================
+   CARD REVEAL — Awwwards SOTD scroll-triggered animation
+   Battle-tested params (from GSAP forum + lab.good-fella):
+   - y: 60px lift, opacity 0→1, duration 0.8s, ease power3.out
+   - Trigger: "top 85%" (fires when ~15% visible)
+   - once: true (one-shot, no reverse on scroll-up)
+   - stagger: 0.08s per card
+   ============================================================ */
+.sigma-card-reveal {
+  opacity: 0;
+  transform: translateY(60px);
+  will-change: transform, opacity;
+}
+.sigma-card-reveal.sigma-card-revealed {
+  opacity: 1;
+  transform: translateY(0);
+  transition:
+    opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ============================================================
+   SIGMA CARD HOVER STACK — 5-layer micro-interaction
+   (per Awwwards SOTD hover pattern from research findings)
+   1. Card lift: translateY(-6px) @ 0.4s
+   2. Border shift to accent @ 0.3s
+   3. Accent glow (box-shadow) @ 0.4s
+   4. Image zoom (if .sigma-hover-img present) @ 0.6s
+   5. Overlay reveal (if .sigma-hover-overlay present) @ 0.3s + 0.05s delay
+   ============================================================ */
+.sigma-hover-card {
+  position: relative;
+  transition:
+    transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.3s ease,
+    box-shadow 0.4s ease;
+  will-change: transform;
+}
+.sigma-hover-card:hover {
+  transform: translateY(-6px);
+  border-color: var(--sigma-hover-accent, #FF4500);
+  box-shadow:
+    0 0 0 1px var(--sigma-hover-accent, #FF4500),
+    0 0 24px -4px var(--sigma-hover-accent, #FF4500),
+    0 20px 40px -12px rgba(0, 0, 0, 0.8);
+}
+.sigma-hover-img {
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+}
+.sigma-hover-card:hover .sigma-hover-img {
+  transform: scale(1.08);
+}
+.sigma-hover-overlay {
+  opacity: 0;
+  transform: translateY(8px);
+  transition:
+    opacity 0.3s ease 0.05s,
+    transform 0.3s cubic-bezier(0.22, 1, 0.36, 1) 0.05s;
+  will-change: transform, opacity;
+}
+.sigma-hover-card:hover .sigma-hover-overlay {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ============================================================
+   EXPANDED REDUCED MOTION — covers brand + card animations
+   (Awwwards juror accessibility check — non-negotiable)
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  .sigma-brand__glyph,
+  .sigma-brand__shimmer,
+  .sigma-brand__glitch {
+    animation: none !important;
+  }
+  .sigma-brand__text {
+    text-shadow: none !important;
+  }
+  .sigma-card-reveal {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  .sigma-hover-card,
+  .sigma-hover-card:hover,
+  .sigma-hover-img,
+  .sigma-hover-card:hover .sigma-hover-img,
+  .sigma-hover-overlay,
+  .sigma-hover-card:hover .sigma-hover-overlay {
+    transition: opacity 0.2s ease, border-color 0.2s ease !important;
+    transform: none !important;
+  }
+}

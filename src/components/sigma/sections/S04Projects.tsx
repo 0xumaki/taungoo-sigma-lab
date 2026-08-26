@@ -15,6 +15,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Github, Star, GitFork, CircleDot } from "lucide-react";
+import { useCardReveal } from "@/lib/sigma/use-card-reveal";
 
 gsap.registerPlugin(useGSAP);
 
@@ -40,7 +41,7 @@ const langColor: Record<string, string> = {
 
 export function S04Projects() {
   const { navigate, activeProject, setActiveProject } = useSigmaStore();
-  const root = React.useRef<HTMLDivElement>(null);
+  const cardsRef = useCardReveal<HTMLDivElement>({ stagger: true });
   const [filter, setFilter] = React.useState("ALL");
 
   const filtered = React.useMemo(
@@ -66,7 +67,7 @@ export function S04Projects() {
         stagger: { each: 0.04, from: "start" },
       });
     },
-    { scope: root, dependencies: [filter] }
+    { scope: cardsRef, dependencies: [filter] }
   );
 
   return (
@@ -75,7 +76,7 @@ export function S04Projects() {
       title="PROJECT VAULT"
       tagline="Sector 04 is the portfolio — 11 live GitHub repos with real screenshots and commit history."
     >
-      <div ref={root} className="relative flex h-full flex-col gap-3">
+      <div ref={cardsRef} className="relative flex h-full flex-col gap-3">
         {/* Ambient particles */}
         <SigmaParticles count={11} color="#C6FF00" />
         {/* toolbar */}
@@ -151,13 +152,13 @@ function ProjectCard({ project, onOpen }: { project: Project; onOpen: () => void
     <button
       data-proj
       onClick={onOpen}
-      className="group relative block w-full overflow-hidden border border-border bg-card text-left transition-all duration-300 hover:-translate-y-1 hover:border-[#C6FF00]"
-      style={{ aspectRatio: "4 / 3" }}
+      className="sigma-card-reveal sigma-hover-card group relative block w-full overflow-hidden border border-border bg-card text-left transition-all duration-300 hover:-translate-y-1 hover:border-[#C6FF00]"
+      style={{ aspectRatio: "4 / 3", "--sigma-hover-accent": "#C6FF00" } as React.CSSProperties}
     >
       <img
         src={project.image}
         alt={project.name}
-        className="absolute inset-0 h-full w-full object-cover object-top opacity-95 transition-all duration-500 group-hover:scale-105 group-hover:opacity-100"
+        className="sigma-hover-img absolute inset-0 h-full w-full object-cover object-top opacity-95 transition-all duration-500 group-hover:scale-105 group-hover:opacity-100"
       />
       <div
         className="absolute inset-0 opacity-20 mix-blend-color transition-opacity group-hover:opacity-40"

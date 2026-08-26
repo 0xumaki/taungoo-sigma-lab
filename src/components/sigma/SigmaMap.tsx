@@ -9,6 +9,7 @@ import { sigmaSound } from "@/lib/sigma/sound";
 import { useTilt3D } from "@/hooks/use-tilt-3d";
 import { cn } from "@/lib/utils";
 import { BrutalButton, Crosshair, Panel, Tag } from "./shared/components";
+import { useCardReveal } from "@/lib/sigma/use-card-reveal";
 
 gsap.registerPlugin(useGSAP);
 
@@ -39,10 +40,10 @@ function MapNode({
       onMouseLeave={() => onHover(null)}
       onClick={() => { onEnter(); sigmaSound.play("transition"); }}
       className={cn(
-        "group relative block w-full overflow-hidden border border-border bg-card text-left transition-[border-color] duration-300 hover:border-foreground/60",
+        "sigma-card-reveal sigma-hover-card group relative block w-full overflow-hidden border border-border bg-card text-left transition-[border-color] duration-300 hover:border-foreground/60",
         isActive && "border-foreground"
       )}
-      style={{ aspectRatio: "4 / 3", transformStyle: "preserve-3d" }}
+      style={{ aspectRatio: "4 / 3", transformStyle: "preserve-3d", "--sigma-hover-accent": section.accent, transitionDelay: `${index * 0.05}s` } as React.CSSProperties}
     >
       {/* accent top bar */}
       <div className="absolute inset-x-0 top-0 z-20 h-[3px]" style={{ background: section.accent }} />
@@ -50,7 +51,7 @@ function MapNode({
       <img
         src={thumb}
         alt={`${section.name} preview`}
-        className="absolute inset-0 h-full w-full object-cover object-top opacity-95 transition-all duration-500 group-hover:scale-105 group-hover:opacity-100"
+        className="sigma-hover-img absolute inset-0 h-full w-full object-cover object-top opacity-95 transition-all duration-500 group-hover:scale-105 group-hover:opacity-100"
         onError={(e) => {
           (e.currentTarget as HTMLImageElement).style.display = "none";
         }}
@@ -114,7 +115,7 @@ function MapNode({
 
 /** The Nexus Map — the video-game level-select hub. */
 export function SigmaMap() {
-  const rootRef = React.useRef<HTMLDivElement>(null);
+  const rootRef = useCardReveal<HTMLDivElement>({ stagger: true });
   const { navigate, hoverNode } = useSigmaStore();
   const [hovered, setHovered] = React.useState<SectionMeta | null>(null);
 

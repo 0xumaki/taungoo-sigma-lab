@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { PageTransitionLink } from "@/components/sigma/PageTransitionLink";
+import { useCardReveal } from "@/lib/sigma/use-card-reveal";
 
 const SERVICES = [
   { name: "AI Chatbot", icon: "◐", desc: "Custom AI chatbots with multi-model orchestration", price: "from 3,020,000 MMK", cat: "AI", slug: "ai-chatbot" },
@@ -61,6 +62,7 @@ const DETAIL_SLUGS = new Set([
 
 export function AlphaServices() {
   const [activeCat, setActiveCat] = React.useState("ALL");
+  const cardsRef = useCardReveal<HTMLDivElement>({ stagger: true });
 
   const filtered = React.useMemo(() => {
     if (activeCat === "ALL") return SERVICES;
@@ -111,7 +113,7 @@ export function AlphaServices() {
         </div>
 
         {/* Maximalist sci-fi service cards */}
-        <div className="mt-6 grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+        <div ref={cardsRef} className="mt-6 grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
           {filtered.map((s, i) => {
             const catColor = CAT_COLORS[s.cat] || "#FF4500";
             const hasDetail = DETAIL_SLUGS.has(s.slug);
@@ -129,8 +131,8 @@ export function AlphaServices() {
               <LinkComp
                 key={s.name}
                 {...(linkProps as any)}
-                className="group relative flex flex-col overflow-hidden border border-border bg-card/30 transition-all hover:border-foreground/40"
-                style={{ clipPath: "polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px))" }}
+                className="sigma-card-reveal sigma-hover-card group relative flex flex-col overflow-hidden border border-border bg-card/30 transition-all hover:border-foreground/40"
+                style={{ "--sigma-hover-accent": catColor, transitionDelay: `${i * 0.08}s`, clipPath: "polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px))" } as React.CSSProperties}
               >
                 {/* === HEADER BAR === */}
                 <div className="flex items-center justify-between border-b border-border/40 px-2 py-1">
