@@ -6,6 +6,7 @@ import Link from "next/link";
 import { AlphaNav } from "@/components/sigma/alpha/AlphaNav";
 import { AlphaFooter } from "@/components/sigma/alpha/AlphaFooter";
 import { SciFiCard } from "@/components/sigma/alpha/SciFiCard";
+import { usePageReveal } from "@/lib/sigma/use-page-reveal";
 
 const PROJECTS: Record<string, {
   name: string;
@@ -178,6 +179,8 @@ export default function PortfolioCaseStudy() {
   const params = useParams();
   const slug = params.slug as string;
   const project = PROJECTS[slug];
+  // Trigger the page reveal animation (panels retract) when this case study mounts
+  usePageReveal();
 
   if (!project) {
     return (

@@ -1,5 +1,7 @@
 "use client";
 
+import { PageTransitionLink } from "@/components/sigma/PageTransitionLink";
+
 const PROJECTS = [
   { name: "Omnibridge", desc: "Cross-chain bridge protocol with MCP & A2A server", tech: ["Solidity", "TypeScript", "Express", "GraphQL"], solution: "Multi-chain interoperability", image: "/portfolio/ominibridge.png", accent: "#00FF94", slug: "omnibridge", cat: "WEB3" },
   { name: "Dukon Pro", desc: "Private capital real estate investment platform", tech: ["Next.js", "TypeScript", "Prisma", "NextAuth"], solution: "Real estate tokenization", image: "/portfolio/dukon-pro.png", accent: "#FF4500", slug: "dukon-pro", cat: "FULL-STACK" },
@@ -37,9 +39,12 @@ export function AlphaPortfolio() {
         {/* Maximalist sci-fi portfolio cards */}
         <div className="mt-6 grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
           {PROJECTS.map((p, i) => (
-            <a
+            <PageTransitionLink
               key={p.name}
               href={`/portfolio/${p.slug}`}
+              label={p.name}
+              kind="project"
+              accent={p.accent}
               className="group relative flex flex-col overflow-hidden border border-border bg-card/30 transition-all hover:border-foreground/40"
               style={{ clipPath: "polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px))" }}
             >
@@ -92,7 +97,7 @@ export function AlphaPortfolio() {
               <div className="absolute left-0 top-0 h-full w-0.5 opacity-30 transition-opacity group-hover:opacity-100" style={{ background: p.accent }} />
               {/* Hover glow */}
               <div className="pointer-events-none absolute inset-0 z-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100" style={{ background: `radial-gradient(60% 50% at 50% 50%, ${p.accent}08, transparent 70%)` }} />
-            </a>
+            </PageTransitionLink>
           ))}
         </div>
 

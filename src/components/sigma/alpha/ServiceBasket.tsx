@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { useBasketStore, formatMMK, type BasketItem } from "@/lib/sigma/basket";
+import { useBasketStore, formatMMK, type BasketItem, DISCOUNT_TIERS, getNextTier } from "@/lib/sigma/basket";
 import { toast } from "sonner";
 import { ShoppingBag, X, Trash2, Send } from "lucide-react";
 
@@ -275,14 +275,57 @@ export function ServiceBasket() {
             {/* Summary + checkout */}
             {items.length > 0 && (
               <div className="border-t border-border p-4">
-                {/* Discount tier */}
-                <div className="mb-3 flex items-center justify-between">
-                  <span className="font-mono text-[8px] uppercase tracking-[0.14em] text-muted-foreground">
-                    BULK DISCOUNT ({getServiceCount()} SERVICES)
-                  </span>
-                  <span className="font-mono text-[9px] text-[#00FF94]">
-                    -{getDiscount() > 0 ? Math.round((getDiscount() / Math.max(getTotal(), 1)) * 100) + "%" : "0%"}
-                  </span>
+                {/* Discount tier ladder — shows all 4 tiers, highlights current */}
+                <div className="mb-3">
+                  <div className="mb-1.5 flex items-center justify-between">
+                    <span className="font-mono text-[8px] uppercase tracking-[0.14em] text-muted-foreground">
+                      BULK DISCOUNT TIERS
+                    </span>
+                    <span className="font-mono text-[9px] text-[#00FF94]">
+                      ACTIVE: -{getDiscount() > 0 ? Math.round((getDiscount() / Math.max(getTotal(), 1)) * 100) + "%" : "0%"}
+                    </span>
+                  </div>
+                  <div className="grid grid-cols-4 gap-0.5">
+                    {DISCOUNT_TIERS.map((tier) => {
+                      const svcCount = getServiceCount();
+                      const isActive = svcCount >= tier.count && (tier.count === DISCOUNT_TIERS[DISCOUNT_TIERS.length - 1].count
+                        ? svcCount >= tier.count
+                        : svcCount >= tier.count && svcCount < (DISCOUNT_TIERS.find((t) => t.count > tier.count)?.count ?? Infinity));
+                      return (
+                        <div
+                          key={tier.count}
+                          className={`border px-1.5 py-1 text-center transition-colors ${
+                            isActive
+                              ? "border-[#00FF94] bg-[#00FF94]/15"
+                              : "border-border/40 opacity-50"
+                          }`}
+                        >
+                          <div className="font-mono text-[7px] uppercase tracking-[0.1em] text-muted-foreground">
+                            {tier.label}
+                          </div>
+                          <div className={`font-sans text-xs font-black ${isActive ? "text-[#00FF94]" : "text-foreground"}`}>
+                            {Math.round(tier.rate * 100)}%
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                  {/* Next tier incentive */}
+                  {(() => {
+                    const next = getNextTier(getServiceCount());
+                    if (!next) return null;
+                    const svcCount = getServiceCount();
+                    return (
+                      <div className="mt-1.5 border border-[#FFB300]/40 bg-[#FFB300]/5 px-2 py-1">
+                        <div className="flex items-center justify-between">
+                          <span className="font-mono text-[7px] uppercase tracking-[0.12em] text-[#FFB300]">
+                            ▸ ADD {next.count - svcCount} MORE FOR {Math.round(next.rate * 100)}% OFF
+                          </span>
+                          <span className="font-mono text-[7px] text-muted-foreground">{svcCount}/{next.count}</span>
+                        </div>
+                      </div>
+                    );
+                  })()}
                 </div>
 
                 {/* Price breakdown */}
@@ -313,7 +356,7 @@ export function ServiceBasket() {
                   {submitting ? "▮ SUBMITTING..." : "REQUEST QUOTATION →"}
                 </button>
                 <p className="mt-2 text-center font-mono text-[8px] uppercase tracking-[0.14em] text-muted-foreground">
-                  ▸ THIS IS A QUOTATION REQUEST, NOT A PURCHASE. OUR TEAM WILL CONTACT YOU.
+                  ▸ THIS IS A QUOTATION REQUEST, NOT A PURCHASE. PAYMENT HAPPENS OFF-PLATFORM.
                 </p>
               </div>
             )}

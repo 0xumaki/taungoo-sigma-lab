@@ -25,12 +25,27 @@ interface BasketState {
 }
 
 // Bulk discount tiers
-// 1 service: 0%, 2: 5%, 3-4: 10%, 5+: 15%
+// 1 service: 0%, 2 services: 7%, 3+ services: 10%, 5+ services: 20%
 function getDiscountRate(serviceCount: number): number {
-  if (serviceCount >= 5) return 0.15;
+  if (serviceCount >= 5) return 0.20;
   if (serviceCount >= 3) return 0.10;
-  if (serviceCount >= 2) return 0.05;
+  if (serviceCount >= 2) return 0.07;
   return 0;
+}
+
+// Discount tier metadata for UI display
+export const DISCOUNT_TIERS = [
+  { count: 1, rate: 0, label: "1 SERVICE" },
+  { count: 2, rate: 0.07, label: "2 SERVICES" },
+  { count: 3, rate: 0.10, label: "3+ SERVICES" },
+  { count: 5, rate: 0.20, label: "5+ SERVICES" },
+] as const;
+
+export function getNextTier(serviceCount: number): { count: number; rate: number; label: string } | null {
+  for (const tier of DISCOUNT_TIERS) {
+    if (serviceCount < tier.count) return tier;
+  }
+  return null;
 }
 
 // Parse price string to number (MMK)

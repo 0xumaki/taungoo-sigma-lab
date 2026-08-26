@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Space_Grotesk, JetBrains_Mono, Instrument_Serif } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
+import { PageTransitionOverlay } from "@/components/sigma/PageTransitionOverlay";
 
 const spaceGrotesk = Space_Grotesk({
   variable: "--font-sans",
@@ -138,6 +139,7 @@ export default function RootLayout({
         />
         {children}
         <Toaster />
+        <PageTransitionOverlay />
       </body>
     </html>
   );

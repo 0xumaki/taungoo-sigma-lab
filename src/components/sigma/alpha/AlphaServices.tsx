@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { PageTransitionLink } from "@/components/sigma/PageTransitionLink";
 
 const SERVICES = [
   { name: "AI Chatbot", icon: "◐", desc: "Custom AI chatbots with multi-model orchestration", price: "from 3,020,000 MMK", cat: "AI", slug: "ai-chatbot" },
@@ -112,10 +113,20 @@ export function AlphaServices() {
           {filtered.map((s, i) => {
             const catColor = CAT_COLORS[s.cat] || "#FF4500";
             const hasDetail = DETAIL_SLUGS.has(s.slug);
+            // Use PageTransitionLink when navigating to a detail page; otherwise plain <a> for hash links
+            const LinkComp = hasDetail ? PageTransitionLink : "a" as const;
+            const linkProps = hasDetail
+              ? {
+                  href: `/services/${s.slug}`,
+                  label: s.name,
+                  kind: "service" as const,
+                  accent: catColor,
+                }
+              : { href: "#contact" };
             return (
-              <a
+              <LinkComp
                 key={s.name}
-                href={hasDetail ? `/services/${s.slug}` : "#contact"}
+                {...(linkProps as any)}
                 className="group relative flex flex-col overflow-hidden border border-border bg-card/30 transition-all hover:border-foreground/40"
                 style={{ clipPath: "polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px))" }}
               >
@@ -160,7 +171,7 @@ export function AlphaServices() {
                 <div className="absolute left-0 top-0 h-full w-0.5 opacity-30 transition-opacity group-hover:opacity-100" style={{ background: catColor }} />
                 {/* Hover glow */}
                 <div className="pointer-events-none absolute inset-0 z-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100" style={{ background: `radial-gradient(60% 50% at 50% 50%, ${catColor}08, transparent 70%)` }} />
-              </a>
+              </LinkComp>
             );
           })}
         </div>

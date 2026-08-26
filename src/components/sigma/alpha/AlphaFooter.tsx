@@ -1,5 +1,17 @@
 "use client";
 
+import { PageTransitionLink } from "@/components/sigma/PageTransitionLink";
+
+// Service slugs — must match the actual /services/[slug] routes
+const SERVICE_SLUGS: Record<string, string> = {
+  "AI Chatbot": "ai-chatbot",
+  "Voice AI": "voice-ai",
+  "Agent Swarm": "agent-swarm",
+  "AI Automation": "ai-automation",
+  "Web3 Wallets": "web3-wallets",
+  "Smart Contracts": "smart-contract-development",
+};
+
 const FOOTER_LINKS: [string, string[]][] = [
   ["SERVICES", ["AI Chatbot", "Voice AI", "Agent Swarm", "AI Automation", "Web3 Wallets", "Smart Contracts"]],
   ["COMPANY", ["About", "Portfolio", "Team", "Tech Stack", "Process", "Contact"]],
@@ -54,15 +66,35 @@ export function AlphaFooter() {
             <div key={category}>
               <div className="font-mono text-[9px] uppercase tracking-[0.2em] text-[#FF4500]">{category}</div>
               <div className="mt-2 space-y-1">
-                {items.map((item) => (
-                  <a
-                    key={item}
-                    href={category === "SERVICES" ? `/services/${item.toLowerCase().replace(/\s+/g, "-")}` : "#"}
-                    className="block font-mono text-[10px] text-foreground/60 transition-colors hover:text-foreground"
-                  >
-                    {item}
-                  </a>
-                ))}
+                {items.map((item) => {
+                  // Use PageTransitionLink for service links (with the page transition + service name)
+                  if (category === "SERVICES") {
+                    const slug = SERVICE_SLUGS[item];
+                    if (slug) {
+                      return (
+                        <PageTransitionLink
+                          key={item}
+                          href={`/services/${slug}`}
+                          label={item}
+                          kind="service"
+                          className="block font-mono text-[10px] text-foreground/60 transition-colors hover:text-foreground"
+                        >
+                          {item}
+                        </PageTransitionLink>
+                      );
+                    }
+                  }
+                  // Plain anchor for hash links (Company/Resources/Connect)
+                  return (
+                    <a
+                      key={item}
+                      href="#"
+                      className="block font-mono text-[10px] text-foreground/60 transition-colors hover:text-foreground"
+                    >
+                      {item}
+                    </a>
+                  );
+                })}
               </div>
             </div>
           ))}

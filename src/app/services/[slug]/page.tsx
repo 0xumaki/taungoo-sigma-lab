@@ -9,6 +9,7 @@ import { ADDONS, SERVICE_PRICES, ServiceBasket } from "@/components/sigma/alpha/
 import { useBasketStore, parsePrice, formatMMK } from "@/lib/sigma/basket";
 import { toast } from "sonner";
 import { Plus, Check } from "lucide-react";
+import { usePageReveal } from "@/lib/sigma/use-page-reveal";
 
 interface ServiceDetail {
   slug: string;
@@ -54,6 +55,8 @@ export default function ServiceDetailPage() {
   const params = useParams();
   const slug = params.slug as string;
   const service = SERVICES.find((s) => s.slug === slug);
+  // Trigger the page reveal animation (panels retract) when this detail page mounts
+  usePageReveal();
 
   if (!service) {
     return (
