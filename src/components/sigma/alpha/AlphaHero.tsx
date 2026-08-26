@@ -4,7 +4,7 @@ import { GlitchImage } from "./GlitchImage";
 
 export function AlphaHero() {
   return (
-    <section id="hero" className="relative flex min-h-screen items-center overflow-hidden px-6 pt-20">
+    <section id="hero" className="relative flex min-h-screen items-center overflow-hidden px-3 pt-20">
       {/* Background image — reduced brightness with glitch */}
       <div className="pointer-events-none absolute inset-0">
         <GlitchImage src="/alpha-hero-bg.png" alt="" className="h-full w-full" intensity={0.5} />
@@ -18,7 +18,7 @@ export function AlphaHero() {
       {/* Accent glow */}
       <div className="pointer-events-none absolute -right-1/4 top-1/4 h-[60vh] w-[60vh] rounded-full opacity-10 blur-[100px]" style={{ background: "#FF4500" }} />
 
-      <div className="relative z-10 mx-auto w-full max-w-7xl">
+      <div className="relative z-10 mx-auto w-full max-w-[1600px]">
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:items-center">
           {/* Left: Content */}
           <div>

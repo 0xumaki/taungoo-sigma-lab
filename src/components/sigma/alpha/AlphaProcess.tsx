@@ -9,6 +9,17 @@ const STEPS: { num: string; title: string; desc: string; color: string; delivera
   { num: "04", title: "DEPLOY", color: "#00FF94", duration: "1 week +", desc: "Production deployment with monitoring, documentation, and handoff. We don't ship and forget.", deliverables: ["Production deployment", "Monitoring setup", "Documentation", "30-day support"] },
 ];
 
+const PRINCIPLES: { icon: string; text: string; color: string }[] = [
+  { icon: "◐", text: "PRODUCTION-FIRST", color: "#00FF94" },
+  { icon: "⬡", text: "MULTI-MODEL AI", color: "#00E5FF" },
+  { icon: "▤", text: "DOCUMENTED", color: "#C6FF00" },
+  { icon: "⚙", text: "SUPPORTED", color: "#FFB300" },
+  { icon: "◴", text: "DAILY DEPLOYS", color: "#FF2D7E" },
+  { icon: "⚿", text: "SECURITY AUDITED", color: "#FF3D3D" },
+  { icon: "◍", text: "OPEN COMMUNICATION", color: "#B388FF" },
+  { icon: "✦", text: "30-DAY WARRANTY", color: "#FFEB3B" },
+];
+
 export function AlphaProcess() {
   return (
     <section id="process" className="relative border-t border-border px-3 py-20">
@@ -30,47 +41,49 @@ export function AlphaProcess() {
           </div>
         </div>
 
-        {/* Horizontal sci-fi process cards — different design from S3 */}
-        <div className="mt-8 space-y-3">
+        {/* === PRINCIPLES BAR — maximalist, fills negative space === */}
+        <div className="mt-4 flex flex-wrap gap-1">
+          {PRINCIPLES.map((p) => (
+            <div key={p.text} className="flex items-center gap-1.5 border border-border/40 bg-card/20 px-2 py-1">
+              <span className="font-sans text-xs" style={{ color: p.color }}>{p.icon}</span>
+              <span className="font-mono text-[8px] uppercase tracking-[0.14em] text-muted-foreground">{p.text}</span>
+            </div>
+          ))}
+        </div>
+
+        {/* === PROCESS CARDS — horizontal sci-fi, tight spacing === */}
+        <div className="mt-4 space-y-2">
           {STEPS.map((s, idx) => (
             <div
               key={s.num}
               className="group relative flex border border-border bg-card/30 transition-all hover:border-foreground/40"
               style={{ clipPath: "polygon(20px 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%, 0 20px)" }}
             >
-              {/* Left: Large number + accent block */}
-              <div className="relative flex w-28 shrink-0 flex-col items-center justify-center border-r border-border/40" style={{ background: `linear-gradient(135deg, ${s.color}15, transparent)` }}>
-                <span className="sigma-glitch font-sans text-5xl font-black leading-none" data-text={s.num} style={{ color: s.color }}>{s.num}</span>
-                <span className="mt-1 font-mono text-[7px] uppercase tracking-[0.16em] text-muted-foreground">{s.duration}</span>
-                {/* Hazard stripe bottom */}
+              {/* Left: Number + accent */}
+              <div className="relative flex w-24 shrink-0 flex-col items-center justify-center border-r border-border/40" style={{ background: `linear-gradient(135deg, ${s.color}15, transparent)` }}>
+                <span className="sigma-glitch font-sans text-4xl font-black leading-none" data-text={s.num} style={{ color: s.color }}>{s.num}</span>
+                <span className="mt-0.5 font-mono text-[6px] uppercase tracking-[0.14em] text-muted-foreground">{s.duration}</span>
                 <div className="absolute bottom-0 left-0 h-1 w-full" style={{ background: `repeating-linear-gradient(45deg, ${s.color} 0, ${s.color} 3px, transparent 3px, transparent 6px)` }} />
               </div>
 
-              {/* Middle: Title + description */}
-              <div className="flex-1 p-4">
-                <div className="flex items-center gap-3">
-                  <h3 className="font-sans text-lg font-bold uppercase tracking-tight">{s.title}</h3>
-                  <span className="font-mono text-[8px] uppercase tracking-[0.16em]" style={{ color: s.color }}>PHASE {s.num}</span>
+              {/* Middle: Title + desc + deliverables inline */}
+              <div className="flex-1 p-3">
+                <div className="flex items-center gap-2">
+                  <h3 className="font-sans text-sm font-bold uppercase tracking-tight">{s.title}</h3>
+                  <span className="font-mono text-[7px] uppercase tracking-[0.14em]" style={{ color: s.color }}>PHASE {s.num}</span>
+                  {/* Phase connector inline */}
+                  {idx < STEPS.length - 1 && <span className="font-mono text-xs text-muted-foreground/30">→</span>}
+                  {idx === STEPS.length - 1 && <span className="font-mono text-xs" style={{ color: s.color }}>✓ SHIPPED</span>}
                 </div>
-                <p className="mt-1 font-serif text-sm italic text-muted-foreground">{s.desc}</p>
-
+                <p className="mt-1 font-serif text-xs italic text-muted-foreground">{s.desc}</p>
                 {/* Deliverables — inline tags */}
-                <div className="mt-3 flex flex-wrap gap-1">
+                <div className="mt-2 flex flex-wrap gap-0.5">
                   {s.deliverables.map((d) => (
-                    <span key={d} className="border px-1.5 py-0.5 font-mono text-[8px] uppercase tracking-[0.12em] text-muted-foreground" style={{ borderColor: `${s.color}33` }}>
+                    <span key={d} className="border px-1.5 py-0.5 font-mono text-[7px] uppercase tracking-[0.1em] text-muted-foreground" style={{ borderColor: `${s.color}33` }}>
                       <span style={{ color: s.color }}>▸</span> {d}
                     </span>
                   ))}
                 </div>
-              </div>
-
-              {/* Right: Phase connector + scanlines */}
-              <div className="hidden w-12 shrink-0 items-center justify-center border-l border-border/40 sm:flex">
-                {idx < STEPS.length - 1 ? (
-                  <span className="font-mono text-2xl text-muted-foreground/30">↓</span>
-                ) : (
-                  <span className="font-mono text-2xl" style={{ color: s.color }}>✓</span>
-                )}
               </div>
 
               {/* Scanlines */}
@@ -79,6 +92,33 @@ export function AlphaProcess() {
               <div className="pointer-events-none absolute inset-0 z-0 opacity-0 transition-opacity group-hover:opacity-100" style={{ background: `radial-gradient(60% 50% at 50% 50%, ${s.color}08, transparent 70%)` }} />
             </div>
           ))}
+        </div>
+
+        {/* === STATS ROW — fills bottom negative space === */}
+        <div className="mt-4 grid grid-cols-2 gap-px border border-border/40 bg-border/40 sm:grid-cols-4">
+          {[
+            ["4-11", "WEEKS TYPICAL", "#FF4500"],
+            ["16", "DELIVERABLES", "#00E5FF"],
+            ["100%", "TRANSPARENT", "#C6FF00"],
+            ["30D", "SUPPORT", "#00FF94"],
+          ].map(([v, k, c]) => (
+            <div key={k} className="bg-card/40 p-3">
+              {/* Hazard top strip */}
+              <div className="mb-1 h-0.5 w-full" style={{ background: `repeating-linear-gradient(45deg, ${c} 0, ${c} 3px, transparent 3px, transparent 6px)` }} />
+              <div className="font-sans text-xl font-black" style={{ color: c }}>{v}</div>
+              <div className="font-mono text-[8px] uppercase tracking-[0.16em] text-muted-foreground">{k}</div>
+            </div>
+          ))}
+        </div>
+
+        {/* === ASCII TIMELINE — maximalist text decoration === */}
+        <div className="mt-4 border border-border/40 bg-black/40 p-3 font-mono text-[8px] leading-tight text-muted-foreground/40">
+          <div>┌─ DISCOVERY ─┬─ ARCHITECTURE ─┬─ BUILD ─┬─ DEPLOY ─┐</div>
+          <div>│  ████████   │  ████████████   │ ██████████████ │ ████████████ │</div>
+          <div>│  Week 1-2   │  Week 3        │ Week 4-10     │ Week 11+     │</div>
+          <div>│  SCOPE      │  DESIGN        │ CODE          │ SHIP         │</div>
+          <div>└─────────────┴────────────────┴───────────────┴─────────────┘</div>
+          <div className="mt-1 text-[#00FF94]">▶ STATUS: ALL PHASES COMPLETE · 100% DELIVERY RATE · 0 BLACK BOXES</div>
         </div>
       </div>
     </section>

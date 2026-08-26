@@ -46,6 +46,16 @@ const CAT_COLORS: Record<string, string> = {
   "DESIGN": "#FF2D7E",
 };
 
+// Slugs that have full detail pages
+const DETAIL_SLUGS = new Set([
+  "ai-chatbot", "voice-ai", "agent-swarm", "ai-automation", "api-mcp",
+  "hermes-openclaw-grokbot", "ai-video-generation", "3d-modeling", "graphic-design",
+  "content-copywriting", "online-media-buying", "ui-ux-design",
+  "android-ios-app", "web-webapp", "chrome-extensions", "desktop-macbook-apps", "aso",
+  "web3-wallets", "amm-dex", "dao-governance", "nft-systems", "security-audit",
+  "smart-contract-development", "bug-bounty", "money-market-development", "cbdc-development",
+]);
+
 export function AlphaServices() {
   const [activeCat, setActiveCat] = React.useState("ALL");
 
@@ -97,48 +107,57 @@ export function AlphaServices() {
           })}
         </div>
 
-        {/* Vertical sci-fi service cards — reference-inspired design */}
-        <div className="mt-6 grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        {/* Maximalist sci-fi service cards */}
+        <div className="mt-6 grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
           {filtered.map((s, i) => {
             const catColor = CAT_COLORS[s.cat] || "#FF4500";
-            const hasDetailPage = ["ai-chatbot", "voice-ai", "agent-swarm", "ai-automation", "api-mcp", "web3-wallets", "smart-contract-development", "amm-dex", "web-webapp", "android-ios-app"].includes(s.slug);
+            const hasDetail = DETAIL_SLUGS.has(s.slug);
             return (
               <a
                 key={s.name}
-                href={hasDetailPage ? `/services/${s.slug}` : "#contact"}
-                className="group relative block overflow-hidden border border-border bg-card/30 transition-all hover:border-foreground/40"
-                style={{ clipPath: "polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px))" }}
+                href={hasDetail ? `/services/${s.slug}` : "#contact"}
+                className="group relative flex flex-col overflow-hidden border border-border bg-card/30 transition-all hover:border-foreground/40"
+                style={{ clipPath: "polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px))" }}
               >
-                {/* Top section — icon in large area with accent bg */}
-                <div className="relative flex flex-col items-center justify-center border-b border-border/40 py-5" style={{ background: `linear-gradient(180deg, ${catColor}11, transparent)` }}>
-                  {/* Hazard stripe top-left */}
-                  <div className="absolute left-0 top-0 h-5 w-5" style={{ background: `repeating-linear-gradient(45deg, ${catColor} 0, ${catColor} 2px, transparent 2px, transparent 4px)` }} />
-                  {/* Index number */}
-                  <span className="absolute right-2 top-1.5 font-mono text-[7px] uppercase tracking-[0.14em] text-muted-foreground">{String(i + 1).padStart(2, "0")}</span>
+                {/* === HEADER BAR === */}
+                <div className="flex items-center justify-between border-b border-border/40 px-2 py-1">
+                  {/* Left hazard dot + cat label */}
+                  <div className="flex items-center gap-1">
+                    <span className="h-1.5 w-1.5" style={{ background: catColor }} />
+                    <span className="font-mono text-[6px] uppercase tracking-[0.16em]" style={{ color: catColor }}>{s.cat}</span>
+                  </div>
+                  {/* Right index */}
+                  <span className="font-mono text-[6px] uppercase tracking-[0.12em] text-muted-foreground">{String(i + 1).padStart(2, "0")}/{String(filtered.length).padStart(2, "0")}</span>
+                </div>
 
+                {/* === ICON ZONE === */}
+                <div className="relative flex items-center justify-center py-4" style={{ background: `linear-gradient(180deg, ${catColor}0a, transparent)` }}>
+                  {/* Hazard stripe top-left corner */}
+                  <div className="absolute left-0 top-0 h-4 w-4" style={{ background: `repeating-linear-gradient(45deg, ${catColor} 0, ${catColor} 2px, transparent 2px, transparent 4px)` }} />
+                  {/* Crosshair marks */}
+                  <span className="absolute right-1 top-1 h-1.5 w-1.5 border-r border-t" style={{ borderColor: `${catColor}44` }} />
                   {/* Large icon */}
-                  <span className="font-sans text-4xl font-black transition-transform group-hover:scale-110" style={{ color: catColor }}>{s.icon}</span>
-                  {/* Category label */}
-                  <span className="mt-1 font-mono text-[7px] uppercase tracking-[0.18em]" style={{ color: catColor }}>{s.cat}</span>
+                  <span className="font-sans text-3xl font-black transition-transform group-hover:scale-110" style={{ color: catColor }}>{s.icon}</span>
+                  {/* Scanlines on icon area */}
+                  <div className="pointer-events-none absolute inset-0 opacity-15" style={{ background: "repeating-linear-gradient(0deg, transparent 0px, transparent 2px, rgba(0,0,0,0.15) 3px, rgba(0,0,0,0.15) 4px)" }} />
                 </div>
 
-                {/* Middle — title + description */}
-                <div className="p-3">
-                  <h3 className="font-sans text-sm font-bold uppercase tracking-tight transition-colors group-hover:text-[#FF4500]">{s.name}</h3>
-                  <p className="mt-1 font-serif text-xs italic text-muted-foreground line-clamp-2">{s.desc}</p>
+                {/* === CONTENT === */}
+                <div className="flex flex-1 flex-col p-2">
+                  <h3 className="font-sans text-xs font-bold uppercase leading-tight tracking-tight transition-colors group-hover:text-[#FF4500]">{s.name}</h3>
+                  <p className="mt-0.5 font-serif text-[10px] italic text-muted-foreground line-clamp-2">{s.desc}</p>
                 </div>
 
-                {/* Bottom — price + link */}
-                <div className="flex items-center justify-between border-t border-border/40 px-3 py-2">
-                  <span className="font-mono text-[9px] uppercase tracking-[0.14em] text-[#00FF94]">{s.price}</span>
-                  <span className="font-mono text-[8px] uppercase tracking-[0.14em] text-muted-foreground transition-colors group-hover:text-foreground">
-                    {hasDetailPage ? "DETAILS →" : "INQUIRE →"}
+                {/* === FOOTER BAR === */}
+                <div className="flex items-center justify-between border-t border-border/40 px-2 py-1.5">
+                  <span className="font-mono text-[8px] uppercase tracking-[0.12em] text-[#00FF94]">{s.price}</span>
+                  <span className="font-mono text-[7px] uppercase tracking-[0.12em] text-muted-foreground transition-colors group-hover:text-foreground">
+                    {hasDetail ? "▸ DETAILS" : "▸ INQUIRE"}
                   </span>
                 </div>
 
-                {/* Scanline overlay */}
-                <div className="pointer-events-none absolute inset-0 z-0 opacity-15" style={{ background: "repeating-linear-gradient(0deg, transparent 0px, transparent 2px, rgba(0,0,0,0.15) 3px, rgba(0,0,0,0.15) 4px)" }} />
-
+                {/* Side accent strip — left */}
+                <div className="absolute left-0 top-0 h-full w-0.5 opacity-30 transition-opacity group-hover:opacity-100" style={{ background: catColor }} />
                 {/* Hover glow */}
                 <div className="pointer-events-none absolute inset-0 z-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100" style={{ background: `radial-gradient(60% 50% at 50% 50%, ${catColor}08, transparent 70%)` }} />
               </a>
