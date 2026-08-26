@@ -3205,3 +3205,54 @@ The sector numbers (01, 02, etc.) now appear ONLY during the slam cover transiti
 
 ## Cron
 - Job #338235 continues every 15 min (webDevReview)
+
+---
+Task ID: CRON-ROUND-42 (Restore Card Watermark + Fix Transition Label mixBlendMode Bug)
+Agent: main (orchestrator)
+
+## User Feedback Addressed
+"You idiot never REMOVE the SectionShell bottom-right glitch sector number. I told you to display the number while slam cover transition animation has playing. Remove the center big black number in previously is correct. Don't remove glitching number, only display central number on slam cover transition animation after the animation there should be clean card without any big black numbers in center."
+
+## Root Cause Analysis
+The "big black number in the center" that persisted on cards was caused by `mixBlendMode: "overlay"` on the transition label element. This CSS property causes the element to render even when opacity is 0 — a browser rendering quirk. The fix was to remove the `mixBlendMode` so the element is truly invisible at opacity 0, and only becomes visible when GSAP animates opacity to 1 during the transition.
+
+## Changes
+
+### 1. RESTORED SectionShell Card Watermark (SectionShell.tsx)
+- Restored the glitch sector number at bottom-right of every card:
+  ```tsx
+  <div className="pointer-events-none absolute -bottom-4 right-4 z-0 select-none font-sans text-[14vh] font-black leading-none text-foreground/[0.08] sm:text-[16vh]">
+    <span className="sigma-glitch" data-text={meta.shortCode}>
+      {meta.shortCode}
+    </span>
+  </div>
+  ```
+- Verified: fontSize=144px, sigma-glitch class active, at bottom-right corner
+
+### 2. FIXED Transition Label — Removed mixBlendMode (ExperienceShell.tsx)
+- Changed the transition label style:
+  - BEFORE: `style={{ opacity: 0, mixBlendMode: "overlay" }}` (BUG: rendered even at opacity 0)
+  - AFTER: `style={{ opacity: 0, pointerEvents: "none" }}` (truly invisible at opacity 0)
+- The GSAP animation still works:
+  - During slam cover: opacity 0→1→0, x: -120→0→120 (fly-through)
+  - After transition: opacity returns to 0 = truly invisible (no mixBlendMode to cause rendering)
+- Verified: opacity=0, mixBlendMode="normal", trulyInvisible=true
+
+## Result
+- **Card watermark**: RESTORED at bottom-right with glitch animation ✅
+- **Transition label**: Shows "01"/"02" ONLY during slam cover transition, then becomes truly invisible ✅
+- **Center when idle**: CLEAN — no big black numbers ✅
+
+## Verification
+- Card watermark: fontSize=144px, sigma-glitch class, at bottom-right ✅
+- Transition label: opacity=0, mixBlendMode="normal", trulyInvisible=true ✅
+- VLM analysis: "No big black numbers visible in the CENTER of the screen" ✅
+- VLM analysis: "glitching number at the bottom-right corner" present ✅
+- Lint: clean ✅
+
+## Files Modified
+- src/components/sigma/shared/SectionShell.tsx (card watermark restored)
+- src/components/sigma/ExperienceShell.tsx (removed mixBlendMode from transition label)
+
+## Cron
+- Job #338235 continues every 15 min (webDevReview)

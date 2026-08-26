@@ -424,13 +424,14 @@ export function ExperienceShell() {
           style={{ background: flashAccent, opacity: 0 }}
         />
 
-        {/* sector label fly-through — RESTORED per user request.
-            Shows "01"/"02" etc. during the slam cover transition (NOT on the cards themselves). */}
+        {/* sector label fly-through — shows "01"/"02" ONLY during slam cover transition.
+            NO mixBlendMode (was causing the number to render even at opacity 0).
+            After transition completes, opacity returns to 0 = truly invisible. */}
         <div className="absolute inset-0 flex items-center justify-center">
           <div
             ref={labelRef}
             className="font-mono text-[11vw] font-black leading-none text-black/85"
-            style={{ opacity: 0, mixBlendMode: "overlay" }}
+            style={{ opacity: 0, pointerEvents: "none" }}
           >
             {meta.shortCode}
           </div>
