@@ -40,37 +40,12 @@ export function S02Manifesto() {
     { scope: root }
   );
 
-  // Infinite typewriter effect for manifesto background text.
-  // NEVER disappears — continuously appends text, scrolls forever.
-  // When the manifesto text is fully typed, it immediately restarts from the beginning
-  // WITHOUT clearing — the text just keeps flowing like a live terminal feed.
+  // Manifesto background text — typed once, then stays static.
+  // Removed infinite loop per user request.
   React.useEffect(() => {
     const el = manifestoRef.current;
     if (!el) return;
-    const fullText = MANIFESTO_TEXT;
-    let charIdx = 0;
-    let active = true;
-
-    const typeNext = () => {
-      if (!active || !el) return;
-      // Append 5 chars at a time — never clear, just keep growing
-      const chunk = fullText.slice(0, charIdx + 5);
-      el.textContent = chunk + "▮";
-      charIdx += 5;
-
-      if (charIdx >= fullText.length) {
-        // Loop complete — immediately restart WITHOUT clearing
-        // The text stays visible the entire time, just resets the index
-        charIdx = 0;
-        // Tiny pause then continue typing from the start
-        setTimeout(typeNext, 50);
-        return;
-      }
-      setTimeout(typeNext, 12);
-    };
-    typeNext();
-
-    return () => { active = false; };
+    el.textContent = MANIFESTO_TEXT;
   }, []);
 
   return (
