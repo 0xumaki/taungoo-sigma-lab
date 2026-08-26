@@ -118,8 +118,8 @@ export function S03CoreSystems() {
   return (
     <SectionShell
       id="s03"
-      title="MARKETS WE SERVICE"
-      tagline="Sector 03 is the market map — six verticals we ship to right now, from AI automation to edge IoT for operations."
+      title="CORE SYSTEMS"
+      tagline="Sector 03 is the core systems map — six verticals we ship to right now, from AI automation to edge IoT for operations."
     >
       <div ref={root} className="relative grid h-full grid-cols-12 gap-3 overflow-y-auto sigma-scroll-hidden lg:grid-rows-[repeat(6,minmax(min-content,1fr))]">
         {/* Ambient system particles */}
@@ -270,11 +270,11 @@ function MarketCard({
           <div className="font-mono text-[9px] uppercase tracking-[0.22em] text-muted-foreground">
             ▸ SAMPLES
           </div>
-          <div className="mt-1.5 flex flex-wrap gap-1">
+          <div className="mt-1.5 flex flex-wrap gap-1 overflow-hidden">
             {market.samples.map((s) => (
               <span
                 key={s}
-                className="border px-1.5 py-0.5 font-mono text-[9px] uppercase tracking-[0.12em] text-foreground/80"
+                className="border px-1.5 py-0.5 font-mono text-[9px] uppercase tracking-[0.12em] text-foreground/80 whitespace-nowrap"
                 style={{ borderColor: `${a}33` }}
               >
                 {s}

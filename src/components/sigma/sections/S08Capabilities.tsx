@@ -74,22 +74,15 @@ export function S08Capabilities() {
               data-gear
               key={g.code}
               className="col-span-12 sm:col-span-6 lg:col-span-4"
-              style={{ perspective: "1000px" } as React.CSSProperties}
             >
-              <div
-                className="relative h-full transition-transform duration-500"
-                style={{
-                  transformStyle: "preserve-3d",
-                  transform: isFlipped ? "rotateY(180deg)" : "rotateY(0deg)",
-                }}
-              >
-                {/* FRONT FACE */}
+              {/* FRONT FACE — shown when not flipped */}
+              {!isFlipped && (
                 <Panel
                   label={g.code}
                   id={g.serial}
                   accent={g.accent}
                   scan
-                  className={isFlipped ? "hidden" : "block h-full"}
+                  className="block h-full"
                 >
                   <div className="flex h-full flex-col p-3">
                     <div className="flex items-start justify-between">
@@ -128,29 +121,28 @@ export function S08Capabilities() {
                         />
                       ))}
                     </div>
-                    {/* flip hint */}
+                    {/* flip button — properly contained, no overflow */}
                     <button
                       onClick={() => { setFlipped(g.code); sigmaSound.play("open"); }}
                       className="mt-auto flex items-center justify-center gap-1.5 border border-border py-1.5 font-mono text-[9px] uppercase tracking-[0.18em] text-muted-foreground transition-colors hover:bg-foreground/10 hover:text-foreground"
                       data-cursor="hover"
                     >
-                      <RotateCw className="h-3 w-3" /> FLIP FOR DETAILS
+                      <RotateCw className="h-3 w-3 shrink-0" /> FLIP FOR DETAILS
                     </button>
                   </div>
                 </Panel>
+              )}
 
-                {/* BACK FACE */}
+              {/* BACK FACE — shown when flipped (simple show/hide, no 3D transform) */}
+              {isFlipped && (
                 <Panel
                   label={`${g.code} · DETAIL`}
                   id={g.serial}
                   accent={g.accent}
                   scan
-                  className={isFlipped ? "block h-full" : "hidden"}
+                  className="block h-full"
                 >
-                  <div
-                    className="flex h-full flex-col p-3"
-                    style={{ transform: "rotateY(180deg)", backfaceVisibility: "hidden" }}
-                  >
+                  <div className="flex h-full flex-col p-3">
                     <div className="flex items-start justify-between">
                       <span className="font-mono text-[10px] uppercase tracking-[0.22em]" style={{ color: g.accent }}>
                         {g.code}
@@ -211,7 +203,7 @@ export function S08Capabilities() {
                     </div>
                   </div>
                 </Panel>
-              </div>
+              )}
             </div>
           );
         })}

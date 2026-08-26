@@ -3628,3 +3628,128 @@ Agent: main (orchestrator)
 
 ## Cron
 - Job #338235 continues every 15 min (webDevReview)
+
+---
+Task ID: 46-A
+Agent: subagent (S04 project swap)
+Task: Replace S04 projects with Alpha portfolio projects
+
+Work Log:
+- Replaced 11 projects in projects-data.json with the 10 Alpha portfolio projects (omnibridge, dukon-pro, royaldao, vortex-sales-os, gymmaster, lumina-tarot, sai-pay, brorus, asean-swap, manymarket)
+- Mapped Alpha data to Project interface: language = first Alpha tech; topics = Alpha tech array; category mapped WEB3→Web3, FULL-STACK→Full-Stack, AI→AI Systems, DESIGN→Design; code TSL-001..TSL-010; stars/forks/openIssues = 0; updated 2025-08-26; created 2024-06-29; fullName/htmlUrl = taungoo-sigma-lab/<slug>; defaultBranch main; realistic sizes 10800-34200KB
+- Images use AlphaPortfolio paths incl. the preserved "ominibridge" typo (/portfolio/ominibridge.png) for cross-file consistency; asean-swap + manymarket use "" (no published screenshot) per spec
+- AlphaPortfolio.tsx needed NO changes — image paths already consistent with the JSON
+- FIXED THE POPUP (real root cause found): shadcn DialogContent default `sm:max-w-lg` was overriding the previous round's `max-w-6xl` (tailwind-merge keeps both since different variants; responsive variant wins in CSS) → dialog was stuck at 512px wide on desktop despite the "bigger" fix from CRON-ROUND-45. Fix: `max-w-[calc(100%-2rem)] sm:max-w-6xl` — now 1152px on desktop, 358px (edge-margined) on mobile, 90vh height cap, 0 scroll overflow
+- Added "[ SCREENSHOT CLASSIFIED ]" dashed-cover fallback (S04's own style, mirrors AlphaPortfolio pattern) to ProjectCard + ProjectDetail for empty-image projects — previously React omitted the src attribute and rendered a broken <img> for asean-swap/manymarket (rule 5's expected cover did not exist in S04 code)
+- Data-consistency touches in S04Projects.tsx (layout/design untouched): CATEGORIES filter list updated to the 4 categories present in the new data (Web3/Full-Stack/AI Systems/Design — old list had Generative/DeFi/Research/Governance/Brand which all matched 0 projects); tagline "11 shipped systems" → "10 shipped systems"
+- Verified in browser (1440x900 + 390x844): 10 cards render in order, 8 real images load, 2 classified covers show, counter reads "10 / 10 ARTIFACTS", filters work (Web3→4 cards, Design→1 card), popup verified for omnibridge (real img) and asean-swap (classified cover) — no overflow/overlap (VLM-verified), mobile popup no horizontal overflow (content scrolls inside dialog)
+- Lint: clean (exit 0). dev.log: transient mid-edit Fast Refresh parse warnings only; final compiles clean, /?s=04 returns 200
+
+Stage Summary:
+- Files modified: src/lib/sigma/projects-data.json (full data swap), src/components/sigma/sections/S04Projects.tsx (popup width fix + classified covers + category/count data)
+- Lint: clean
+- Old 0xumaki repos (11) fully replaced by taungoo-sigma-lab Alpha portfolio (10); Project interface unchanged; no other sections touched
+
+---
+Task ID: CRON-ROUND-46 (S03 Name + Sample Tags + S04 Project Swap + Popup + S08 Flip + S10 Transmit + Completion + Konami Maximalist)
+Agent: main (orchestrator) + subagent (S04 project swap)
+
+## User Feedback Addressed (8 items)
+1. "Why you change card name of page 3 in Sigma mode? Bring back the original name"
+2. "Samples tag are overflowing from their parent cards"
+3. "Remove all project repo from current Project vault and substitute with projects from Alpha mode portfolio section"
+4. "The pop-up card in the project vault need to be bigger and fix visual overlapping"
+5. "In Capabilities page, the Flip-for-detail buttons are overflow downward and there is no detail even after flip"
+6. "In Access Protocol, Transmit button is overflowing and not properly positioned"
+7. "11/11 perfect page tracking badge is still clashing"
+8. "I want a better and more maximalist techno brutalism animation for secret Konami code"
+
+## Changes
+
+### 1. S03 Name Restored to "CORE SYSTEMS"
+- sections.ts: name "MARKETS" → "CORE SYSTEMS"
+- S03CoreSystems.tsx: title "MARKETS WE SERVICE" → "CORE SYSTEMS"
+- Kept the markets content (6 verticals) — only the NAME was restored
+
+### 2. S03 Sample Tags Overflow Fix
+- Added `overflow-hidden` to the flex-wrap container
+- Added `whitespace-nowrap` to each sample tag
+- Tags now stay within their parent card, no overflow
+
+### 3. S04 Projects Swapped with Alpha Portfolio (via subagent)
+- projects-data.json: replaced 11 old 0xumaki repos with 10 Alpha portfolio projects
+  - Omnibridge, Dukon Pro, Royal DAO, Vortex Sales OS, GymMaster, Lumina Tarot, Sai Pay, Brorus, Asean Swap, ManyMarket
+  - Mapped to Project interface (id, name, fullName, description, language, topics, image, code, category, accent)
+  - ASEAN Swap + ManyMarket have image: "" (show classified cover)
+- S04 layout/design UNCHANGED — only data swapped
+- Categories updated to match new data
+- Tagline: "11 shipped systems" → "10 shipped systems"
+- S04 also got "[ SCREENSHOT CLASSIFIED ]" cover fallback for empty-image projects
+
+### 4. S04 Popup Made BIGGER (root cause found by subagent)
+- Root cause: shadcn's DialogContent default `sm:max-w-lg` was overriding `max-w-6xl` (tailwind-merge kept both, responsive variant won)
+- Fix: `max-w-4xl` → `max-w-[calc(100%-2rem)] sm:max-w-6xl`
+- Verified: popup is now **1152px wide** (was stuck at 512px)
+- Content: `max-h-[70vh]` → `max-h-[calc(90vh-3rem)]`
+- Padding: `p-4` → `p-6`, gap: `gap-3` → `gap-4`
+- Title: `text-2xl` → `text-3xl`, description: `text-sm` → `text-base`
+- Repo-restricted: one-line `▸ [ REPO ACCESS: RESTRICTED ] ◄` with `whitespace-nowrap`
+- VLM verified: no overflow, repo text one line, popup big enough ✅
+
+### 5. S08 Flip Card Fix — Complete Rewrite
+- Root cause: 3D transform (`rotateY(180deg)` + `backfaceVisibility: hidden`) was broken — back face wasn't showing detail
+- Fix: replaced 3D transform with SIMPLE show/hide (`{!isFlipped && <FrontPanel/>}` / `{isFlipped && <BackPanel/>}`)
+- Removed `perspective`, `transformStyle: preserve-3d`, `rotateY`, `backfaceVisibility`
+- Front face: "FLIP FOR DETAILS" button with `shrink-0` icon, properly contained
+- Back face: shows actual detail (POWER DRAW, TEMP, LOCATION, LAST MAINT, UPTIME, FIELD NOTES, barcode)
+- Verified: clicking FLIP shows detail content (FIELD NOTES / POWER DRAW / BACK button) ✅
+
+### 6. S10 Transmit Button Fix
+- Root cause: BrutalButton didn't have `whitespace-nowrap` or `shrink-0`
+- Fix (in components.tsx BrutalButton): added `shrink-0`, `justify-center`, `whitespace-nowrap` to className
+- Verified: Transmit button width=152px, fits in parent (YES), no overflow ✅
+
+### 7. SigmaCompletion Badge Relocated
+- Moved from `right-9 top-[140px]` → `left-14 bottom-12` (bottom-left corner, away from sound/theme toggles)
+- Verified: no overlap with interactive HUD elements ✅
+
+### 8. Konami Code — Maximalist Techno Brutalism Enhancement
+Complete rewrite of SigmaKonami.tsx — 11-phase sequence:
+1. System alert flash (rapid red/white yoyo)
+2. Screen crack — 12 glitch bars sweep with staggered timing
+3. RGB channel split (full screen red/cyan layers)
+4. "SYSTEM OVERRIDE" text slam with chromatic aberration (scale 4→1, blur 30→0)
+5. Hex grid materializes (7 concentric rings of hexagons)
+6. Giant Σ morphs in (scale 0→1, rotation -360→0, blur 20→0) with glitch
+7. Photon streaks radiate (24 lines, orange+cyan, rotating)
+8. Shockwave ring (scale 0→3, fade out)
+9. "SIGMA PROTOCOL" terminal display (scaleY 0→1, with clip-path cut-corner)
+10. Status bars fill (PHOTON, SIGMA, OVERFLOW, CHARGE — staggered width 0→100%)
+11. Data readout grid (SIG, NODES, BUILD, MODE, ACCESS, STATUS)
+- Data stream rain on canvas (Σ + binary characters, orange gradient)
+- Faiz Henshin soundtrack plays throughout
+- Animated corner brackets with glow
+- Top/bottom hazard stripes
+- VLM: "SIGMA FORM" with glitch effect, chromatic aberration, hex grid, photon streaks
+
+## Verification
+- S03: title="CORE SYSTEMS" ✅, sample tags no overflow ✅
+- S04: 10 Alpha projects ✅, popup 1152px wide ✅, repo text one line ✅
+- S08: FLIP shows detail (FIELD NOTES/POWER DRAW/BACK) ✅
+- S10: Transmit button fits, no overflow ✅
+- SigmaCompletion: bottom-left, no clash ✅
+- Konami: enhanced with 11-phase maximalist sequence ✅
+- Lint: clean ✅
+
+## Files Modified
+- src/lib/sigma/sections.ts (S03 name)
+- src/components/sigma/sections/S03CoreSystems.tsx (title + sample tags)
+- src/lib/sigma/projects-data.json (10 Alpha projects)
+- src/components/sigma/sections/S04Projects.tsx (popup bigger + classified covers + categories)
+- src/components/sigma/sections/S08Capabilities.tsx (flip card rewrite)
+- src/components/sigma/shared/components.tsx (BrutalButton whitespace-nowrap + shrink-0)
+- src/components/sigma/shared/SigmaCompletion.tsx (relocated to bottom-left)
+- src/components/sigma/shared/SigmaKonami.tsx (maximalist techno brutalism enhancement)
+
+## Cron
+- Job #338235 continues every 15 min (webDevReview)

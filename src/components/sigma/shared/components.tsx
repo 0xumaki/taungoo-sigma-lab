@@ -139,7 +139,7 @@ export function BrutalButton({
       ref={magnetic ? magRef : undefined}
       onClick={onClick}
       className={cn(
-        "group inline-flex items-center gap-2 px-4 py-2.5 font-mono text-[11px] uppercase tracking-[0.2em] transition-all duration-200 active:translate-x-[2px] active:translate-y-[2px]",
+        "group inline-flex shrink-0 items-center justify-center gap-2 whitespace-nowrap px-4 py-2.5 font-mono text-[11px] uppercase tracking-[0.2em] transition-all duration-200 active:translate-x-[2px] active:translate-y-[2px]",
         styles[variant],
         className
       )}

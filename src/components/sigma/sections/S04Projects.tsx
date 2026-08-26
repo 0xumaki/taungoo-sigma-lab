@@ -20,13 +20,10 @@ gsap.registerPlugin(useGSAP);
 
 const CATEGORIES = [
   "ALL",
-  "AI Systems",
-  "Generative",
-  "DeFi",
   "Web3",
-  "Research",
-  "Governance",
-  "Brand",
+  "Full-Stack",
+  "AI Systems",
+  "Design",
 ];
 
 const langColor: Record<string, string> = {
@@ -73,7 +70,7 @@ export function S04Projects() {
     <SectionShell
       id="s04"
       title="PROJECT VAULT"
-      tagline="Sector 04 is the project vault — 11 shipped systems with real screenshots. Contact us for repo access."
+      tagline="Sector 04 is the project vault — 10 shipped systems with real screenshots. Contact us for repo access."
     >
       <div ref={root} className="relative flex h-full flex-col gap-3">
         {/* Ambient particles */}
@@ -129,9 +126,9 @@ export function S04Projects() {
         </div>
       </div>
 
-      {/* DETAIL DIALOG — made BIGGER (max-w-6xl, max-h-[90vh]) to prevent overflow */}
+      {/* DETAIL DIALOG — BIG (sm:max-w-6xl beats the default sm:max-w-lg; maxHeight 90vh) to prevent overflow */}
       <Dialog open={!!selected} onOpenChange={(o) => !o && setActiveProject(null)}>
-        <DialogContent className="max-w-6xl gap-0 overflow-hidden border-foreground/30 bg-card p-0" style={{ maxHeight: '90vh' }}>
+        <DialogContent className="max-w-[calc(100%-2rem)] sm:max-w-6xl gap-0 overflow-hidden border-foreground/30 bg-card p-0" style={{ maxHeight: '90vh' }}>
           <DialogHeader className="border-b border-border px-4 py-2">
             <DialogTitle className="flex items-center gap-2 font-mono text-xs uppercase tracking-[0.2em]">
               <span className="text-[#C6FF00]">{selected?.code}</span>
@@ -153,11 +150,35 @@ function ProjectCard({ project, onOpen }: { project: Project; onOpen: () => void
       className="group relative block w-full overflow-hidden border border-border bg-card text-left transition-all duration-300 hover:-translate-y-1 hover:border-[#C6FF00]"
       style={{ aspectRatio: "4 / 3" } as React.CSSProperties}
     >
-      <img
-        src={project.image}
-        alt={project.name}
-        className="absolute inset-0 h-full w-full object-cover object-top opacity-95 transition-all duration-500 group-hover:scale-105 group-hover:opacity-100"
-      />
+      {project.image ? (
+        <img
+          src={project.image}
+          alt={project.name}
+          className="absolute inset-0 h-full w-full object-cover object-top opacity-95 transition-all duration-500 group-hover:scale-105 group-hover:opacity-100"
+        />
+      ) : (
+        /* "[ SCREENSHOT CLASSIFIED ]" cover for projects without a published screenshot */
+        <div
+          className="absolute inset-0 flex h-full w-full flex-col items-center justify-center gap-1.5 border-2 border-dashed"
+          style={{ borderColor: `${project.accent}50`, background: `${project.accent}0a` }}
+        >
+          <span
+            className="px-2 text-center font-mono text-[9px] uppercase tracking-[0.26em]"
+            style={{ color: project.accent }}
+          >
+            ▸ [ SCREENSHOT CLASSIFIED ]
+          </span>
+          <span className="px-2 text-center font-serif text-[9px] italic text-muted-foreground">
+            Contact us to view this project
+          </span>
+          <div
+            className="mt-1 h-1 w-14"
+            style={{
+              background: `repeating-linear-gradient(45deg, ${project.accent} 0, ${project.accent} 4px, transparent 4px, transparent 8px)`,
+            }}
+          />
+        </div>
+      )}
       <div
         className="absolute inset-0 opacity-20 mix-blend-color transition-opacity group-hover:opacity-40"
         style={{ background: project.accent }}
@@ -208,11 +229,35 @@ function ProjectDetail({ project }: { project: Project }) {
   return (
     <div className="grid max-h-[calc(90vh-3rem)] grid-cols-1 gap-0 overflow-y-auto md:grid-cols-2 sigma-scroll-hidden">
       <div className="relative border-r border-border bg-black">
-        <img
-          src={project.image}
-          alt={project.name}
-          className="h-full max-h-[calc(90vh-3rem)] w-full object-cover object-top"
-        />
+        {project.image ? (
+          <img
+            src={project.image}
+            alt={project.name}
+            className="h-full max-h-[calc(90vh-3rem)] w-full object-cover object-top"
+          />
+        ) : (
+          /* "[ SCREENSHOT CLASSIFIED ]" cover for projects without a published screenshot */
+          <div
+            className="flex h-full min-h-[240px] w-full flex-col items-center justify-center gap-2 border-2 border-dashed"
+            style={{ borderColor: `${project.accent}50`, background: `${project.accent}0a` }}
+          >
+            <span
+              className="font-mono text-[10px] uppercase tracking-[0.3em]"
+              style={{ color: project.accent }}
+            >
+              ▸ [ SCREENSHOT CLASSIFIED ]
+            </span>
+            <span className="font-serif text-[10px] italic text-muted-foreground">
+              Contact us to view this project
+            </span>
+            <div
+              className="mt-1 h-1 w-16"
+              style={{
+                background: `repeating-linear-gradient(45deg, ${project.accent} 0, ${project.accent} 4px, transparent 4px, transparent 8px)`,
+              }}
+            />
+          </div>
+        )}
         <div className="sigma-scanlines pointer-events-none absolute inset-0 opacity-40" />
       </div>
       <div className="flex flex-col gap-4 p-6">
