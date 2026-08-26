@@ -1544,3 +1544,55 @@ Agent: main (orchestrator)
 - **Health API**: OPERATIONAL ✅
 - **Lint clean** ✅
 - **Cron #337053 continues every 15 min**
+
+---
+Task ID: CRON-ROUND-27 (SciFiCard Design System + Maximalist Fixes)
+Agent: main (orchestrator)
+
+## SciFiCard Component Created
+New reusable card component with cyberpunk HUD reference design:
+- **Cut-corner (chamfered) borders** via CSS clip-path (12px angle on top-left + bottom-right)
+- **Inner bordered panel** (frame-within-frame architecture)
+- **Top accent strip** colored per card
+- **Corner crosshair marks** with SVG diagonal lines at cut corners
+- **Scanline overlay** (horizontal repeating gradient)
+- **Header bar** with label + ID
+- **Hover glow** (radial gradient in accent color)
+- **Outer corner brackets** (border-l/t + border-b/r)
+
+## Sections Updated
+
+### Section 2 (About) — SciFiCard applied
+- Mission card: cut-corner border, accent top strip, header bar "▸ MISSION", approach items as bordered boxes with icons
+- Stats card: 4 stat tiles inside cut-corner card
+- Sigma card: spinning glyph + label
+- 5 capability cards: each a SciFiCard with hazard-stripe fill bars (replaces flat progress bars)
+
+### Section 5 (Process) — SciFiCard applied, metric bars REMOVED
+- Each step is now a SciFiCard with: large glitch number, hazard stripe block, deliverables checklist
+- Timeline bar: colored dots + dashed hazard connectors + "✓ SHIPPED"
+- Removed: phase progress bars, stats bar (per user request to remove "stupid metric bar")
+
+### Section 6 (Team) — SciFiCard applied, sigma bars REMOVED
+- Each operator is a SciFiCard with: glyph in cut-corner box with glow + hazard stripe corner, scanlines on glyph, skill tags as hazard-styled borders
+- Bottom stats: 4 SciFiCards with icons
+- Removed: sigma meter bars (per user request)
+
+### Section 7 (Tech) — SciFiCard applied, usage bars REMOVED
+- Each category is a SciFiCard with: icon in bordered box, hazard stripe accent, tool tags
+- Infrastructure stats: 4 SciFiCards
+- Removed: usage bars (per user request)
+
+## VLM Verification
+- About: "cut-corner/chamfered borders, hazard stripes, scanlines, sci-fi UI overlays" ✅
+- Process: "cut-corner borders, hazard stripes, scanline textures" ✅
+- Team: "cut-corner/chamfered borders, hazard stripes" ✅
+- Tech: "cut-corner borders at 45-degree angles, hazard stripes" ✅
+
+## Final QA
+- Sigma: 10/11 sectors ✅
+- Alpha: all 8 sections confirmed (hero, about, services, portfolio, process, team, tech, contact) ✅
+- Case study + service pages: 200 ✅
+- Health API: OPERATIONAL ✅
+- Lint clean ✅
+- Cron #337053 continues every 15 min
