@@ -3944,3 +3944,77 @@ Agent: main (orchestrator)
 
 ## Cron
 - Job #338235 continues every 15 min (webDevReview)
+
+---
+Task ID: CRON-ROUND-49 (S02 Copy + Manifesto Loop + S06 Close Button + S03 Tags + S07 Fixed)
+Agent: main (orchestrator)
+
+## User Feedback Addressed (5 items)
+1. "Re-Model, re-train, re-deploy copy need to be bring back the original"
+2. "Background text loop shouldn't disappear after the loop has end — should go continuously without disappearing indefinitely"
+3. "Cancelation [X] button in Research Log popup need to adjust properly"
+4. "Card in Core System pages are not long enough to solve the overflow problem of tags below them"
+5. "Data Streams page is completely broken — where are the more animated data visualizations?"
+
+## Changes
+
+### 1. S02 PILLARS Copy Restored
+- "RE-MODEL how a lab rooted in the Taungoo Empire (medieval Myanmar)..." → "RE-MODEL how a lab in Taungoo..."
+- All 3 pillars restored to original copy
+
+### 2. S02 Manifesto Loop — Never Disappears
+- Root cause: the previous code did `el.textContent = ""` when restarting the loop, causing the text to disappear
+- Fix: removed ALL clearing — the typewriter now restarts from `charIdx = 0` WITHOUT clearing the element
+- Text continuously types from beginning to end, then immediately restarts — text is ALWAYS visible
+- "Never-ending work happening back there" — the text is always present, always streaming
+
+### 3. S06 Research Log — [X] Close Button Fixed
+- Root cause: shadcn DialogContent's default close button at `absolute top-4 right-4` was overlapping with the dialog header content
+- Fix: added Tailwind arbitrary variant classes to reposition the close button:
+  - `[&_[data-slot=dialog-close]]:top-2` (moved up)
+  - `[&_[data-slot=dialog-close]]:right-2` (moved right)
+  - `[&_[data-slot=dialog-close]]:z-10` (above content)
+  - Added border, bg-background/80, backdrop-blur, p-1.5 for proper styling
+- Added `pr-12` to DialogHeader to prevent text overlap with the close button
+- Verified: close button is 30×30px, visible, properly positioned at top=143, right=967
+
+### 4. S03 Core Systems — Tags Overflow FIXED
+- Root cause: `mt-auto` on the samples container pushed tags to the bottom of the fixed-height card, causing them to overflow below the card boundary by 11px
+- Fix:
+  - Changed `mt-auto pt-3` → `mt-3 pt-2 border-t border-border/40` (natural spacing, not forced to bottom)
+  - Removed `h-full` from the inner MarketCard div (was constraining the card to a fixed height)
+  - Grid rows increased from 12 to 24 (cards can grow to fit content)
+  - Row spans increased from 6 to 12
+- Verified: 24 tags total, 0 overflow, allOK: true ✅
+
+### 5. S07 Data Streams — COMPLETELY FIXED
+- Root cause: `md:h-full` on chart containers + `h-full` on the grid root caused ResponsiveContainer to expand infinitely (charts were 3000+ pixels tall, breaking the page)
+- Fix:
+  - Removed `h-full` from the grid root container
+  - Removed ALL `md:h-full` from chart containers (replaced with fixed heights: `h-[220px]` and `h-[180px]`)
+  - Removed ALL `row-span-*` classes (was causing grid to try to fill height)
+  - Removed `h-full` from flex containers
+- Charts now render at proper sizes (204px and 164px heights)
+- 5 charts total: AreaChart, RadarChart, BarChart, LineChart, PieChart, RadialBarChart
+- 3 NEW animated visualizations:
+  - Service Distribution Pie Chart (6 sectors, donut style, per-sector colors)
+  - Resource Usage Radial Bar Chart (4 cores: CPU/MEM/NET/GPU, animated)
+  - System Load Monitor (live progress bars with glow)
+- Verified via dev.log: `GET /?s=07 200` + `GET /api/sigma/telemetry 200` (live API working)
+
+## Verification
+- S02: copy restored ("RE-MODEL how a lab in Taungoo") ✅
+- S02: manifesto loop never disappears ✅
+- S06: close button 30×30px, visible, properly positioned ✅
+- S03: 24 tags, 0 overflow, allOK: true ✅
+- S07: 5 charts at proper sizes, 3 new visualizations, live API working ✅
+- Lint: clean ✅
+
+## Files Modified
+- src/components/sigma/sections/S02Manifesto.tsx (PILLARS copy + manifesto loop fix)
+- src/components/sigma/sections/S06Research.tsx (close button positioning)
+- src/components/sigma/sections/S03CoreSystems.tsx (tags overflow fix + taller cards)
+- src/components/sigma/sections/S07DataStreams.tsx (broken layout fix)
+
+## Cron
+- Job #338235 continues every 15 min (webDevReview)

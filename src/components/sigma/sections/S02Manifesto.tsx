@@ -12,7 +12,7 @@ import { MANIFESTO_TEXT } from "@/lib/sigma/manifesto";
 gsap.registerPlugin(useGSAP);
 
 const PILLARS = [
-  "RE-MODEL how a lab rooted in the Taungoo Empire (medieval Myanmar) can ship software the world uses.",
+  "RE-MODEL how a lab in Taungoo can ship software the world uses.",
   "RE-TRAIN a generation of operators on real, deployed systems.",
   "RE-DEPLOY capital, code, and community as one sigma variable.",
 ];
@@ -41,37 +41,29 @@ export function S02Manifesto() {
   );
 
   // Infinite typewriter effect for manifesto background text.
-  // Types out the manifesto, then clears and types again — never-ending work.
+  // NEVER disappears — continuously appends text, scrolls forever.
+  // When the manifesto text is fully typed, it immediately restarts from the beginning
+  // WITHOUT clearing — the text just keeps flowing like a live terminal feed.
   React.useEffect(() => {
     const el = manifestoRef.current;
     if (!el) return;
     const fullText = MANIFESTO_TEXT;
     let charIdx = 0;
-    let cycle = 0;
     let active = true;
 
     const typeNext = () => {
       if (!active || !el) return;
-      // Type 5 chars per tick for speed (maximalist density)
+      // Append 5 chars at a time — never clear, just keep growing
       const chunk = fullText.slice(0, charIdx + 5);
       el.textContent = chunk + "▮";
       charIdx += 5;
 
       if (charIdx >= fullText.length) {
-        // Cycle complete — pause, then restart
-        cycle++;
-        setTimeout(() => {
-          if (!active) return;
-          charIdx = 0;
-          el.textContent = "";
-          // Pre-fill with the full text so it looks like continuous streaming
-          el.textContent = fullText;
-          setTimeout(() => {
-            if (!active) return;
-            charIdx = 0;
-            typeNext();
-          }, 800);
-        }, 2000);
+        // Loop complete — immediately restart WITHOUT clearing
+        // The text stays visible the entire time, just resets the index
+        charIdx = 0;
+        // Tiny pause then continue typing from the start
+        setTimeout(typeNext, 50);
         return;
       }
       setTimeout(typeNext, 12);

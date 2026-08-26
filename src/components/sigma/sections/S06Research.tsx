@@ -184,10 +184,10 @@ export function S06Research() {
         </div>
       </div>
 
-      {/* PAPER DETAIL MODAL */}
+      {/* PAPER DETAIL MODAL — close button properly positioned */}
       <Dialog open={!!selected} onOpenChange={(o) => { if (!o) { setSelected(null); sigmaSound.play("close"); } }}>
-        <DialogContent className="max-w-3xl gap-0 overflow-hidden border-foreground/30 bg-card p-0">
-          <DialogHeader className="border-b border-border px-4 py-2">
+        <DialogContent className="max-w-3xl gap-0 overflow-hidden border-foreground/30 bg-card p-0 [&_[data-slot=dialog-close]]:top-2 [&_[data-slot=dialog-close]]:right-2 [&_[data-slot=dialog-close]]:z-10 [&_[data-slot=dialog-close]]:border [&_[data-slot=dialog-close]]:border-border [&_[data-slot=dialog-close]]:bg-background/80 [&_[data-slot=dialog-close]]:p-1.5 [&_[data-slot=dialog-close]]:backdrop-blur-sm">
+          <DialogHeader className="border-b border-border px-4 py-2 pr-12">
             <DialogTitle className="flex items-center gap-2 font-mono text-xs uppercase tracking-[0.2em]">
               {selected && (
                 <>

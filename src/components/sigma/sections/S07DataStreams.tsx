@@ -160,7 +160,7 @@ export function S07DataStreams() {
       title="DATA STREAMS"
       tagline="Sector 07 is the live dashboard — real-time metrics from running systems. These numbers are moving right now."
     >
-      <div ref={root} className="relative grid h-full grid-cols-12 gap-3 overflow-y-auto sigma-scroll-hidden">
+      <div ref={root} className="relative grid grid-cols-12 gap-3 overflow-y-auto sigma-scroll-hidden">
         {/* Ambient floating data motes */}
         <SigmaParticles count={24} color="#00FF94" />
 
@@ -184,7 +184,7 @@ export function S07DataStreams() {
         </Panel>
 
         <Panel data-ds label="STATUS" id="NOMINAL" accent="#00FF94" className="col-span-12 md:col-span-4">
-          <div className="flex h-full flex-col justify-between p-3">
+          <div className="flex flex-col justify-between p-3">
             <div className="space-y-1.5">
               {systems.map((s) => (
                 <div key={s.name} className="flex items-center justify-between font-mono text-[10px] uppercase tracking-[0.18em]">
@@ -203,8 +203,8 @@ export function S07DataStreams() {
         </Panel>
 
         {/* neural stream — main chart */}
-        <Panel data-ds label="NEURAL ACTIVITY" id="LIVE" accent="#00FF94" className="col-span-12 row-span-3 md:col-span-8">
-          <div className="h-[220px] p-2 md:h-full">
+        <Panel data-ds label="NEURAL ACTIVITY" id="LIVE" accent="#00FF94" className="col-span-12 md:col-span-8">
+          <div className="h-[220px] p-2">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={stream} margin={{ top: 8, right: 8, bottom: 0, left: -20 }}>
                 <defs>
@@ -240,8 +240,8 @@ export function S07DataStreams() {
         </Panel>
 
         {/* radar */}
-        <Panel data-ds label="CAPABILITY MATRIX" id="6-AXIS" accent="#00FF94" className="col-span-12 row-span-3 md:col-span-4">
-          <div className="h-[220px] p-2 md:h-full">
+        <Panel data-ds label="CAPABILITY MATRIX" id="6-AXIS" accent="#00FF94" className="col-span-12 md:col-span-4">
+          <div className="h-[220px] p-2">
             <ResponsiveContainer width="100%" height="100%">
               <RadarChart data={radar}>
                 <PolarGrid stroke="#333" />
@@ -253,8 +253,8 @@ export function S07DataStreams() {
         </Panel>
 
         {/* sector throughput bars */}
-        <Panel data-ds label="SECTOR THROUGHPUT" id="11-CH" accent="#00FF94" className="col-span-12 row-span-2 md:col-span-7">
-          <div className="h-[180px] p-2 md:h-full">
+        <Panel data-ds label="SECTOR THROUGHPUT" id="11-CH" accent="#00FF94" className="col-span-12 md:col-span-7">
+          <div className="h-[180px] p-2">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={bars} margin={{ top: 4, right: 8, bottom: 0, left: -24 }}>
                 <XAxis dataKey="sector" tick={{ fill: "#888", fontSize: 9, fontFamily: "monospace" }} stroke="#333" />
@@ -270,8 +270,8 @@ export function S07DataStreams() {
         </Panel>
 
         {/* sparkline + cta */}
-        <Panel data-ds label="PACKET RATE" id="SPARK" accent="#00FF94" className="col-span-12 row-span-2 md:col-span-5">
-          <div className="flex h-full flex-col p-3">
+        <Panel data-ds label="PACKET RATE" id="SPARK" accent="#00FF94" className="col-span-12 md:col-span-5">
+          <div className="flex flex-col p-3">
             <StatReadout label="LIVE PACKET RATE" value={(counters.pkts % 100000) / 1000} unit="k/s" accent="#00FF94" />
             <div className="mt-2 h-10 flex-1">
               <ResponsiveContainer width="100%" height="100%">
@@ -284,8 +284,8 @@ export function S07DataStreams() {
         </Panel>
 
         {/* NEW: Service Distribution Pie Chart */}
-        <Panel data-ds label="SERVICE DISTRIBUTION" id="6-SECTORS" accent="#C6FF00" className="col-span-12 row-span-2 md:col-span-4">
-          <div className="h-[180px] p-2 md:h-full">
+        <Panel data-ds label="SERVICE DISTRIBUTION" id="6-SECTORS" accent="#C6FF00" className="col-span-12 md:col-span-4">
+          <div className="h-[180px] p-2">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie
@@ -311,8 +311,8 @@ export function S07DataStreams() {
         </Panel>
 
         {/* NEW: Resource Usage Radial Bars */}
-        <Panel data-ds label="RESOURCE USAGE" id="4-CORE" accent="#FFB300" className="col-span-12 row-span-2 md:col-span-4">
-          <div className="h-[180px] p-2 md:h-full">
+        <Panel data-ds label="RESOURCE USAGE" id="4-CORE" accent="#FFB300" className="col-span-12 md:col-span-4">
+          <div className="h-[180px] p-2">
             <ResponsiveContainer width="100%" height="100%">
               <RadialBarChart
                 cx="50%"
@@ -334,8 +334,8 @@ export function S07DataStreams() {
         </Panel>
 
         {/* NEW: System Load Monitor */}
-        <Panel data-ds label="SYSTEM LOAD" id="MONITOR" accent="#FF2D7E" className="col-span-12 row-span-2 md:col-span-4">
-          <div className="flex h-full flex-col justify-between p-3">
+        <Panel data-ds label="SYSTEM LOAD" id="MONITOR" accent="#FF2D7E" className="col-span-12 md:col-span-4">
+          <div className="flex flex-col justify-between p-3">
             <div className="space-y-2">
               {radial.map((r) => (
                 <div key={r.name}>
