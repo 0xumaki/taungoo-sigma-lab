@@ -13,221 +13,37 @@ interface ServiceDetail {
   tagline: string;
   description: string;
   features: string[];
-  packages: {
-    name: string;
-    price: string;
-    features: string[];
-    popular?: boolean;
-  }[];
-  comparison: {
-    feature: string;
-    starter: string;
-    pro: string;
-    enterprise: string;
-  }[];
+  packages: { name: string; price: string; features: string[]; popular?: boolean }[];
+  comparison: { feature: string; starter: string; pro: string; enterprise: string }[];
 }
 
 const SERVICES: ServiceDetail[] = [
-  {
-    slug: "ai-chatbot",
-    name: "AI Chatbot",
-    icon: "◐",
-    tagline: "Custom AI chatbots with multi-model orchestration",
-    description: "We build production-grade AI chatbots that handle real workloads — sales, support, onboarding, and internal tools. Multi-model orchestration means your bot uses the right model for each task, optimizing for cost and quality.",
-    features: ["Multi-model orchestration (GPT-4, Claude, Llama)", "Custom training on your data", "Web, mobile, and API integration", "Conversation analytics dashboard", "Human handoff escalation", "Multi-language support"],
-    packages: [
-      { name: "STARTER", price: "3,020,000 MMK", features: ["1 channel (web)", "10k messages/mo", "2 models", "Email support"] },
-      { name: "PRO", price: "6,040,000 MMK", features: ["3 channels", "50k messages/mo", "5 models", "Analytics dashboard", "Priority support"], popular: true },
-      { name: "ENTERPRISE", price: "custom", features: ["Unlimited channels", "Custom volume", "All models + fine-tuned", "Dedicated manager", "SLA + 24/7 support"] },
-    ],
-    comparison: [
-      { feature: "Messages/mo", starter: "10k", pro: "50k", enterprise: "unlimited" },
-      { feature: "Models", starter: "2", pro: "5", enterprise: "all + custom" },
-      { feature: "Channels", starter: "1", pro: "3", enterprise: "unlimited" },
-      { feature: "Analytics", starter: "—", pro: "✓", enterprise: "✓" },
-      { feature: "SLA", starter: "—", pro: "—", enterprise: "✓" },
-    ],
-  },
-  {
-    slug: "voice-ai",
-    name: "Voice AI",
-    icon: "♫",
-    tagline: "Voice agents for sales, support, and automation",
-    description: "Voice AI agents that handle real phone calls — sales, support, scheduling, and intake. Built with ElevenLabs, Whisper, and our proprietary sigma-loop stabilizer for natural-sounding conversations.",
-    features: ["Natural voice synthesis (ElevenLabs)", "Real-time speech recognition (Whisper)", "Function calling for bookings/orders", "CRM integration", "Multi-language voice", "Call recording + transcription"],
-    packages: [
-      { name: "STARTER", price: "6,040,000 MMK", features: ["100 calls/mo", "1 language", "Basic CRM", "Email support"] },
-      { name: "PRO", price: "14,490,000 MMK", features: ["500 calls/mo", "3 languages", "Full CRM integration", "Analytics dashboard", "Priority support"], popular: true },
-      { name: "ENTERPRISE", price: "custom", features: ["Unlimited calls", "All languages", "Custom integrations", "Dedicated infrastructure", "SLA + 24/7 support"] },
-    ],
-    comparison: [
-      { feature: "Calls/mo", starter: "100", pro: "500", enterprise: "unlimited" },
-      { feature: "Languages", starter: "1", pro: "3", enterprise: "all" },
-      { feature: "CRM Integration", starter: "basic", pro: "full", enterprise: "custom" },
-      { feature: "Recording", starter: "✓", pro: "✓", enterprise: "✓" },
-      { feature: "SLA", starter: "—", pro: "—", enterprise: "✓" },
-    ],
-  },
-  {
-    slug: "agent-swarm",
-    name: "Agent Swarm",
-    icon: "⬡",
-    tagline: "Multi-agent systems for complex workflows",
-    description: "Coordinated swarms of AI agents that handle multi-step workflows — research, data enrichment, content generation, code review, and more. Each agent specializes in one task; the swarm orchestrator manages handoffs.",
-    features: ["Multi-agent orchestration (up to 50 agents)", "Custom agent specialization", "Workflow builder (N8N + custom)", "Distributed task queue", "Real-time monitoring dashboard", "API access for external triggers"],
-    packages: [
-      { name: "STARTER", price: "9,660,000 MMK", features: ["5 agents", "1k tasks/mo", "Basic workflows", "Email support"] },
-      { name: "PRO", price: "24,150,000 MMK", features: ["20 agents", "10k tasks/mo", "Custom workflows", "Monitoring dashboard", "Priority support"], popular: true },
-      { name: "ENTERPRISE", price: "custom", features: ["50+ agents", "Unlimited tasks", "Bespoke orchestration", "Dedicated infrastructure", "SLA + 24/7 support"] },
-    ],
-    comparison: [
-      { feature: "Agents", starter: "5", pro: "20", enterprise: "50+" },
-      { feature: "Tasks/mo", starter: "1k", pro: "10k", enterprise: "unlimited" },
-      { feature: "Workflows", starter: "basic", pro: "custom", enterprise: "bespoke" },
-      { feature: "Dashboard", starter: "—", pro: "✓", enterprise: "✓" },
-      { feature: "SLA", starter: "—", pro: "—", enterprise: "✓" },
-    ],
-  },
-  {
-    slug: "ai-automation",
-    name: "AI Automation",
-    icon: "⚙",
-    tagline: "N8N workflows, process automation, CRM loops",
-    description: "Automate your business processes with AI-powered workflows. We build N8N pipelines that connect your tools, automate repetitive tasks, and use AI to handle exceptions — reducing manual work by up to 80%.",
-    features: ["N8N workflow development", "200+ app integrations", "AI-powered exception handling", "Custom API development", "Process monitoring + alerting", "Team training + documentation"],
-    packages: [
-      { name: "STARTER", price: "3,620,000 MMK", features: ["3 workflows", "10 integrations", "Basic monitoring", "Email support"] },
-      { name: "PRO", price: "$8,000", features: ["10 workflows", "Unlimited integrations", "Full monitoring", "Team training", "Priority support"], popular: true },
-      { name: "ENTERPRISE", price: "custom", features: ["Unlimited workflows", "Custom development", "Dedicated support", "SLA + 24/7", "Process optimization"] },
-    ],
-    comparison: [
-      { feature: "Workflows", starter: "3", pro: "10", enterprise: "unlimited" },
-      { feature: "Integrations", starter: "10", pro: "unlimited", enterprise: "unlimited" },
-      { feature: "Monitoring", starter: "basic", pro: "full", enterprise: "full" },
-      { feature: "Training", starter: "—", pro: "✓", enterprise: "✓" },
-      { feature: "SLA", starter: "—", pro: "—", enterprise: "✓" },
-    ],
-  },
-  {
-    slug: "api-mcp",
-    name: "API & MCP Services",
-    icon: "⌗",
-    tagline: "Custom APIs, MCP servers, and integration services",
-    description: "We design and build REST/GraphQL APIs, MCP (Model Context Protocol) servers, and integration layers that connect your systems. Production-ready with auth, rate limiting, and monitoring.",
-    features: ["REST/GraphQL API design", "MCP server development", "Authentication + rate limiting", "API documentation (OpenAPI)", "SDK generation", "Monitoring + logging"],
-    packages: [
-      { name: "STARTER", price: "4,830,000 MMK", features: ["1 API endpoint", "Basic auth", "Documentation", "Email support"] },
-      { name: "PRO", price: "12,080,000 MMK", features: ["10 endpoints", "Full auth + rate limiting", "SDK generation", "Monitoring", "Priority support"], popular: true },
-      { name: "ENTERPRISE", price: "custom", features: ["Unlimited endpoints", "MCP server", "Custom integrations", "Dedicated infrastructure", "SLA + 24/7"] },
-    ],
-    comparison: [
-      { feature: "Endpoints", starter: "1", pro: "10", enterprise: "unlimited" },
-      { feature: "Auth", starter: "basic", pro: "full", enterprise: "custom" },
-      { feature: "SDK", starter: "—", pro: "✓", enterprise: "✓" },
-      { feature: "Monitoring", starter: "—", pro: "✓", enterprise: "✓" },
-      { feature: "SLA", starter: "—", pro: "—", enterprise: "✓" },
-    ],
-  },
-  {
-    slug: "web3-wallets",
-    name: "Web3 Wallets",
-    icon: "⬡",
-    tagline: "Non-custodial wallet development and integration",
-    description: "Custom non-custodial wallet development for web, mobile, and browser extension. Support for EVM chains, Solana, and custom L2s. Security audited and production-ready.",
-    features: ["Multi-chain support (EVM, Solana, custom)", "Non-custodial architecture", "Hardware wallet integration (Ledger, Trezor)", "Biometric authentication", "Transaction simulation + security", "Cross-chain swaps"],
-    packages: [
-      { name: "STARTER", price: "18,110,000 MMK", features: ["1 chain", "Web only", "Basic wallet functions", "Security review"] },
-      { name: "PRO", price: "36,220,000 MMK", features: ["5 chains", "Web + mobile", "Hardware wallet support", "Full audit", "Priority support"], popular: true },
-      { name: "ENTERPRISE", price: "custom", features: ["All chains", "All platforms", "Custom features", "Full audit + bug bounty", "SLA + 24/7"] },
-    ],
-    comparison: [
-      { feature: "Chains", starter: "1", pro: "5", enterprise: "all" },
-      { feature: "Platforms", starter: "web", pro: "web+mobile", enterprise: "all" },
-      { feature: "Hardware wallet", starter: "—", pro: "✓", enterprise: "✓" },
-      { feature: "Audit", starter: "review", pro: "full", enterprise: "full + bounty" },
-      { feature: "SLA", starter: "—", pro: "—", enterprise: "✓" },
-    ],
-  },
-  {
-    slug: "smart-contract-development",
-    name: "Smart Contract Development",
-    icon: "∎",
-    tagline: "Solidity/Rust contract development and deployment",
-    description: "Production-grade smart contract development in Solidity and Rust (Soroban). Full lifecycle: design, development, testing, auditing, deployment, and monitoring.",
-    features: ["Solidity + Rust (Soroban) development", "Formal verification", "Gas optimization", "Upgradeable proxy patterns", "On-chain monitoring", "Multi-sig deployment"],
-    packages: [
-      { name: "STARTER", price: "9,660,000 MMK", features: ["1 contract", "Basic testing", "Deployment", "Email support"] },
-      { name: "PRO", price: "24,150,000 MMK", features: ["5 contracts", "Full test suite", "Gas optimization", "Monitoring", "Priority support"], popular: true },
-      { name: "ENTERPRISE", price: "custom", features: ["Unlimited contracts", "Formal verification", "Custom architecture", "Full audit", "SLA + 24/7"] },
-    ],
-    comparison: [
-      { feature: "Contracts", starter: "1", pro: "5", enterprise: "unlimited" },
-      { feature: "Testing", starter: "basic", pro: "full", enterprise: "formal" },
-      { feature: "Gas optimization", starter: "—", pro: "✓", enterprise: "✓" },
-      { feature: "Monitoring", starter: "—", pro: "✓", enterprise: "✓" },
-      { feature: "SLA", starter: "—", pro: "—", enterprise: "✓" },
-    ],
-  },
-  {
-    slug: "dex-amm",
-    name: "AMM / DEX",
-    icon: "⇄",
-    tagline: "Automated market maker and DEX protocol development",
-    description: "Full DEX development — AMM pools, order books, limit orders, cross-chain swaps, and liquidity management. Deployed on EVM chains with sub-second finality.",
-    features: ["Custom AMM (constant product, stable, weighted)", "Order book matching engine", "Cross-chain swaps (LayerZero, CCIP)", "Liquidity management dashboard", "MEV protection", "Flash loan integration"],
-    packages: [
-      { name: "STARTER", price: "24,150,000 MMK", features: ["1 AMM pool type", "1 chain", "Basic frontend", "Security review"] },
-      { name: "PRO", price: "60,370,000 MMK", features: ["3 pool types", "3 chains", "Full DEX frontend", "Full audit", "Priority support"], popular: true },
-      { name: "ENTERPRISE", price: "custom", features: ["Custom pool types", "All chains", "White-label DEX", "Full audit + bounty", "SLA + 24/7"] },
-    ],
-    comparison: [
-      { feature: "Pool types", starter: "1", pro: "3", enterprise: "custom" },
-      { feature: "Chains", starter: "1", pro: "3", enterprise: "all" },
-      { feature: "Frontend", starter: "basic", pro: "full", enterprise: "white-label" },
-      { feature: "Audit", starter: "review", pro: "full", enterprise: "full + bounty" },
-      { feature: "SLA", starter: "—", pro: "—", enterprise: "✓" },
-    ],
-  },
-  {
-    slug: "web-webapp",
-    name: "Web / WebApp",
-    icon: "▣",
-    tagline: "Full-stack web applications with modern frameworks",
-    description: "Production web applications built with Next.js, React, and TypeScript. From landing pages to complex SaaS dashboards — we build scalable, performant, and maintainable web apps.",
-    features: ["Next.js + React + TypeScript", "Server-side rendering + ISR", "Database design (PostgreSQL + Prisma)", "Authentication (NextAuth)", "Real-time features (WebSocket)", "CI/CD pipeline"],
-    packages: [
-      { name: "STARTER", price: "6,040,000 MMK", features: ["5 pages", "Basic CMS", "Responsive design", "Email support"] },
-      { name: "PRO", price: "18,110,000 MMK", features: ["20 pages", "Full CMS + dashboard", "Auth + database", "Real-time features", "Priority support"], popular: true },
-      { name: "ENTERPRISE", price: "custom", features: ["Unlimited pages", "Custom architecture", "Microservices", "Dedicated team", "SLA + 24/7"] },
-    ],
-    comparison: [
-      { feature: "Pages", starter: "5", pro: "20", enterprise: "unlimited" },
-      { feature: "CMS", starter: "basic", pro: "full", enterprise: "custom" },
-      { feature: "Auth", starter: "—", pro: "✓", enterprise: "✓" },
-      { feature: "Real-time", starter: "—", pro: "✓", enterprise: "✓" },
-      { feature: "SLA", starter: "—", pro: "—", enterprise: "✓" },
-    ],
-  },
-  {
-    slug: "android-ios-app",
-    name: "Android & iOS App",
-    icon: "▣",
-    tagline: "Native and cross-platform mobile applications",
-    description: "Cross-platform mobile apps with React Native / Expo, or native Swift/Kotlin. From MVP to production — App Store and Play Store ready.",
-    features: ["React Native / Expo (cross-platform)", "Native Swift / Kotlin (optional)", "Offline-first architecture", "Push notifications", "In-app purchases", "App Store / Play Store submission"],
-    packages: [
-      { name: "STARTER", price: "12,080,000 MMK", features: ["5 screens", "1 platform", "Basic API", "Email support"] },
-      { name: "PRO", price: "30,190,000 MMK", features: ["15 screens", "Both platforms", "Full API + auth", "Push notifications", "Priority support"], popular: true },
-      { name: "ENTERPRISE", price: "custom", features: ["Unlimited screens", "Both + web", "Custom integrations", "Dedicated team", "SLA + 24/7"] },
-    ],
-    comparison: [
-      { feature: "Screens", starter: "5", pro: "15", enterprise: "unlimited" },
-      { feature: "Platforms", starter: "1", pro: "both", enterprise: "both + web" },
-      { feature: "Push notifications", starter: "—", pro: "✓", enterprise: "✓" },
-      { feature: "IAP", starter: "—", pro: "✓", enterprise: "✓" },
-      { feature: "SLA", starter: "—", pro: "—", enterprise: "✓" },
-    ],
-  },
+  { slug:"ai-chatbot",name:"AI Chatbot",icon:"◐",tagline:"Custom AI chatbots with multi-model orchestration",description:"Production-grade AI chatbots that handle real workloads — sales, support, onboarding, and internal tools.",features:["Multi-model orchestration (Zai, Kimi K3, DeepSeek V4)","Custom training on your data","Web, mobile, and API integration","Conversation analytics dashboard","Human handoff escalation","Multi-language support"],packages:[{name:"STARTER",price:"3,020,000 MMK",features:["1 channel (web)","10k messages/mo","2 models","Email support"]},{name:"PRO",price:"6,040,000 MMK",features:["3 channels","50k messages/mo","5 models","Analytics dashboard","Priority support"],popular:true},{name:"ENTERPRISE",price:"custom",features:["Unlimited channels","Custom volume","All models + fine-tuned","Dedicated manager","SLA + 24/7 support"]}],comparison:[{feature:"Messages/mo",starter:"10k",pro:"50k",enterprise:"unlimited"},{feature:"Models",starter:"2",pro:"5",enterprise:"all + custom"},{feature:"Channels",starter:"1",pro:"3",enterprise:"unlimited"},{feature:"Analytics",starter:"—",pro:"✓",enterprise:"✓"},{feature:"SLA",starter:"—",pro:"—",enterprise:"✓"}]},
+  { slug:"voice-ai",name:"Voice AI",icon:"♫",tagline:"Voice agents for sales, support, and automation",description:"Voice AI agents that handle real phone calls with ElevenLabs, Whisper, and sigma-loop stabilization.",features:["Natural voice synthesis (ElevenLabs)","Real-time speech recognition (Whisper)","Function calling for bookings/orders","CRM integration","Multi-language voice","Call recording + transcription"],packages:[{name:"STARTER",price:"6,040,000 MMK",features:["100 calls/mo","1 language","Basic CRM","Email support"]},{name:"PRO",price:"14,490,000 MMK",features:["500 calls/mo","3 languages","Full CRM integration","Analytics dashboard","Priority support"],popular:true},{name:"ENTERPRISE",price:"custom",features:["Unlimited calls","All languages","Custom integrations","Dedicated infrastructure","SLA + 24/7 support"]}],comparison:[{feature:"Calls/mo",starter:"100",pro:"500",enterprise:"unlimited"},{feature:"Languages",starter:"1",pro:"3",enterprise:"all"},{feature:"CRM Integration",starter:"basic",pro:"full",enterprise:"custom"},{feature:"Recording",starter:"✓",pro:"✓",enterprise:"✓"},{feature:"SLA",starter:"—",pro:"—",enterprise:"✓"}]},
+  { slug:"agent-swarm",name:"Agent Swarm",icon:"⬡",tagline:"Multi-agent systems for complex workflows",description:"Coordinated swarms of AI agents for multi-step workflows — research, data enrichment, content generation, code review.",features:["Multi-agent orchestration (up to 50 agents)","Custom agent specialization","Workflow builder (N8N + custom)","Distributed task queue","Real-time monitoring dashboard","API access for external triggers"],packages:[{name:"STARTER",price:"9,660,000 MMK",features:["5 agents","1k tasks/mo","Basic workflows","Email support"]},{name:"PRO",price:"24,150,000 MMK",features:["20 agents","10k tasks/mo","Custom workflows","Monitoring dashboard","Priority support"],popular:true},{name:"ENTERPRISE",price:"custom",features:["50+ agents","Unlimited tasks","Bespoke orchestration","Dedicated infrastructure","SLA + 24/7 support"]}],comparison:[{feature:"Agents",starter:"5",pro:"20",enterprise:"50+"},{feature:"Tasks/mo",starter:"1k",pro:"10k",enterprise:"unlimited"},{feature:"Workflows",starter:"basic",pro:"custom",enterprise:"bespoke"},{feature:"Dashboard",starter:"—",pro:"✓",enterprise:"✓"},{feature:"SLA",starter:"—",pro:"—",enterprise:"✓"}]},
+  { slug:"ai-automation",name:"AI Automation",icon:"⚙",tagline:"N8N workflows, process automation, CRM loops",description:"Automate business processes with AI-powered N8N pipelines that connect your tools and handle exceptions.",features:["N8N workflow development","200+ app integrations","AI-powered exception handling","Custom API development","Process monitoring + alerting","Team training + documentation"],packages:[{name:"STARTER",price:"3,620,000 MMK",features:["3 workflows","10 integrations","Basic monitoring","Email support"]},{name:"PRO",price:"9,660,000 MMK",features:["10 workflows","Unlimited integrations","Full monitoring","Team training","Priority support"],popular:true},{name:"ENTERPRISE",price:"custom",features:["Unlimited workflows","Custom development","Dedicated support","SLA + 24/7","Process optimization"]}],comparison:[{feature:"Workflows",starter:"3",pro:"10",enterprise:"unlimited"},{feature:"Integrations",starter:"10",pro:"unlimited",enterprise:"unlimited"},{feature:"Monitoring",starter:"basic",pro:"full",enterprise:"full"},{feature:"Training",starter:"—",pro:"✓",enterprise:"✓"},{feature:"SLA",starter:"—",pro:"—",enterprise:"✓"}]},
+  { slug:"api-mcp",name:"API & MCP Services",icon:"⌗",tagline:"Custom APIs, MCP servers, and integration services",description:"REST/GraphQL APIs, MCP servers, and integration layers with auth, rate limiting, and monitoring.",features:["REST/GraphQL API design","MCP server development","Authentication + rate limiting","API documentation (OpenAPI)","SDK generation","Monitoring + logging"],packages:[{name:"STARTER",price:"4,830,000 MMK",features:["1 API endpoint","Basic auth","Documentation","Email support"]},{name:"PRO",price:"12,080,000 MMK",features:["10 endpoints","Full auth + rate limiting","SDK generation","Monitoring","Priority support"],popular:true},{name:"ENTERPRISE",price:"custom",features:["Unlimited endpoints","MCP server","Custom integrations","Dedicated infrastructure","SLA + 24/7"]}],comparison:[{feature:"Endpoints",starter:"1",pro:"10",enterprise:"unlimited"},{feature:"Auth",starter:"basic",pro:"full",enterprise:"custom"},{feature:"SDK",starter:"—",pro:"✓",enterprise:"✓"},{feature:"Monitoring",starter:"—",pro:"✓",enterprise:"✓"},{feature:"SLA",starter:"—",pro:"—",enterprise:"✓"}]},
+  { slug:"hermes-openclaw-grokbot",name:"HERMES / Openclaw / GrokBot",icon:"⚡",tagline:"Specialized AI agent platforms and integrations",description:"Custom AI agent platforms built on HERMES, Openclaw, and GrokBot frameworks for enterprise workflows.",features:["HERMES agent platform integration","Openclaw workflow automation","GrokBot custom training","Enterprise security compliance","Custom plugin development","Multi-tenant architecture"],packages:[{name:"STARTER",price:"custom",features:["1 platform","Basic integration","Documentation","Email support"]},{name:"PRO",price:"custom",features:["2 platforms","Full integration","Custom plugins","Priority support"],popular:true},{name:"ENTERPRISE",price:"custom",features:["All platforms","Custom development","Enterprise security","Dedicated team","SLA + 24/7"]}],comparison:[{feature:"Platforms",starter:"1",pro:"2",enterprise:"all"},{feature:"Integration",starter:"basic",pro:"full",enterprise:"custom"},{feature:"Plugins",starter:"—",pro:"✓",enterprise:"✓"},{feature:"Security",starter:"—",pro:"—",enterprise:"✓"},{feature:"SLA",starter:"—",pro:"—",enterprise:"✓"}]},
+  { slug:"ai-video-generation",name:"AI Video Generation",icon:"▶",tagline:"Commercial and MV video generation pipelines",description:"AI-powered video generation for commercials, music videos, and content marketing.",features:["Text-to-video generation","Music video pipelines","Commercial ad production","Voice + lip sync","Custom AI model fine-tuning","Batch rendering infrastructure"],packages:[{name:"STARTER",price:"2,415,000 MMK",features:["1 video","30s duration","1 revision","Email support"]},{name:"PRO",price:"6,040,000 MMK",features:["5 videos","60s duration","3 revisions","Custom model","Priority support"],popular:true},{name:"ENTERPRISE",price:"custom",features:["Unlimited videos","Custom duration","Unlimited revisions","Dedicated GPU cluster","SLA + 24/7"]}],comparison:[{feature:"Videos",starter:"1",pro:"5",enterprise:"unlimited"},{feature:"Duration",starter:"30s",pro:"60s",enterprise:"custom"},{feature:"Revisions",starter:"1",pro:"3",enterprise:"unlimited"},{feature:"Custom model",starter:"—",pro:"✓",enterprise:"✓"},{feature:"SLA",starter:"—",pro:"—",enterprise:"✓"}]},
+  { slug:"3d-modeling",name:"3D Modeling",icon:"◈",tagline:"Product visualization, architectural, and game assets",description:"3D modeling for product visualization, architectural rendering, and game asset creation.",features:["Product visualization","Architectural rendering","Game asset creation","PBR texturing","3D printing ready files","WebGL / Three.js integration"],packages:[{name:"STARTER",price:"1,810,000 MMK",features:["1 model","Low-poly","1 revision","Email support"]},{name:"PRO",price:"4,830,000 MMK",features:["5 models","High-poly","3 revisions","PBR texturing","Priority support"],popular:true},{name:"ENTERPRISE",price:"custom",features:["Unlimited models","All poly levels","Unlimited revisions","Custom shaders","SLA + 24/7"]}],comparison:[{feature:"Models",starter:"1",pro:"5",enterprise:"unlimited"},{feature:"Poly",starter:"low",pro:"high",enterprise:"all"},{feature:"Texturing",starter:"—",pro:"PBR",enterprise:"custom"},{feature:"Revisions",starter:"1",pro:"3",enterprise:"unlimited"},{feature:"SLA",starter:"—",pro:"—",enterprise:"✓"}]},
+  { slug:"graphic-design",name:"Graphic Design",icon:"◆",tagline:"Brand identity, marketing collateral, and UI kits",description:"Full-spectrum graphic design — brand identity, marketing collateral, UI kits, and social media assets.",features:["Brand identity design","Marketing collateral","UI/UX design kits","Social media templates","Print-ready files","Vector + raster assets"],packages:[{name:"STARTER",price:"1,210,000 MMK",features:["3 designs","1 format","1 revision","Email support"]},{name:"PRO",price:"3,620,000 MMK",features:["10 designs","All formats","3 revisions","Brand guidelines","Priority support"],popular:true},{name:"ENTERPRISE",price:"custom",features:["Unlimited designs","All formats","Unlimited revisions","Full brand system","SLA + 24/7"]}],comparison:[{feature:"Designs",starter:"3",pro:"10",enterprise:"unlimited"},{feature:"Formats",starter:"1",pro:"all",enterprise:"all"},{feature:"Revisions",starter:"1",pro:"3",enterprise:"unlimited"},{feature:"Brand guide",starter:"—",pro:"✓",enterprise:"✓"},{feature:"SLA",starter:"—",pro:"—",enterprise:"✓"}]},
+  { slug:"content-copywriting",name:"Content & Copywriting",icon:"✎",tagline:"Technical writing, marketing copy, and documentation",description:"Technical writing, marketing copy, API documentation, and content strategy. AI-assisted + human-edited.",features:["Technical documentation","Marketing copywriting","API docs (OpenAPI)","Blog + article writing","Content strategy","SEO-optimized content"],packages:[{name:"STARTER",price:"966,000 MMK",features:["3 pieces","500 words each","1 revision","Email support"]},{name:"PRO",price:"2,415,000 MMK",features:["10 pieces","1000 words each","3 revisions","SEO optimization","Priority support"],popular:true},{name:"ENTERPRISE",price:"custom",features:["Unlimited pieces","Custom length","Unlimited revisions","Content strategy","SLA + 24/7"]}],comparison:[{feature:"Pieces",starter:"3",pro:"10",enterprise:"unlimited"},{feature:"Words",starter:"500",pro:"1000",enterprise:"custom"},{feature:"Revisions",starter:"1",pro:"3",enterprise:"unlimited"},{feature:"SEO",starter:"—",pro:"✓",enterprise:"✓"},{feature:"SLA",starter:"—",pro:"—",enterprise:"✓"}]},
+  { slug:"online-media-buying",name:"Online Media Buying",icon:"▲",tagline:"Ad campaigns, media strategy, and performance marketing",description:"Data-driven ad campaigns across Meta, Google, TikTok with real-time optimization.",features:["Meta Ads management","Google Ads management","TikTok Ads","Creative testing","Conversion tracking","ROI reporting"],packages:[{name:"STARTER",price:"1,810,000 MMK",features:["1 platform","Ad spend < 5M MMK","Weekly reports","Email support"]},{name:"PRO",price:"4,830,000 MMK",features:["3 platforms","Ad spend < 20M MMK","Daily reports","Creative testing","Priority support"],popular:true},{name:"ENTERPRISE",price:"custom",features:["All platforms","Unlimited spend","Real-time dashboard","Dedicated manager","SLA + 24/7"]}],comparison:[{feature:"Platforms",starter:"1",pro:"3",enterprise:"all"},{feature:"Ad spend",starter:"<5M",pro:"<20M",enterprise:"unlimited"},{feature:"Reports",starter:"weekly",pro:"daily",enterprise:"real-time"},{feature:"Creative testing",starter:"—",pro:"✓",enterprise:"✓"},{feature:"SLA",starter:"—",pro:"—",enterprise:"✓"}]},
+  { slug:"ui-ux-design",name:"UI/UX Design",icon:"◡",tagline:"Product design, design systems, and prototyping",description:"End-to-end product design — user research, wireframes, high-fidelity prototypes, and design systems.",features:["User research + personas","Wireframing + prototyping","High-fidelity UI design","Design system creation","Usability testing","Figma handoff"],packages:[{name:"STARTER",price:"2,415,000 MMK",features:["5 screens","Wireframes","1 revision","Figma handoff"]},{name:"PRO",price:"6,040,000 MMK",features:["20 screens","Hi-fi prototypes","3 revisions","Design system","Priority support"],popular:true},{name:"ENTERPRISE",price:"custom",features:["Unlimited screens","Full design system","Unlimited revisions","User testing","SLA + 24/7"]}],comparison:[{feature:"Screens",starter:"5",pro:"20",enterprise:"unlimited"},{feature:"Fidelity",starter:"wireframe",pro:"hi-fi",enterprise:"all"},{feature:"Design system",starter:"—",pro:"✓",enterprise:"✓"},{feature:"Testing",starter:"—",pro:"—",enterprise:"✓"},{feature:"SLA",starter:"—",pro:"—",enterprise:"✓"}]},
+  { slug:"android-ios-app",name:"Android & iOS App",icon:"▣",tagline:"Native and cross-platform mobile applications",description:"Cross-platform mobile apps with React Native / Expo, or native Swift/Kotlin. From MVP to production.",features:["React Native / Expo","Native Swift / Kotlin","Offline-first architecture","Push notifications","In-app purchases","App Store / Play Store submission"],packages:[{name:"STARTER",price:"12,080,000 MMK",features:["5 screens","1 platform","Basic API","Email support"]},{name:"PRO",price:"30,190,000 MMK",features:["15 screens","Both platforms","Full API + auth","Push notifications","Priority support"],popular:true},{name:"ENTERPRISE",price:"custom",features:["Unlimited screens","Both + web","Custom integrations","Dedicated team","SLA + 24/7"]}],comparison:[{feature:"Screens",starter:"5",pro:"15",enterprise:"unlimited"},{feature:"Platforms",starter:"1",pro:"both",enterprise:"both + web"},{feature:"Push notifications",starter:"—",pro:"✓",enterprise:"✓"},{feature:"IAP",starter:"—",pro:"✓",enterprise:"✓"},{feature:"SLA",starter:"—",pro:"—",enterprise:"✓"}]},
+  { slug:"web-webapp",name:"Web / WebApp",icon:"▣",tagline:"Full-stack web applications with modern frameworks",description:"Production web applications built with Next.js, React, and TypeScript. From landing pages to SaaS dashboards.",features:["Next.js + React + TypeScript","Server-side rendering + ISR","Database design (PostgreSQL + Prisma)","Authentication (NextAuth)","Real-time features (WebSocket)","CI/CD pipeline"],packages:[{name:"STARTER",price:"6,040,000 MMK",features:["5 pages","Basic CMS","Responsive design","Email support"]},{name:"PRO",price:"18,110,000 MMK",features:["20 pages","Full CMS + dashboard","Auth + database","Real-time features","Priority support"],popular:true},{name:"ENTERPRISE",price:"custom",features:["Unlimited pages","Custom architecture","Microservices","Dedicated team","SLA + 24/7"]}],comparison:[{feature:"Pages",starter:"5",pro:"20",enterprise:"unlimited"},{feature:"CMS",starter:"basic",pro:"full",enterprise:"custom"},{feature:"Auth",starter:"—",pro:"✓",enterprise:"✓"},{feature:"Real-time",starter:"—",pro:"✓",enterprise:"✓"},{feature:"SLA",starter:"—",pro:"—",enterprise:"✓"}]},
+  { slug:"chrome-extensions",name:"Chrome Extensions",icon:"⬚",tagline:"Browser automation and productivity extensions",description:"Custom Chrome extensions for browser automation, productivity, and workflow enhancement.",features:["Manifest V3 development","Content script injection","Background service workers","Popup + options pages","Chrome Web Store submission","Cross-browser support (Firefox/Edge)"],packages:[{name:"STARTER",price:"2,415,000 MMK",features:["1 extension","Basic features","1 revision","Email support"]},{name:"PRO",price:"6,040,000 MMK",features:["3 extensions","Advanced features","3 revisions","Web Store submission","Priority support"],popular:true},{name:"ENTERPRISE",price:"custom",features:["Unlimited extensions","Enterprise deployment","Unlimited revisions","Custom APIs","SLA + 24/7"]}],comparison:[{feature:"Extensions",starter:"1",pro:"3",enterprise:"unlimited"},{feature:"Features",starter:"basic",pro:"advanced",enterprise:"custom"},{feature:"Web Store",starter:"—",pro:"✓",enterprise:"✓"},{feature:"Cross-browser",starter:"—",pro:"—",enterprise:"✓"},{feature:"SLA",starter:"—",pro:"—",enterprise:"✓"}]},
+  { slug:"desktop-macbook-apps",name:"Desktop / MacBook Apps",icon:"◱",tagline:"Cross-platform desktop applications (Electron/Tauri)",description:"Desktop applications for Windows, macOS, and Linux using Electron or Tauri. Native performance with web tech.",features:["Electron / Tauri development","Cross-platform (Win/Mac/Linux)","Native menus + tray","Auto-update system","Code signing + notarization","Installer creation"],packages:[{name:"STARTER",price:"9,660,000 MMK",features:["5 screens","1 platform","Basic features","Email support"]},{name:"PRO",price:"24,150,000 MMK",features:["15 screens","All platforms","Auto-update","Code signing","Priority support"],popular:true},{name:"ENTERPRISE",price:"custom",features:["Unlimited screens","All platforms","Enterprise features","Dedicated team","SLA + 24/7"]}],comparison:[{feature:"Screens",starter:"5",pro:"15",enterprise:"unlimited"},{feature:"Platforms",starter:"1",pro:"all",enterprise:"all"},{feature:"Auto-update",starter:"—",pro:"✓",enterprise:"✓"},{feature:"Code signing",starter:"—",pro:"✓",enterprise:"✓"},{feature:"SLA",starter:"—",pro:"—",enterprise:"✓"}]},
+  { slug:"aso",name:"ASO",icon:"⊙",tagline:"App Store Optimization for mobile and web stores",description:"App Store Optimization services to improve visibility and downloads across App Store, Play Store, and Chrome Web Store.",features:["Keyword research + optimization","Store listing optimization","Screenshot + video creation","Review management","A/B testing","Competitor analysis"],packages:[{name:"STARTER",price:"1,210,000 MMK",features:["1 app","Keyword research","1 revision","Email support"]},{name:"PRO",price:"3,620,000 MMK",features:["3 apps","Full optimization","3 revisions","A/B testing","Priority support"],popular:true},{name:"ENTERPRISE",price:"custom",features:["Unlimited apps","Full ASO strategy","Unlimited revisions","Competitor tracking","SLA + 24/7"]}],comparison:[{feature:"Apps",starter:"1",pro:"3",enterprise:"unlimited"},{feature:"Keywords",starter:"✓",pro:"✓",enterprise:"✓"},{feature:"A/B testing",starter:"—",pro:"✓",enterprise:"✓"},{feature:"Competitor",starter:"—",pro:"—",enterprise:"✓"},{feature:"SLA",starter:"—",pro:"—",enterprise:"✓"}]},
+  { slug:"web3-wallets",name:"Web3 Wallets",icon:"⬡",tagline:"Non-custodial wallet development and integration",description:"Custom non-custodial wallet development for web, mobile, and browser extension. Support for EVM chains, Solana, and custom L2s.",features:["Multi-chain support (EVM, Solana, custom)","Non-custodial architecture","Hardware wallet integration (Ledger, Trezor)","Biometric authentication","Transaction simulation + security","Cross-chain swaps"],packages:[{name:"STARTER",price:"18,110,000 MMK",features:["1 chain","Web only","Basic wallet functions","Security review"]},{name:"PRO",price:"36,220,000 MMK",features:["5 chains","Web + mobile","Hardware wallet support","Full audit","Priority support"],popular:true},{name:"ENTERPRISE",price:"custom",features:["All chains","All platforms","Custom features","Full audit + bug bounty","SLA + 24/7"]}],comparison:[{feature:"Chains",starter:"1",pro:"5",enterprise:"all"},{feature:"Platforms",starter:"web",pro:"web+mobile",enterprise:"all"},{feature:"Hardware wallet",starter:"—",pro:"✓",enterprise:"✓"},{feature:"Audit",starter:"review",pro:"full",enterprise:"full + bounty"},{feature:"SLA",starter:"—",pro:"—",enterprise:"✓"}]},
+  { slug:"amm-dex",name:"AMM / DEX",icon:"⇄",tagline:"Automated market maker and DEX protocol development",description:"Full DEX development — AMM pools, order books, limit orders, cross-chain swaps, and liquidity management.",features:["Custom AMM (constant product, stable, weighted)","Order book matching engine","Cross-chain swaps (LayerZero, CCIP)","Liquidity management dashboard","MEV protection","Flash loan integration"],packages:[{name:"STARTER",price:"24,150,000 MMK",features:["1 AMM pool type","1 chain","Basic frontend","Security review"]},{name:"PRO",price:"60,370,000 MMK",features:["3 pool types","3 chains","Full DEX frontend","Full audit","Priority support"],popular:true},{name:"ENTERPRISE",price:"custom",features:["Custom pool types","All chains","White-label DEX","Full audit + bounty","SLA + 24/7"]}],comparison:[{feature:"Pool types",starter:"1",pro:"3",enterprise:"custom"},{feature:"Chains",starter:"1",pro:"3",enterprise:"all"},{feature:"Frontend",starter:"basic",pro:"full",enterprise:"white-label"},{feature:"Audit",starter:"review",pro:"full",enterprise:"full + bounty"},{feature:"SLA",starter:"—",pro:"—",enterprise:"✓"}]},
+  { slug:"dao-governance",name:"DAO Governance",icon:"◍",tagline:"DAO frameworks, voting, and treasury management",description:"DAO governance platforms with proposal creation, voting mechanisms, and treasury management.",features:["Proposal creation and voting","Quadratic voting","Treasury management","Delegate system","On-chain reputation","IPFS document storage"],packages:[{name:"STARTER",price:"18,110,000 MMK",features:["Basic governance","1 voting type","Treasury view","Email support"]},{name:"PRO",price:"36,220,000 MMK",features:["Full governance","3 voting types","Treasury management","Delegate system","Priority support"],popular:true},{name:"ENTERPRISE",price:"custom",features:["Custom governance","All voting types","Custom treasury","Full reputation system","SLA + 24/7"]}],comparison:[{feature:"Voting types",starter:"1",pro:"3",enterprise:"all"},{feature:"Treasury",starter:"view",pro:"manage",enterprise:"custom"},{feature:"Delegates",starter:"—",pro:"✓",enterprise:"✓"},{feature:"Reputation",starter:"—",pro:"—",enterprise:"✓"},{feature:"SLA",starter:"—",pro:"—",enterprise:"✓"}]},
+  { slug:"nft-systems",name:"NFT Systems",icon:"✦",tagline:"NFT minting, marketplace, and royalty infrastructure",description:"Full NFT infrastructure — minting contracts, marketplace, royalty enforcement, and metadata management.",features:["NFT minting contracts (ERC-721/1155)","Marketplace development","Royalty enforcement (EIP-2981)","Metadata management (IPFS)","Lazy minting","Batch minting"],packages:[{name:"STARTER",price:"12,080,000 MMK",features:["1 collection","Basic minting","Marketplace frontend","Email support"]},{name:"PRO",price:"30,190,000 MMK",features:["5 collections","Lazy + batch minting","Full marketplace","Royalty enforcement","Priority support"],popular:true},{name:"ENTERPRISE",price:"custom",features:["Unlimited collections","Custom minting","White-label marketplace","Full royalty system","SLA + 24/7"]}],comparison:[{feature:"Collections",starter:"1",pro:"5",enterprise:"unlimited"},{feature:"Minting",starter:"basic",pro:"lazy + batch",enterprise:"custom"},{feature:"Marketplace",starter:"basic",pro:"full",enterprise:"white-label"},{feature:"Royalties",starter:"—",pro:"✓",enterprise:"✓"},{feature:"SLA",starter:"—",pro:"—",enterprise:"✓"}]},
+  { slug:"security-audit",name:"Security Audit",icon:"⚿",tagline:"Smart contract and protocol security audits",description:"Comprehensive security audits for smart contracts, DeFi protocols, and web applications. Manual + automated review.",features:["Smart contract audit","DeFi protocol review","Automated vulnerability scanning","Manual code review","Gas optimization","Audit report + remediation"],packages:[{name:"STARTER",price:"6,040,000 MMK",features:["1 contract","Automated scan","Basic report","Email support"]},{name:"PRO",price:"14,490,000 MMK",features:["5 contracts","Manual + automated","Full report","Gas optimization","Priority support"],popular:true},{name:"ENTERPRISE",price:"custom",features:["Unlimited contracts","Full audit team","Detailed report","Remediation support","SLA + 24/7"]}],comparison:[{feature:"Contracts",starter:"1",pro:"5",enterprise:"unlimited"},{feature:"Scan type",starter:"automated",pro:"manual + auto",enterprise:"full team"},{feature:"Gas optimization",starter:"—",pro:"✓",enterprise:"✓"},{feature:"Remediation",starter:"—",pro:"—",enterprise:"✓"},{feature:"SLA",starter:"—",pro:"—",enterprise:"✓"}]},
+  { slug:"smart-contract-development",name:"Smart Contract Development",icon:"∎",tagline:"Solidity/Rust contract development and deployment",description:"Production-grade smart contract development in Solidity and Rust. Full lifecycle: design, development, testing, auditing, deployment.",features:["Solidity + Rust (Soroban) development","Formal verification","Gas optimization","Upgradeable proxy patterns","On-chain monitoring","Multi-sig deployment"],packages:[{name:"STARTER",price:"9,660,000 MMK",features:["1 contract","Basic testing","Deployment","Email support"]},{name:"PRO",price:"24,150,000 MMK",features:["5 contracts","Full test suite","Gas optimization","Monitoring","Priority support"],popular:true},{name:"ENTERPRISE",price:"custom",features:["Unlimited contracts","Formal verification","Custom architecture","Full audit","SLA + 24/7"]}],comparison:[{feature:"Contracts",starter:"1",pro:"5",enterprise:"unlimited"},{feature:"Testing",starter:"basic",pro:"full",enterprise:"formal"},{feature:"Gas optimization",starter:"—",pro:"✓",enterprise:"✓"},{feature:"Monitoring",starter:"—",pro:"✓",enterprise:"✓"},{feature:"SLA",starter:"—",pro:"—",enterprise:"✓"}]},
+  { slug:"bug-bounty",name:"Bug Bounty",icon:"▣",tagline:"Security testing and vulnerability assessment programs",description:"Bug bounty program setup, management, and vulnerability assessment for DeFi and web applications.",features:["Bug bounty program setup","Triage + vulnerability assessment","Reward management","Hall of fame page","Integration with Immunefi","Continuous security testing"],packages:[{name:"STARTER",price:"3,620,000 MMK",features:["1 program","Basic triage","Reward pool management","Email support"]},{name:"PRO",price:"9,660,000 MMK",features:["3 programs","Full triage","Hall of fame","Immunefi integration","Priority support"],popular:true},{name:"ENTERPRISE",price:"custom",features:["Unlimited programs","Dedicated triage team","Custom rewards","Full integration","SLA + 24/7"]}],comparison:[{feature:"Programs",starter:"1",pro:"3",enterprise:"unlimited"},{feature:"Triage",starter:"basic",pro:"full",enterprise:"dedicated team"},{feature:"Hall of fame",starter:"—",pro:"✓",enterprise:"✓"},{feature:"Immunefi",starter:"—",pro:"✓",enterprise:"✓"},{feature:"SLA",starter:"—",pro:"—",enterprise:"✓"}]},
+  { slug:"money-market-development",name:"Money Market Development",icon:"$",tagline:"DeFi lending, borrowing, and yield protocols",description:"DeFi money market protocols — lending, borrowing, yield farming, and interest rate models. Production-ready and audited.",features:["Lending + borrowing pools","Variable interest rate models","Liquidation engine","Yield farming","Flash loans","Cross-chain lending"],packages:[{name:"STARTER",price:"30,190,000 MMK",features:["1 asset","Basic lending","Liquidation","Security review"]},{name:"PRO",price:"60,370,000 MMK",features:["5 assets","Full lending + borrowing","Yield farming","Full audit","Priority support"],popular:true},{name:"ENTERPRISE",price:"custom",features:["Unlimited assets","Custom interest models","Cross-chain","Full audit + bounty","SLA + 24/7"]}],comparison:[{feature:"Assets",starter:"1",pro:"5",enterprise:"unlimited"},{feature:"Borrowing",starter:"—",pro:"✓",enterprise:"✓"},{feature:"Yield farming",starter:"—",pro:"✓",enterprise:"✓"},{feature:"Audit",starter:"review",pro:"full",enterprise:"full + bounty"},{feature:"SLA",starter:"—",pro:"—",enterprise:"✓"}]},
+  { slug:"cbdc-development",name:"CBDC Development",icon:"₵",tagline:"Central bank digital currency infrastructure",description:"Central Bank Digital Currency (CBDC) infrastructure — issuance, distribution, and settlement systems for government and institutional clients.",features:["CBDC issuance system","Distribution network","Settlement layer","KYC/AML integration","Privacy-preserving transactions","Regulatory compliance framework"],packages:[{name:"STARTER",price:"custom",features:["Consultation","Architecture design","Proof of concept","Email support"]},{name:"PRO",price:"custom",features:["Full design","Pilot deployment","Regulatory framework","Priority support"],popular:true},{name:"ENTERPRISE",price:"custom",features:["Production deployment","Full infrastructure","Government integration","Dedicated team","SLA + 24/7"]}],comparison:[{feature:"Phase",starter:"consultation",pro:"pilot",enterprise:"production"},{feature:"Deployment",starter:"—",pro:"pilot",enterprise:"full"},{feature:"Regulatory",starter:"—",pro:"✓",enterprise:"✓"},{feature:"Government",starter:"—",pro:"—",enterprise:"✓"},{feature:"SLA",starter:"—",pro:"—",enterprise:"✓"}]},
 ];
 
 export default function ServiceDetailPage() {
@@ -241,9 +57,7 @@ export default function ServiceDetailPage() {
         <AlphaNav />
         <div className="mx-auto mt-20 max-w-2xl text-center">
           <h1 className="font-sans text-4xl font-black uppercase">SERVICE NOT FOUND</h1>
-          <Link href="/#services" className="mt-4 inline-block border border-foreground px-4 py-2 font-mono text-[10px] uppercase tracking-[0.2em]">
-            ← BACK TO SERVICES
-          </Link>
+          <Link href="/#services" className="mt-4 inline-block border border-foreground px-4 py-2 font-mono text-[10px] uppercase tracking-[0.2em]">← BACK TO SERVICES</Link>
         </div>
       </div>
     );
@@ -252,14 +66,10 @@ export default function ServiceDetailPage() {
   return (
     <div className="min-h-screen bg-background">
       <AlphaNav />
-      
-      {/* Hero */}
-      <section className="px-6 pt-24 pb-12">
-        <div className="mx-auto max-w-5xl">
-          <Link href="/#services" className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground hover:text-foreground">
-            ← ALL SERVICES
-          </Link>
-          <div className="mt-6 flex items-center gap-4">
+      <section className="px-3 pt-24 pb-8">
+        <div className="mx-auto w-full max-w-[1600px]">
+          <Link href="/#services" className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground hover:text-foreground">← ALL SERVICES</Link>
+          <div className="mt-4 flex items-center gap-4">
             <span className="font-sans text-6xl font-black text-[#FF4500]">{service.icon}</span>
             <div>
               <h1 className="font-sans text-4xl font-black uppercase tracking-tight sm:text-6xl">{service.name}</h1>
@@ -269,14 +79,12 @@ export default function ServiceDetailPage() {
           <p className="mt-6 max-w-3xl font-serif text-base leading-relaxed text-muted-foreground">{service.description}</p>
         </div>
       </section>
-
-      {/* Features */}
-      <section className="border-t border-border px-6 py-12">
-        <div className="mx-auto max-w-5xl">
+      <section className="px-3 py-8">
+        <div className="mx-auto w-full max-w-[1600px]">
           <h2 className="font-mono text-[10px] uppercase tracking-[0.3em] text-muted-foreground">▸ WHAT'S INCLUDED</h2>
           <div className="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-2">
             {service.features.map((f) => (
-              <div key={f} className="flex items-center gap-2 border border-border p-2">
+              <div key={f} className="flex items-center gap-2 border border-border/60 p-2">
                 <span className="text-[#00FF94]">▸</span>
                 <span className="font-mono text-xs text-foreground/80">{f}</span>
               </div>
@@ -284,23 +92,13 @@ export default function ServiceDetailPage() {
           </div>
         </div>
       </section>
-
-      {/* Pricing */}
-      <section className="border-t border-border px-6 py-12">
-        <div className="mx-auto max-w-5xl">
+      <section className="px-3 py-8">
+        <div className="mx-auto w-full max-w-[1600px]">
           <h2 className="font-mono text-[10px] uppercase tracking-[0.3em] text-muted-foreground">▸ PRICING</h2>
           <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-3">
             {service.packages.map((pkg) => (
-              <div
-                key={pkg.name}
-                className={`border p-4 ${pkg.popular ? "border-[#FF4500] bg-[#FF4500]/5" : "border-border"}`}
-              style={pkg.popular ? { boxShadow: "0 0 0 1px #FF4500" } : undefined}
-              >
-                {pkg.popular && (
-                  <div className="mb-2 inline-block bg-[#FF4500] px-2 py-0.5 font-mono text-[9px] uppercase tracking-[0.18em] text-white">
-                    MOST POPULAR
-                  </div>
-                )}
+              <div key={pkg.name} className={`border p-4 ${pkg.popular ? "border-[#FF4500] bg-[#FF4500]/5" : "border-border"}`} style={pkg.popular ? { boxShadow: "0 0 0 1px #FF4500" } : undefined}>
+                {pkg.popular && <div className="mb-2 inline-block bg-[#FF4500] px-2 py-0.5 font-mono text-[9px] uppercase tracking-[0.18em] text-white">MOST POPULAR</div>}
                 <h3 className="font-sans text-xl font-bold uppercase">{pkg.name}</h3>
                 <div className="mt-1 font-sans text-3xl font-black">{pkg.price}</div>
                 <div className="mt-3 space-y-1">
@@ -316,10 +114,8 @@ export default function ServiceDetailPage() {
           </div>
         </div>
       </section>
-
-      {/* Comparison Table */}
-      <section className="border-t border-border px-6 py-12">
-        <div className="mx-auto max-w-5xl">
+      <section className="px-3 py-8">
+        <div className="mx-auto w-full max-w-[1600px]">
           <h2 className="font-mono text-[10px] uppercase tracking-[0.3em] text-muted-foreground">▸ COMPARISON</h2>
           <div className="mt-4 overflow-x-auto">
             <table className="w-full border border-border">
@@ -345,20 +141,13 @@ export default function ServiceDetailPage() {
           </div>
         </div>
       </section>
-
-      {/* CTA */}
-      <section className="border-t border-border px-6 py-16 text-center">
+      <section className="border-t border-border px-3 py-16 text-center">
         <div className="mx-auto max-w-2xl">
           <h2 className="font-sans text-3xl font-black uppercase tracking-tight">NOT SURE WHICH PACKAGE?</h2>
-          <p className="mt-2 font-serif text-base italic text-muted-foreground">
-            Contact our team — we'll help you choose the right plan for your needs.
-          </p>
-          <a href="mailto:contact@taungoosigma.lab" className="mt-6 inline-block border border-foreground bg-foreground px-8 py-3 font-mono text-[11px] uppercase tracking-[0.2em] text-background transition-opacity hover:opacity-80">
-            CONTACT OUR TEAM →
-          </a>
+          <p className="mt-2 font-serif text-base italic text-muted-foreground">Contact our team — we'll help you choose the right plan for your needs.</p>
+          <a href="mailto:contact@taungoosigma.lab" className="mt-6 inline-block border border-foreground bg-foreground px-8 py-3 font-mono text-[11px] uppercase tracking-[0.2em] text-background transition-opacity hover:opacity-80">CONTACT OUR TEAM →</a>
         </div>
       </section>
-
       <AlphaFooter />
     </div>
   );

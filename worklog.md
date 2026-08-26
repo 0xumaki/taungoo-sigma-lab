@@ -1758,3 +1758,55 @@ Agent: main (orchestrator)
 - All 26 service pages: 200 ✅
 - Lint clean ✅
 - Cron #337053 continues every 15 min
+
+---
+Task ID: CRON-ROUND-31 (26 Service Pages + Mode Transition + Sigma Numbers + Light Mode + Insights Popup)
+Agent: main (orchestrator)
+
+## Fixes Applied
+
+### 1. All 26 Service Detail Pages (FIXED)
+- Root cause: only 10 services were defined in the SERVICES array; 16 slugs hit "SERVICE NOT FOUND"
+- Fix: rewrote the entire file with all 26 services with full detail (features, pricing, comparison tables)
+- All 26 slugs verified returning 200
+
+### 2. Mode Transition Scroll (FIXED)
+- When switching from Sigma to Alpha, page was scrolling to section 3
+- Fix: AlphaInterface now scrolls to top on mount: `container.scrollTo({top: 0})` + `window.scrollTo({top: 0})`
+
+### 3. Sigma Mode 01-11 Numbers (FIXED)
+- Numbers were too large (20vh) and too opaque (0.04) — overlapping text
+- Fix: reduced to 12vh and 0.02 opacity — barely visible watermark
+
+### 4. Light Mode Text Visibility (FIXED)
+- Text was nearly invisible in light mode
+- Fix: added `.light` CSS overrides for all opacity-based foreground colors:
+  - `text-muted-foreground` → darker (0.30 oklch)
+  - `text-foreground/80` → darker (0.15 oklch)
+  - `text-foreground/70` → darker (0.20 oklch)
+  - `text-foreground/60` → darker (0.25 oklch)
+  - `text-foreground/50` → darker (0.30 oklch)
+  - `text-foreground/40` → darker (0.35 oklch)
+  - Watermark colors → darker (0.50-0.55 oklch)
+  - Reduced scanline/noise/grid opacity in light mode
+  - Increased border contrast (22% → 30% black)
+
+### 5. Research Logs as Popup (FIXED)
+- Insights cards now open a popup modal (not a dedicated page route)
+- Click any research card → full-screen modal with:
+  - Header bar (tag + date + read time + close button)
+  - Accent top bar
+  - Title + abstract + authors
+  - 4 sections (INTRODUCTION/PROBLEM/APPROACH/RESULTS)
+  - CTA at bottom
+- Modal has cut-corner clip-path + scrollable content
+- Click outside or X button to close
+
+### 6. SciFiAvatar Import Fix (BUG FIX)
+- Root cause: AlphaTestimonials imported `SciFiAvatar` from SciFiCard, but SciFiCard only exports `SciFiCard` component
+- Fix: inlined the SciFiAvatar SVG component directly in AlphaTestimonials.tsx
+
+## Verification
+- All 26 service pages: 200 ✅
+- Lint clean ✅
+- Cron #337053 continues every 15 min

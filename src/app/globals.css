@@ -113,32 +113,44 @@
 /* SIGMA LIGHT — high-contrast white variant */
 .light {
   --background: oklch(0.97 0 0);
-  --foreground: oklch(0.07 0 0);
-  --card: oklch(0.92 0 0);
-  --card-foreground: oklch(0.07 0 0);
-  --popover: oklch(0.92 0 0);
-  --popover-foreground: oklch(0.07 0 0);
-  --primary: oklch(0.07 0 0);
+  --foreground: oklch(0.10 0 0);
+  --card: oklch(0.90 0 0);
+  --card-foreground: oklch(0.10 0 0);
+  --popover: oklch(0.90 0 0);
+  --popover-foreground: oklch(0.10 0 0);
+  --primary: oklch(0.10 0 0);
   --primary-foreground: oklch(0.97 0 0);
-  --secondary: oklch(0.88 0 0);
-  --secondary-foreground: oklch(0.07 0 0);
-  --muted: oklch(0.88 0 0);
-  --muted-foreground: oklch(0.42 0 0);
-  --accent: oklch(0.82 0 0);
-  --accent-foreground: oklch(0.07 0 0);
-  --destructive: oklch(0.55 0.24 25);
-  --border: oklch(0 0 0 / 22%);
-  --input: oklch(0 0 0 / 22%);
-  --ring: oklch(0.3 0 0);
-  --sidebar: oklch(0.92 0 0);
-  --sidebar-foreground: oklch(0.07 0 0);
-  --sidebar-primary: oklch(0.07 0 0);
+  --secondary: oklch(0.85 0 0);
+  --secondary-foreground: oklch(0.10 0 0);
+  --muted: oklch(0.85 0 0);
+  --muted-foreground: oklch(0.35 0 0);
+  --accent: oklch(0.80 0 0);
+  --accent-foreground: oklch(0.10 0 0);
+  --destructive: oklch(0.50 0.24 25);
+  --border: oklch(0 0 0 / 30%);
+  --input: oklch(0 0 0 / 30%);
+  --ring: oklch(0.25 0 0);
+  --sidebar: oklch(0.90 0 0);
+  --sidebar-foreground: oklch(0.10 0 0);
+  --sidebar-primary: oklch(0.10 0 0);
   --sidebar-primary-foreground: oklch(0.97 0 0);
-  --sidebar-accent: oklch(0.88 0 0);
-  --sidebar-accent-foreground: oklch(0.07 0 0);
-  --sidebar-border: oklch(0 0 0 / 12%);
-  --sidebar-ring: oklch(0.3 0 0);
+  --sidebar-accent: oklch(0.85 0 0);
+  --sidebar-accent-foreground: oklch(0.10 0 0);
+  --sidebar-border: oklch(0 0 0 / 20%);
+  --sidebar-ring: oklch(0.25 0 0);
 }
+.light .sigma-scanlines::after { opacity: 0.06; }
+.light .sigma-noise::before { opacity: 0.02; }
+.light .sigma-grid { opacity: 0.4 !important; }
+.light .text-muted-foreground { color: oklch(0.30 0 0) !important; }
+.light .text-foreground\/80 { color: oklch(0.15 0 0) !important; }
+.light .text-foreground\/70 { color: oklch(0.20 0 0) !important; }
+.light .text-foreground\/60 { color: oklch(0.25 0 0) !important; }
+.light .text-foreground\/50 { color: oklch(0.30 0 0) !important; }
+.light .text-foreground\/40 { color: oklch(0.35 0 0) !important; }
+.light .text-foreground\/15 { color: oklch(0.40 0 0) !important; }
+.light .text-foreground\/\[0\.025\] { color: oklch(0.50 0 0) !important; }
+.light .text-foreground\/\[0\.04\] { color: oklch(0.55 0 0) !important; }
 
 @layer base {
   * {

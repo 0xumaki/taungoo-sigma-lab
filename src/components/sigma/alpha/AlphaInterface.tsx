@@ -44,11 +44,13 @@ function ScrollProgress() {
  */
 export function AlphaInterface() {
   React.useEffect(() => {
-    // Enable smooth scroll for the Alpha interface
+    // When switching to Alpha mode, scroll to top (hero)
     const container = document.querySelector("[data-alpha-scroll]");
     if (container) {
       container.scrollTo({ top: 0, behavior: "auto" });
     }
+    // Also scroll the window to top
+    window.scrollTo({ top: 0, behavior: "auto" });
     // Handle hash navigation
     const handleHash = () => {
       const hash = window.location.hash;

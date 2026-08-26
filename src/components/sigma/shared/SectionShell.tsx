@@ -128,9 +128,9 @@ export function SectionShell({
       </footer>
 
       {/* big corner index watermark with glitch */}
-      <div className="pointer-events-none absolute -bottom-2 right-4 z-0 select-none font-sans text-[20vh] font-black leading-none">
+      <div className="pointer-events-none absolute -bottom-2 right-4 z-0 select-none font-sans text-[12vh] font-black leading-none">
         <span
-          className="sigma-glitch text-foreground/[0.04]"
+          className="sigma-glitch text-foreground/[0.02]"
           data-text={meta.shortCode}
         >
           {meta.shortCode}
