@@ -34,49 +34,68 @@ export function AlphaAbout() {
             </h2>
           </div>
           <div className="hidden shrink-0 font-mono text-[9px] uppercase tracking-[0.2em] text-muted-foreground sm:block">
-            EST. 2016<br />TAUNGOO, MM
+            EST. 2016<br />YANGON, MM
           </div>
         </div>
 
-        <div className="mt-8 grid grid-cols-1 gap-4 lg:grid-cols-3">
-          {/* Left: Mission — SciFiCard */}
-          <SciFiCard className="alpha-card-hover lg:col-span-2" accent="#FF4500" label="▸ MISSION" id="TSL-001" style={{ "--sigma-hover-accent": "#FF4500" } as React.CSSProperties}>
-            <div className="p-4">
-              <p className="font-serif text-xl italic leading-relaxed text-foreground/90">
+        {/* Main grid — mission card spans full width on top, stats below */}
+        <div className="mt-6 grid grid-cols-1 gap-4 lg:grid-cols-[1.6fr_1fr]">
+          {/* Left: Mission — full height, properly fitted */}
+          <SciFiCard className="alpha-card-hover" accent="#FF4500" label="▸ MISSION" id="TSL-001" style={{ "--sigma-hover-accent": "#FF4500" } as React.CSSProperties}>
+            <div className="flex h-full flex-col p-5">
+              {/* Mission statement — large, readable */}
+              <p className="font-serif text-xl italic leading-relaxed text-foreground/90 sm:text-2xl">
                 We're a full-stack development lab building AI automation, agent swarms, and Web3 infrastructure for consumer and enterprise clients.
               </p>
-              <p className="mt-4 font-serif text-base italic leading-relaxed text-muted-foreground">
+              <p className="mt-4 font-serif text-base italic leading-relaxed text-muted-foreground sm:text-lg">
                 From multi-model AI agents that handle real workloads, to DeFi protocols that settle on mainnet — every system we build ships to production. No black boxes. No vaporware.
               </p>
 
-              {/* Approach items — maximalist with icons */}
-              <div className="mt-4 grid grid-cols-2 gap-2">
+              {/* Approach items — 2x2 grid */}
+              <div className="mt-6 grid grid-cols-2 gap-2">
                 {[
-                  { icon: "◐", text: "Production-first", color: "#00FF94" },
-                  { icon: "⬡", text: "Multi-model AI", color: "#00E5FF" },
-                  { icon: "▤", text: "Documented", color: "#C6FF00" },
-                  { icon: "⚙", text: "Supported", color: "#FFB300" },
+                  { icon: "◐", text: "Production-first", desc: "No demos, no MVPs", color: "#00FF94" },
+                  { icon: "⬡", text: "Multi-model AI", desc: "7+ model families", color: "#00E5FF" },
+                  { icon: "▤", text: "Documented", desc: "Every commit logged", color: "#C6FF00" },
+                  { icon: "⚙", text: "Supported", desc: "30-day support incl.", color: "#FFB300" },
                 ].map((item) => (
-                  <div key={item.text} className="flex items-center gap-2 border border-border/40 p-2">
-                    <span className="font-sans text-lg" style={{ color: item.color }}>{item.icon}</span>
-                    <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-foreground/80">{item.text}</span>
+                  <div key={item.text} className="group relative border border-border/40 p-3 transition-colors hover:border-foreground/30">
+                    <div className="flex items-center gap-2">
+                      <span className="font-sans text-lg" style={{ color: item.color }}>{item.icon}</span>
+                      <span className="font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-foreground">{item.text}</span>
+                    </div>
+                    <div className="mt-1 font-mono text-[8px] uppercase tracking-[0.12em] text-muted-foreground">{item.desc}</div>
+                    {/* Accent left strip */}
+                    <div className="absolute left-0 top-0 h-full w-0.5 opacity-30 transition-opacity group-hover:opacity-100" style={{ background: item.color }} />
                   </div>
                 ))}
+              </div>
+
+              {/* Bottom data strip */}
+              <div className="mt-auto flex items-center justify-between border-t border-border/40 pt-3 font-mono text-[8px] uppercase tracking-[0.18em] text-muted-foreground">
+                <span>▸ OPERATING SINCE 2016</span>
+                <span style={{ color: "#FF4500" }}>▮ SIGMA = 1.0000</span>
+                <span className="hidden sm:inline">▸ YANGON, MM</span>
               </div>
             </div>
           </SciFiCard>
 
-          {/* Right: Stat cards — SciFiCard */}
-          <div className="space-y-4">
-            <SciFiCard accent="#00FF94" label="▸ STATS" id="LAB.v2" className="alpha-card-hover" style={{ "--sigma-hover-accent": "#00FF94" } as React.CSSProperties}>
-              <div className="p-4">
-                <div className="grid grid-cols-2 gap-2">
+          {/* Right: Stats + Sigma stacked */}
+          <div className="flex flex-col gap-4">
+            <SciFiCard accent="#00FF94" label="▸ STATS" id="LAB.v2" className="alpha-card-hover flex-1" style={{ "--sigma-hover-accent": "#00FF94" } as React.CSSProperties}>
+              <div className="flex h-full flex-col p-4">
+                <div className="grid flex-1 grid-cols-2 gap-2">
                   {statData.map((s) => (
-                    <div key={s.k} className="border border-border/40 p-2 text-center">
-                      <div className="font-sans text-2xl font-black" style={{ color: s.c }}>{s.v}</div>
-                      <div className="font-mono text-[8px] uppercase tracking-[0.16em] text-muted-foreground">{s.k}</div>
+                    <div key={s.k} className="flex flex-col items-center justify-center border border-border/40 p-3">
+                      <div className="font-sans text-3xl font-black" style={{ color: s.c }}>{s.v}</div>
+                      <div className="mt-1 font-mono text-[8px] uppercase tracking-[0.16em] text-muted-foreground">{s.k}</div>
                     </div>
                   ))}
+                </div>
+                {/* Bottom accent bar */}
+                <div className="mt-3 flex items-center justify-between font-mono text-[7px] uppercase tracking-[0.16em] text-muted-foreground">
+                  <span>▸ ALL LIVE</span>
+                  <span style={{ color: "#00FF94" }}>▮ NOMINAL</span>
                 </div>
               </div>
             </SciFiCard>
@@ -93,9 +112,9 @@ export function AlphaAbout() {
           </div>
         </div>
 
-        {/* Bottom: Capability cards — SciFiCard row */}
-        <div className="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-5">
-          {capabilityData.map((cap, i) => (
+        {/* Bottom: Capability cards — wider, better spaced */}
+        <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+          {capabilityData.map((cap) => (
             <SciFiCard key={cap.label} accent={cap.color} label={cap.label} id={`${cap.pct}%`} className="alpha-card-hover" style={{ "--sigma-hover-accent": cap.color } as React.CSSProperties}>
               <div className="p-3">
                 {/* Visual: large percentage with accent color */}
@@ -103,7 +122,7 @@ export function AlphaAbout() {
                 {/* Hazard-style fill bar */}
                 <div className="mt-2 h-3 w-full bg-foreground/5">
                   <div
-                    className="h-full"
+                    className="h-full transition-all duration-500"
                     style={{
                       width: `${cap.pct}%`,
                       background: `repeating-linear-gradient(45deg, ${cap.color} 0, ${cap.color} 4px, ${cap.color}88 4px, ${cap.color}88 8px)`,

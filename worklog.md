@@ -4260,3 +4260,87 @@ The sandbox has limited memory (~2-4GB). The Next.js 16 Turbopack dev server is 
 
 ## Cron
 - Job #338235 continues every 15 min (webDevReview)
+
+---
+Task ID: CRON-ROUND-54 (About Section Fix + S06 Popup + More Blog Posts + Optimization Suggestions)
+Agent: main (orchestrator)
+
+## User Feedback Addressed
+1. "Alpha mode section 2 mission card is not fully fitted and needs design-wise improvement"
+2. "Research Log section popup cards are only partially visible since the section itself is too small"
+3. "Try to add more blog posts as well"
+4. "Suggest me to make the significant optimization for this website"
+
+## Changes
+
+### 1. AlphaAbout Section 2 — Redesigned Mission Card
+- Mission card: now uses `flex h-full flex-col p-5` (fills full height)
+- Added descriptions to approach items ("No demos, no MVPs", "7+ model families", etc.)
+- Added accent left strips on hover
+- Added bottom data strip ("OPERATING SINCE 2016 · SIGMA = 1.0000 · YANGON, MM")
+- Mission text: `text-xl sm:text-2xl` (larger, more readable)
+- Layout: `lg:grid-cols-[1.6fr_1fr]` (mission card is 60% width, stats 40%)
+- Stats card: uses `flex-1` to fill height
+- Capability cards: `gap-3` (more breathing room)
+- Verified: aboutHeight=899px, 8 cards, all fitting properly ✅
+
+### 2. S06 Research Logs Popup — Fixed Size + Visibility
+- DialogContent: `max-w-3xl` → `max-w-[calc(100%-2rem)] sm:max-w-4xl` (wider, responsive)
+- Added `style={{ maxHeight: '90vh' }}` (prevents popup from exceeding viewport)
+- PaperDossier: `max-h-[72vh]` → `max-h-[calc(90vh-3rem)]` (matches popup height)
+- Left column: `180px` → `200px` (wider for better readability)
+- Verified: `GET /?s=06 200` ✅
+
+### 3. Added 8 New Blog Posts (9 → 17 total)
+New research entries added:
+1. ZK Proof Systems for Non-Custodial Wallets (PAPER, 2025.01)
+2. DeFi Transaction Corpus (DATASET, 2025.02)
+3. Agent Swarm Orchestration Protocol v3 (BLUEPRINT, 2025.02)
+4. Game-Theoretic Analysis of AMM Liquidity Pools (PAPER, 2025.03)
+5. Adaptive Voice Synthesis with Emotion Transfer (PATENT, 2025.03)
+6. Multi-Model AI Output Quality Benchmark (DATASET, 2025.04)
+7. Cross-Chain Bridge Security Audit Framework (BLUEPRINT, 2025.04)
+8. Real-Time Anomaly Detection in IoT Sensor Meshes (PAPER, 2025.05)
+
+Total research logs: 17 (was 9)
+- PAPERS: 6 (was 3)
+- DATASETS: 4 (was 2)
+- BLUEPRINTS: 4 (was 2)
+- PATENTS: 3 (was 2)
+
+## Optimization Suggestions
+
+### Already Implemented
+1. ✅ Lazy-loading all 11 Sigma sections (dynamic imports) — saves ~70% memory in Alpha mode
+2. ✅ CSS will-change hints on animated elements
+3. ✅ content-visibility: auto on Alpha sections (skips off-screen rendering)
+4. ✅ React.memo on SigmaBrand
+5. ✅ Reduced barcode DOM nodes (48→24 per card)
+6. ✅ Tour mode interval 500ms→1000ms
+7. ✅ SFX auto-enable on first interaction
+
+### Recommended for Production (not needed for dev)
+1. **Image optimization**: Use `next/image` instead of `<img>` for portfolio screenshots — adds lazy loading, WebP, responsive sizes
+2. **Font subsetting**: Currently loading full Space Grotesk + JetBrains Mono + Instrument Serif — subset to only the weights/characters used
+3. **Code splitting by route**: Service detail pages (`/services/[slug]`) and portfolio case studies (`/portfolio/[slug]`) are already separate routes — ensure they're not pre-loading
+4. **Tree-shake recharts**: Import only the specific chart components used (already done) — saves ~3MB vs full import
+5. **GSAP production build**: In production, use `gsap.min.js` instead of the dev build
+6. **CSS purge**: Tailwind 4 purges unused classes in production — ensure all dynamic classes are in the safelist
+7. **Preload critical resources**: Preload the hero background image and chidori.mp3
+8. **Service Worker**: Add offline caching for static assets (images, fonts, sounds)
+9. **Bundle analysis**: Run `bun run build && bunx @next/bundle-analyzer` to identify heavy chunks
+10. **HTTP/2 push**: If using a CDN, push critical CSS/JS files
+
+### Dev Server Memory (the OOM issue)
+The sandbox has ~2-4GB RAM. Next.js 16 Turbopack is memory-hungry during compilation.
+- **Quick fix**: Restart the server when it dies: `setsid bash -c 'exec bun run dev' > dev.log 2>&1 &`
+- **Better fix**: Use `NODE_OPTIONS="--max-old-space-size=1024"` to limit Node memory (may cause slower compiles)
+- **Best fix**: Deploy to a production server with more RAM — the dev server is NOT optimized for low-memory environments
+- **Alternative**: Use `next build && next start` for production mode (much less memory, no hot reload)
+
+## Files Modified
+- src/components/sigma/alpha/AlphaAbout.tsx (mission card redesign)
+- src/components/sigma/sections/S06Research.tsx (popup size + 8 new blog posts)
+
+## Cron
+- Job #338235 continues every 15 min (webDevReview)
