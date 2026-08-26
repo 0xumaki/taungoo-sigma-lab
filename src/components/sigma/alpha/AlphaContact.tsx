@@ -72,9 +72,9 @@ export function AlphaContact() {
           </div>
         </div>
 
-        <div className="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-2">
+        <div className="mt-8 grid grid-cols-1 items-stretch gap-6 lg:grid-cols-2">
           {/* Left: Contact form — sci-fi terminal style */}
-          <div className="border border-border bg-card/40">
+          <div className="flex flex-col border border-border bg-card/40">
             {/* Terminal header */}
             <div className="flex items-center justify-between border-b border-border/60 px-4 py-2">
               <div className="flex items-center gap-2">
@@ -84,8 +84,8 @@ export function AlphaContact() {
               <span className="font-mono text-[9px] uppercase tracking-[0.16em] text-[#00FF94]">ONLINE</span>
             </div>
 
-            {/* Form body */}
-            <div className="p-4 space-y-4">
+            {/* Form body — flex-1 so the form stretches to match the right column height */}
+            <div className="flex flex-1 flex-col p-4 gap-4">
               {/* Identity */}
               <div>
                 <label className="mb-1 block font-mono text-[9px] uppercase tracking-[0.22em] text-muted-foreground">
@@ -165,8 +165,8 @@ export function AlphaContact() {
                 </div>
               </div>
 
-              {/* Message */}
-              <div>
+              {/* Message — flex-1 so textarea grows to fill remaining space */}
+              <div className="flex flex-1 flex-col">
                 <label className="mb-1 block font-mono text-[9px] uppercase tracking-[0.22em] text-muted-foreground">
                   ▸ ENCRYPTED MESSAGE
                 </label>
@@ -174,8 +174,7 @@ export function AlphaContact() {
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
                   placeholder="> describe your project, timeline, and budget..."
-                  rows={4}
-                  className="w-full resize-none border border-border bg-background px-3 py-2.5 font-mono text-sm leading-relaxed text-foreground outline-none transition focus:border-[#FF4500] focus:bg-[#FF45000a]"
+                  className="min-h-[120px] w-full flex-1 resize-none border border-border bg-background px-3 py-2.5 font-mono text-sm leading-relaxed text-foreground outline-none transition focus:border-[#FF4500] focus:bg-[#FF45000a]"
                 />
               </div>
 
@@ -200,19 +199,19 @@ export function AlphaContact() {
             </div>
           </div>
 
-          {/* Right: Contact info panels — maximalist */}
-          <div className="space-y-3">
-            {/* Direct channels */}
-            <div className="border border-border bg-card/40 p-4">
+          {/* Right: Contact info panels — flex column that stretches to match left column height */}
+          <div className="flex h-full flex-col gap-3">
+            {/* Direct channels — flex-1 so it grows */}
+            <div className="flex flex-1 flex-col border border-border bg-card/40 p-4">
               <div className="font-mono text-[9px] uppercase tracking-[0.2em] text-[#FF4500]">▸ DIRECT CHANNELS</div>
-              <div className="mt-3 divide-y divide-border/40">
+              <div className="mt-3 flex-1 divide-y divide-border/40">
                 {[
                   ["EMAIL", "contact@taungoosigma.lab", "#00FF94"],
                   ["PHONE", "+95 · on request", "#00E5FF"],
                   ["GITHUB", "github.com/0xumaki", "#C6FF00"],
                   ["LOCATION", "Taungoo, Bago Region, MM", "#FF2D7E"],
                 ].map(([k, v, c]) => (
-                  <div key={k} className="flex items-center gap-3 py-2">
+                  <div key={k} className="flex items-center gap-3 py-2.5">
                     <span className="h-2 w-2" style={{ background: c }} />
                     <span className="w-20 font-mono text-[9px] uppercase tracking-[0.16em] text-muted-foreground">{k}</span>
                     <span className="flex-1 font-mono text-sm text-foreground">{v}</span>
@@ -238,11 +237,11 @@ export function AlphaContact() {
               </div>
             </div>
 
-            {/* Access tier */}
-            <div className="border border-border bg-card/40 p-4">
+            {/* Access tier — flex-1 so it grows */}
+            <div className="flex flex-1 flex-col border border-border bg-card/40 p-4">
               <div className="font-mono text-[9px] uppercase tracking-[0.2em] text-[#00FF94]">▸ ACCESS TIER</div>
-              <p className="mt-2 font-serif text-sm italic text-muted-foreground">
-                Lab access is tiered. Public-read is open to all. Write access is earned through the sigma-review process — submit a credible signal and the collective will respond.
+              <p className="mt-2 flex-1 font-serif text-sm italic text-muted-foreground">
+                Lab access is tiered. Public-read is open to all. Write access is earned through the sigma-review process — submit a credible signal and the collective will respond. All channels are monitored. We do not sell, share, or train on your signal.
               </p>
               <div className="mt-3 flex gap-2">
                 <span className="border border-[#00FF94]/40 px-2 py-0.5 font-mono text-[8px] uppercase tracking-[0.14em] text-[#00FF94]">PUBLIC READ</span>

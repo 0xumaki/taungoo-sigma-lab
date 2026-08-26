@@ -43,44 +43,47 @@ export function AlphaHero() {
   return (
     <section
       id="hero"
-      className="relative min-h-screen overflow-hidden px-2 py-2 sm:px-3 sm:py-3"
+      className="relative h-screen min-h-screen w-full overflow-hidden"
     >
       {/* ============================================================
           BACKGROUND LAYER (full-bleed, behind hero card)
+          Reduced gradients so the hero image is more visible
          ============================================================ */}
       <div className="pointer-events-none absolute inset-0">
-        <GlitchImage src="/alpha-hero-bg.png" alt="" className="h-full w-full" intensity={0.5} />
-        <div className="absolute inset-0 bg-gradient-to-r from-background via-background/85 to-background/50" />
-        <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-transparent to-background/60" />
+        <GlitchImage src="/alpha-hero-bg.png" alt="" className="h-full w-full" intensity={0.35} />
+        {/* Lighter gradient — only darkens left side for text legibility */}
+        <div className="absolute inset-0 bg-gradient-to-r from-background/95 via-background/55 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-background/30" />
       </div>
 
-      <div className="sigma-grid pointer-events-none absolute inset-0 opacity-15" />
-      <div className="sigma-scanlines pointer-events-none absolute inset-0 opacity-20" />
+      <div className="sigma-grid pointer-events-none absolute inset-0 opacity-10" />
+      <div className="sigma-scanlines pointer-events-none absolute inset-0 opacity-10" />
 
       {/* Accent glows — orange (primary) + cyan (secondary) */}
       <div
-        className="pointer-events-none absolute -right-[15%] top-[10%] h-[55vh] w-[55vh] opacity-15 blur-[110px]"
+        className="pointer-events-none absolute -right-[15%] top-[10%] h-[55vh] w-[55vh] opacity-20 blur-[110px]"
         style={{ background: "#FF4500" }}
       />
       <div
-        className="pointer-events-none absolute -left-[10%] bottom-[5%] h-[40vh] w-[40vh] opacity-10 blur-[100px]"
+        className="pointer-events-none absolute -left-[10%] bottom-[5%] h-[40vh] w-[40vh] opacity-15 blur-[100px]"
         style={{ background: "#00E5FF" }}
       />
 
       {/* ============================================================
-          OUTER CROSSHAIR CORNERS (page-level framing)
+          OUTER CROSSHAIR CORNERS (page-level framing) — inset slightly
          ============================================================ */}
-      <span className="pointer-events-none absolute left-2 top-2 z-40 h-5 w-5 border-l border-t border-[#FF4500]/60 sm:left-4 sm:top-4 sm:h-6 sm:w-6" />
-      <span className="pointer-events-none absolute right-2 top-2 z-40 h-5 w-5 border-r border-t border-[#FF4500]/60 sm:right-4 sm:top-4 sm:h-6 sm:w-6" />
-      <span className="pointer-events-none absolute bottom-2 left-2 z-40 h-5 w-5 border-b border-l border-[#FF4500]/60 sm:bottom-4 sm:left-4 sm:h-6 sm:w-6" />
-      <span className="pointer-events-none absolute bottom-2 right-2 z-40 h-5 w-5 border-b border-r border-[#FF4500]/60 sm:bottom-4 sm:right-4 sm:h-6 sm:w-6" />
+      <span className="pointer-events-none absolute left-2 top-2 z-40 h-5 w-5 border-l border-t border-[#FF4500]/60 sm:h-6 sm:w-6" />
+      <span className="pointer-events-none absolute right-2 top-2 z-40 h-5 w-5 border-r border-t border-[#FF4500]/60 sm:h-6 sm:w-6" />
+      <span className="pointer-events-none absolute bottom-2 left-2 z-40 h-5 w-5 border-b border-l border-[#FF4500]/60 sm:h-6 sm:w-6" />
+      <span className="pointer-events-none absolute bottom-2 right-2 z-40 h-5 w-5 border-b border-r border-[#FF4500]/60 sm:h-6 sm:w-6" />
 
       {/* ============================================================
-          THE HERO CARD — massive, fills viewport
+          THE HERO CARD — FULL-SCREEN, NO PADDING, FULL-WIDTH
+          Fills entire viewport (h-screen w-screen, no max-width)
          ============================================================ */}
-      <div className="relative z-10 mx-auto mt-12 flex min-h-[calc(100vh-4rem)] w-full max-w-[1600px] flex-col sm:mt-16">
+      <div className="relative z-10 flex h-screen w-full flex-col">
         <div
-          className="relative flex flex-1 flex-col overflow-hidden border-2 border-[#FF4500]/40 bg-card/70 backdrop-blur-sm"
+          className="relative flex flex-1 flex-col overflow-hidden border-2 border-[#FF4500]/40 bg-card/40 backdrop-blur-[2px]"
           style={{
             clipPath:
               "polygon(22px 0, 100% 0, 100% calc(100% - 22px), calc(100% - 22px) 100%, 0 100%, 0 22px)",

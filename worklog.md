@@ -2444,3 +2444,65 @@ Agent: main (orchestrator) + subagents A/B/C
 
 ## Cron
 - Job #338235 continues every 15 min (webDevReview)
+
+---
+Task ID: CRON-ROUND-36 (Full-Screen Hero + AlphaContact Card Heights + S10 Sigma Revert)
+Agent: main (orchestrator)
+
+## User Feedback Addressed
+1. "Make the Hero card full-screen without any padding for a wider view and make the hero image more visible accordingly"
+2. "Revert the previous condition to Section 10 Sigma mode"
+3. "I want to adjust the card side in Section 10 Alpha mode" (AlphaContact, not Sigma S10)
+
+## Changes
+
+### 1. Hero Card Full-Screen (AlphaHero.tsx)
+- Section: removed `px-2 py-2 sm:px-3 sm:py-3` padding → now `h-screen min-h-screen w-full`
+- Hero card wrapper: removed `mx-auto mt-12 sm:mt-16 max-w-[1600px]` → now `h-screen w-full` (full-bleed)
+- Card bg: `bg-card/70` → `bg-card/40` (more transparent so hero image shows through)
+- Card blur: `backdrop-blur-sm` → `backdrop-blur-[2px]` (lighter blur for image visibility)
+- Background gradient overlays reduced:
+  - `from-background via-background/85 to-background/50` → `from-background/95 via-background/55 to-transparent`
+  - `from-background/90 via-transparent to-background/60` → `from-background/80 via-transparent to-background/30`
+- GlitchImage intensity: 0.5 → 0.35 (less glitch distortion, more image clarity)
+- Grid/scanline opacity: 0.15/0.20 → 0.10/0.10 (reduced overlay noise)
+- Accent glows: opacity 0.15/0.10 → 0.20/0.15 (slightly more vibrant)
+- Verified: hero card = 1440×900 (full viewport), top=0, left=0
+
+### 2. S10Access.tsx (Sigma Mode) Reverted
+- Reverted all changes from previous round:
+  - Removed `h-full` from right column
+  - Removed `flex-1` from DIRECT CHANNELS and ACCESS TIER panels
+  - Removed `shrink-0` from hazard stripe and footer text
+  - Removed extra paragraph from ACCESS TIER
+- S10Access is now back to its original Sigma mode state
+
+### 3. AlphaContact (Alpha Mode Section 10 = CONTACT) Card Heights Fixed
+- Grid: added `items-stretch` to force equal column heights
+- Left column (form):
+  - Changed from `border bg-card/40` to `flex flex-col border bg-card/40`
+  - Form body: `p-4 space-y-4` → `flex flex-1 flex-col p-4 gap-4` (stretches to fill)
+  - Message textarea: `rows={4}` fixed → `flex flex-1 flex-col` with `min-h-[120px]` + `flex-1` (grows to fill)
+- Right column (info panels):
+  - Changed from `space-y-3` to `flex h-full flex-col gap-3` (fills left column height)
+  - DIRECT CHANNELS panel: added `flex flex-1 flex-col` (stretches vertically)
+  - ACCESS TIER panel: added `flex flex-1 flex-col` (stretches vertically)
+  - Added extra text to ACCESS TIER for content balance
+  - RESPONSE PROTOCOL + Sigma stamp: remain fixed height
+- Verified: both columns now = 620px height (perfectly balanced)
+
+## Verification
+- Hero card: 1440×900 (full viewport, no padding) ✅
+- Scroll position: 0 (lands on hero, not section 3) ✅
+- Contact section: both columns = 620px (equal) ✅
+- S10 Sigma: reverted to original ✅
+- Lint: clean ✅
+- No console errors ✅
+
+## Files Modified
+- src/components/sigma/alpha/AlphaHero.tsx (full-screen hero)
+- src/components/sigma/alpha/AlphaContact.tsx (equal card heights)
+- src/components/sigma/sections/S10Access.tsx (reverted)
+
+## Cron
+- Job #338235 continues every 15 min (webDevReview)
