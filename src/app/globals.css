@@ -596,15 +596,12 @@
 }
 
 /* ============================================================
-   SIGMA BRAND — hybrid C+D treatment (TAUNGOO SIGMA LAB wordmark)
-   C = RGB-split chromatic aberration + on-hover one-shot glitch
-   D = Σ glyph pulse (NO rotation) + text shimmer gradient
-   Battle-tested values from Awwwards SOTD research:
-   - Rest RGB offset: 2px (subtle "always-on" aberration)
-   - Hover RGB offset: 6px (dramatic glitch split)
-   - Glitch cadence: 90% silent, 10% active (per designmd.app)
-   - Shimmer period: 6s (molten metal, ease-in-out)
-   - Σ pulse: 2.4s, scale 1→1.06 (NO rotation per user spec)
+   SIGMA BRAND — TAUNGOO Σ LAB wordmark with gradient sweep
+   Alternative effect (replaces RGB-split glitch):
+   - Animated gradient sweep across text (like Stripe, Linear, Vercel)
+   - 3-color gradient: foreground → accent → foreground
+   - 5s ease-in-out infinite (slow, premium "molten metal" feel)
+   - Σ glyph keeps pulse animation (scale 1→1.06, NO rotation)
    ============================================================ */
 .sigma-brand {
   display: inline-flex;
@@ -637,115 +634,49 @@
   }
 }
 
-/* Brand text container — holds the shimmer + glitch layers via pseudo-elements */
+/* Brand text — gradient sweep effect (alternative to RGB glitch)
+   Uses background-clip: text with an animated 3-color gradient.
+   The gradient moves left→right, creating a "light passing through" effect. */
 .sigma-brand__text {
-  position: relative;
-  display: inline-block;
   font-family: var(--font-sans), system-ui, sans-serif;
   font-weight: 900;
-  letter-spacing: -0.01em;
-  /* Base RGB-split text-shadow (always-on, subtle) */
-  color: var(--color-foreground, #fff);
-  text-shadow:
-    2px 0 0 rgba(255, 45, 126, 0.75),   /* R channel — uses existing #FF2D7E */
-    -2px 0 0 rgba(0, 229, 255, 0.75);   /* B channel — uses existing #00E5FF */
-  transition: text-shadow 0.18s cubic-bezier(0.22, 1, 0.36, 1);
-  will-change: text-shadow;
-}
-
-/* Shimmer overlay — uses ::before pseudo-element with content from data-text attr.
-   This avoids layout duplication (no visible text in the shimmer span itself). */
-.sigma-brand__shimmer {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  overflow: hidden;
-}
-.sigma-brand__shimmer::before {
-  content: attr(data-text);
-  position: absolute;
-  inset: 0;
+  letter-spacing: 0.1em;
   background: linear-gradient(
     100deg,
-    transparent 0%,
-    transparent 40%,
-    rgba(255, 255, 255, 0.55) 50%,
-    transparent 60%,
-    transparent 100%
+    var(--color-foreground, #fff) 0%,
+    var(--color-foreground, #fff) 35%,
+    #FF4500 50%,
+    var(--color-foreground, #fff) 65%,
+    var(--color-foreground, #fff) 100%
   );
-  background-size: 200% 100%;
+  background-size: 250% 100%;
   background-position: 100% 0;
   -webkit-background-clip: text;
   background-clip: text;
+  -webkit-text-fill-color: transparent;
   color: transparent;
-  font-family: inherit;
-  font-weight: inherit;
-  letter-spacing: inherit;
-  text-transform: inherit;
-  animation: sigma-brand-shimmer 6s ease-in-out infinite;
+  animation: sigma-brand-sweep 5s ease-in-out infinite;
   will-change: background-position;
+  transition: filter 0.3s ease;
 }
-@keyframes sigma-brand-shimmer {
+@keyframes sigma-brand-sweep {
   0%, 100% { background-position: 100% 0; }
   50% { background-position: 0% 0; }
 }
-
-/* Hover state — dramatic RGB split + speed up shimmer */
+/* Hover — speed up sweep + subtle brightness boost */
 .sigma-brand:hover .sigma-brand__text {
-  text-shadow:
-    6px 0 0 rgba(255, 45, 126, 0.95),
-    -6px 0 0 rgba(0, 229, 255, 0.95);
-}
-.sigma-brand:hover .sigma-brand__shimmer::before {
-  animation-duration: 1.2s; /* speed up shimmer on hover */
+  animation-duration: 1.5s;
+  filter: brightness(1.15);
 }
 
-/* One-shot glitch burst on hover — fires once, doesn't loop.
-   Uses ::before + ::after with clip-path inset to create "torn signal band" effect.
-   Colors: pink (#FF2D7E) + cyan (#00E5FF) — matches existing sigma-glitch palette. */
-.sigma-brand__glitch {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  opacity: 0;
-}
-.sigma-brand__glitch::before,
-.sigma-brand__glitch::after {
-  content: attr(data-text);
-  position: absolute;
-  inset: 0;
-  font-family: inherit;
-  font-weight: inherit;
-  letter-spacing: inherit;
-  text-transform: inherit;
-  mix-blend-mode: screen;
-  pointer-events: none;
-}
-.sigma-brand__glitch::before {
-  color: #FF2D7E;
-}
-.sigma-brand__glitch::after {
-  color: #00E5FF;
-}
-.sigma-brand:hover .sigma-brand__glitch {
-  opacity: 1;
-}
-.sigma-brand:hover .sigma-brand__glitch::before {
-  animation: sigma-brand-glitch-burst 0.4s steps(2, end) 1;
-}
-.sigma-brand:hover .sigma-brand__glitch::after {
-  animation: sigma-brand-glitch-burst-2 0.4s steps(2, end) 1;
-}
-@keyframes sigma-brand-glitch-burst {
-  0% { transform: translate(0); clip-path: inset(0 0 0 0); }
-  20% { transform: translate(-3px, 1px); clip-path: inset(20% 0 60% 0); }
-  40% { transform: translate(2px, -1px); clip-path: inset(40% 0 30% 0); }
-  60% { transform: translate(-1px, 0); clip-path: inset(70% 0 5% 0); }
-  80% { transform: translate(1px, 1px); clip-path: inset(10% 0 70% 0); }
-  100% { transform: translate(0); clip-path: inset(0 0 0 0); }
+/* Σ symbol inside the wordmark (the sigma between TAUNGOO and LAB) */
+.sigma-brand__sigma {
+  color: #FF4500;
+  -webkit-text-fill-color: #FF4500;
+  font-weight: 900;
 }
 
-/* Sub-label — "SIGMA LAB" or "AI · WEB3 · FULL-STACK" */
+/* Sub-label — "LAB" or "AI · WEB3 · FULL-STACK" */
 .sigma-brand__sub {
   font-family: var(--font-mono), monospace;
   font-size: 0.625rem;
@@ -828,12 +759,13 @@
    ============================================================ */
 @media (prefers-reduced-motion: reduce) {
   .sigma-brand__glyph,
-  .sigma-brand__shimmer,
-  .sigma-brand__glitch {
+  .sigma-brand__text {
     animation: none !important;
   }
   .sigma-brand__text {
-    text-shadow: none !important;
+    -webkit-text-fill-color: var(--color-foreground, #fff) !important;
+    color: var(--color-foreground, #fff) !important;
+    background: none !important;
   }
   .sigma-card-reveal {
     opacity: 1 !important;
@@ -847,5 +779,35 @@
   .sigma-hover-card:hover .sigma-hover-overlay {
     transition: opacity 0.2s ease, border-color 0.2s ease !important;
     transform: none !important;
+  }
+}
+
+/* ============================================================
+   ALPHA CARD ANIMATION — alternative simpler approach
+   Replaces the 5-layer hover stack with a cleaner 2-layer effect:
+   1. Border color shift to accent @ 0.3s
+   2. Soft accent glow (box-shadow, no lift) @ 0.4s
+   No scroll-triggered reveal — cards are visible immediately on load.
+   This is cleaner and less "busy" than the previous approach.
+   ============================================================ */
+.alpha-card-hover {
+  transition:
+    border-color 0.3s ease,
+    box-shadow 0.4s ease;
+  will-change: border-color, box-shadow;
+}
+.alpha-card-hover:hover {
+  border-color: var(--sigma-hover-accent, #FF4500);
+  box-shadow:
+    0 0 0 1px var(--sigma-hover-accent, #FF4500),
+    0 0 20px -4px var(--sigma-hover-accent, #FF4500);
+}
+
+/* Reduced motion for alpha cards */
+@media (prefers-reduced-motion: reduce) {
+  .alpha-card-hover,
+  .alpha-card-hover:hover {
+    transition: border-color 0.2s ease !important;
+    box-shadow: none !important;
   }
 }

@@ -23,7 +23,6 @@ import { useSigmaStore } from "@/lib/sigma/store";
 import { SectionShell } from "../shared/SectionShell";
 import { Panel, StatReadout, Tag } from "../shared/components";
 import { SigmaParticles } from "../shared/SigmaParticles";
-import { useCardReveal } from "@/lib/sigma/use-card-reveal";
 
 gsap.registerPlugin(useGSAP);
 
@@ -36,7 +35,7 @@ function useTicker(fn: () => void, ms: number) {
 
 export function S07DataStreams() {
   const { navigate } = useSigmaStore();
-  const cardsRef = useCardReveal<HTMLDivElement>({ stagger: true });
+  const root = React.useRef<HTMLDivElement>(null);
 
   const [stream, setStream] = React.useState(
     Array.from({ length: 40 }, (_, i) => ({
@@ -128,7 +127,7 @@ export function S07DataStreams() {
         stagger: 0.08,
       });
     },
-    { scope: cardsRef }
+    { scope: root }
   );
 
   return (
@@ -137,11 +136,11 @@ export function S07DataStreams() {
       title="DATA STREAMS"
       tagline="Sector 07 is the live dashboard — real-time metrics from running systems. These numbers are moving right now."
     >
-      <div ref={cardsRef} className="relative grid h-full grid-cols-12 grid-rows-6 gap-3">
+      <div ref={root} className="relative grid h-full grid-cols-12 grid-rows-6 gap-3">
         {/* Ambient floating data motes */}
         <SigmaParticles count={24} color="#00FF94" />
         {/* big counter row */}
-        <Panel data-ds label="LIVE METRICS" id={source} accent="#00FF94" className="sigma-card-reveal sigma-hover-card col-span-12 md:col-span-8" style={{ "--sigma-hover-accent": "#00FF94" } as React.CSSProperties}>
+        <Panel data-ds label="LIVE METRICS" id={source} accent="#00FF94" className="col-span-12 md:col-span-8">
           <div className="grid grid-cols-2 divide-x divide-border/70 sm:grid-cols-4">
             {[
               ["OPS/SEC", counters.ops.toLocaleString(), "+120", "#00FF94"],
@@ -159,7 +158,7 @@ export function S07DataStreams() {
           </div>
         </Panel>
 
-        <Panel data-ds label="STATUS" id="NOMINAL" accent="#00FF94" className="sigma-card-reveal sigma-hover-card col-span-12 md:col-span-4" style={{ "--sigma-hover-accent": "#00FF94" } as React.CSSProperties}>
+        <Panel data-ds label="STATUS" id="NOMINAL" accent="#00FF94" className="col-span-12 md:col-span-4">
           <div className="flex h-full flex-col justify-between p-3">
             <div className="space-y-1.5">
               {systems.map((s) => (
@@ -179,7 +178,7 @@ export function S07DataStreams() {
         </Panel>
 
         {/* neural stream */}
-        <Panel data-ds label="NEURAL ACTIVITY" id="LIVE" accent="#00FF94" className="sigma-card-reveal sigma-hover-card col-span-12 row-span-3 md:col-span-8" style={{ "--sigma-hover-accent": "#00FF94" } as React.CSSProperties}>
+        <Panel data-ds label="NEURAL ACTIVITY" id="LIVE" accent="#00FF94" className="col-span-12 row-span-3 md:col-span-8">
           <div className="h-full p-2">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={stream} margin={{ top: 8, right: 8, bottom: 0, left: -20 }}>
@@ -211,7 +210,7 @@ export function S07DataStreams() {
         </Panel>
 
         {/* radar */}
-        <Panel data-ds label="CAPABILITY MATRIX" id="6-AXIS" accent="#00FF94" className="sigma-card-reveal sigma-hover-card col-span-12 row-span-3 md:col-span-4" style={{ "--sigma-hover-accent": "#00FF94" } as React.CSSProperties}>
+        <Panel data-ds label="CAPABILITY MATRIX" id="6-AXIS" accent="#00FF94" className="col-span-12 row-span-3 md:col-span-4">
           <div className="h-full p-2">
             <ResponsiveContainer width="100%" height="100%">
               <RadarChart data={radar}>
@@ -224,7 +223,7 @@ export function S07DataStreams() {
         </Panel>
 
         {/* sector throughput bars */}
-        <Panel data-ds label="SECTOR THROUGHPUT" id="11-CH" accent="#00FF94" className="sigma-card-reveal sigma-hover-card col-span-12 row-span-2 md:col-span-7" style={{ "--sigma-hover-accent": "#00FF94" } as React.CSSProperties}>
+        <Panel data-ds label="SECTOR THROUGHPUT" id="11-CH" accent="#00FF94" className="col-span-12 row-span-2 md:col-span-7">
           <div className="h-full p-2">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={bars} margin={{ top: 4, right: 8, bottom: 0, left: -24 }}>
@@ -241,7 +240,7 @@ export function S07DataStreams() {
         </Panel>
 
         {/* sparkline + cta */}
-        <Panel data-ds label="PACKET RATE" id="SPARK" accent="#00FF94" className="sigma-card-reveal sigma-hover-card col-span-12 row-span-2 md:col-span-5" style={{ "--sigma-hover-accent": "#00FF94" } as React.CSSProperties}>
+        <Panel data-ds label="PACKET RATE" id="SPARK" accent="#00FF94" className="col-span-12 row-span-2 md:col-span-5">
           <div className="flex h-full flex-col p-3">
             <StatReadout label="LIVE PACKET RATE" value={(counters.pkts % 100000) / 1000} unit="k/s" accent="#00FF94" />
             <div className="mt-2 h-10 flex-1">

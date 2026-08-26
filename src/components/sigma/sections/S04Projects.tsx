@@ -15,7 +15,6 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Github, Star, GitFork, CircleDot } from "lucide-react";
-import { useCardReveal } from "@/lib/sigma/use-card-reveal";
 
 gsap.registerPlugin(useGSAP);
 
@@ -41,7 +40,7 @@ const langColor: Record<string, string> = {
 
 export function S04Projects() {
   const { navigate, activeProject, setActiveProject } = useSigmaStore();
-  const cardsRef = useCardReveal<HTMLDivElement>({ stagger: true });
+  const root = React.useRef<HTMLDivElement>(null);
   const [filter, setFilter] = React.useState("ALL");
 
   const filtered = React.useMemo(
@@ -67,7 +66,7 @@ export function S04Projects() {
         stagger: { each: 0.04, from: "start" },
       });
     },
-    { scope: cardsRef, dependencies: [filter] }
+    { scope: root, dependencies: [filter] }
   );
 
   return (
@@ -76,7 +75,7 @@ export function S04Projects() {
       title="PROJECT VAULT"
       tagline="Sector 04 is the portfolio — 11 live GitHub repos with real screenshots and commit history."
     >
-      <div ref={cardsRef} className="relative flex h-full flex-col gap-3">
+      <div ref={root} className="relative flex h-full flex-col gap-3">
         {/* Ambient particles */}
         <SigmaParticles count={11} color="#C6FF00" />
         {/* toolbar */}
@@ -100,14 +99,13 @@ export function S04Projects() {
             <span>
               <span className="text-[#C6FF00]">{filtered.length}</span> / {PROJECTS.length} ARTIFACTS
             </span>
-            <a
-              href="https://github.com/0xumaki"
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center gap-1.5 text-foreground hover:text-[#C6FF00]"
+            {/* GitHub link — stylized as "[REDACTED]" cover (repo not published) */}
+            <span
+              className="inline-flex items-center gap-1.5 border border-dashed border-[#FF3D3D]/50 bg-[#FF3D3D]/5 px-2 py-0.5 text-[#FF3D3D] line-through decoration-[#FF3D3D]/60"
+              title="Repository access restricted — contact us to request access"
             >
-              <Github className="h-3.5 w-3.5" /> @0xumaki
-            </a>
+              <Github className="h-3.5 w-3.5" /> [REDACTED]
+            </span>
           </div>
         </div>
 
@@ -152,13 +150,13 @@ function ProjectCard({ project, onOpen }: { project: Project; onOpen: () => void
     <button
       data-proj
       onClick={onOpen}
-      className="sigma-card-reveal sigma-hover-card group relative block w-full overflow-hidden border border-border bg-card text-left transition-all duration-300 hover:-translate-y-1 hover:border-[#C6FF00]"
-      style={{ aspectRatio: "4 / 3", "--sigma-hover-accent": "#C6FF00" } as React.CSSProperties}
+      className="group relative block w-full overflow-hidden border border-border bg-card text-left transition-all duration-300 hover:-translate-y-1 hover:border-[#C6FF00]"
+      style={{ aspectRatio: "4 / 3" } as React.CSSProperties}
     >
       <img
         src={project.image}
         alt={project.name}
-        className="sigma-hover-img absolute inset-0 h-full w-full object-cover object-top opacity-95 transition-all duration-500 group-hover:scale-105 group-hover:opacity-100"
+        className="absolute inset-0 h-full w-full object-cover object-top opacity-95 transition-all duration-500 group-hover:scale-105 group-hover:opacity-100"
       />
       <div
         className="absolute inset-0 opacity-20 mix-blend-color transition-opacity group-hover:opacity-40"
@@ -264,14 +262,13 @@ function ProjectDetail({ project }: { project: Project }) {
         </div>
 
         <div className="mt-auto flex gap-2">
-          <a
-            href={project.htmlUrl}
-            target="_blank"
-            rel="noreferrer"
-            className="inline-flex flex-1 items-center justify-center gap-2 bg-foreground px-4 py-2.5 font-mono text-[11px] uppercase tracking-[0.2em] text-background transition hover:bg-foreground/85"
+          {/* "VIEW REPO" replaced with "[ REPO ACCESS RESTRICTED ]" cover — repo not published */}
+          <span
+            className="inline-flex flex-1 items-center justify-center gap-2 border border-dashed border-[#FF3D3D]/50 bg-[#FF3D3D]/5 px-4 py-2.5 font-mono text-[11px] uppercase tracking-[0.2em] text-[#FF3D3D] line-through decoration-[#FF3D3D]/60"
+            title="Repository access restricted — contact us to request access"
           >
-            <Github className="h-4 w-4" /> VIEW REPO ►
-          </a>
+            <Github className="h-4 w-4" /> [ REPO RESTRICTED ]
+          </span>
         </div>
       </div>
     </div>

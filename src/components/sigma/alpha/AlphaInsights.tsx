@@ -71,8 +71,8 @@ export function AlphaInsights() {
               <button
                 key={i}
                 onClick={() => setSelected(i)}
-                className="group relative flex flex-col border border-border bg-card/30 text-left transition-all hover:border-foreground/40"
-                style={{ clipPath: "polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px)" }}
+                className="alpha-card-hover group relative flex flex-col border border-border bg-card/30 text-left transition-all hover:border-foreground/40"
+                style={{ "--sigma-hover-accent": color, clipPath: "polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px)" } as React.CSSProperties}
               >
                 <div className="h-1 w-full" style={{ background: color }} />
                 <div className="p-4">

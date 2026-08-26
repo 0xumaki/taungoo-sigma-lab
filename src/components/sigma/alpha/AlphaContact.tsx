@@ -2,14 +2,12 @@
 
 import * as React from "react";
 import { toast } from "sonner";
-import { useCardReveal } from "@/lib/sigma/use-card-reveal";
 
 const CHANNELS = ["RESEARCH", "PARTNERSHIP", "CAREER", "PRESS", "OTHER"];
 const SERVICES = ["AI Chatbot", "Voice AI", "Agent Swarm", "AI Automation", "Web3 Wallets", "Smart Contract", "Web/WebApp", "Mobile App", "Other"];
 const BUDGETS = ["< 3M MMK", "3M - 10M MMK", "10M - 30M MMK", "30M+ MMK", "CUSTOM"];
 
 export function AlphaContact() {
-  const cardsRef = useCardReveal<HTMLDivElement>({ stagger: true });
   const [channel, setChannel] = React.useState("RESEARCH");
   const [service, setService] = React.useState("AI Chatbot");
   const [budget, setBudget] = React.useState("3M - 10M MMK");
@@ -74,9 +72,9 @@ export function AlphaContact() {
           </div>
         </div>
 
-        <div ref={cardsRef} className="mt-8 grid grid-cols-1 items-stretch gap-6 lg:grid-cols-2">
+        <div className="mt-8 grid grid-cols-1 items-stretch gap-6 lg:grid-cols-2">
           {/* Left: Contact form — sci-fi terminal style */}
-          <div className="sigma-card-reveal sigma-hover-card flex flex-col border border-border bg-card/40" style={{ "--sigma-hover-accent": "#FF4500" } as React.CSSProperties}>
+          <div className="alpha-card-hover flex flex-col border border-border bg-card/40" style={{ "--sigma-hover-accent": "#FF4500" } as React.CSSProperties}>
             {/* Terminal header */}
             <div className="flex items-center justify-between border-b border-border/60 px-4 py-2">
               <div className="flex items-center gap-2">
@@ -204,13 +202,13 @@ export function AlphaContact() {
           {/* Right: Contact info panels — flex column that stretches to match left column height */}
           <div className="flex h-full flex-col gap-3">
             {/* Direct channels — flex-1 so it grows */}
-            <div className="sigma-card-reveal sigma-hover-card flex flex-1 flex-col border border-border bg-card/40 p-4" style={{ "--sigma-hover-accent": "#FF4500", transitionDelay: "0.08s" } as React.CSSProperties}>
+            <div className="alpha-card-hover flex flex-1 flex-col border border-border bg-card/40 p-4" style={{ "--sigma-hover-accent": "#FF4500" } as React.CSSProperties}>
               <div className="font-mono text-[9px] uppercase tracking-[0.2em] text-[#FF4500]">▸ DIRECT CHANNELS</div>
               <div className="mt-3 flex-1 divide-y divide-border/40">
                 {[
                   ["EMAIL", "contact@taungoosigma.lab", "#00FF94"],
                   ["PHONE", "+95 · on request", "#00E5FF"],
-                  ["GITHUB", "github.com/0xumaki", "#C6FF00"],
+                  ["GITHUB", "[ ACCESS RESTRICTED ]", "#C6FF00"],
                   ["LOCATION", "Taungoo, Bago Region, MM", "#FF2D7E"],
                 ].map(([k, v, c]) => (
                   <div key={k} className="flex items-center gap-3 py-2.5">
@@ -223,7 +221,7 @@ export function AlphaContact() {
             </div>
 
             {/* Response time panel */}
-            <div className="sigma-card-reveal sigma-hover-card border border-border bg-card/40 p-4" style={{ "--sigma-hover-accent": "#00E5FF", transitionDelay: "0.16s" } as React.CSSProperties}>
+            <div className="alpha-card-hover border border-border bg-card/40 p-4" style={{ "--sigma-hover-accent": "#00E5FF" } as React.CSSProperties}>
               <div className="font-mono text-[9px] uppercase tracking-[0.2em] text-[#00E5FF]">▸ RESPONSE PROTOCOL</div>
               <div className="mt-3 grid grid-cols-3 gap-2">
                 {[
@@ -240,7 +238,7 @@ export function AlphaContact() {
             </div>
 
             {/* Access tier — flex-1 so it grows */}
-            <div className="sigma-card-reveal sigma-hover-card flex flex-1 flex-col border border-border bg-card/40 p-4" style={{ "--sigma-hover-accent": "#00FF94", transitionDelay: "0.24s" } as React.CSSProperties}>
+            <div className="alpha-card-hover flex flex-1 flex-col border border-border bg-card/40 p-4" style={{ "--sigma-hover-accent": "#00FF94" } as React.CSSProperties}>
               <div className="font-mono text-[9px] uppercase tracking-[0.2em] text-[#00FF94]">▸ ACCESS TIER</div>
               <p className="mt-2 flex-1 font-serif text-sm italic text-muted-foreground">
                 Lab access is tiered. Public-read is open to all. Write access is earned through the sigma-review process — submit a credible signal and the collective will respond. All channels are monitored. We do not sell, share, or train on your signal.
@@ -252,7 +250,7 @@ export function AlphaContact() {
             </div>
 
             {/* Sigma stamp */}
-            <div className="sigma-card-reveal sigma-hover-card flex items-center justify-center border border-border/40 p-4" style={{ "--sigma-hover-accent": "#FF4500", transitionDelay: "0.32s" } as React.CSSProperties}>
+            <div className="alpha-card-hover flex items-center justify-center border border-border/40 p-4" style={{ "--sigma-hover-accent": "#FF4500" } as React.CSSProperties}>
               <span className="sigma-spin-slow mr-3 font-sans text-4xl font-black text-[#FF4500]">Σ</span>
               <div className="text-center">
                 <div className="font-sans text-lg font-black uppercase">TAUNGOO SIGMA LAB</div>

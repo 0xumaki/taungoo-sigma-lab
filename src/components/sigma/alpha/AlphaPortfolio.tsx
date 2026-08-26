@@ -23,8 +23,8 @@ const PROJECTS: Project[] = [
   { name: "Lumina Tarot", desc: "Mystical daily companion with sound frequencies", tech: ["Tone.js", "Socket.io", "Framer Motion", "Next.js"], solution: "Lifestyle app", image: "/portfolio/lumina-tarot.png", accent: "#FFB300", slug: "lumina-tarot", cat: "DESIGN" },
   { name: "Sai Pay", desc: "Digital wallet and payment application", tech: ["Next.js", "Recharts", "Radix UI", "Zod"], solution: "Fintech wallet", image: "/portfolio/sai-pay.png", accent: "#B388FF", slug: "sai-pay", cat: "FULL-STACK" },
   { name: "Brorus", desc: "DeFi protocol with smart contracts and Web3", tech: ["Solidity", "Hardhat", "Ethers.js", "Vite"], solution: "DeFi infrastructure", image: "/portfolio/brorus.png", accent: "#FF3D3D", slug: "brorus", cat: "WEB3" },
-  { name: "Asean Swap", desc: "Multi-chain token swap exchange", tech: ["React", "Vite", "TanStack Query", "Recharts"], solution: "DEX trading", image: "/portfolio/asean-swap.png", accent: "#FFEB3B", slug: "asean-swap", cat: "WEB3" },
-  { name: "ManyMarket", desc: "3D globe marketplace with Three.js", tech: ["Three.js", "R3F", "tsParticles", "Next.js"], solution: "Marketplace aggregation", image: "/portfolio/manymarket.png", accent: "#2979FF", slug: "manymarket", cat: "FULL-STACK" },
+  { name: "Asean Swap", desc: "Multi-chain token swap exchange", tech: ["React", "Vite", "TanStack Query", "Recharts"], solution: "DEX trading", image: "", accent: "#FFEB3B", slug: "asean-swap", cat: "WEB3" },
+  { name: "ManyMarket", desc: "3D globe marketplace with Three.js", tech: ["Three.js", "R3F", "tsParticles", "Next.js"], solution: "Marketplace aggregation", image: "", accent: "#2979FF", slug: "manymarket", cat: "FULL-STACK" },
 ];
 
 // First N projects are rendered as larger "featured" cards on >=md layouts
@@ -155,16 +155,41 @@ export function AlphaPortfolio() {
 
                   {/* === HERO IMAGE ZONE === */}
                   <div className="relative aspect-[16/10] overflow-hidden bg-card">
-                    <img
-                      src={p.image}
-                      alt={`${p.name} — ${p.solution} screenshot`}
-                      loading="lazy"
-                      decoding="async"
-                      className="sigma-card-img h-full w-full object-cover object-top"
-                      onError={(e) => {
-                        (e.currentTarget as HTMLImageElement).style.opacity = "0.25";
-                      }}
-                    />
+                    {p.image ? (
+                      <img
+                        src={p.image}
+                        alt={`${p.name} — ${p.solution} screenshot`}
+                        loading="lazy"
+                        decoding="async"
+                        className="sigma-card-img h-full w-full object-cover object-top"
+                        onError={(e) => {
+                          (e.currentTarget as HTMLImageElement).style.opacity = "0.25";
+                        }}
+                      />
+                    ) : (
+                      /* "[ SCREENSHOT CLASSIFIED ]" cover for projects without a published screenshot */
+                      <div
+                        className="flex h-full w-full flex-col items-center justify-center gap-2 border-2 border-dashed"
+                        style={{ borderColor: `${p.accent}50`, background: `${p.accent}08` }}
+                      >
+                        <span
+                          className="font-mono text-[10px] uppercase tracking-[0.3em]"
+                          style={{ color: p.accent }}
+                        >
+                          ▸ [ SCREENSHOT CLASSIFIED ]
+                        </span>
+                        <span className="font-serif text-[10px] italic text-muted-foreground">
+                          Contact us to view this project
+                        </span>
+                        {/* Decorative hazard stripes */}
+                        <div
+                          className="mt-1 h-1 w-16"
+                          style={{
+                            background: `repeating-linear-gradient(45deg, ${p.accent} 0, ${p.accent} 4px, transparent 4px, transparent 8px)`,
+                          }}
+                        />
+                      </div>
+                    )}
 
                     {/* Bottom gradient for legibility */}
                     <div
@@ -319,17 +344,15 @@ export function AlphaPortfolio() {
                 WANT TO SEE <span style={{ color: "#FF4500" }}>MORE?</span>
               </div>
               <p className="mt-1 font-serif text-sm italic text-muted-foreground">
-                Browse 35+ public repositories on GitHub — open source, live demos, ongoing experiments.
+                Our project vault contains 50+ shipped systems. Contact us to request a private viewing of the full archive.
               </p>
             </div>
             <a
-              href="https://github.com/0xumaki"
-              target="_blank"
-              rel="noreferrer"
+              href="#contact"
               className="sigma-magnetic group relative flex shrink-0 items-center gap-3 border border-foreground bg-foreground px-5 py-3 font-mono text-[10px] uppercase tracking-[0.25em] text-background transition-all hover:shadow-[5px_5px_0_0_#FF4500]"
             >
               <span className="sigma-pulse h-1.5 w-1.5 bg-[#FF4500]" aria-hidden />
-              GITHUB / 0xUMAKI
+              CONTACT US
               <span className="sigma-card-arrow transition-transform group-hover:translate-x-1" aria-hidden>→</span>
             </a>
           </div>

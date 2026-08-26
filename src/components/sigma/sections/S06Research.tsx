@@ -15,7 +15,6 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { FileText, FlaskConical, Database, PenTool, Download, ArrowUpRight, BookOpen } from "lucide-react";
-import { useCardReveal } from "@/lib/sigma/use-card-reveal";
 
 gsap.registerPlugin(useGSAP);
 
@@ -60,7 +59,7 @@ const TABS: LogKind[] = ["PAPER", "PATENT", "DATASET", "BLUEPRINT"];
 
 export function S06Research() {
   const { navigate } = useSigmaStore();
-  const cardsRef = useCardReveal<HTMLDivElement>({ stagger: true });
+  const root = React.useRef<HTMLDivElement>(null);
   const [tab, setTab] = React.useState<LogKind | "ALL">("ALL");
   const [selected, setSelected] = React.useState<LogEntry | null>(null);
 
@@ -77,7 +76,7 @@ export function S06Research() {
         clearProps: "opacity,transform",
       });
     },
-    { scope: cardsRef, dependencies: [tab] }
+    { scope: root, dependencies: [tab] }
   );
 
   return (
@@ -86,7 +85,7 @@ export function S06Research() {
       title="RESEARCH LOGS"
       tagline="Sector 06 is the knowledge base — papers, datasets, and architecture blueprints. Click any for the full abstract."
     >
-      <div ref={cardsRef} className="relative flex h-full flex-col gap-3">
+      <div ref={root} className="relative flex h-full flex-col gap-3">
         {/* Ambient particles */}
         <SigmaParticles count={10} color="#FFB300" />
         {/* tabs */}
@@ -131,8 +130,7 @@ export function S06Research() {
                   data-log
                   key={log.id}
                   onClick={() => { setSelected(log); sigmaSound.play("open"); }}
-                  className="sigma-card-reveal sigma-hover-card group grid w-full grid-cols-12 items-center gap-3 p-3 text-left transition-colors hover:bg-foreground/[0.04]"
-                  style={{ "--sigma-hover-accent": color, transitionDelay: `${i * 0.08}s` } as React.CSSProperties}
+                  className="group grid w-full grid-cols-12 items-center gap-3 p-3 text-left transition-colors hover:bg-foreground/[0.04]"
                   data-cursor="hover"
                 >
                   <div className="col-span-1 font-mono text-3xl font-black text-foreground/15 transition-colors group-hover:text-foreground/30">

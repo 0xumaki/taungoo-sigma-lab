@@ -147,7 +147,7 @@ const PROJECTS: Record<string, {
     name: "Asean Swap",
     tagline: "Multi-chain DEX with React Router and TanStack Query",
     desc: "A decentralized exchange supporting multi-chain token swaps with real-time price data.",
-    image: "/portfolio/asean-swap.png",
+    image: "",
     tech: ["React", "Vite", "TypeScript", "Tailwind CSS", "TanStack Query", "React Router", "Recharts", "Framer Motion", "Zod", "React Transition Group"],
     category: "WEB3",
     loc: "~4,200 LOC",
@@ -162,7 +162,7 @@ const PROJECTS: Record<string, {
     name: "ManyMarket",
     tagline: "3D globe marketplace with Three.js and particles",
     desc: "A visually stunning marketplace platform with a 3D globe visualization, particle effects, and immersive animations.",
-    image: "/portfolio/manymarket.png",
+    image: "",
     tech: ["Next.js", "TypeScript", "Three.js", "React Three Fiber", "Three Globe", "tsParticles", "Framer Motion", "Tailwind CSS", "Tabler Icons"],
     category: "FULL-STACK",
     loc: "~12,000 LOC",
@@ -221,7 +221,25 @@ export default function PortfolioCaseStudy() {
       <section className="px-6">
         <div className="mx-auto max-w-5xl">
           <div className="relative overflow-hidden border border-border">
-            <img src={project.image} alt={project.name} className="w-full" />
+            {project.image ? (
+              <img src={project.image} alt={project.name} className="w-full" />
+            ) : (
+              /* "[ SCREENSHOT CLASSIFIED ]" cover for projects without a published screenshot */
+              <div className="flex aspect-video w-full flex-col items-center justify-center gap-3 border-2 border-dashed border-[#FF3D3D]/40 bg-[#FF3D3D]/5">
+                <span className="font-mono text-sm uppercase tracking-[0.3em] text-[#FF3D3D]">
+                  ▸ [ SCREENSHOT CLASSIFIED ]
+                </span>
+                <span className="font-serif text-sm italic text-muted-foreground">
+                  Screenshot access restricted — contact us to view this project
+                </span>
+                <div
+                  className="mt-1 h-1.5 w-24"
+                  style={{
+                    background: "repeating-linear-gradient(45deg, #FF3D3D 0, #FF3D3D 4px, transparent 4px, transparent 8px)",
+                  }}
+                />
+              </div>
+            )}
             <div className="sigma-scanlines pointer-events-none absolute inset-0 opacity-30" />
           </div>
         </div>
@@ -282,7 +300,7 @@ export default function PortfolioCaseStudy() {
       {/* Tech Stack — accurate from GitHub */}
       <section className="px-6 py-8">
         <div className="mx-auto max-w-5xl">
-          <h2 className="font-mono text-[10px] uppercase tracking-[0.3em] text-muted-foreground">▸ TECH STACK (FROM GITHUB)</h2>
+          <h2 className="font-mono text-[10px] uppercase tracking-[0.3em] text-muted-foreground">▸ TECH STACK</h2>
           <div className="mt-2 font-mono text-[9px] uppercase tracking-[0.14em] text-muted-foreground">
             Verified from package.json · {project.tech.length} dependencies
           </div>

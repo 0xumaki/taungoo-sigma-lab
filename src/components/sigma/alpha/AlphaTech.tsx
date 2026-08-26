@@ -1,7 +1,6 @@
 "use client";
 
 import { SciFiCard } from "./SciFiCard";
-import { useCardReveal } from "@/lib/sigma/use-card-reveal";
 
 // Tech stack researched from actual GitHub repos (package.json analysis)
 // + updated to 2025/2026 current tools
@@ -52,13 +51,12 @@ const INFRA_STATS: { v: string; k: string; c: string }[] = [
 ];
 
 export function AlphaTech() {
-  const cardsRef = useCardReveal<HTMLDivElement>({ stagger: true });
   return (
     <section id="tech" className="relative border-t border-border px-3 py-20">
       <div className="sigma-grid pointer-events-none absolute inset-0 opacity-10" />
       <div className="sigma-scanlines pointer-events-none absolute inset-0 opacity-15" />
 
-      <div ref={cardsRef} className="relative z-10 mx-auto w-full max-w-[1600px]">
+      <div className="relative z-10 mx-auto w-full max-w-[1600px]">
         {/* Header */}
         <div className="flex items-end justify-between gap-4 border-b border-border pb-4">
           <div>
@@ -78,7 +76,7 @@ export function AlphaTech() {
         {/* Tech grid — SciFiCard */}
         <div className="mt-8 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {TECH_DATA.map((t, i) => (
-            <SciFiCard key={t.category} accent={t.color} label={t.category} id={`${t.items.length} TOOLS`} className="sigma-card-reveal sigma-hover-card" style={{ "--sigma-hover-accent": t.color, transitionDelay: `${i * 0.08}s` } as React.CSSProperties}>
+            <SciFiCard key={t.category} accent={t.color} label={t.category} id={`${t.items.length} TOOLS`} className="alpha-card-hover" style={{ "--sigma-hover-accent": t.color } as React.CSSProperties}>
               <div className="p-4">
                 {/* Icon + hazard stripe */}
                 <div className="flex items-center gap-3 border-b border-border/40 pb-2">
@@ -113,7 +111,7 @@ export function AlphaTech() {
         {/* Infrastructure stats — SciFiCard row */}
         <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
           {INFRA_STATS.map((s, i) => (
-            <SciFiCard key={s.k} accent={s.c} label={s.k} className="sigma-card-reveal sigma-hover-card" style={{ "--sigma-hover-accent": s.c, transitionDelay: `${(i + TECH_DATA.length) * 0.08}s` } as React.CSSProperties}>
+            <SciFiCard key={s.k} accent={s.c} label={s.k} className="alpha-card-hover" style={{ "--sigma-hover-accent": s.c } as React.CSSProperties}>
               <div className="p-3 text-center">
                 <div className="font-sans text-xl font-black" style={{ color: s.c }}>{s.v}</div>
                 <div className="font-mono text-[8px] uppercase tracking-[0.16em] text-muted-foreground">{s.k}</div>
@@ -126,7 +124,7 @@ export function AlphaTech() {
         <div className="mt-4 border border-border/40 bg-card/20 p-3">
           <div className="flex items-center gap-2 font-mono text-[8px] uppercase tracking-[0.16em] text-muted-foreground">
             <span className="text-[#00FF94]">▸</span>
-            TECH STACK VERIFIED FROM GITHUB PACKAGE.JSON · UPDATED 2025/2026 · NO MARKETING FLUFF
+            TECH STACK VERIFIED FROM PACKAGE.JSON · UPDATED 2025/2026 · NO MARKETING FLUFF
           </div>
         </div>
       </div>

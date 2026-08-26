@@ -128,10 +128,9 @@ export function SectionShell({
       </footer>
 
       {/* Glitching sector number — lower-right corner of every card.
-          Smaller than the old 12vh watermark (was disturbing content) but keeps
-          the sigma-glitch RGB-split animation the user wants. Sits at z-0 so it
-          sits behind content but is visible in the card's negative space. */}
-      <div className="pointer-events-none absolute bottom-2 right-4 z-0 select-none font-sans text-[6vh] font-black leading-none text-foreground/[0.06] sm:text-[7vh]">
+          BIG size per user request. sigma-glitch RGB-split animation active.
+          Sits at z-0 behind content, in the card's negative space. */}
+      <div className="pointer-events-none absolute -bottom-4 right-4 z-0 select-none font-sans text-[14vh] font-black leading-none text-foreground/[0.08] sm:text-[16vh]">
         <span
           className="sigma-glitch"
           data-text={meta.shortCode}

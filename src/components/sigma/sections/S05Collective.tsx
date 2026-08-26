@@ -14,7 +14,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { useCardReveal } from "@/lib/sigma/use-card-reveal";
 
 gsap.registerPlugin(useGSAP);
 
@@ -48,7 +47,7 @@ const MEMBERS: Member[] = [
 
 export function S05Collective() {
   const { navigate } = useSigmaStore();
-  const cardsRef = useCardReveal<HTMLDivElement>({ stagger: true });
+  const root = React.useRef<HTMLDivElement>(null);
   const [selected, setSelected] = React.useState<Member | null>(null);
 
   useGSAP(
@@ -62,7 +61,7 @@ export function S05Collective() {
         clearProps: "opacity,transform",
       });
     },
-    { scope: cardsRef }
+    { scope: root }
   );
 
   return (
@@ -71,7 +70,7 @@ export function S05Collective() {
       title="COLLECTIVE"
       tagline="Sector 05 is the engineering team — 8 operators with handles, not egos. Click any for their dossier."
     >
-      <div ref={cardsRef} className="relative grid h-full grid-cols-12 gap-3">
+      <div ref={root} className="relative grid h-full grid-cols-12 gap-3">
         {/* Ambient particles */}
         <SigmaParticles count={12} color="#FF2D7E" />
         {/* intro panel */}
@@ -79,8 +78,7 @@ export function S05Collective() {
           label="THE SIGMA COLLECTIVE"
           id="08 OPS"
           accent="#FF2D7E"
-          className="sigma-card-reveal sigma-hover-card col-span-12 md:col-span-4 md:row-span-2"
-          style={{ "--sigma-hover-accent": "#FF2D7E" } as React.CSSProperties}
+          className="col-span-12 md:col-span-4 md:row-span-2"
           scan
         >
           <div className="flex h-full flex-col p-4">
@@ -116,8 +114,7 @@ export function S05Collective() {
           <Panel
             data-op
             key={m.code}
-            className="sigma-card-reveal sigma-hover-card group relative col-span-6 cursor-pointer overflow-hidden md:col-span-4 lg:col-span-2"
-            style={{ "--sigma-hover-accent": m.accent, transitionDelay: `${i * 0.08}s` } as React.CSSProperties}
+            className="group relative col-span-6 cursor-pointer overflow-hidden md:col-span-4 lg:col-span-2"
           >
             <button
               onClick={() => { setSelected(m); sigmaSound.play("open"); }}
@@ -145,7 +142,7 @@ export function S05Collective() {
                 </span>
                 <span className="absolute right-1.5 top-1.5 h-1.5 w-1.5 sigma-pulse" style={{ background: m.accent }} />
                 {/* hover overlay */}
-                <div className="sigma-hover-overlay absolute inset-0 flex items-end justify-center bg-black/60 p-2 opacity-0 transition-opacity group-hover:opacity-100">
+                <div className="absolute inset-0 flex items-end justify-center bg-black/60 p-2 opacity-0 transition-opacity group-hover:opacity-100">
                   <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-foreground">
                     ▸ OPEN DOSSIER
                   </span>

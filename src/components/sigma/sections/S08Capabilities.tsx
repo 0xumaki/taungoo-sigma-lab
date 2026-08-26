@@ -9,7 +9,6 @@ import { BrutalButton, Panel, Tag } from "../shared/components";
 import { SigmaParticles } from "../shared/SigmaParticles";
 import { sigmaSound } from "@/lib/sigma/sound";
 import { Cpu, HardDrive, Radio, Server, Zap, Microscope, RotateCw, MapPin, Thermometer, Wrench } from "lucide-react";
-import { useCardReveal } from "@/lib/sigma/use-card-reveal";
 
 gsap.registerPlugin(useGSAP);
 
@@ -41,7 +40,7 @@ const GEAR: Gear[] = [
 
 export function S08Capabilities() {
   const { navigate } = useSigmaStore();
-  const cardsRef = useCardReveal<HTMLDivElement>({ stagger: true });
+  const root = React.useRef<HTMLDivElement>(null);
   const [flipped, setFlipped] = React.useState<string | null>(null);
 
   useGSAP(
@@ -55,7 +54,7 @@ export function S08Capabilities() {
         clearProps: "opacity,transform",
       });
     },
-    { scope: cardsRef }
+    { scope: root }
   );
 
   return (
@@ -64,7 +63,7 @@ export function S08Capabilities() {
       title="CAPABILITIES"
       tagline="Sector 08 is the hardware lab — compute, sensors, and infrastructure. Click any unit to flip and see maintenance logs."
     >
-      <div ref={cardsRef} className="relative grid h-full grid-cols-12 gap-3 overflow-y-auto sigma-scroll-hidden">
+      <div ref={root} className="relative grid h-full grid-cols-12 gap-3 overflow-y-auto sigma-scroll-hidden">
         {/* Ambient particles */}
         <SigmaParticles count={14} color="#FF3D3D" />
         {GEAR.map((g, i) => {
@@ -74,8 +73,8 @@ export function S08Capabilities() {
             <div
               data-gear
               key={g.code}
-              className="sigma-card-reveal sigma-hover-card col-span-12 sm:col-span-6 lg:col-span-4"
-              style={{ perspective: "1000px", "--sigma-hover-accent": g.accent, transitionDelay: `${i * 0.08}s` } as React.CSSProperties}
+              className="col-span-12 sm:col-span-6 lg:col-span-4"
+              style={{ perspective: "1000px" } as React.CSSProperties}
             >
               <div
                 className="relative h-full transition-transform duration-500"

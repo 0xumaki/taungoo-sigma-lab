@@ -7,7 +7,6 @@ import { useSigmaStore } from "@/lib/sigma/store";
 import { SectionShell } from "../shared/SectionShell";
 import { BrutalButton, Panel, Tag } from "../shared/components";
 import { SigmaParticles } from "../shared/SigmaParticles";
-import { useCardReveal } from "@/lib/sigma/use-card-reveal";
 
 gsap.registerPlugin(useGSAP);
 
@@ -24,7 +23,7 @@ const PARTNERS = [
 
 export function S09Alliances() {
   const { navigate } = useSigmaStore();
-  const cardsRef = useCardReveal<HTMLDivElement>({ stagger: true });
+  const root = React.useRef<HTMLDivElement>(null);
 
   useGSAP(
     () => {
@@ -36,7 +35,7 @@ export function S09Alliances() {
         stagger: { each: 0.06, from: "center" },
       });
     },
-    { scope: cardsRef }
+    { scope: root }
   );
 
   return (
@@ -45,11 +44,11 @@ export function S09Alliances() {
       title="ALLIANCES"
       tagline="Sector 09 is the partner network — universities, companies, and communities we build with."
     >
-      <div ref={cardsRef} className="relative grid h-full grid-cols-12 gap-3">
+      <div ref={root} className="relative grid h-full grid-cols-12 gap-3">
         {/* Ambient alliance particles */}
         <SigmaParticles count={14} color="#B388FF" />
         {/* relationship diagram */}
-        <Panel label="RELATIONSHIP MESH" id="8 NODES" accent="#B388FF" className="sigma-card-reveal sigma-hover-card col-span-12 lg:col-span-5" style={{ "--sigma-hover-accent": "#B388FF" } as React.CSSProperties} scan>
+        <Panel label="RELATIONSHIP MESH" id="8 NODES" accent="#B388FF" className="col-span-12 lg:col-span-5" scan>
           <div className="relative h-full min-h-[280px] p-3">
             <svg viewBox="0 0 400 320" className="h-full w-full">
               {/* connections */}
@@ -112,8 +111,7 @@ export function S09Alliances() {
               label={p.type}
               id={p.since}
               accent={p.accent}
-              className="sigma-card-reveal sigma-hover-card group"
-              style={{ "--sigma-hover-accent": p.accent, transitionDelay: `${i * 0.08}s` } as React.CSSProperties}
+              className="group"
             >
               <div className="p-3">
                 <div className="flex items-start justify-between gap-2">
