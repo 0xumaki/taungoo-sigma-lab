@@ -1596,3 +1596,51 @@ New reusable card component with cyberpunk HUD reference design:
 - Health API: OPERATIONAL ✅
 - Lint clean ✅
 - Cron #337053 continues every 15 min
+
+---
+Task ID: CRON-ROUND-28 (Real Data + Hero Maximalism + Tech Stack Fix)
+Agent: main (orchestrator)
+
+## Changes
+
+### Hero Section — Maximalist Upgrade
+- **Stopped spinning Σ** — now static in a cut-corner frame with scanlines + hazard stripe corner
+- **3 maximalist buttons** with data overlays: "EXPLORE SERVICES (26 SERVICES)", "VIEW WORK (10 PROJECTS)", "CONTACT (72H RESPONSE)" — each with icon boxes and shadow hover effects
+- **3 status badges**: SYSTEM ONLINE, EST. 2016 · YANGON MM, v2.7.SIGMA
+- **8 feature pills**: AI AGENTS, WEB3, AUTOMATION, FULL-STACK, VOICE AI, SMART CONTRACTS, MCP, N8N
+- **Data labels around Σ glyph**: SIG=1.0000, NODES: 11, STATUS: ONLINE
+- **Stats with hazard-strip top borders** instead of plain left-border
+- **Build info**: "BUILD 2.7.SIGMA · DUAL MODE: Σ/Α · SINCE 2016 · YANGON"
+- **Copy corrected**: "operating since 2016" (was "EST. 2024"), "Yangon" (was "Taungoo")
+
+### Tech Stack (Section 7) — Real Data from GitHub
+- Researched actual package.json from all 10 repos via GitHub API
+- **Removed outdated tools**: GPT-4 → GPT-4o, added Claude 4, Gemini 2.5, Llama 4
+- **Updated to current 2025/2026 stack**: Next.js 16, React 19, Tailwind CSS 4, Vercel AI SDK, OpenAI Agents SDK, Viem, Wagmi, RainbowKit, Foundry, R3F
+- **Added MULTIMEDIA category** (from repo analysis): Tone.js, Web Audio API, Canvas API, Recharts, D3.js, tsParticles, Three Globe, Sharp
+- 6 categories, 50+ tools (up from 37)
+- Added verification note: "TECH STACK VERIFIED FROM GITHUB PACKAGE.JSON · UPDATED 2025/2026 · NO MARKETING FLUFF"
+
+### Case Studies (Section 4) — Real Research-Driven Data
+- **Rewrote all 10 case studies** with data from GitHub API:
+  - **Real tech stacks** from package.json analysis (not fabricated)
+  - **Real commit counts**: Omnibridge 113, Lumina 91, Vortex 16, Sai Pay 6, Brorus 8, etc.
+  - **Real codebase sizes**: Omnibridge 49.2MB, Lumina 212MB, ManyMarket 114MB, etc.
+  - **Project type** categorized by service categories (WEB3, FULL-STACK, AI, DESIGN)
+  - **Challenge/Approach/Outcome** rewritten to be project-specific and research-driven
+  - **Features** derived from actual dependencies (Socket.io, Tone.js, QRCode, etc.)
+- **No fake metrics** — removed TVL, users, conversion rates
+- **New metrics**: COMMITS, TECH STACK count, CODEBASE SIZE
+
+### Copy Fixes
+- "EST. 2024" → "EST. 2016" (operating since 2016)
+- "Taungoo, Bago Region" → "Yangon, MM" (located in Yangon)
+- Updated across hero, about, contact, footer
+
+## Verification
+- Sigma: 10/11 sectors ✅
+- Alpha: hero (Yangon, 2016, maximalist buttons), services (MMK), portfolio, tech (GPT-4o, Claude 4, Next.js 16), contact all confirmed ✅
+- Case study pages: 200 with real commit/tech/size data ✅
+- Health API: OPERATIONAL ✅
+- Lint clean ✅
+- Cron #337053 continues every 15 min

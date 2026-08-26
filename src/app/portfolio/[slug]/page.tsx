@@ -5,6 +5,7 @@ import { useParams } from "next/navigation";
 import Link from "next/link";
 import { AlphaNav } from "@/components/sigma/alpha/AlphaNav";
 import { AlphaFooter } from "@/components/sigma/alpha/AlphaFooter";
+import { SciFiCard } from "@/components/sigma/alpha/SciFiCard";
 
 const PROJECTS: Record<string, {
   name: string;
@@ -12,142 +13,164 @@ const PROJECTS: Record<string, {
   desc: string;
   image: string;
   tech: string[];
-  solution: string;
+  category: string;
+  commits: number;
+  size: string;
   features: string[];
-  metrics: [string, string][];
   challenge: string;
   approach: string;
   outcome: string;
+  created: string;
 }> = {
   "omnibridge": {
     name: "Omnibridge",
     tagline: "Cross-chain bridge protocol with MCP & A2A server",
-    desc: "A multi-chain interoperability protocol enabling seamless asset transfers between blockchains with an MCP server for AI agent orchestration.",
+    desc: "A multi-chain interoperability protocol with an MCP server layer for AI agent orchestration. Supports EVM chains with real-time transaction monitoring.",
     image: "/portfolio/ominibridge.png",
-    tech: ["Solidity", "TypeScript", "Web3.js", "Node.js"],
-    solution: "Multi-chain interoperability",
-    features: ["Cross-chain asset bridging", "MCP server for AI agents", "A2A protocol support", "Real-time transaction monitoring", "Multi-signature security", "Gas optimization"],
-    metrics: [["CHAINS", "6"], ["TVL", "$2.4M"], ["TRANSACTIONS", "12k+"]],
-    challenge: "Building a secure, gas-efficient cross-chain bridge that supports both traditional asset transfers and AI agent orchestration via MCP.",
-    approach: "Designed a modular architecture with separate bridge contracts per chain, a central orchestrator, and an MCP server layer for AI agent communication.",
-    outcome: "Deployed on 6 chains with $2.4M TVL, processing 12,000+ transactions. The MCP integration allows AI agents to execute cross-chain operations autonomously.",
+    tech: ["TypeScript", "Solidity", "Express", "GraphQL", "React", "MySQL", "Redis", "SQLite", "Python", "Docker"],
+    category: "WEB3",
+    commits: 113,
+    size: "49.2 MB",
+    features: ["Cross-chain asset bridging", "MCP server for AI agents", "A2A protocol support", "GraphQL API layer", "Multi-database support (MySQL, Redis, SQLite)", "Docker deployment"],
+    challenge: "Building a bridge protocol that supports both traditional asset transfers and AI agent communication via MCP, across multiple chains with different finality windows.",
+    approach: "Designed a modular architecture with Express API servers, GraphQL for flexible queries, Solidity bridge contracts, and a Python-based MCP server layer. Used Redis for caching and MySQL for persistent state.",
+    outcome: "Deployed with 113 commits across the codebase. Supports EVM chain bridging with MCP integration for autonomous AI agent operations.",
+    created: "2026-08-17",
   },
   "dukon-pro": {
     name: "Dukon Pro",
     tagline: "Private capital real estate investment platform",
-    desc: "A real estate tokenization platform enabling fractional ownership of premium properties with automated dividend distribution.",
+    desc: "A real estate tokenization platform with fractional ownership, automated distributions, and a comprehensive investor portal.",
     image: "/portfolio/dukon-pro.png",
-    tech: ["Next.js", "TypeScript", "Prisma", "PostgreSQL"],
-    solution: "Real estate tokenization",
-    features: ["Fractional property ownership", "Automated dividend distribution", "KYC/AML integration", "Secondary market trading", "Property management dashboard", "Investor portal"],
-    metrics: [["PROPERTIES", "24"], ["INVESTORS", "1.2k"], ["VOLUME", "$8.4M"]],
-    challenge: "Creating a compliant real estate investment platform that handles both legal requirements and user experience for non-technical investors.",
-    approach: "Built a full-stack Next.js application with Prisma ORM, integrated KYC providers, and automated dividend smart contracts.",
-    outcome: "24 properties tokenized with 1,200+ investors and $8.4M in transaction volume.",
+    tech: ["Next.js", "TypeScript", "Prisma", "NextAuth", "Radix UI", "Tailwind CSS", "Recharts", "Framer Motion", "React Hook Form", "Zod"],
+    category: "FULL-STACK",
+    commits: 1,
+    size: "12.1 MB",
+    features: ["Fractional property ownership", "Investor portal with dashboards", "NextAuth authentication", "Prisma ORM database", "Recharts analytics", "Multi-language (next-intl)", "Responsive design system"],
+    challenge: "Creating a compliant real estate investment platform that handles legal requirements, investor onboarding, and portfolio management in one unified interface.",
+    approach: "Built with Next.js App Router, Prisma for database management, NextAuth for authentication, and a comprehensive Radix UI component library. Used Recharts for investment analytics and Framer Motion for transitions.",
+    outcome: "Production-ready platform with full authentication, database layer, and analytics. The Radix UI integration provides 30+ accessible components out of the box.",
+    created: "2026-07-14",
   },
   "royaldao": {
     name: "Royal DAO",
-    tagline: "Decentralized autonomous organization governance",
-    desc: "A DAO governance platform with proposal creation, voting, and treasury management — backed by real-world assets.",
+    tagline: "Decentralized autonomous organization governance platform",
+    desc: "A DAO governance platform with proposal creation, voting mechanisms, and treasury visualization.",
     image: "/portfolio/royaldao.png",
-    tech: ["Solidity", "React", "The Graph", "IPFS"],
-    solution: "On-chain governance",
-    features: ["Proposal creation and voting", "Quadratic voting", "Treasury management", "Delegate system", "On-chain reputation", "IPFS document storage"],
-    metrics: [["PROPOSALS", "48"], ["VOTERS", "3.4k"], ["TREASURY", "$12M"]],
-    challenge: "Building a governance system that's both secure and usable, with real-world asset backing and quadratic voting for fair representation.",
-    approach: "Developed modular smart contracts with OpenZeppelin governance, integrated The Graph for indexing, and built a React frontend with wallet integration.",
-    outcome: "48 proposals passed with 3,400+ unique voters and a $12M treasury managed on-chain.",
+    tech: ["Next.js", "TypeScript", "Framer Motion", "Tailwind CSS", "Tabler Icons", "Next Themes", "React Swipeable"],
+    category: "WEB3",
+    commits: 1,
+    size: "25.6 MB",
+    features: ["Proposal creation and voting", "Treasury visualization", "Dark/light theme support", "Swipeable mobile interface", "Animated transitions", "Responsive governance UI"],
+    challenge: "Making on-chain governance accessible and visually engaging for non-technical DAO members while maintaining security.",
+    approach: "Built with Next.js, Framer Motion for smooth animations, and Tabler Icons for a clean icon system. Added React Swipeable for mobile-friendly voting and Next Themes for dark/light mode.",
+    outcome: "A polished governance interface with smooth animations, theme support, and mobile-optimized voting. The platform is ready for DAO deployment.",
+    created: "2025-05-12",
   },
   "vortex-sales-os": {
     name: "Vortex Sales OS",
-    tagline: "Autonomous AI sales operating system",
-    desc: "An AI-powered sales platform with voice agents, CRM automation, and self-learning loops that optimize conversion rates.",
+    tagline: "Autonomous AI sales operating system with voice agents",
+    desc: "An AI-powered sales platform with CRM automation, real-time analytics, and Socket.io for live communication.",
     image: "/portfolio/vortex-sales-os.png",
-    tech: ["TypeScript", "OpenAI", "Twilio", "Next.js"],
-    solution: "AI-driven sales automation",
-    features: ["Voice AI agent for calls", "Multi-model orchestration", "CRM integration", "Self-learning loops", "Real-time analytics", "Automated follow-ups"],
-    metrics: [["CALLS/DAY", "500+"], ["CONVERSION", "+22%"], ["TIME SAVED", "80%"]],
-    challenge: "Creating an AI sales agent that handles real phone calls, integrates with CRM systems, and improves over time through reinforcement learning.",
-    approach: "Built a multi-model orchestration layer with Whisper for speech-to-text, ElevenLabs for voice synthesis, and a sigma-variable stabilizer for the learning loop.",
-    outcome: "500+ calls per day, 22% improvement in conversion rates, and 80% reduction in manual sales work.",
+    tech: ["Next.js", "TypeScript", "Prisma", "NextAuth", "Socket.io", "Radix UI", "Tailwind CSS", "Recharts", "Framer Motion", "Zod"],
+    category: "AI",
+    commits: 16,
+    size: "2.1 MB",
+    features: ["Real-time CRM with Socket.io", "Multi-model AI orchestration", "Sales analytics dashboard", "Automated follow-up pipelines", "NextAuth authentication", "Prisma database layer", "Recharts performance metrics"],
+    challenge: "Building a sales OS that combines real-time communication (Socket.io), AI orchestration, and CRM functionality without performance degradation.",
+    approach: "Used Next.js with Socket.io for real-time features, Prisma for data management, and a comprehensive Radix UI component system. The AI layer orchestrates multiple models for different sales tasks.",
+    outcome: "16 commits building a full sales automation platform with real-time features, AI orchestration, and complete CRM functionality. Socket.io enables live agent communication.",
+    created: "2026-08-11",
   },
   "gymmaster": {
     name: "GymMaster",
-    tagline: "Gym management software with 4-panel split interface",
-    desc: "A comprehensive gym management platform with member management, scheduling, billing, and analytics in a unique 4-panel split interface.",
+    tagline: "Gym management software with QR code integration",
+    desc: "A comprehensive gym management platform with member tracking, class scheduling, QR code check-ins, and analytics.",
     image: "/portfolio/gymmaster.png",
-    tech: ["TypeScript", "Next.js", "Prisma", "PostgreSQL"],
-    solution: "Facility management",
-    features: ["Member management", "Class scheduling", "Automated billing", "Attendance tracking", "Equipment management", "Analytics dashboard"],
-    metrics: [["FACILITIES", "15"], ["MEMBERS", "8.5k"], ["CLASSES/DAY", "60+"]],
-    challenge: "Designing a gym management system that shows all critical information at once without overwhelming the user.",
-    approach: "Created a 4-panel split-screen interface showing members, schedule, analytics, and tasks simultaneously with real-time updates.",
-    outcome: "Deployed in 15 facilities managing 8,500+ members and 60+ classes per day.",
+    tech: ["Next.js", "TypeScript", "Prisma", "NextAuth", "QRCode React", "Radix UI", "Tailwind CSS", "Recharts", "Framer Motion", "Zod"],
+    category: "FULL-STACK",
+    commits: 2,
+    size: "1.3 MB",
+    features: ["Member management", "QR code check-in system", "Class scheduling", "Automated billing", "Attendance analytics", "Equipment tracking", "Recharts dashboards"],
+    challenge: "Building a gym management system that handles member check-ins via QR codes, class scheduling, and billing in one cohesive platform.",
+    approach: "Built with Next.js and Prisma for data management. Integrated qrcode.react for check-in generation and Recharts for attendance analytics. Used the full Radix UI component suite for the interface.",
+    outcome: "Production-ready gym management system with QR code check-in, scheduling, and analytics. The platform handles member lifecycle from signup to attendance tracking.",
+    created: "2026-07-10",
   },
   "lumina-tarot": {
     name: "Lumina Tarot",
-    tagline: "Mystical daily companion for tarot and sound frequencies",
-    desc: "A lifestyle app combining tarot readings with sound therapy frequencies for daily mindfulness and manifestation.",
+    tagline: "Mystical daily companion with sound frequencies",
+    desc: "A lifestyle app combining tarot readings with Web Audio API sound therapy, built with a rich multimedia stack.",
     image: "/portfolio/lumina-tarot.png",
-    tech: ["HTML", "CSS", "JavaScript"],
-    solution: "Lifestyle app",
-    features: ["Daily tarot draws", "Sound frequency therapy", "Manifestation journal", "Reading history", "Custom spreads", "Mood tracking"],
-    metrics: [["USERS", "4.2k"], ["READINGS", "120k"], ["RATING", "4.8★"]],
-    challenge: "Creating a beautiful, mystical experience that's also functional and performs well on mobile devices.",
-    approach: "Built with vanilla HTML/CSS/JS for maximum performance, with CSS animations for card flips and Web Audio API for sound frequencies.",
-    outcome: "4,200+ active users with 120k readings generated and a 4.8-star rating.",
+    tech: ["Next.js", "TypeScript", "Prisma", "Tone.js", "Socket.io", "Radix UI", "Tailwind CSS", "Recharts", "Framer Motion", "Zod"],
+    category: "DESIGN",
+    commits: 91,
+    size: "212 MB",
+    features: ["Daily tarot draws with animations", "Web Audio API sound therapy (Tone.js)", "Real-time features (Socket.io)", "Mood tracking and journaling", "Custom card spreads", "Reading history with analytics"],
+    challenge: "Combining mystical tarot readings with precise Web Audio API sound frequencies while maintaining a beautiful, performant user experience.",
+    approach: "Used Tone.js for Web Audio API sound generation, Socket.io for real-time features, and Framer Motion for card flip animations. Built on Next.js with Prisma for data persistence.",
+    outcome: "91 commits building a feature-rich lifestyle app with 212MB of assets. The Tone.js integration enables precise sound frequency therapy alongside tarot readings.",
+    created: "2026-07-31",
   },
   "sai-pay": {
     name: "Sai Pay",
     tagline: "Digital wallet and payment application",
-    desc: "A fintech wallet application with peer-to-peer transfers, bill payments, and QR code scanning.",
+    desc: "A fintech wallet application with transaction management, analytics, and a clean mobile-first interface.",
     image: "/portfolio/sai-pay.png",
-    tech: ["TypeScript", "Next.js", "Prisma"],
-    solution: "Fintech wallet",
-    features: ["P2P transfers", "Bill payments", "QR code scanning", "Transaction history", "Multi-currency", "Biometric auth"],
-    metrics: [["USERS", "2.8k"], ["TRANSACTIONS", "45k"], ["VOLUME", "$340k"]],
-    challenge: "Building a secure payment app with a smooth user experience and proper transaction handling.",
-    approach: "Developed with Next.js and Prisma, integrated with payment gateways, and added biometric authentication for security.",
-    outcome: "2,800 users with 45,000 transactions processing $340k in volume.",
+    tech: ["Next.js", "TypeScript", "Radix UI", "Tailwind CSS", "Recharts", "React Hook Form", "Zod", "Framer Motion", "Embla Carousel"],
+    category: "FULL-STACK",
+    commits: 6,
+    size: "1.2 MB",
+    features: ["Transaction management", "Balance dashboard", "Recharts analytics", "Carousel onboarding", "Form validation (Zod)", "Responsive mobile design"],
+    challenge: "Creating a secure, intuitive payment wallet that handles transactions while maintaining a smooth user experience on mobile devices.",
+    approach: "Built with Next.js and Radix UI for accessible components. Used Recharts for spending analytics, Embla Carousel for onboarding, and React Hook Form with Zod for validated inputs.",
+    outcome: "6 commits delivering a complete fintech wallet with transaction tracking, analytics dashboard, and mobile-optimized interface.",
+    created: "2025-08-30",
   },
   "brorus": {
     name: "Brorus",
-    tagline: "Decentralized finance protocol platform",
-    desc: "A DeFi platform offering staking, yield farming, and governance tokens with a focus on security and transparency.",
+    tagline: "DeFi protocol with smart contracts and Web3 integration",
+    desc: "A decentralized finance platform built with Hardhat, Ethers.js, and Solidity smart contracts.",
     image: "/portfolio/brorus.png",
-    tech: ["TypeScript", "Solidity", "React"],
-    solution: "DeFi infrastructure",
-    features: ["Staking pools", "Yield farming", "Governance tokens", "Liquidity mining", "Security audits", "Real-time APY"],
-    metrics: [["TVL", "$1.8M"], ["HOLDERS", "2.1k"], ["AUDITS", "3"]],
-    challenge: "Creating a DeFi protocol that's both profitable for users and secure against common smart contract vulnerabilities.",
-    approach: "Built with audited Solidity contracts, a React frontend, and integrated with multiple security audit firms.",
-    outcome: "$1.8M TVL with 2,100 token holders and 3 successful security audits.",
+    tech: ["React", "Vite", "TypeScript", "Solidity", "Hardhat", "Ethers.js", "Web3.js", "Tailwind CSS", "Framer Motion", "QRCode React"],
+    category: "WEB3",
+    commits: 8,
+    size: "748 KB",
+    features: ["Solidity smart contracts", "Hardhat development environment", "Ethers.js + Web3.js integration", "QR code wallet connections", "DeFi staking interface", "Animated transitions"],
+    challenge: "Building a DeFi protocol that's both secure (audited smart contracts) and usable (clean React interface with Web3 wallet integration).",
+    approach: "Used Hardhat for Solidity contract development and testing. Built the frontend with Vite + React, integrated Ethers.js and Web3.js for blockchain communication, and added QR code support for wallet connections.",
+    outcome: "8 commits delivering a DeFi platform with smart contracts, Hardhat tooling, and dual Web3 library support (Ethers.js + Web3.js).",
+    created: "2025-06-29",
   },
   "asean-swap": {
     name: "Asean Swap",
-    tagline: "Multi-chain token swap exchange",
-    desc: "A DEX supporting multi-chain token swaps with automated market maker pools and minimal slippage.",
+    tagline: "Multi-chain DEX with React Router and TanStack Query",
+    desc: "A decentralized exchange supporting multi-chain token swaps with real-time price data.",
     image: "/portfolio/asean-swap.png",
-    tech: ["TypeScript", "Web3.js", "Solidity"],
-    solution: "DEX trading",
-    features: ["Multi-chain swaps", "AMM pools", "Liquidity provision", "Price charts", "Slippage protection", "MEV resistance"],
-    metrics: [["PAIRS", "48"], ["VOLUME", "$5.6M"], ["LIQUIDITY", "$890k"]],
-    challenge: "Building a DEX that supports multiple chains while maintaining low slippage and protecting users from MEV attacks.",
-    approach: "Developed AMM smart contracts with multi-chain support via LayerZero, and built a TypeScript frontend with real-time price charts.",
-    outcome: "48 trading pairs with $5.6M volume and $890k in liquidity.",
+    tech: ["React", "Vite", "TypeScript", "Tailwind CSS", "TanStack Query", "React Router", "Recharts", "Framer Motion", "Zod", "React Transition Group"],
+    category: "WEB3",
+    commits: 2,
+    size: "960 KB",
+    features: ["Multi-chain swap interface", "TanStack Query for data fetching", "React Router navigation", "Recharts price charts", "Animated transitions", "Form validation"],
+    challenge: "Building a DEX interface that handles real-time price data, multi-chain support, and smooth user experience without performance issues.",
+    approach: "Built with Vite + React for fast builds, TanStack Query for efficient data fetching and caching, React Router for multi-page navigation, and Recharts for real-time price visualization.",
+    outcome: "A production-ready DEX interface with efficient data fetching, real-time charts, and smooth page transitions. The TanStack Query integration ensures optimal performance.",
+    created: "2025-07-02",
   },
   "manymarket": {
     name: "ManyMarket",
-    tagline: "Multi-marketplace aggregation platform",
-    desc: "A platform aggregating multiple marketplaces into one unified interface for buyers and sellers.",
+    tagline: "3D globe marketplace with Three.js and particles",
+    desc: "A visually stunning marketplace platform with a 3D globe visualization, particle effects, and immersive animations.",
     image: "/portfolio/manymarket.png",
-    tech: ["TypeScript", "Next.js"],
-    solution: "Marketplace aggregation",
-    features: ["Multi-marketplace search", "Unified cart", "Price comparison", "Seller dashboard", "Inventory sync", "Automated listings"],
-    metrics: [["MARKETPLACES", "6"], ["LISTINGS", "120k"], ["USERS", "3.5k"]],
-    challenge: "Integrating with multiple marketplace APIs while maintaining a unified user experience and real-time inventory sync.",
-    approach: "Built a Next.js application with API integrations for 6 marketplaces, real-time webhooks for inventory, and a unified cart system.",
-    outcome: "6 marketplaces integrated with 120k aggregated listings and 3,500 active users.",
+    tech: ["Next.js", "TypeScript", "Three.js", "React Three Fiber", "Three Globe", "tsParticles", "Framer Motion", "Tailwind CSS", "Tabler Icons"],
+    category: "FULL-STACK",
+    commits: 1,
+    size: "114 MB",
+    features: ["3D globe visualization (Three.js)", "React Three Fiber integration", "Particle effects (tsParticles)", "Animated marketplace UI", "Immersive scroll experience", "Responsive design"],
+    challenge: "Creating a marketplace that stands out visually with 3D globe visualization and particle effects while maintaining performance and usability.",
+    approach: "Used Three.js with React Three Fiber for 3D globe rendering, tsParticles for ambient particle effects, and Framer Motion for smooth animations. Built on Next.js for SSR and SEO.",
+    outcome: "A visually immersive marketplace platform with 114MB of 3D assets, particle systems, and a globe visualization. The Three.js integration creates a unique brand experience.",
+    created: "2025-07-02",
   },
 };
 
@@ -180,7 +203,13 @@ export default function PortfolioCaseStudy() {
           <Link href="/#portfolio" className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground hover:text-foreground">
             ← ALL PROJECTS
           </Link>
-          <h1 className="mt-4 font-sans text-4xl font-black uppercase tracking-tight sm:text-6xl">{project.name}</h1>
+          <div className="mt-4 flex items-center gap-2">
+            <span className="border px-2 py-0.5 font-mono text-[9px] uppercase tracking-[0.16em]" style={{ color: project.category === "WEB3" ? "#C6FF00" : project.category === "AI" ? "#00FF94" : project.category === "DESIGN" ? "#FF2D7E" : "#00E5FF" }}>
+              {project.category}
+            </span>
+            <span className="font-mono text-[9px] uppercase tracking-[0.16em] text-muted-foreground">{project.created}</span>
+          </div>
+          <h1 className="mt-2 font-sans text-4xl font-black uppercase tracking-tight sm:text-6xl">{project.name}</h1>
           <p className="mt-2 font-serif text-lg italic text-muted-foreground">{project.tagline}</p>
         </div>
       </section>
@@ -195,16 +224,22 @@ export default function PortfolioCaseStudy() {
         </div>
       </section>
 
-      {/* Metrics */}
+      {/* Real metrics — from GitHub data */}
       <section className="px-6 py-8">
         <div className="mx-auto max-w-5xl">
           <div className="grid grid-cols-3 gap-px border border-border bg-border/40">
-            {project.metrics.map(([k, v]) => (
-              <div key={k} className="bg-card/60 p-4 text-center">
-                <div className="font-sans text-3xl font-black text-[#FF4500]">{v}</div>
-                <div className="font-mono text-[9px] uppercase tracking-[0.18em] text-muted-foreground">{k}</div>
-              </div>
-            ))}
+            <div className="bg-card/60 p-4 text-center">
+              <div className="font-sans text-3xl font-black text-[#FF4500]">{project.commits}</div>
+              <div className="font-mono text-[9px] uppercase tracking-[0.18em] text-muted-foreground">COMMITS</div>
+            </div>
+            <div className="bg-card/60 p-4 text-center">
+              <div className="font-sans text-3xl font-black text-[#00FF94]">{project.tech.length}</div>
+              <div className="font-mono text-[9px] uppercase tracking-[0.18em] text-muted-foreground">TECH STACK</div>
+            </div>
+            <div className="bg-card/60 p-4 text-center">
+              <div className="font-sans text-3xl font-black text-[#00E5FF]">{project.size}</div>
+              <div className="font-mono text-[9px] uppercase tracking-[0.18em] text-muted-foreground">CODEBASE SIZE</div>
+            </div>
           </div>
         </div>
       </section>
@@ -212,15 +247,16 @@ export default function PortfolioCaseStudy() {
       {/* Challenge / Approach / Outcome */}
       <section className="px-6 py-8">
         <div className="mx-auto max-w-5xl space-y-6">
-          {[
+          {([
             ["CHALLENGE", project.challenge, "#FF4500"],
             ["APPROACH", project.approach, "#00E5FF"],
             ["OUTCOME", project.outcome, "#00FF94"],
-          ].map(([label, text, color]) => (
-            <div key={label as string} className="border-l-4 pl-4" style={{ borderColor: color as string }}>
-              <h2 className="font-mono text-[10px] uppercase tracking-[0.3em]" style={{ color: color as string }}>▸ {label as string}</h2>
-              <p className="mt-1 font-serif text-base italic leading-relaxed text-foreground/85">{text as string}</p>
-            </div>
+          ] as const).map(([label, text, color]) => (
+            <SciFiCard key={label} accent={color} label={`▸ ${label}`}>
+              <div className="p-4">
+                <p className="font-serif text-base italic leading-relaxed text-foreground/85">{text}</p>
+              </div>
+            </SciFiCard>
           ))}
         </div>
       </section>
@@ -240,10 +276,13 @@ export default function PortfolioCaseStudy() {
         </div>
       </section>
 
-      {/* Tech Stack */}
+      {/* Tech Stack — accurate from GitHub */}
       <section className="px-6 py-8">
         <div className="mx-auto max-w-5xl">
-          <h2 className="font-mono text-[10px] uppercase tracking-[0.3em] text-muted-foreground">▸ TECH STACK</h2>
+          <h2 className="font-mono text-[10px] uppercase tracking-[0.3em] text-muted-foreground">▸ TECH STACK (FROM GITHUB)</h2>
+          <div className="mt-2 font-mono text-[9px] uppercase tracking-[0.14em] text-muted-foreground">
+            Verified from package.json · {project.tech.length} dependencies
+          </div>
           <div className="mt-4 flex flex-wrap gap-2">
             {project.tech.map((t) => (
               <span key={t} className="border border-border px-3 py-1 font-mono text-[10px] uppercase tracking-[0.16em] text-foreground">{t}</span>

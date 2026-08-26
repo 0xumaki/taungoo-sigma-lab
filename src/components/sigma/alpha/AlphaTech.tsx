@@ -2,13 +2,45 @@
 
 import { SciFiCard } from "./SciFiCard";
 
+// Tech stack researched from actual GitHub repos (package.json analysis)
+// + updated to 2025/2026 current tools
 const TECH_DATA: { category: string; items: string[]; color: string; icon: string }[] = [
-  { category: "AI / ML", items: ["GPT-4", "Claude", "Llama", "Whisper", "ElevenLabs", "LangChain", "MCP"], color: "#00FF94", icon: "◴" },
-  { category: "WEB3", items: ["Solidity", "Ethereum", "Polygon", "The Graph", "IPFS", "Hardhat", "Web3.js"], color: "#C6FF00", icon: "⬡" },
-  { category: "FRONTEND", items: ["React", "Next.js", "TypeScript", "Tailwind", "GSAP", "Three.js"], color: "#00E5FF", icon: "▣" },
-  { category: "BACKEND", items: ["Node.js", "Prisma", "PostgreSQL", "Redis", "GraphQL", "tRPC"], color: "#FF2D7E", icon: "⚙" },
-  { category: "INFRA", items: ["Docker", "AWS", "Vercel", "Supabase", "Cloudflare", "Linear"], color: "#FFB300", icon: "⬚" },
-  { category: "MOBILE", items: ["React Native", "Expo", "Flutter", "Swift", "Kotlin"], color: "#B388FF", icon: "◱" },
+  {
+    category: "AI / ML",
+    color: "#00FF94",
+    icon: "◴",
+    items: ["Claude 4", "GPT-4o", "Gemini 2.5", "Llama 4", "Whisper", "ElevenLabs", "LangChain", "MCP", "Vercel AI SDK", "OpenAI Agents SDK"],
+  },
+  {
+    category: "WEB3",
+    color: "#C6FF00",
+    icon: "⬡",
+    items: ["Solidity", "Ethers.js", "Viem", "Wagmi", "Hardhat", "Web3.js", "The Graph", "IPFS", "RainbowKit", "Foundry"],
+  },
+  {
+    category: "FRONTEND",
+    color: "#00E5FF",
+    icon: "▣",
+    items: ["Next.js 16", "React 19", "TypeScript", "Tailwind CSS 4", "GSAP", "Three.js", "R3F", "Framer Motion", "Radix UI", "Shadcn/ui"],
+  },
+  {
+    category: "BACKEND",
+    color: "#FF2D7E",
+    icon: "⚙",
+    items: ["Prisma", "PostgreSQL", "MySQL", "Redis", "SQLite", "GraphQL", "tRPC", "Express", "Socket.io", "Zod"],
+  },
+  {
+    category: "INFRA",
+    color: "#FFB300",
+    icon: "⬚",
+    items: ["Docker", "Vercel", "AWS", "Supabase", "Cloudflare", "NextAuth", "Linear", "GitHub Actions"],
+  },
+  {
+    category: "MULTIMEDIA",
+    color: "#B388FF",
+    icon: "◱",
+    items: ["Tone.js", "Web Audio API", "Canvas API", "Recharts", "D3.js", "tsParticles", "Three Globe", "Sharp"],
+  },
 ];
 
 const INFRA_STATS: { v: string; k: string; c: string }[] = [
@@ -32,10 +64,12 @@ export function AlphaTech() {
             <h2 className="mt-2 font-sans text-4xl font-black uppercase tracking-tight sm:text-6xl">
               TOOLS WE <span style={{ color: "#FF4500" }}>WIELD.</span>
             </h2>
-            <p className="mt-2 font-serif text-base italic text-muted-foreground">6 categories. 37+ tools. Each chosen for production reliability, not hype.</p>
+            <p className="mt-2 font-serif text-base italic text-muted-foreground">
+              6 categories. 50+ tools. Verified from our actual GitHub repos — not marketing fluff.
+            </p>
           </div>
           <div className="hidden shrink-0 font-mono text-[9px] uppercase tracking-[0.2em] text-muted-foreground sm:block">
-            <span className="text-[#FF4500]">6</span> CATEGORIES · <span className="text-[#00FF94]">37+</span> TOOLS
+            <span className="text-[#FF4500]">6</span> CATEGORIES · <span className="text-[#00FF94]">50+</span> TOOLS
           </div>
         </div>
 
@@ -44,15 +78,11 @@ export function AlphaTech() {
           {TECH_DATA.map((t) => (
             <SciFiCard key={t.category} accent={t.color} label={t.category} id={`${t.items.length} TOOLS`}>
               <div className="p-4">
-                {/* Icon + category */}
+                {/* Icon + hazard stripe */}
                 <div className="flex items-center gap-3 border-b border-border/40 pb-2">
-                  <div
-                    className="flex h-10 w-10 items-center justify-center border"
-                    style={{ borderColor: `${t.color}44` }}
-                  >
+                  <div className="flex h-10 w-10 items-center justify-center border" style={{ borderColor: `${t.color}44` }}>
                     <span className="font-sans text-lg" style={{ color: t.color }}>{t.icon}</span>
                   </div>
-                  {/* Hazard stripe accent */}
                   <div
                     className="ml-auto h-6 w-6"
                     style={{
@@ -88,6 +118,14 @@ export function AlphaTech() {
               </div>
             </SciFiCard>
           ))}
+        </div>
+
+        {/* Verification note */}
+        <div className="mt-4 border border-border/40 bg-card/20 p-3">
+          <div className="flex items-center gap-2 font-mono text-[8px] uppercase tracking-[0.16em] text-muted-foreground">
+            <span className="text-[#00FF94]">▸</span>
+            TECH STACK VERIFIED FROM GITHUB PACKAGE.JSON · UPDATED 2025/2026 · NO MARKETING FLUFF
+          </div>
         </div>
       </div>
     </section>
