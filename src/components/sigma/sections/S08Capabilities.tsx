@@ -125,7 +125,7 @@ export function S08Capabilities() {
                     </div>
                     {/* fake barcode — smaller */}
                     <div className="mt-1 flex h-4 gap-px">
-                      {Array.from({ length: 40 }).map((_, i) => (
+                      {Array.from({ length: 24 }).map((_, i) => (
                         <span
                           key={i}
                           className="bg-foreground"
@@ -208,7 +208,7 @@ export function S08Capabilities() {
 
                     {/* barcode */}
                     <div className="mt-auto flex h-6 gap-px">
-                      {Array.from({ length: 48 }).map((_, i) => (
+                      {Array.from({ length: 24 }).map((_, i) => (
                         <span
                           key={i}
                           className="bg-foreground"

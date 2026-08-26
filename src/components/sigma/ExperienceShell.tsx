@@ -238,7 +238,7 @@ export function ExperienceShell() {
           return next;
         });
       }
-    }, 500);
+    }, 1000);
     return () => clearInterval(interval);
   }, [tourActive, tourPaused, phase, navigate]);
 

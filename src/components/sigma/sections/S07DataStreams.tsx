@@ -224,12 +224,9 @@ export function S07DataStreams() {
                 <XAxis dataKey="t" tick={{ fill: "#888", fontSize: 9, fontFamily: "monospace" }} stroke="#333" />
                 <YAxis tick={{ fill: "#888", fontSize: 9, fontFamily: "monospace" }} stroke="#333" />
                 <Tooltip
-                  contentStyle={{
-                    background: "#0a0a0a",
-                    border: "1px solid #00FF9455",
-                    fontFamily: "monospace",
-                    fontSize: 11,
-                  }}
+                  contentStyle={{ background: "#0a0a0a", border: "1px solid #00FF9455", fontFamily: "monospace", fontSize: 11, color: "#00FF94" }}
+                  itemStyle={{ color: "#00FF94" }}
+                  labelStyle={{ color: "#888" }}
                 />
                 <Area type="monotone" dataKey="neural" stroke="#00FF94" strokeWidth={1.5} fill="url(#gn)" />
                 <Area type="monotone" dataKey="infer" stroke="#00E5FF" strokeWidth={1.5} fill="url(#gi)" />
@@ -261,7 +258,9 @@ export function S07DataStreams() {
                 <YAxis tick={{ fill: "#888", fontSize: 9, fontFamily: "monospace" }} stroke="#333" />
                 <Tooltip
                   cursor={{ fill: "#ffffff10" }}
-                  contentStyle={{ background: "#0a0a0a", border: "1px solid #00FF9455", fontFamily: "monospace", fontSize: 11 }}
+                  contentStyle={{ background: "#0a0a0a", border: "1px solid #00FF9455", fontFamily: "monospace", fontSize: 11, color: "#00FF94" }}
+                  itemStyle={{ color: "#00FF94" }}
+                  labelStyle={{ color: "#888" }}
                 />
                 <Bar dataKey="v" fill="#00FF94" />
               </BarChart>
@@ -303,7 +302,9 @@ export function S07DataStreams() {
                   ))}
                 </Pie>
                 <Tooltip
-                  contentStyle={{ background: "#0a0a0a", border: "1px solid #C6FF0055", fontFamily: "monospace", fontSize: 11 }}
+                  contentStyle={{ background: "#0a0a0a", border: "1px solid #C6FF0055", fontFamily: "monospace", fontSize: 11, color: "#C6FF00" }}
+                  itemStyle={{ color: "#C6FF00" }}
+                  labelStyle={{ color: "#888" }}
                 />
               </PieChart>
             </ResponsiveContainer>
@@ -326,7 +327,9 @@ export function S07DataStreams() {
               >
                 <RadialBar background dataKey="v" cornerRadius={4} />
                 <Tooltip
-                  contentStyle={{ background: "#0a0a0a", border: "1px solid #FFB30055", fontFamily: "monospace", fontSize: 11 }}
+                  contentStyle={{ background: "#0a0a0a", border: "1px solid #FFB30055", fontFamily: "monospace", fontSize: 11, color: "#FFB300" }}
+                  itemStyle={{ color: "#FFB300" }}
+                  labelStyle={{ color: "#888" }}
                 />
               </RadialBarChart>
             </ResponsiveContainer>

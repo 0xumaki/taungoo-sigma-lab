@@ -28,7 +28,7 @@ interface SigmaBrandProps {
   href?: string;
 }
 
-export function SigmaBrand({
+export const SigmaBrand = React.memo(function SigmaBrand({
   size = "md",
   showSubLabel = true,
   subLabel = "LAB",
@@ -71,4 +71,4 @@ export function SigmaBrand({
       </div>
     </a>
   );
-}
+});

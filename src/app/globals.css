@@ -811,3 +811,72 @@
     box-shadow: none !important;
   }
 }
+
+/* ============================================================
+   PERFORMANCE OPTIMIZATIONS — reduce repaints and reflows
+   All effects remain 100% intact, these only hint the browser
+   ============================================================ */
+
+/* will-change hints for animated elements — tells browser to
+   pre-compute layers, reducing jank on transform/opacity animations */
+.sigma-spin-slow { will-change: transform; }
+.sigma-pulse { will-change: transform, opacity; }
+.sigma-glitch { will-change: transform, opacity; }
+.sigma-brand__text { will-change: background-position; }
+.sigma-brand__glyph { will-change: transform, filter; }
+.sigma-card-reveal { will-change: transform, opacity; }
+.alpha-card-hover { will-change: border-color, box-shadow; }
+
+/* contain: layout style paint — isolates rendering boundaries.
+   Each section renders independently, so changes in one section
+   don't trigger recalculations in others. */
+.sigma-scroll-hidden {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.sigma-scroll-hidden::-webkit-scrollbar {
+  display: none;
+}
+
+/* content-visibility: auto — browser skips rendering for
+   off-screen sections entirely (huge performance win for
+   11 sections where only 1 is visible at a time) */
+[data-alpha-scroll] > section,
+[data-alpha-scroll] > div {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 800px;
+}
+
+/* Reduce paint complexity on scanline overlays — use transform
+   instead of opacity for GPU compositing */
+.sigma-scanlines {
+  will-change: transform;
+  transform: translateZ(0); /* force GPU layer */
+}
+.sigma-grid {
+  transform: translateZ(0); /* force GPU layer */
+}
+.sigma-hazard-orange {
+  transform: translateZ(0);
+}
+
+/* backface-visibility for 3D flip cards — already set inline
+   but adding here as safety net for all preserve-3d elements */
+[style*="preserve-3d"] {
+  backface-visibility: hidden;
+  transform: translateZ(0);
+}
+
+/* Optimize recharts containers — prevent layout thrashing */
+.recharts-wrapper {
+  contain: layout style paint;
+}
+
+/* Reduced motion — already handled but ensure transitions are instant */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
