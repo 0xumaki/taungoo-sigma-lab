@@ -131,7 +131,12 @@ export function S01Initializing() {
 
           {/* the wordmark */}
           <div className="relative flex flex-1 flex-col items-center justify-center">
-            {/* Big Σ watermark removed per user request — was disturbing content visibility */}
+            <div
+              data-hero-mark
+              className="pointer-events-none absolute inset-0 flex items-center justify-center opacity-[0.06]"
+            >
+              <span className="font-sans text-[42vh] font-black leading-none">Σ</span>
+            </div>
             <h1 className="relative text-center">
               <div className="flex justify-center">
                 {letters.map((l, i) => (

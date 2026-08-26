@@ -157,7 +157,6 @@ export function ExperienceShell() {
   const panelsRef = React.useRef<(HTMLDivElement | null)[]>([]);
   const overlayRef = React.useRef<HTMLDivElement>(null);
   const flashRef = React.useRef<HTMLDivElement>(null);
-  const labelRef = React.useRef<HTMLDivElement>(null);
   const rootRef = React.useRef<HTMLDivElement>(null);
 
   // Keyboard navigation
@@ -263,7 +262,6 @@ export function ExperienceShell() {
     const panels = panelsRef.current.filter(Boolean) as HTMLDivElement[];
     const overlay = overlayRef.current;
     const flash = flashRef.current;
-    const label = labelRef.current;
 
     if (panels.length === 0 || !overlay) {
       // no panels yet — just swap immediately
@@ -314,20 +312,7 @@ export function ExperienceShell() {
       ">-0.05"
     );
 
-    // sector label flies through
-    if (label) {
-      tl.set(label, { opacity: 0, x: -120 }, "<");
-      tl.to(
-        label,
-        { opacity: 1, x: 0, duration: 0.28, ease: "power3.out" },
-        "<"
-      );
-      tl.to(
-        label,
-        { opacity: 0, x: 120, duration: 0.28, ease: "power3.in" },
-        ">+0.04"
-      );
-    }
+    // (Center sector label fly-through removed per user request — was "the big number in the middle")
 
     // 3. REVEAL — panels retract from bottom, staggered
     tl.set(panels, { transformOrigin: "bottom" });
@@ -340,7 +325,6 @@ export function ExperienceShell() {
     });
 
     tl.set(overlay, { pointerEvents: "none" });
-    if (label) tl.set(label, { clearProps: "opacity,transform" });
 
     // Safety: if timeline doesn't complete in 3s, force-finish
     const safety = setTimeout(() => {
@@ -423,17 +407,6 @@ export function ExperienceShell() {
           className="absolute inset-0 mix-blend-screen"
           style={{ background: flashAccent, opacity: 0 }}
         />
-
-        {/* sector label fly-through */}
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div
-            ref={labelRef}
-            className="font-mono text-[11vw] font-black leading-none text-black/85"
-            style={{ opacity: 0, mixBlendMode: "overlay" }}
-          >
-            {meta.shortCode}
-          </div>
-        </div>
 
         {/* hazard edge during transition */}
         <div className="sigma-hazard-orange absolute inset-x-0 top-0 h-2 opacity-0" />

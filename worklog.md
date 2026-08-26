@@ -3062,3 +3062,77 @@ Agent: main (orchestrator) + subagent (revert + replace)
 
 ## Cron
 - Job #338235 continues every 15 min (webDevReview)
+
+---
+Task ID: CRON-ROUND-40 (Restore Σ Watermarks + Remove Center Transition Label)
+Agent: main (orchestrator)
+
+## User Feedback Addressed
+"The big black numbers at est x0497-y0523 in sigma mode are not yet removed. I have never referred to this so bring them back."
+
+## Root Cause Analysis
+User uploaded screenshot showing big black "02" numbers in the CENTER of Sigma S02. Using VLM analysis, identified:
+- The "02" was the SECTOR LABEL FLY-THROUGH in ExperienceShell's transition overlay
+- Element: `<div ref={labelRef} className="font-mono text-[11vw] font-black leading-none text-black/85" style={{ opacity: 0, mixBlendMode: "overlay" }}>{meta.shortCode}</div>`
+- Located at center (x=625, y=371), fontSize=158px
+- Due to `mixBlendMode: "overlay"` + `text-black/85`, the element was visible as a watermark even at opacity:0 (browser rendering quirk with mix-blend-mode)
+- This was the ACTUAL "big number in the middle" the user wanted removed (NOT the Σ symbol I mistakenly removed in the previous round)
+
+## Changes
+
+### 1. RESTORED Σ Watermarks (user never asked to remove these)
+- S01Initializing.tsx: restored the `text-[42vh]` Σ watermark
+  ```tsx
+  <div data-hero-mark className="pointer-events-none absolute inset-0 flex items-center justify-center opacity-[0.06]">
+    <span className="font-sans text-[42vh] font-black leading-none">Σ</span>
+  </div>
+  ```
+- S02Manifesto.tsx: restored the `text-[40vh]` rotating Σ watermark
+  ```tsx
+  <div className="sigma-spin-slow absolute inset-0 flex items-center justify-center">
+    <span className="font-sans text-[40vh] font-black text-black/15">Σ</span>
+  </div>
+  ```
+- Verified in browser: fontSize=360px, parentClass="sigma-spin-slow absolute inset-0 flex items-center justify-center" ✅
+
+### 2. REMOVED Center Transition Label (the actual "big number in the middle")
+- ExperienceShell.tsx: removed the sector label fly-through element entirely
+  - Removed the JSX block:
+    ```tsx
+    {/* sector label fly-through */}
+    <div className="absolute inset-0 flex items-center justify-center">
+      <div ref={labelRef} className="font-mono text-[11vw] font-black leading-none text-black/85"
+        style={{ opacity: 0, mixBlendMode: "overlay" }}>
+        {meta.shortCode}
+      </div>
+    </div>
+    ```
+  - Removed the `labelRef` declaration: `const labelRef = React.useRef<HTMLDivElement>(null);`
+  - Removed the `label` variable: `const label = labelRef.current;`
+  - Removed the GSAP label animation block:
+    ```tsx
+    if (label) {
+      tl.set(label, { opacity: 0, x: -120 }, "<");
+      tl.to(label, { opacity: 1, x: 0, duration: 0.28, ease: "power3.out" }, "<");
+      tl.to(label, { opacity: 0, x: 120, duration: 0.28, ease: "power3.in" }, ">+0.04");
+    }
+    ```
+  - Removed the `clearProps` line: `if (label) tl.set(label, { clearProps: "opacity,transform" });`
+- The Sigma mode transition still has: 8-panel slam cover + accent flash + hazard edges
+- Only the center sector number fly-through was removed
+- Verified in browser: 0 center labels found ✅
+
+## Verification
+- Lint: clean ✅
+- Σ watermark restored: fontSize=360px, spinning ✅
+- Center "02" label: 0 found (completely removed) ✅
+- Sigma S02 footer: "TAUNGOO SIGMA LAB / MAN.02 ACTIVE" (correct sector) ✅
+- No errors ✅
+
+## Files Modified
+- src/components/sigma/sections/S01Initializing.tsx (Σ watermark restored)
+- src/components/sigma/sections/S02Manifesto.tsx (Σ watermark restored)
+- src/components/sigma/ExperienceShell.tsx (center transition label removed + labelRef cleaned up)
+
+## Cron
+- Job #338235 continues every 15 min (webDevReview)

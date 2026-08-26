@@ -65,7 +65,10 @@ export function S02Manifesto() {
                 fill="currentColor"
               />
             </svg>
-            {/* Big Σ watermark removed per user request — was disturbing content visibility */}
+            {/* rotating sigma glyph — RESTORED (user never asked to remove it) */}
+            <div className="sigma-spin-slow absolute inset-0 flex items-center justify-center">
+              <span className="font-sans text-[40vh] font-black text-black/15">Σ</span>
+            </div>
           </div>
         </div>
 
