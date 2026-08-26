@@ -154,7 +154,7 @@ export function S11Status() {
               {/* wordmark + manifesto */}
               <div className="min-w-0">
                 <div className="font-mono text-[9px] uppercase tracking-[0.3em] text-muted-foreground">
-                  Est. MMXXIV · Yangon, MM · 16.87°N 96.19°E
+                  Est. MMXVI · Yangon, MM · 16.87°N 96.19°E
                 </div>
                 <h3 className="mt-1.5 font-sans text-4xl font-black uppercase leading-[0.85] tracking-tight">
                   Taungoo
@@ -301,7 +301,7 @@ export function S11Status() {
               <div className="text-center font-mono text-[9px] uppercase leading-relaxed tracking-[0.22em] text-muted-foreground">
                 TAUNGOO SIGMA LAB
                 <br />
-                © MMXXIV · ALL SYSTEMS NOMINAL
+                © MMXVI · ALL SYSTEMS NOMINAL
                 <br />
                 <span className="text-[#2979FF]">▮ END OF LINE</span>
               </div>

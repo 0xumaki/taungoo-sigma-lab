@@ -121,7 +121,7 @@ export function AlphaFooter() {
         {/* Bottom section: copyright + meta */}
         <div className="mt-6 flex flex-wrap items-center justify-between gap-2 border-t border-border/40 pt-4 font-mono text-[9px] uppercase tracking-[0.18em] text-muted-foreground">
           <div className="flex items-center gap-4">
-            <span>© MMXXIV TAUNGOO SIGMA LAB</span>
+            <span>© MMXVI TAUNGOO SIGMA LAB</span>
             <span className="hidden sm:inline">·</span>
             <span className="hidden sm:inline text-[#00FF94]">▮ ALL SYSTEMS NOMINAL</span>
           </div>

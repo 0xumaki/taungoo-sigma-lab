@@ -34,7 +34,7 @@ export function AlphaAbout() {
             </h2>
           </div>
           <div className="hidden shrink-0 font-mono text-[9px] uppercase tracking-[0.2em] text-muted-foreground sm:block">
-            EST. 2024<br />TAUNGOO, MM
+            EST. 2016<br />TAUNGOO, MM
           </div>
         </div>
 

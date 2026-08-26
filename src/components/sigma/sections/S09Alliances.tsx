@@ -11,10 +11,10 @@ import { SigmaParticles } from "../shared/SigmaParticles";
 gsap.registerPlugin(useGSAP);
 
 const PARTNERS = [
-  { name: "HELSINKI TRUST", type: "TRUST ANCHOR", model: "Partnership", since: "2024.01", strength: 98, accent: "#B388FF" },
-  { name: "TAUNGOO TECH PARK", type: "FACILITY", model: "Host", since: "2024.01", strength: 96, accent: "#B388FF" },
+  { name: "HELSINKI TRUST", type: "TRUST ANCHOR", model: "Partnership", since: "2016.01", strength: 98, accent: "#B388FF" },
+  { name: "TAUNGOO TECH PARK", type: "FACILITY", model: "Host", since: "2016.01", strength: 96, accent: "#B388FF" },
   { name: "BAGO REGIONAL GOV", type: "PUBLIC", model: "MoU", since: "2024.03", strength: 82, accent: "#B388FF" },
-  { name: "OPEN SOURCE COMMUNITY", type: "MESH", model: "Reciprocal", since: "2024.02", strength: 94, accent: "#B388FF" },
+  { name: "OPEN SOURCE COMMUNITY", type: "MESH", model: "Reciprocal", since: "2016.02", strength: 94, accent: "#B388FF" },
   { name: "MM LEGAL COLLECTIVE", type: "LEGAL", model: "Advisory", since: "2024.04", strength: 76, accent: "#B388FF" },
   { name: "ASEAN SWAP NET", type: "ECONOMIC", model: "Research", since: "2024.05", strength: 71, accent: "#B388FF" },
   { name: "ROYAL DAO", type: "GOVERNANCE", model: "Pilot", since: "2024.06", strength: 68, accent: "#B388FF" },

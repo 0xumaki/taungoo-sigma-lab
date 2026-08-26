@@ -95,7 +95,7 @@ const jsonLd = {
   url: "https://taungoosigma.lab",
   description:
     "A brutalist research lab at the intersection of AI, Web3, and community resilience. 11 sectors. One sigma variable.",
-  foundingDate: "2024-06-29",
+  foundingDate: "2016-06-29",
   slogan: "We are the sigma variable.",
   knowsAbout: [
     "Artificial Intelligence",

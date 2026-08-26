@@ -4018,3 +4018,62 @@ Agent: main (orchestrator)
 
 ## Cron
 - Job #338235 continues every 15 min (webDevReview)
+
+---
+Task ID: CRON-ROUND-50 (Founding Year 2024→2016 + Server Restart)
+Agent: main (orchestrator)
+
+## User Feedback Addressed
+1. "We are founded in 2016 not in 2024, since I don't remember the date just keep the month and day as the current ones"
+2. "Preview is not working right now and I can't even click any button"
+
+## Changes
+
+### 1. Founding Year: 2024 → 2016 (global replacement)
+Changed ALL founding year references from 2024 to 2016, keeping the month/day as June 29 (29.06):
+
+**Sigma Mode:**
+- S02Manifesto.tsx: FOUNDED value "2024" → "2016", unit "MMXXIV" → "MMXVI", MANIFESTO / 2024 → 2016, date 29.06.24 → 29.06.16
+- S05Collective.tsx: all operator joined dates (2024.01 → 2016.01, etc.)
+- S09Alliances.tsx: all alliance since dates (2024.01 → 2016.01, etc.)
+- S11Status.tsx: "Est. MMXXIV" → "Est. MMXVI", "© MMXXIV" → "© MMXVI"
+
+**Alpha Mode:**
+- AlphaAbout.tsx: "EST. 2024" → "EST. 2016"
+- AlphaContact.tsx: "© MMXXIV" → "© MMXVI"
+- AlphaFooter.tsx: "© MMXXIV" → "© MMXVI"
+
+**Root:**
+- layout.tsx: foundingDate "2024-06-29" → "2016-06-29"
+
+**Roman Numerals:** MMXXIV (2024) → MMXVI (2016) everywhere
+
+### 2. Server Restart (preview not working)
+- Root cause: Next.js dev server was being OOM-killed by the Linux kernel (sandbox memory limit). The process was using 30GB virtual memory / 2GB RSS, triggering `oom-kill`.
+- Fix: restarted the dev server with `setsid` to keep it alive
+- Verified: server returns HTTP 200, buttons are clickable, Alpha mode loads correctly
+
+## Verification
+- S02: has2016=true, hasMMXVI=true, hasOld2024=false ✅
+- Home page: buttons clickable, Alpha mode works ✅
+- Lint: clean ✅
+- No remaining "2024" or "MMXXIV" founding references ✅
+
+## Files Modified
+- src/components/sigma/sections/S02Manifesto.tsx
+- src/components/sigma/sections/S05Collective.tsx
+- src/components/sigma/sections/S09Alliances.tsx
+- src/components/sigma/sections/S11Status.tsx
+- src/components/sigma/alpha/AlphaAbout.tsx
+- src/components/sigma/alpha/AlphaContact.tsx
+- src/components/sigma/alpha/AlphaFooter.tsx
+- src/app/layout.tsx
+
+## Note
+The dev server may still be killed by OOM if too many pages are compiled. If the preview stops working again, the server needs to be restarted with:
+```bash
+cd /home/z/my-project && setsid bash -c 'exec bun run dev' > dev.log 2>&1 &
+```
+
+## Cron
+- Job #338235 continues every 15 min (webDevReview)

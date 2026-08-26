@@ -254,7 +254,7 @@ export function AlphaContact() {
               <span className="sigma-spin-slow mr-3 font-sans text-4xl font-black text-[#FF4500]">Σ</span>
               <div className="text-center">
                 <div className="font-sans text-lg font-black uppercase">TAUNGOO SIGMA LAB</div>
-                <div className="font-mono text-[8px] uppercase tracking-[0.2em] text-muted-foreground">© MMXXIV · ALL SYSTEMS NOMINAL</div>
+                <div className="font-mono text-[8px] uppercase tracking-[0.2em] text-muted-foreground">© MMXVI · ALL SYSTEMS NOMINAL</div>
               </div>
             </div>
           </div>

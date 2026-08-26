@@ -18,7 +18,7 @@ const PILLARS = [
 ];
 
 const STATS = [
-  { label: "FOUNDED", value: "2024", unit: "MMXXIV" },
+  { label: "FOUNDED", value: "2016", unit: "MMXVI" },
   { label: "SECTORS MAPPED", value: "11", unit: "ACTIVE" },
   { label: "ARTIFACTS SHIPPED", value: "11", unit: "LIVE" },
   { label: "SIGMA VARIABLE", value: "1.00", unit: "HOLD" },
@@ -134,7 +134,7 @@ export function S02Manifesto() {
         {/* LEFT — headline */}
         <div className="relative z-10 col-span-12 flex flex-col justify-center md:col-span-7">
           <Tag accent="#FF4500" className="mb-3 w-fit">
-            MANIFESTO / 2024
+            MANIFESTO / 2016
           </Tag>
           <h2 className="font-sans text-5xl font-black uppercase leading-[0.88] tracking-tight sm:text-7xl">
             <span data-m-line className="block">WE ARE</span>
