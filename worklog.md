@@ -3136,3 +3136,72 @@ User uploaded screenshot showing big black "02" numbers in the CENTER of Sigma S
 
 ## Cron
 - Job #338235 continues every 15 min (webDevReview)
+
+---
+Task ID: CRON-ROUND-41 (Restore Transition Label + Remove Card Watermark)
+Agent: main (orchestrator)
+
+## User Feedback Addressed
+"But you have to keep at slam cover transition with 01, 02 by just not displaying and distributing on actual cards."
+
+## Root Cause
+In the previous round, I misunderstood which element to remove. I removed the slam cover transition label (the fly-through "01"/"02" that appears DURING the transition), but the user actually wanted me to keep that and remove the SectionShell watermark that displays ON every card.
+
+## Changes
+
+### 1. RESTORED Slam Cover Transition Label (ExperienceShell.tsx)
+- Restored the JSX element:
+  ```tsx
+  {/* sector label fly-through — RESTORED per user request.
+      Shows "01"/"02" etc. during the slam cover transition (NOT on the cards themselves). */}
+  <div className="absolute inset-0 flex items-center justify-center">
+    <div ref={labelRef} className="font-mono text-[11vw] font-black leading-none text-black/85"
+      style={{ opacity: 0, mixBlendMode: "overlay" }}>
+      {meta.shortCode}
+    </div>
+  </div>
+  ```
+- Restored the `labelRef` declaration
+- Restored the `label` variable
+- Restored the GSAP label animation:
+  ```tsx
+  if (label) {
+    tl.set(label, { opacity: 0, x: -120 }, "<");
+    tl.to(label, { opacity: 1, x: 0, duration: 0.28, ease: "power3.out" }, "<");
+    tl.to(label, { opacity: 0, x: 120, duration: 0.28, ease: "power3.in" }, ">+0.04");
+  }
+  ```
+- Restored the `clearProps` cleanup
+
+### 2. REMOVED SectionShell Card Watermark (SectionShell.tsx)
+- Removed the entire glitch sector number block that was on every card:
+  ```tsx
+  {/* REMOVED:
+  <div className="pointer-events-none absolute -bottom-4 right-4 z-0 select-none font-sans text-[14vh] font-black leading-none text-foreground/[0.08] sm:text-[16vh]">
+    <span className="sigma-glitch" data-text={meta.shortCode}>
+      {meta.shortCode}
+    </span>
+  </div>
+  */}
+  ```
+- Replaced with a comment explaining the design decision
+- The sector numbers now ONLY appear during the slam cover transition, NOT distributed on the cards
+
+## Verification
+- Transition label: FOUND ✅
+  - text="02" (on S02), fontSize=158.4px, opacity=0 when idle
+  - During transition: text="01", opacity=1 (fly-through animation working)
+- Card watermarks: 0 found ✅ (completely removed from SectionShell)
+- Σ watermark on S01: fontSize=378px, opacity=1 ✅ (still restored from previous round)
+- Lint: clean ✅
+- No errors ✅
+
+## Files Modified
+- src/components/sigma/ExperienceShell.tsx (transition label restored + labelRef + GSAP animation)
+- src/components/sigma/shared/SectionShell.tsx (card watermark removed)
+
+## Summary
+The sector numbers (01, 02, etc.) now appear ONLY during the slam cover transition (flying through the center), and are NO LONGER displayed as watermarks on the actual cards. This matches the user's intent: "keep at slam cover transition with 01, 02 but just not displaying and distributing on actual cards."
+
+## Cron
+- Job #338235 continues every 15 min (webDevReview)

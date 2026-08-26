@@ -127,17 +127,9 @@ export function SectionShell({
         <span className="hidden sm:inline">SIG=1.00 · BUILD 2.4.SIGMA</span>
       </footer>
 
-      {/* Glitching sector number — lower-right corner of every card.
-          BIG size per user request. sigma-glitch RGB-split animation active.
-          Sits at z-0 behind content, in the card's negative space. */}
-      <div className="pointer-events-none absolute -bottom-4 right-4 z-0 select-none font-sans text-[14vh] font-black leading-none text-foreground/[0.08] sm:text-[16vh]">
-        <span
-          className="sigma-glitch"
-          data-text={meta.shortCode}
-        >
-          {meta.shortCode}
-        </span>
-      </div>
+      {/* (Sector number watermark on cards REMOVED per user request.
+          The sector numbers only appear during the slam cover transition,
+          NOT distributed/displayed on the actual cards.) */}
     </div>
   );
 }
