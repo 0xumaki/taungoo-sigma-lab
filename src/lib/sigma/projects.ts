@@ -9,6 +9,8 @@ export interface Project {
   stars: number;
   forks: number;
   openIssues: number;
+  loc: string;
+  budget: string;
   updated: string;
   created: string;
   topics: string[];

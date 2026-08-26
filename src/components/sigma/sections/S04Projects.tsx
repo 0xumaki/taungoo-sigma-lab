@@ -207,14 +207,14 @@ function ProjectCard({ project, onOpen }: { project: Project; onOpen: () => void
           {project.category}
         </div>
         <div className="mt-1.5 flex items-center gap-2 font-mono text-[9px] text-foreground/80">
-          <span className="flex items-center gap-0.5">
-            <Star className="h-2.5 w-2.5" /> {project.stars}
+          <span className="flex items-center gap-0.5 whitespace-nowrap">
+            <Star className="h-2.5 w-2.5 shrink-0" /> {project.loc}
           </span>
-          <span className="flex items-center gap-0.5">
-            <GitFork className="h-2.5 w-2.5" /> {project.forks}
+          <span className="flex items-center gap-0.5 whitespace-nowrap">
+            <GitFork className="h-2.5 w-2.5 shrink-0" /> {project.category}
           </span>
-          <span className="flex items-center gap-0.5">
-            <CircleDot className="h-2.5 w-2.5" /> {project.openIssues}
+          <span className="flex items-center gap-0.5 whitespace-nowrap">
+            <CircleDot className="h-2.5 w-2.5 shrink-0" /> {project.budget}
           </span>
         </div>
       </div>
@@ -278,9 +278,9 @@ function ProjectDetail({ project }: { project: Project }) {
         <div className="grid grid-cols-3 gap-2">
           {[
             ["LANGUAGE", project.language],
-            ["STARS", String(project.stars)],
-            ["FORKS", String(project.forks)],
-            ["ISSUES", String(project.openIssues)],
+            ["LOC", project.loc],
+            ["CATEGORY", project.category],
+            ["BUDGET", project.budget],
             ["SIZE", `${project.size}KB`],
             ["UPDATED", project.updated],
           ].map(([k, v]) => (

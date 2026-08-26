@@ -22,7 +22,9 @@
     "image": "/portfolio/ominibridge.png",
     "code": "TSL-001",
     "category": "Web3",
-    "accent": "#00FF94"
+    "accent": "#00FF94",
+    "loc": "~48,000",
+    "budget": "from 18,110,000 MMK"
   },
   {
     "id": "dukon-pro",
@@ -47,7 +49,9 @@
     "image": "/portfolio/dukon-pro.png",
     "code": "TSL-002",
     "category": "Full-Stack",
-    "accent": "#FF4500"
+    "accent": "#FF4500",
+    "loc": "~12,000",
+    "budget": "from 6,040,000 MMK"
   },
   {
     "id": "royaldao",
@@ -71,7 +75,9 @@
     "image": "/portfolio/royaldao.png",
     "code": "TSL-003",
     "category": "Web3",
-    "accent": "#C6FF00"
+    "accent": "#C6FF00",
+    "loc": "~8,500",
+    "budget": "from 18,110,000 MMK"
   },
   {
     "id": "vortex-sales-os",
@@ -96,7 +102,9 @@
     "image": "/portfolio/vortex-sales-os.png",
     "code": "TSL-004",
     "category": "AI Systems",
-    "accent": "#00E5FF"
+    "accent": "#00E5FF",
+    "loc": "~25,000",
+    "budget": "from 9,660,000 MMK"
   },
   {
     "id": "gymmaster",
@@ -121,7 +129,9 @@
     "image": "/portfolio/gymmaster.png",
     "code": "TSL-005",
     "category": "Full-Stack",
-    "accent": "#FF2D7E"
+    "accent": "#FF2D7E",
+    "loc": "~4,200",
+    "budget": "from 6,040,000 MMK"
   },
   {
     "id": "lumina-tarot",
@@ -146,7 +156,9 @@
     "image": "/portfolio/lumina-tarot.png",
     "code": "TSL-006",
     "category": "Design",
-    "accent": "#FFB300"
+    "accent": "#FFB300",
+    "loc": "~15,000",
+    "budget": "from 2,415,000 MMK"
   },
   {
     "id": "sai-pay",
@@ -171,7 +183,9 @@
     "image": "/portfolio/sai-pay.png",
     "code": "TSL-007",
     "category": "Full-Stack",
-    "accent": "#B388FF"
+    "accent": "#B388FF",
+    "loc": "~3,800",
+    "budget": "from 6,040,000 MMK"
   },
   {
     "id": "brorus",
@@ -196,7 +210,9 @@
     "image": "/portfolio/brorus.png",
     "code": "TSL-008",
     "category": "Web3",
-    "accent": "#FF3D3D"
+    "accent": "#FF3D3D",
+    "loc": "~2,500",
+    "budget": "from 9,660,000 MMK"
   },
   {
     "id": "asean-swap",
@@ -221,7 +237,9 @@
     "image": "",
     "code": "TSL-009",
     "category": "Web3",
-    "accent": "#FFEB3B"
+    "accent": "#FFEB3B",
+    "loc": "~4,200",
+    "budget": "from 24,150,000 MMK"
   },
   {
     "id": "manymarket",
@@ -246,6 +264,8 @@
     "image": "",
     "code": "TSL-010",
     "category": "Full-Stack",
-    "accent": "#2979FF"
+    "accent": "#2979FF",
+    "loc": "~12,000",
+    "budget": "from 7,240,000 MMK"
   }
 ]

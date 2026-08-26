@@ -270,11 +270,11 @@ function MarketCard({
           <div className="font-mono text-[9px] uppercase tracking-[0.22em] text-muted-foreground">
             ▸ SAMPLES
           </div>
-          <div className="mt-1.5 flex flex-wrap gap-1 overflow-hidden">
+          <div className="mt-1.5 flex flex-nowrap gap-1 overflow-x-auto sigma-scroll-hidden">
             {market.samples.map((s) => (
               <span
                 key={s}
-                className="border px-1.5 py-0.5 font-mono text-[9px] uppercase tracking-[0.12em] text-foreground/80 whitespace-nowrap"
+                className="border px-1.5 py-0.5 font-mono text-[9px] uppercase tracking-[0.12em] text-foreground/80 whitespace-nowrap shrink-0"
                 style={{ borderColor: `${a}33` }}
               >
                 {s}

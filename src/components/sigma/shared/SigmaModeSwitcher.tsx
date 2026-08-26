@@ -28,14 +28,13 @@ export function SigmaModeSwitcher({
   const overlayRef = React.useRef<HTMLDivElement>(null);
   const lightningRef = React.useRef<HTMLCanvasElement>(null);
 
-  // Initialize audio
+  // Initialize audio reference (Audio element is created on-demand in switchMode to avoid autoplay blocking)
   React.useEffect(() => {
-    const audio = new Audio("/chidori.mp3");
-    audio.volume = 0.15;
-    audioRef.current = audio;
     return () => {
-      audio.pause();
-      audio.src = "";
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.src = "";
+      }
     };
   }, []);
 
@@ -57,13 +56,15 @@ export function SigmaModeSwitcher({
 
     const nextMode: Mode = mode === "sigma" ? "alpha" : "sigma";
 
-    // Play chidori soundtrack
-    if (audioRef.current) {
-      audioRef.current.currentTime = 0;
-      audioRef.current.play().catch(() => {
-        // autoplay blocked — will play on next interaction
-      });
-    }
+    // Play chidori soundtrack — create Audio ON-DEMAND inside the click handler
+    // This fixes autoplay blocking: browsers require Audio to be created in response
+    // to a user interaction, not in useEffect on page load.
+    const audio = new Audio("/chidori.mp3");
+    audio.volume = 0.15;
+    audioRef.current = audio;
+    audio.play().catch(() => {
+      // autoplay still blocked — try again on next interaction
+    });
 
     // Start lightning + glitch overlay
     const overlay = overlayRef.current;

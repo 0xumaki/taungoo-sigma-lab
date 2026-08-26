@@ -7,6 +7,7 @@ import { useSigmaStore } from "@/lib/sigma/store";
 import { SectionShell } from "../shared/SectionShell";
 import { BrutalButton, Panel, StatReadout, Tag } from "../shared/components";
 import { SigmaParticles } from "../shared/SigmaParticles";
+import { MANIFESTO_TEXT } from "@/lib/sigma/manifesto";
 
 gsap.registerPlugin(useGSAP);
 
@@ -34,6 +35,18 @@ export function S02Manifesto() {
         .from("[data-m-line]", { opacity: 0, y: 30, duration: 0.6, stagger: 0.08 }, 0.2)
         .from("[data-m-stat]", { opacity: 0, y: 20, duration: 0.5, stagger: 0.06 }, 0.5)
         .from("[data-m-panel]", { opacity: 0, x: 40, duration: 0.6, stagger: 0.1 }, 0.4);
+
+      // Manifesto text — slow continuous scroll like a live terminal feed
+      const manifesto = root.current?.querySelector("[data-m-manifesto]");
+      if (manifesto) {
+        gsap.to(manifesto, {
+          scrollTop: manifesto.scrollHeight,
+          duration: 60,
+          ease: "none",
+          repeat: -1,
+          yoyo: true,
+        });
+      }
     },
     { scope: root }
   );
@@ -47,6 +60,24 @@ export function S02Manifesto() {
       <div ref={root} className="relative grid h-full grid-cols-12 gap-3 overflow-y-auto overflow-x-hidden sigma-scroll-hidden">
         {/* Ambient particles */}
         <SigmaParticles count={12} color="#FF4500" />
+
+        {/* MANIFESTO TEXT — fills the void space with green hacker terminal text.
+            Alien vs Predator vibe: small green monospace, glitch effect, auto-scroll.
+            Sits behind the main content at z-0, visible in negative space. */}
+        <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
+          <div
+            data-m-manifesto
+            className="sigma-glitch absolute left-0 top-0 h-full w-full overflow-y-auto whitespace-pre-wrap break-words p-4 font-mono text-[8px] leading-[1.3] text-[#00FF94]/12"
+            data-text="MANIFESTO"
+            style={{
+              maskImage: "linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.4) 10%, rgba(0,0,0,0.8) 30%, rgba(0,0,0,0.8) 70%, rgba(0,0,0,0.4) 90%, transparent 100%)",
+              WebkitMaskImage: "linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.4) 10%, rgba(0,0,0,0.8) 30%, rgba(0,0,0,0.8) 70%, rgba(0,0,0,0.4) 90%, transparent 100%)",
+            }}
+          >
+            {MANIFESTO_TEXT}
+          </div>
+        </div>
+
         {/* THE GIANT ORANGE CIRCLE */}
         <div className="pointer-events-none absolute inset-0 z-0 flex items-center overflow-hidden">
           <div

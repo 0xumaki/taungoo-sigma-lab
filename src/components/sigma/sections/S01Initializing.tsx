@@ -11,13 +11,56 @@ import { SigmaParticles } from "../shared/SigmaParticles";
 gsap.registerPlugin(useGSAP);
 
 const BOOT_LINES = [
-  "[ 0.001 ] TAUNGOO SIGMA KERNEL v2.4.Σ …",
-  "[ 0.014 ] mounting /sigma/core … OK",
-  "[ 0.031 ] neural-forge: 5 pillars online",
-  "[ 0.058 ] calibrating sigma variable … 1.0000",
-  "[ 0.092 ] handshake: NEXUS MAP …… OK",
-  "[ 0.118 ] access: PUBLIC READ granted",
-  "[ 0.207 ] boot complete. welcome, operator.",
+  "[ 0.001 ] TAUNGOO SIGMA KERNEL v2.7.Σ …",
+  "[ 0.003 ] CPU: 8 cores @ 3.2GHz … OK",
+  "[ 0.007 ] memory: 64GB ECC DDR5 … OK",
+  "[ 0.012 ] mounting /sigma/core … OK",
+  "[ 0.018 ] mounting /sigma/neural … OK",
+  "[ 0.024 ] mounting /sigma/web3 … OK",
+  "[ 0.031 ] mounting /sigma/edge … OK",
+  "[ 0.038 ] neural-forge: initializing GPU cluster …",
+  "[ 0.045 ] neural-forge: 8× A100 80GB detected … OK",
+  "[ 0.052 ] neural-forge: 5 pillars online … OK",
+  "[ 0.061 ] edge-mesh: 240 nodes registered … OK",
+  "[ 0.068 ] edge-mesh: LoRa+BLE radios nominal … OK",
+  "[ 0.075 ] edge-mesh: 8.1M packets/day throughput … OK",
+  "[ 0.082 ] storage: 1.2PB cold vault mounted … OK",
+  "[ 0.089 ] storage: AES-256 encryption verified … OK",
+  "[ 0.094 ] web-rail: 6 regions online … OK",
+  "[ 0.098 ] web-rail: CDN edge cache primed … OK",
+  "[ 0.103 ] calibrating sigma variable …",
+  "[ 0.108 ] sigma = 0.8764 …",
+  "[ 0.112 ] sigma = 0.9231 …",
+  "[ 0.116 ] sigma = 0.9687 …",
+  "[ 0.119 ] sigma = 0.9942 …",
+  "[ 0.121 ] sigma = 1.0000 … HOLD NOMINAL",
+  "[ 0.128 ] handshake: NEXUS MAP … OK",
+  "[ 0.135 ] handshake: 11 sectors mapped … OK",
+  "[ 0.142 ] access: PUBLIC READ granted … OK",
+  "[ 0.148 ] access: WRITE = EARNED via sigma-review",
+  "[ 0.155 ] encryption: AES-256 channel secure … OK",
+  "[ 0.161 ] encryption: TLS 1.3 handshake … OK",
+  "[ 0.167 ] loading agent-swarm registry …",
+  "[ 0.172 ] agent-swarm: 8 operators loaded … OK",
+  "[ 0.178 ] loading research logs …",
+  "[ 0.183 ] research: 6 papers indexed … OK",
+  "[ 0.189 ] loading project vault …",
+  "[ 0.194 ] project-vault: 10 artifacts cataloged … OK",
+  "[ 0.201 ] loading service registry …",
+  "[ 0.206 ] services: 27 modules online … OK",
+  "[ 0.213 ] loading add-on catalog …",
+  "[ 0.218 ] add-ons: 189 modules indexed … OK",
+  "[ 0.224 ] initializing sound engine …",
+  "[ 0.229 ] sound: 8 channels ready … OK",
+  "[ 0.235 ] initializing cursor reticle …",
+  "[ 0.240 ] cursor: tracking enabled … OK",
+  "[ 0.246 ] initializing HUD overlay …",
+  "[ 0.251 ] HUD: all systems nominal … OK",
+  "[ 0.257 ] kernel: boot sequence complete …",
+  "[ 0.263 ] ████████████████████ 100%",
+  "[ 0.268 ] WELCOME, OPERATOR.",
+  "[ 0.271 ] THE SIGMA VARIABLE IS 1.0000.",
+  "[ 0.274 ] ▮ STANDING BY FOR INPUT ▮",
 ];
 
 export function S01Initializing() {
@@ -54,24 +97,39 @@ export function S01Initializing() {
     { scope: root }
   );
 
-  // typewriter boot log
+  // typewriter boot log — reveals line by line like a real boot sequence
   React.useEffect(() => {
     if (!logRef.current) return;
-    let i = 0;
-    let line = 0;
-    const full = BOOT_LINES.join("\n");
     const node = logRef.current;
     node.textContent = "";
-    const t = setInterval(() => {
-      node.textContent = full.slice(0, i);
-      i += 2;
-      if (i > full.length) {
-        clearInterval(t);
+    let lineIdx = 0;
+    let charIdx = 0;
+
+    const typeNext = () => {
+      if (lineIdx >= BOOT_LINES.length) return;
+      const currentLine = BOOT_LINES[lineIdx];
+      if (charIdx < currentLine.length) {
+        // Type 3 chars per tick for speed
+        const chunk = currentLine.slice(0, charIdx + 3);
+        const before = lineIdx > 0 ? BOOT_LINES.slice(0, lineIdx).join("\n") + "\n" : "";
+        node.textContent = before + chunk;
+        charIdx += 3;
+        node.scrollTop = node.scrollHeight;
+      } else {
+        // Line complete — move to next line with a brief pause
+        node.textContent = BOOT_LINES.slice(0, lineIdx + 1).join("\n");
+        node.scrollTop = node.scrollHeight;
+        lineIdx++;
+        charIdx = 0;
+        // Variable delay: "..." lines pause longer, "OK" lines are quick
+        const isPause = currentLine.includes("…") && !currentLine.includes("OK");
+        setTimeout(typeNext, isPause ? 120 : 40);
+        return;
       }
-      // autoscroll
-      node.scrollTop = node.scrollHeight;
-    }, 14);
-    return () => clearInterval(t);
+      setTimeout(typeNext, 8);
+    };
+    typeNext();
+    return () => {};
   }, []);
 
   const letters = "TAUNGOO".split("");

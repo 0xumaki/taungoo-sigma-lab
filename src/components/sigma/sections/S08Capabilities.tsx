@@ -84,47 +84,47 @@ export function S08Capabilities() {
                   scan
                   className="block h-full"
                 >
-                  <div className="flex h-full flex-col p-3">
+                  <div className="flex flex-col overflow-hidden p-3">
                     <div className="flex items-start justify-between">
                       <div
-                        className="flex h-12 w-12 items-center justify-center border"
+                        className="flex h-10 w-10 items-center justify-center border"
                         style={{ borderColor: `${g.accent}55`, color: g.accent }}
                       >
-                        <Icon className="h-5 w-5" />
+                        <Icon className="h-4 w-4" />
                       </div>
                       <Tag accent={g.accent}>{g.status}</Tag>
                     </div>
-                    <h3 className="mt-2 font-sans text-lg font-bold uppercase leading-tight tracking-tight">
+                    <h3 className="mt-1.5 font-sans text-base font-bold uppercase leading-tight tracking-tight">
                       {g.name}
                     </h3>
-                    <div className="mt-2 grid grid-cols-2 gap-px border border-border/70 bg-border/40">
+                    <div className="mt-1.5 grid grid-cols-2 gap-px border border-border/70 bg-border/40">
                       {g.specs.map(([k, v]) => (
-                        <div key={k} className="bg-card p-2">
-                          <div className="font-mono text-[9px] uppercase tracking-[0.16em] text-muted-foreground">
+                        <div key={k} className="bg-card p-1.5">
+                          <div className="font-mono text-[8px] uppercase tracking-[0.14em] text-muted-foreground">
                             {k}
                           </div>
-                          <div className="font-mono text-sm font-bold text-foreground">{v}</div>
+                          <div className="font-mono text-xs font-bold text-foreground">{v}</div>
                         </div>
                       ))}
                     </div>
-                    <div className="mt-2 flex items-center justify-between font-mono text-[9px] uppercase tracking-[0.18em] text-muted-foreground">
+                    <div className="mt-1 flex items-center justify-between font-mono text-[8px] uppercase tracking-[0.16em] text-muted-foreground">
                       <span>S/N {g.serial}</span>
-                      <span style={{ color: g.accent }}>▮ BARCODE OK</span>
+                      <span style={{ color: g.accent }}>▮ OK</span>
                     </div>
-                    {/* fake barcode */}
-                    <div className="mt-1.5 flex h-6 gap-px">
-                      {Array.from({ length: 48 }).map((_, i) => (
+                    {/* fake barcode — smaller */}
+                    <div className="mt-1 flex h-4 gap-px">
+                      {Array.from({ length: 40 }).map((_, i) => (
                         <span
                           key={i}
                           className="bg-foreground"
-                          style={{ width: i % 3 === 0 ? 3 : 1, opacity: (i * 7) % 10 < 6 ? 0.9 : 0.3 }}
+                          style={{ width: i % 3 === 0 ? 2 : 1, opacity: (i * 7) % 10 < 6 ? 0.9 : 0.3 }}
                         />
                       ))}
                     </div>
-                    {/* flip button — properly contained, no overflow */}
+                    {/* flip button — uses mt-2 (not mt-auto) so it doesn't overflow */}
                     <button
                       onClick={() => { setFlipped(g.code); sigmaSound.play("open"); }}
-                      className="mt-auto flex items-center justify-center gap-1.5 border border-border py-1.5 font-mono text-[9px] uppercase tracking-[0.18em] text-muted-foreground transition-colors hover:bg-foreground/10 hover:text-foreground"
+                      className="mt-2 flex shrink-0 items-center justify-center gap-1.5 border border-border py-1.5 font-mono text-[9px] uppercase tracking-[0.18em] text-muted-foreground transition-colors hover:bg-foreground/10 hover:text-foreground"
                       data-cursor="hover"
                     >
                       <RotateCw className="h-3 w-3 shrink-0" /> FLIP FOR DETAILS

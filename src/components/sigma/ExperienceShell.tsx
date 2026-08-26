@@ -95,17 +95,14 @@ export function ExperienceShell() {
       }, 0);
       return () => clearTimeout(t); // deep-links skip the boot screen + onboarding
     }
-    // show boot screen only once per session
+    // ALWAYS show boot screen on every page load (removed sessionStorage check — user wants to see it on reload)
+    setBooting(true);
     try {
-      const seen = sessionStorage.getItem("sigma_booted");
-      if (!seen) {
-        setBooting(true);
-      }
       // show onboarding only once per browser (localStorage)
       const onboarded = localStorage.getItem("sigma_onboarded");
       if (!onboarded) {
         // delay onboarding until after boot screen
-        const ob = setTimeout(() => setOnboarding(true), seen ? 500 : 4000);
+        const ob = setTimeout(() => setOnboarding(true), 4000);
         return () => clearTimeout(ob);
       }
     } catch {
