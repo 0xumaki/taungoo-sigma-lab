@@ -160,9 +160,14 @@ export function ExperienceShell() {
   const labelRef = React.useRef<HTMLDivElement>(null);
   const rootRef = React.useRef<HTMLDivElement>(null);
 
-  // Keyboard navigation
+  // Keyboard navigation — DISABLED when typing in form inputs (S10 Access, S08 search, etc.)
   React.useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
+      // Skip ALL key bindings when user is typing in an input/textarea/contenteditable
+      const target = e.target as HTMLElement;
+      if (target && (target.tagName === "INPUT" || target.tagName === "TEXTAREA" || target.isContentEditable)) {
+        return; // Let the user type without triggering navigation
+      }
       if (useSigmaStore.getState().phase !== "idle") return;
       const cur = useSigmaStore.getState().view;
       if (e.key === "Escape") {

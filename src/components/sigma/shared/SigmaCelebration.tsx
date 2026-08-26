@@ -102,12 +102,14 @@ export function SigmaCelebration({ onComplete }: { onComplete: () => void }) {
             );
           })}
 
-          {/* center Σ */}
+          {/* center Σ — FIXED: spin is on an INNER element so it doesn't override the centering transform */}
           <div
             data-cel-sigma
-            className="sigma-spin-slow absolute left-1/2 top-1/2 flex h-24 w-24 -translate-x-1/2 -translate-y-1/2 items-center justify-center border-2 border-foreground font-sans text-6xl font-black"
+            className="absolute left-1/2 top-1/2 flex h-24 w-24 -translate-x-1/2 -translate-y-1/2 items-center justify-center border-2 border-foreground"
           >
-            Σ
+            <span className="sigma-spin-slow block font-sans text-6xl font-black">
+              Σ
+            </span>
           </div>
         </div>
 

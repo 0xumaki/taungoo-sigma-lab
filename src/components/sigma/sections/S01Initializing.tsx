@@ -82,7 +82,7 @@ export function S01Initializing() {
       title="INITIALIZING"
       tagline="Sector 01 is the boot kernel — the sigma variable goes live and the lab comes online. Sigma holds at 1.0000."
     >
-      <div ref={root} className="relative grid h-full grid-cols-12 gap-3 overflow-hidden">
+      <div ref={root} className="relative grid h-full grid-cols-12 gap-3 overflow-y-auto overflow-x-hidden sigma-scroll-hidden">
         {/* Ambient boot particles */}
         <SigmaParticles count={16} color="#FFFFFF" />
         {/* LEFT VERTICAL PANEL */}

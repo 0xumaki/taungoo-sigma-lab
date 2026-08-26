@@ -80,7 +80,7 @@ export function S10Access() {
       title="ACCESS PROTOCOL"
       tagline="Sector 10 is the intake form — pitch us a project, join the team, or request a deploy. The sigma will acknowledge."
     >
-      <div ref={root} className="relative grid h-full grid-cols-12 gap-3">
+      <div ref={root} className="relative grid h-full grid-cols-12 gap-3 overflow-y-auto sigma-scroll-hidden">
         {/* Ambient particles */}
         <SigmaParticles count={10} color="#FFEB3B" />
         {/* terminal form */}
@@ -172,7 +172,7 @@ export function S10Access() {
           <Panel data-ap label="DIRECT CHANNELS" id="OPEN" accent="#FFEB3B">
             <div className="divide-y divide-border/70">
               {[
-                { icon: MapPin, k: "LOCATION", v: "Taungoo, Bago Region, MM" },
+                { icon: MapPin, k: "LOCATION", v: "Yangon, MM" },
                 { icon: Mail, k: "EMAIL", v: "contact@taungoosigma.lab" },
                 { icon: Phone, k: "PHONE", v: "+95 · on request" },
                 { icon: Github, k: "GITHUB", v: "[ ACCESS RESTRICTED ]" },

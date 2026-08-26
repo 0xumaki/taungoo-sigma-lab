@@ -57,7 +57,7 @@ export function SigmaCompletion() {
 
   return (
     <>
-    <div className="fixed right-9 top-[100px] z-[78] hidden items-center gap-2 md:flex">
+    <div className="fixed right-9 top-[140px] z-[78] hidden items-center gap-2 md:flex">
       <div className="relative h-10 w-10">
         <svg className="h-full w-full -rotate-90" viewBox="0 0 40 40">
           {/* background ring */}

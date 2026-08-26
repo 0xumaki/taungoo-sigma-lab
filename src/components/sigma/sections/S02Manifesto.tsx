@@ -11,7 +11,7 @@ import { SigmaParticles } from "../shared/SigmaParticles";
 gsap.registerPlugin(useGSAP);
 
 const PILLARS = [
-  "RE-MODEL how a lab in Taungoo can ship software the world uses.",
+  "RE-MODEL how a lab rooted in the Taungoo Empire (medieval Myanmar) can ship software the world uses.",
   "RE-TRAIN a generation of operators on real, deployed systems.",
   "RE-DEPLOY capital, code, and community as one sigma variable.",
 ];
@@ -44,11 +44,11 @@ export function S02Manifesto() {
       title="MANIFESTO"
       tagline="Sector 02 is the mission statement — we build AI, Web3, and community tech that ships to production."
     >
-      <div ref={root} className="relative grid h-full grid-cols-12 gap-3">
+      <div ref={root} className="relative grid h-full grid-cols-12 gap-3 overflow-y-auto overflow-x-hidden sigma-scroll-hidden">
         {/* Ambient particles */}
         <SigmaParticles count={12} color="#FF4500" />
         {/* THE GIANT ORANGE CIRCLE */}
-        <div className="pointer-events-none absolute inset-0 z-0 flex items-center">
+        <div className="pointer-events-none absolute inset-0 z-0 flex items-center overflow-hidden">
           <div
             data-circle
             className="relative aspect-square h-[115%] -translate-x-[18%] rounded-full"
@@ -87,7 +87,7 @@ export function S02Manifesto() {
             </span>
           </h2>
           <p data-m-line className="mt-5 max-w-md font-serif text-lg italic text-foreground/80">
-            A research lab in Taungoo building at the intersection of AI, Web3,
+            A research lab rooted in the Taungoo Empire (medieval Myanmar), building at the intersection of AI, Web3,
             and community resilience. We treat the lab itself as a sigma — the
             unmeasured deviation that bends the curve.
           </p>
@@ -151,7 +151,7 @@ export function S02Manifesto() {
 
           <Panel data-m-panel className="max-w-xs bg-background/70 backdrop-blur-sm">
             <div className="p-3 font-mono text-[10px] uppercase leading-relaxed tracking-[0.2em] text-muted-foreground">
-              ▸ Located in <span className="text-foreground">Taungoo, Bago Region</span>
+              ▸ Located in <span className="text-foreground">Yangon</span>
               <br />▸ Operating across <span className="text-foreground">11 sectors</span>
               <br />▸ Partnership model:{" "}
               <span className="text-[#FF4500]">Helsinki Trust</span>

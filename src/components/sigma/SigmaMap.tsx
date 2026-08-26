@@ -85,7 +85,7 @@ function MapNode({
             >
               {section.code} · {section.role}
             </div>
-            <div className="font-sans text-lg font-bold uppercase leading-tight tracking-tight text-foreground drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)]">
+            <div className="font-sans text-[15px] font-bold uppercase leading-tight tracking-tight text-foreground drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)] sm:text-lg">
               {section.name}
             </div>
           </div>

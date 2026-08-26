@@ -30,11 +30,11 @@ const INSIGHTS_DATA: { title: string; date: string; tag: string; desc: string; c
   {
     title: "Local-Language NLP for Low-Resource Myanmar Dialects",
     date: "2024.04.22", tag: "NLP", readTime: "11 min", authors: "SIGNAL TENDER",
-    desc: "A tokenizer and adapter stack for Bago-region Myanmar dialects, evaluated on community-authored eval sets.",
+    desc: "A tokenizer and adapter stack for Yangon-region Myanmar dialects, evaluated on community-authored eval sets.",
     citations: 11,
     sections: [
-      { heading: "BACKGROUND", body: "Myanmar has 100+ living languages, but NLP resources exist for fewer than 5. The Bago region dialects are particularly underserved, with no standardized tokenizer, no evaluation benchmarks, and no community-authored datasets." },
-      { heading: "APPROACH", body: "Built a phoneme-aware subword tokenizer that handles Bago dialect variations. Combined with a dialect-adapter fine-tuning protocol. Released the first community-authored eval set: 2,400 sentences annotated by native speakers under a CC-BY-SA license." },
+      { heading: "BACKGROUND", body: "Myanmar has 100+ living languages, but NLP resources exist for fewer than 5. The Yangon region dialects are particularly underserved, with no standardized tokenizer, no evaluation benchmarks, and no community-authored datasets." },
+      { heading: "APPROACH", body: "Built a phoneme-aware subword tokenizer that handles Yangon dialect variations. Combined with a dialect-adapter fine-tuning protocol. Released the first community-authored eval set: 2,400 sentences annotated by native speakers under a CC-BY-SA license." },
       { heading: "EVALUATION", body: "Compared against mBERT baseline on the eval set. The phoneme-aware tokenizer achieved 18% F1 improvement on named entity recognition and 12% improvement on sentiment analysis. The dialect adapter reduced cross-dialect transfer error by 23%." },
       { heading: "IMPACT", body: "The eval set and models are released open-source. 1,800+ learners have used the community NLP tools. The framework is being extended to Karen and Mon languages in collaboration with local community organizations." },
     ],

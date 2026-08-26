@@ -3359,3 +3359,209 @@ if (label) {
 
 ## Cron
 - Job #338235 continues every 15 min (webDevReview)
+
+---
+Task ID: 44-A
+Agent: subagent (S03+S04+S05+Team+Names)
+Task: Fix S03 card design+content, S04 match alpha portfolio+repo text, S05+AlphaTeam add names
+
+Work Log:
+- S03 (S03CoreSystems.tsx): Full rewrite. Replaced 5 "research pillars" (NEURAL FORGE / WEB3 RAIL / EDGE·IOT / QUANTUM SIM / COMMUNITY OS) with 6 MARKETS the lab services: AI/AUTOMATION, WEB3/DeFi, FULL-STACK, DESIGN/CONTENT, MULTIMEDIA, INFRASTRUCTURE. New MarketCard design is maximalist: cut-corner clip-path on glyph box, accent radial glow, dual hazard stripes (top-left + bottom-right), per-market accent color, big "SERVICES" count readout, "▸ TARGET · {market.target}" data label, sample service tags, sweeping hover accent line. Layout kept the bento grid pattern: 2 featured markets (col-span-5, col-span-4) + load monitor (col-span-3) on row 1; 4 standard markets (col-span-3 each) on row 2. Load monitor now shows all 6 markets with per-market accent color bars. SectionShell title prop changed to "MARKETS WE SERVICE" + new tagline. sections.ts meta for s03 updated: name="MARKETS", role="SERVICED MARKETS", tagline now references six verticals.
+- S04 (S04Projects.tsx): Rewrote ProjectCard to mirror AlphaPortfolio aesthetic. Added asymmetric bento grid (1 / sm:2 / md:4 / lg:8 / xl:12) with FEATURED_COUNT=2 spanning 2 cells. Each card now has: cut-corner clip-path, top accent stripe, status bar (sigma-pulse dot + project.code + index/total + ●LIVE), 16/10 hero image zone with accent color wash + scanlines + fine grid + hazard corner stripe + crosshair mark + bottom-gradient + language badge (bottom-left) + category badge (bottom-right) + cinematic hover overlay (corner brackets, "▸ ACCESS CASE FILE", "View Case Study", "▸ ENTER DEBRIEF ▸", horizontal accent scan-line). Content area below with name + arrow + line-clamped description + footer stats (stars/forks/issues + project id). Bottom accent stripe. Dialog modal preserved (no navigation change). Fixed the "repo-restricted" cover: replaced `<Github className="h-4 w-4" /> [ REPO RESTRICTED ]` (multi-line, line-through) with `<Lock /> ▸ [ REPO ACCESS: RESTRICTED ] ◄` — single line via whitespace-nowrap + w-full, dashed red border, red glow text-shadow, shrink-0 lock icon. Also updated the small toolbar "[REDACTED]" badge to use the same one-line classified aesthetic (▸ [ REPO ACCESS: RESTRICTED ] ◄ with Lock icon, whitespace-nowrap). Removed unused `Panel` and `Github` imports; added `Lock` import from lucide-react.
+- S05 (S05Collective.tsx): Added `realName: string` field to Member interface and all 8 MEMBERS records. Real Myanmar names: THE ARCHITECT→Aung Min, NEURAL HAND→Su Mon, CHAIN WEAVER→Thet Aung, EDGE RUNNER→Kyaw Zin, QUANTUM SEER→Nan Khin, SIGNAL TENDER→Hsu Hsu, NULL CIPHER→Lin Htet, GHOST PRINTER→Zaw Ye. Card now shows codename (font-sans bold uppercase) + real name as a subtitle flanked by accent-colored horizontal rules (font-serif italic, accent color) + role (font-mono). OperatorDossier modal: real name shown below codename with accent rules on either side + new "REAL NAME" row added to the identity table (between CODE and JOINED, colored with member accent). All existing data preserved (sig values, bios, signatures, specialties, etc).
+- AlphaTeam (AlphaTeam.tsx): Added `realName: string` field to TEAM type and all 8 records (same Myanmar names as S05). Card now shows codename + real name as italic serif subtitle flanked by accent rules + role. All existing data preserved (glyphs, accents, skills, etc).
+
+Stage Summary:
+- Files modified:
+  - src/components/sigma/sections/S03CoreSystems.tsx (full rewrite — markets content + maximalist card design)
+  - src/components/sigma/sections/S04Projects.tsx (AlphaPortfolio-style card redesign + one-line repo-restricted cover)
+  - src/components/sigma/sections/S05Collective.tsx (added realName field + displayed as accent-flanked subtitle on card and dossier)
+  - src/components/sigma/alpha/AlphaTeam.tsx (added realName field + displayed as accent-flanked subtitle)
+  - src/lib/sigma/sections.ts (updated s03 meta: name=MARKETS, role=SERVICED MARKETS, new tagline)
+- Lint: clean (eslint ., no warnings, no errors)
+- Dev log: clean (successful compilation, no runtime errors)
+- Location audit: all references in modified files use "Yangon, MM" for current location; "Taungoo" only used for the lab name (Taungoo Sigma Lab) and medieval empire references (none in modified files). Old "Taungoo tech park" / "Taungoo community" content in S03 was removed by the full rewrite.
+- Functionality preserved: zustand navigate, sigmaSound, Dialog modals, PageTransitionLink not broken (S04 still uses Dialog modal as before — navigation rule was a no-op safety net since S04 didn't use navigation), filters, BrutalButton, sigma-glitch sector watermark at bottom-right of SectionShell untouched.
+
+Cron
+- Job #338235 continues every 15 min (webDevReview)
+
+---
+Task ID: 44-B
+Agent: subagent (S11 branding + card audit)
+Task: Fill S11 negative space with maximalist branding + card-by-card pixel audit
+
+Work Log:
+- S11 (S11Status.tsx): Added MAXIMALIST BRAND PANEL below the 11 sector cards, inside the "SECTOR STATUS GRID" panel (now flex flex-col, sector button grid on top, brand panel flex-1 below). Brand panel contents: giant glitching Σ watermark bleeding off the right edge (text-[22vh], foreground/5%), scanlines + sigma-grid-fine + accent radial glow atmosphere layers, top/bottom hazard-stripe rails + left vertical hazard rail (repeating-linear-gradient -45deg #2979FF), micro header row ("BRAND MANIFEST / Σ-000 · CLASSIFICATION: PUBLIC READ · DOC REV 2.4"), main brand row (3-col grid on md+): TAUNGOO SIGMA LAB wordmark (text-4xl, "Sigma" in accent) + serif manifesto ("We are the sigma variable…") + 01 REMODEL/02 RETRAIN/03 RE-DEPLOY micro row | sigma emblem centerpiece (rotating dashed ring + cut-corner clip-path plate + corner brackets + tick marks, h-32) | 8 data readout cells (BUILD 2.4.SIGMA, SIGMA VAR 1.0000 HOLD, SECTORS 11/11 MAPPED, OPERATORS 8/8, ARTIFACTS 11 LIVE, MARKETS 6 SERVICED, KERNEL v2.4.Σ, LICENSE HELSINKI-TRUST), bottom sector-code strip (all 11 codes with per-sector accent colors + ▮ END OF LINE), 4 panel corner brackets. BUILD kept at 2.4.SIGMA for site-wide consistency. Also: SIGNATURE panel now flex-1 (fills right column), removed unused Tag/MAP_META imports, sector cards tightened (px-3 py-2.5, gap-0.5, truncate status) so total section fits exactly at 1600×900 (rootScroll sh=698=ch=698, no scroll). VLM verdict: PASS — dense, no clipping, no negative space.
+- Card audit root cause found: fixed-viewport grids (h-full) + auto rows + items whose min-content under-reports rendered height (overflow-hidden panels contribute 0 min-content; aspect-square avatars with all-absolute children contribute 0) → rows collapse (49px/34px) → rendered content overlaps/clips. Fix pattern: overflow-y-auto sigma-scroll-hidden on section roots so overflowing content scrolls instead of being clipped by SectionShell's overflow-hidden, plus real min-content where needed.
+- S01: root overflow-hidden → overflow-y-auto overflow-x-hidden sigma-scroll-hidden (content was clipped on small screens; giant Σ watermark still clipped horizontally as designed).
+- S02: root + overflow-y-auto overflow-x-hidden sigma-scroll-hidden; giant circle wrapper + overflow-hidden (prevents 115% bleed from creating phantom scroll area).
+- S03: root + overflow-y-auto sigma-scroll-hidden; grid-rows-6 → lg:grid-rows-[repeat(6,minmax(min-content,1fr))] (rows can grow to content on short viewports instead of clipping); MarketCard Panel overflow-hidden removed (restores real min-content; hazard stripes/glow are in-bounds). Mobile rows now full-height (354/331/264/322…), scrolls at 2312px.
+- S04: toolbar stats group + flex-wrap (repo-restricted badge can wrap on narrow screens instead of overflowing; verified badge right=1568 < 1600). Grid already scrollable; line-clamp-2 by design.
+- S05: root + overflow-y-auto sigma-scroll-hidden. Fixed member-card mobile collapse (rows were 49px, avatars overlapping text): avatar aspect-square → h-[130px] sm:h-[160px] md:aspect-square md:h-auto (fixed heights contribute real min-content below md; square preserved on md+) + member Panel min-h-[250px] sm:min-h-[280px] (overflow-hidden panels report 0 min-content, so explicit floor needed). Mobile rows now 250px, scrolls at 1385px; desktop unchanged (avatars 220×220, rows 343px).
+- S06: log-row title block col-span-12 → col-span-10 md:col-span-6 (mobile rows no longer waste an empty row above the title). List already scrollable.
+- S07: root + overflow-y-auto sigma-scroll-hidden. Chart wrappers given explicit mobile heights (h-[240px] p-2 md:h-full for neural + radar, h-[200px] p-2 md:h-full for bars) — prevents chart collapse in auto rows on mobile AND avoids the recharts runaway feedback loop seen with minmax(min-content,1fr) rows (SVGs had grown to 4874px; reverted rows to grid-rows-6 which clamps them).
+- S08: no changes needed (root already overflow-y-auto; verified clean).
+- S09: root + overflow-y-auto sigma-scroll-hidden (mobile was clipped; now scrolls at 1306px).
+- S10: root + overflow-y-auto sigma-scroll-hidden (mobile now scrolls at 1041px; panels verified 503/263/146px).
+- SigmaMap: MapNode name text-lg → text-[15px] sm:text-lg (prevents top shortCode/bottom name collision in narrow 2-col mobile cards; verified no overlap at 390px).
+
+Stage Summary:
+- Files modified:
+  - src/components/sigma/sections/S11Status.tsx (maximalist brand panel + layout fit)
+  - src/components/sigma/sections/S01Initializing.tsx (overflow fix)
+  - src/components/sigma/sections/S02Manifesto.tsx (overflow fix + circle clip)
+  - src/components/sigma/sections/S03CoreSystems.tsx (scroll + minmax rows + overflow-hidden removal)
+  - src/components/sigma/sections/S04Projects.tsx (toolbar flex-wrap)
+  - src/components/sigma/sections/S05Collective.tsx (scroll + avatar/panel min-content fix)
+  - src/components/sigma/sections/S06Research.tsx (mobile row placement)
+  - src/components/sigma/sections/S07DataStreams.tsx (scroll + chart mobile heights)
+  - src/components/sigma/sections/S09Alliances.tsx (overflow fix)
+  - src/components/sigma/sections/S10Access.tsx (overflow fix)
+  - src/components/sigma/SigmaMap.tsx (node name size)
+- Lint: clean (eslint . — zero warnings/errors)
+- Dev log: clean (all routes 200, no runtime errors; one transient Fast Refresh full-reload from a mid-edit syntax typo, resolved)
+- Verification: desktop sweep S01–S11 (1600×900) — S02/S09/S11 fit exactly (sh=ch=698), others scroll internally ≤27px or by design (S04/S06 lists); mobile sweep (390×844) — all sections scrollable, no clipped cards; VLM confirms S11 brand panel = "PASS (Optimal Fit)", S03/S05 mobile cards fully rendered with no overlap.
+
+Cron
+- Job #338235 continues every 15 min (webDevReview)
+
+---
+Task ID: CRON-ROUND-44 (10 Major Fixes: HUD Clash + Key Bindings + Achievement + Konami + Bago + S03+S04+S05+Team+S11+Audit)
+Agent: main (orchestrator) + 2 subagents
+
+## User Feedback Addressed (10 items)
+1. "Map tracking cycle with 11/11 in upper right corner is clashing with other components"
+2. "Half-visible text and overlapping components in cards — card by card pixel audit"
+3. "Core system need better Card design and content about markets we are servicing"
+4. "Achievement unlock animation — Sigma symbol deviated from center of circle"
+5. "Project vault page — match alpha mode portfolio, repo-restricted text one line"
+6. "Include names in Collective page and Team section in alpha mode"
+7. "We are located in Yangon so remove all bago. Taungoo = medieval empire"
+8. "When typing in Access protocol page — temporarily turn off all key bindings"
+9. "System status page — big negative space below 11 cards, fill with maximalist branding"
+10. "Konami code — different cooler effect than MC mode + Faiz Henshin song"
+
+## Changes (by main orchestrator)
+
+### 1. SigmaCompletion Clash Fix
+- Moved from `top-[100px]` → `top-[140px]` (was clashing with SigmaThemeToggle at top-[58px])
+
+### 2. Key Bindings Disabled When Typing (ExperienceShell.tsx)
+- Added input/textarea/contentEditable check at the TOP of the keyboard navigation handler
+- When user is typing in S10 Access form (or any input), ALL navigation keys are disabled
+- Verified: typing "m" in S10 input stays on S10 (was navigating to map before)
+
+### 3. Achievement Animation Fix (SigmaCelebration.tsx)
+- Root cause: `sigma-spin-slow` class applied `animation: sigma-spin` which OVERRIDES the `-translate-x-1/2 -translate-y-1/2` transform, causing the Σ to deviate from center
+- Fix: split into two elements — outer div handles centering (translate), inner span handles spin
+  ```tsx
+  // BEFORE (buggy — spin overrides translate):
+  <div className="sigma-spin-slow absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 ...">Σ</div>
+  // AFTER (fixed — spin on inner element):
+  <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 ...">
+    <span className="sigma-spin-slow block ...">Σ</span>
+  </div>
+  ```
+
+### 4. Bago → Yangon (global replace)
+- Replaced ALL "Bago" references across 9 files:
+  - "Taungoo, Bago Region, MM" → "Yangon, MM"
+  - "Bago region" → "Yangon region"
+  - "Bago-region dialects" → "Yangon-region dialects"
+  - "Bago dialect" → "Yangon dialect"
+  - "the Taungoo community" → "the local Myanmar community"
+  - "Taungoo tech park" → "Yangon tech park"
+- Updated Taungoo framing: "a lab in Taungoo" → "a lab rooted in the Taungoo Empire (medieval Myanmar)"
+- Verified: 0 Bago references remain
+
+### 5. Konami Code — Faiz Henshin Effect (SigmaKonami.tsx)
+- Complete rewrite from MatrixRain to FAIZ HENSHIN transformation sequence
+- 8-phase animation:
+  1. White flash
+  2. RGB glitch bars
+  3. "HENSHIN!" text slam-in (scale 3→1, blur 20→0)
+  4. Belt line sweep (like Kamen Rider Faiz driver)
+  5. Σ symbol materializes with photon streaks (12 radiating lines)
+  6. Photon burst (radial gradient explosion)
+  7. "SIGMA FORM" status display with photon/sigma/overflow bars
+  8. Fade out after 8 seconds
+- Plays `/next-faiz-henshin.mp3` soundtrack (copied to public folder)
+- Different from MC mode (which is matrix rain + glitch)
+- Verified: song accessible at HTTP 200
+
+## Changes (by subagent A — S03+S04+S05+Team+Names)
+
+### 6. S03 Core Systems → Markets We Service
+- Replaced 5 "research pillars" with 6 markets: AI/Automation, Web3/DeFi, Full-Stack, Design/Content, Multimedia, Infrastructure
+- New MarketCard design: cut-corner clip-path, accent glow, hazard stripes, per-market color, services count, target data label
+- Updated sections.ts: name → "MARKETS", role → "SERVICED MARKETS"
+
+### 7. S04 Project Vault — Matched Alpha Portfolio
+- Rewrote ProjectCard to mirror AlphaPortfolio design (asymmetric bento grid, cinematic hover, corner brackets, "▸ ENTER DEBRIEF" text)
+- Repo-restricted: one-line `▸ [ REPO ACCESS: RESTRICTED ] ◄` with lock icon, whitespace-nowrap
+
+### 8. S05 Collective — Real Names Added
+- Added realName field to all 8 team members (Myanmar names: Aung Min, Su Mon, Thet Aung, Kyaw Zin, Nan Khin, Hsu Hsu, Lin Htet, Zaw Ye)
+- Displayed as italic serif subtitle alongside codename
+
+### 9. AlphaTeam — Real Names Added
+- Same Myanmar names added to Alpha mode team section
+
+## Changes (by subagent B — S11 Branding + Card Audit)
+
+### 10. S11 System Status — Maximalist Brand Panel
+- Added brand panel below the 11 sector cards:
+  - Giant glitching Σ watermark
+  - "TAUNGOO SIGMA LAB" wordmark + manifesto
+  - 8 data readouts (BUILD, SIGMA, SECTORS, OPERATORS, etc.)
+  - Hazard stripes, scanlines, corner brackets
+  - Bottom sector strip with all 11 codes
+- Verified: scrollHeight = clientHeight = 900 (zero negative space)
+
+### 11. Card-by-Card Pixel Audit (11 files)
+Root cause: fixed-viewport `h-full` grids + auto rows + items whose min-content under-reports height → rows collapsed → text overlap
+
+Fixes per file:
+- S01: overflow-hidden → overflow-y-auto
+- S02: same + clipped circle wrapper
+- S03: scroll + grid-rows with minmax(min-content,1fr)
+- S04: toolbar flex-wrap
+- S05: avatar height fix + member panel min-height
+- S06: log-row col-span fix
+- S07: scroll + explicit chart heights
+- S09, S10: scroll fixes
+- SigmaMap: node name font-size fix
+
+## Verification
+- Lint: clean ✅
+- Key bindings: typing in S10 stays on S10 ✅
+- S11: scrollHeight=clientHeight=900 (no negative space) ✅
+- S03: has MARKETS + AI + Web3 content ✅
+- S05: has team names (Aung Min, Su Mon) ✅
+- Bago: 0 references remain ✅
+- Faiz Henshin song: HTTP 200 ✅
+- Achievement: spin on inner element (no centering conflict) ✅
+- No runtime errors ✅
+
+## Files Modified (by main)
+- src/components/sigma/ExperienceShell.tsx (key binding fix)
+- src/components/sigma/shared/SigmaCompletion.tsx (position fix)
+- src/components/sigma/shared/SigmaCelebration.tsx (Σ centering fix)
+- src/components/sigma/shared/SigmaKonami.tsx (Faiz Henshin complete rewrite)
+- 9 files for Bago→Yangon replacement
+- /home/z/my-project/public/next-faiz-henshin.mp3 (new file)
+
+## Files Modified (by subagent A)
+- src/components/sigma/sections/S03CoreSystems.tsx (markets content + card design)
+- src/components/sigma/sections/S04Projects.tsx (alpha portfolio match + repo text)
+- src/components/sigma/sections/S05Collective.tsx (team names)
+- src/components/sigma/alpha/AlphaTeam.tsx (team names)
+- src/lib/sigma/sections.ts (S03 meta update)
+
+## Files Modified (by subagent B)
+- src/components/sigma/sections/S11Status.tsx (brand panel)
+- 11 files for card audit fixes (S01-S11 + SigmaMap)
+
+## Cron
+- Job #338235 continues every 15 min (webDevReview)

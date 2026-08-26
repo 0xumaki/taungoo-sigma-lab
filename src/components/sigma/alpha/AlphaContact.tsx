@@ -209,7 +209,7 @@ export function AlphaContact() {
                   ["EMAIL", "contact@taungoosigma.lab", "#00FF94"],
                   ["PHONE", "+95 · on request", "#00E5FF"],
                   ["GITHUB", "[ ACCESS RESTRICTED ]", "#C6FF00"],
-                  ["LOCATION", "Taungoo, Bago Region, MM", "#FF2D7E"],
+                  ["LOCATION", "Yangon, MM", "#FF2D7E"],
                 ].map(([k, v, c]) => (
                   <div key={k} className="flex items-center gap-3 py-2.5">
                     <span className="h-2 w-2" style={{ background: c }} />

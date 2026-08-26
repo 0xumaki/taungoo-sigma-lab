@@ -3,15 +3,15 @@
 import * as React from "react";
 import { SciFiCard } from "./SciFiCard";
 
-const TEAM: { name: string; role: string; glyph: string; accent: string; skills: string[] }[] = [
-  { name: "THE ARCHITECT", role: "Lab Director", glyph: "Σ", accent: "#FF4500", skills: ["Strategy", "Architecture", "Partnerships"] },
-  { name: "NEURAL HAND", role: "AI Lead", glyph: "◴", accent: "#00E5FF", skills: ["LLM Orchestration", "Voice AI", "Agent Loops"] },
-  { name: "CHAIN WEAVER", role: "Web3 Lead", glyph: "⬡", accent: "#C6FF00", skills: ["Solidity", "DeFi", "DAO"] },
-  { name: "EDGE RUNNER", role: "IoT Engineer", glyph: "⌖", accent: "#FFB300", skills: ["LoRa Mesh", "Microgrids", "Sensors"] },
-  { name: "QUANTUM SEER", role: "Research", glyph: "⟁", accent: "#B388FF", skills: ["Optimization", "Simulation", "Routing"] },
-  { name: "SIGNAL TENDER", role: "Community", glyph: "◍", accent: "#00FF94", skills: ["NLP", "Literacy", "Open Data"] },
-  { name: "NULL CIPHER", role: "Security", glyph: "⚿", accent: "#FF3D3D", skills: ["Audits", "Pen Test", "Crypto"] },
-  { name: "GHOST PRINTER", role: "Hardware", glyph: "⚙", accent: "#FFEB3B", skills: ["PCB", "Oscilloscope", "Rework"] },
+const TEAM: { name: string; realName: string; role: string; glyph: string; accent: string; skills: string[] }[] = [
+  { name: "THE ARCHITECT", realName: "Aung Min", role: "Lab Director", glyph: "Σ", accent: "#FF4500", skills: ["Strategy", "Architecture", "Partnerships"] },
+  { name: "NEURAL HAND", realName: "Su Mon", role: "AI Lead", glyph: "◴", accent: "#00E5FF", skills: ["LLM Orchestration", "Voice AI", "Agent Loops"] },
+  { name: "CHAIN WEAVER", realName: "Thet Aung", role: "Web3 Lead", glyph: "⬡", accent: "#C6FF00", skills: ["Solidity", "DeFi", "DAO"] },
+  { name: "EDGE RUNNER", realName: "Kyaw Zin", role: "IoT Engineer", glyph: "⌖", accent: "#FFB300", skills: ["LoRa Mesh", "Microgrids", "Sensors"] },
+  { name: "QUANTUM SEER", realName: "Nan Khin", role: "Research", glyph: "⟁", accent: "#B388FF", skills: ["Optimization", "Simulation", "Routing"] },
+  { name: "SIGNAL TENDER", realName: "Hsu Hsu", role: "Community", glyph: "◍", accent: "#00FF94", skills: ["NLP", "Literacy", "Open Data"] },
+  { name: "NULL CIPHER", realName: "Lin Htet", role: "Security", glyph: "⚿", accent: "#FF3D3D", skills: ["Audits", "Pen Test", "Crypto"] },
+  { name: "GHOST PRINTER", realName: "Zaw Ye", role: "Hardware", glyph: "⚙", accent: "#FFEB3B", skills: ["PCB", "Oscilloscope", "Rework"] },
 ];
 
 export function AlphaTeam() {
@@ -70,9 +70,17 @@ export function AlphaTeam() {
                   />
                 </div>
 
-                {/* Name + role */}
+                {/* Name + real identity + role */}
                 <h3 className="font-sans text-sm font-bold uppercase tracking-tight">{m.name}</h3>
-                <p className="font-mono text-[9px] uppercase tracking-[0.16em]" style={{ color: m.accent }}>{m.role}</p>
+                {/* Real identity — italic serif subtitle flanked by accent rules */}
+                <div className="mt-0.5 flex items-center gap-1.5">
+                  <span className="h-px w-2" style={{ background: m.accent, opacity: 0.5 }} />
+                  <span className="font-serif text-[11px] italic leading-none tracking-wide" style={{ color: m.accent }}>
+                    {m.realName}
+                  </span>
+                  <span className="h-px flex-1" style={{ background: m.accent, opacity: 0.5 }} />
+                </div>
+                <p className="mt-1 font-mono text-[9px] uppercase tracking-[0.16em]" style={{ color: m.accent }}>{m.role}</p>
 
                 {/* Skills — as hazard-styled tags */}
                 <div className="mt-2 flex flex-wrap gap-0.5">

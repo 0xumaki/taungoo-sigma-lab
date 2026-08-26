@@ -136,7 +136,7 @@ export function S07DataStreams() {
       title="DATA STREAMS"
       tagline="Sector 07 is the live dashboard — real-time metrics from running systems. These numbers are moving right now."
     >
-      <div ref={root} className="relative grid h-full grid-cols-12 grid-rows-6 gap-3">
+      <div ref={root} className="relative grid h-full grid-cols-12 grid-rows-6 gap-3 overflow-y-auto sigma-scroll-hidden">
         {/* Ambient floating data motes */}
         <SigmaParticles count={24} color="#00FF94" />
         {/* big counter row */}
@@ -179,7 +179,7 @@ export function S07DataStreams() {
 
         {/* neural stream */}
         <Panel data-ds label="NEURAL ACTIVITY" id="LIVE" accent="#00FF94" className="col-span-12 row-span-3 md:col-span-8">
-          <div className="h-full p-2">
+          <div className="h-[240px] p-2 md:h-full">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={stream} margin={{ top: 8, right: 8, bottom: 0, left: -20 }}>
                 <defs>
@@ -211,7 +211,7 @@ export function S07DataStreams() {
 
         {/* radar */}
         <Panel data-ds label="CAPABILITY MATRIX" id="6-AXIS" accent="#00FF94" className="col-span-12 row-span-3 md:col-span-4">
-          <div className="h-full p-2">
+          <div className="h-[240px] p-2 md:h-full">
             <ResponsiveContainer width="100%" height="100%">
               <RadarChart data={radar}>
                 <PolarGrid stroke="#333" />
@@ -224,7 +224,7 @@ export function S07DataStreams() {
 
         {/* sector throughput bars */}
         <Panel data-ds label="SECTOR THROUGHPUT" id="11-CH" accent="#00FF94" className="col-span-12 row-span-2 md:col-span-7">
-          <div className="h-full p-2">
+          <div className="h-[200px] p-2 md:h-full">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={bars} margin={{ top: 4, right: 8, bottom: 0, left: -24 }}>
                 <XAxis dataKey="sector" tick={{ fill: "#888", fontSize: 9, fontFamily: "monospace" }} stroke="#333" />

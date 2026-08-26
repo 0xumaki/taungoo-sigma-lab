@@ -44,7 +44,7 @@ export function S09Alliances() {
       title="ALLIANCES"
       tagline="Sector 09 is the partner network — universities, companies, and communities we build with."
     >
-      <div ref={root} className="relative grid h-full grid-cols-12 gap-3">
+      <div ref={root} className="relative grid h-full grid-cols-12 gap-3 overflow-y-auto sigma-scroll-hidden">
         {/* Ambient alliance particles */}
         <SigmaParticles count={14} color="#B388FF" />
         {/* relationship diagram */}
