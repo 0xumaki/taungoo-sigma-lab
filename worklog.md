@@ -3565,3 +3565,66 @@ Fixes per file:
 
 ## Cron
 - Job #338235 continues every 15 min (webDevReview)
+
+---
+Task ID: CRON-ROUND-45 (S04 Restore + Popup Bigger + HUD Fix + All Sections Clean)
+Agent: main (orchestrator)
+
+## User Feedback Addressed
+1. "For the project vault page, I mean keep the previous design but match the GitHub repo in the Alpha mode Portfolio section"
+2. "Pop up card need to be bigger in project vault page since all the text and components are overflowing and overlapping"
+3. "There are overlapping and overflowing text, tag, button and elements in every pages in Sigma mode yet. Not 100% fix them yet. Fix them immediately i want no more visual bugs in Sigma mode pages ever again"
+
+## Changes
+
+### 1. S04 Restored to Previous Design + CONTACT US Button
+- Reverted S04Projects.tsx to the previous design (276 lines, not the 451-line AlphaPortfolio clone)
+- Updated tagline: "Sector 04 is the project vault — 11 shipped systems with real screenshots. Contact us for repo access."
+- Changed footer CTA from "MEET THE COLLECTIVE" → "CONTACT US ▸" (links to S10 Access Protocol, matching Alpha portfolio's "CONTACT US" button)
+
+### 2. S04 Popup Made BIGGER
+- Dialog: `max-w-4xl` → `max-w-6xl` + `maxHeight: 90vh`
+- ProjectDetail grid: `max-h-[70vh]` → `max-h-[calc(90vh-3rem)]`
+- Image: `max-h-[70vh]` → `max-h-[calc(90vh-3rem)]`
+- Content padding: `p-4` → `p-6`, gap: `gap-3` → `gap-4`
+- Title: `text-2xl` → `text-3xl`
+- Description: `text-sm` → `text-base`
+- Repo-restricted text: one-line `▸ [ REPO ACCESS: RESTRICTED ] ◄` with `whitespace-nowrap` + `shrink-0` lock icon
+- VLM verified: content not overflowing, repo text in one line, popup big enough ✅
+
+### 3. HUD Clipping Fixes (SigmaHud.tsx) — affected ALL sections
+**Root cause of "overlapping and overflowing in every page":**
+- Left vertical sidebar: `w-8` (32px) + `tracking-[0.2em]` was clipping the "Σ / CODE" text
+- Right vertical sidebar: `w-8` was clipping the coordinate readout
+- Bottom status bar: long keyboard hints string was clipping at right edge on all viewports
+
+**Fixes:**
+- Left/right sidebars: `w-8` → `w-10` (40px), `tracking-[0.2em]` → `tracking-[0.15em]`
+- Bottom status bar: made responsive — full hints on xl, short hints on lg, minimal on mobile
+- Added `overflow-hidden` on the ml-auto container
+
+### 4. SectionShell Overflow Fix
+- Root: `overflow-hidden` → `overflow-y-auto overflow-x-hidden sigma-scroll-hidden` (allows scrolling when content exceeds viewport)
+- Content area: same fix (was `overflow-hidden`, now scrollable)
+- This prevents content from being clipped — if content is too tall, it scrolls instead
+
+## Verification (VLM audit of all 11 Sigma sections)
+- S01: CLEAN ✅
+- S02: CLEAN ✅ (sidebars, status bar, marquee all not clipped)
+- S03: CLEAN ✅
+- S04: CLEAN ✅ (popup bigger, repo text one line, CONTACT US button)
+- S05: CLEAN ✅
+- S06: CLEAN ✅
+- S07: CLEAN ✅
+- S08: CLEAN ✅
+- S09: CLEAN ✅
+- S10: CLEAN ✅
+- S11: CLEAN ✅
+
+## Files Modified
+- src/components/sigma/sections/S04Projects.tsx (restored previous design + popup bigger + CONTACT US)
+- src/components/sigma/shared/SigmaHud.tsx (wider sidebars + responsive bottom bar)
+- src/components/sigma/shared/SectionShell.tsx (overflow-y-auto instead of overflow-hidden)
+
+## Cron
+- Job #338235 continues every 15 min (webDevReview)

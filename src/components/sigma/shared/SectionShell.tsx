@@ -57,7 +57,7 @@ export function SectionShell({
     <div
       ref={rootRef}
       className={cn(
-        "sigma-scanlines relative flex h-full w-full flex-col overflow-hidden",
+        "sigma-scanlines relative flex h-full w-full flex-col overflow-y-auto overflow-x-hidden sigma-scroll-hidden",
         className
       )}
     >
@@ -116,7 +116,7 @@ export function SectionShell({
       </header>
 
       {/* CONTENT */}
-      <div className="relative z-10 mt-3 min-h-0 flex-1 overflow-hidden">
+      <div className="relative z-10 mt-3 min-h-0 flex-1 overflow-y-auto overflow-x-hidden sigma-scroll-hidden">
         <div className={cn("h-full w-full", dense ? "" : "")}>{children}</div>
       </div>
 

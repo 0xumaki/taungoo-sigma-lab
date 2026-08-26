@@ -80,8 +80,8 @@ export function SigmaHud() {
         </div>
       </header>
 
-      {/* LEFT VERTICAL RAIL */}
-      <aside className="pointer-events-none fixed left-0 top-8 bottom-8 z-[70] hidden w-8 overflow-hidden border-r border-border/60 bg-background/60 font-mono text-[9px] uppercase tracking-[0.2em] text-muted-foreground lg:flex">
+      {/* LEFT VERTICAL RAIL — wider to prevent text clipping */}
+      <aside className="pointer-events-none fixed left-0 top-8 bottom-8 z-[70] hidden w-10 overflow-hidden border-r border-border/60 bg-background/60 font-mono text-[9px] uppercase tracking-[0.15em] text-muted-foreground lg:flex">
         <div
           className="flex flex-1 items-center justify-center overflow-hidden"
           style={{ writingMode: "vertical-rl" }}
@@ -90,8 +90,8 @@ export function SigmaHud() {
         </div>
       </aside>
 
-      {/* RIGHT VERTICAL RAIL */}
-      <aside className="pointer-events-none fixed right-0 top-8 bottom-8 z-[70] hidden w-8 overflow-hidden border-l border-border/60 bg-background/60 font-mono text-[9px] uppercase tracking-[0.2em] text-muted-foreground lg:flex">
+      {/* RIGHT VERTICAL RAIL — wider to prevent coordinate clipping */}
+      <aside className="pointer-events-none fixed right-0 top-8 bottom-8 z-[70] hidden w-10 overflow-hidden border-l border-border/60 bg-background/60 font-mono text-[9px] uppercase tracking-[0.15em] text-muted-foreground lg:flex">
         <div
           className="flex flex-1 items-center justify-center overflow-hidden"
           style={{ writingMode: "vertical-rl", transform: "rotate(180deg)" }}
@@ -118,9 +118,9 @@ export function SigmaHud() {
             {meta.status}
           </span>
         </div>
-        <div className="ml-auto flex items-center">
+        <div className="ml-auto flex items-center overflow-hidden">
           <span className="border-l border-border/80 px-3 text-muted-foreground">
-            <span className="sigma-blink">▮</span> [M] MAP · [←/→] NAV · [⌘K] JUMP · [T] TOUR · [R] RAND · [C] MC · [H] HELP · [L] THEME
+            <span className="sigma-blink">▮</span> <span className="hidden xl:inline">[M] MAP · [←/→] NAV · [⌘K] JUMP · [T] TOUR · [R] RAND · [C] MC · [H] HELP · [L] THEME</span><span className="hidden lg:inline xl:hidden">[M] MAP · [←/→] NAV · [⌘K] JUMP · [T] TOUR</span><span className="lg:hidden">[M] MAP · [⌘K] · [H] HELP</span>
           </span>
         </div>
       </footer>
