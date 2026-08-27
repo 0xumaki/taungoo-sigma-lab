@@ -4464,3 +4464,95 @@ Agent: main (orchestrator) + subagent (service packages)
 
 ## Cron
 - Job #338235 continues every 15 min (webDevReview)
+
+---
+
+## Task 57-A — Project Data + Founded Date + Screenshot Cover + Insights
+
+**Date:** Multi-issue fix across Taungoo Sigma Lab
+
+### Summary
+Fixed 6 distinct issues: (1) incorrect project descriptions/languages in projects-data.json, (2) language display in S04 popup, (3) founded date year truncated to "24" instead of "2016", (4) plain [SCREENSHOT CLASSIFIED] cover replaced with retro brutalist green PC screen, (5) insights popup too small on PC and content too thin, (6) verified lint and dev.log.
+
+### 1. Project Data (`src/lib/sigma/projects-data.json`)
+Rewrote all 10 project entries to match actual GitHub research:
+- **Omnibridge**: "Cross-chain bridge protocol..." → "Neural Forge — multi-model AI orchestration platform with agent swarm coordination" (language Solidity → TypeScript)
+- **Dukon Pro**: Added "tokenized assets" suffix; language Next.js → TypeScript
+- **Royal DAO**: Added "on-chain voting"; language Next.js → TypeScript
+- **Vortex Sales OS**: Rewrote to "SOTA autonomous AI sales operating system with self-learning voice AI agent"; language Next.js → TypeScript
+- **GymMaster**: Added "member analytics"; language Next.js → TypeScript
+- **Lumina Tarot**: Rewrote to "...manifestation, and sound frequencies with XP system"; language Tone.js → HTML
+- **Sai Pay**: Added "transaction analytics"; language Next.js → TypeScript
+- **Brorus**: Updated to "...yield farming infrastructure"; language Solidity → TypeScript
+- **Asean Swap**: Added "real-time price data"; language React → TypeScript
+- **ManyMarket**: Added "immersive scroll experience"; language Three.js → TypeScript
+
+Each entry now includes a new `languages: string[]` array (3-5 languages as strings). The existing `language` field is kept (now reflects the top language). All other fields (price, loc, budget, category, accent, code, image, size, dates, topics) unchanged.
+
+Also updated `src/lib/sigma/projects.ts` Project interface to add `languages?: string[]` field.
+
+### 2. S04 Projects Popup Languages Display (`S04Projects.tsx`)
+Replaced the single LANGUAGE cell in the ProjectDetail metrics grid with a full-width LANGUAGES row spanning all 3 columns (`col-span-3`). Now renders each language as a styled accent tag (border + text colored with project.accent, with 44/alpha and tracking-[0.12em] mono styling). Falls back to `[project.language]` if `languages` array is missing.
+
+Removed LANGUAGE from the inline 5-cell array so the grid now shows: LOC, CATEGORY, BUDGET, SIZE, UPDATED + full-width LANGUAGES row = 6 items total on a `grid-cols-3` layout.
+
+### 3. S02 Manifesto Founded Date (`S02Manifesto.tsx`)
+Changed the final segment from "24" → "2016" so the date reads "29.06.2016" instead of the truncated "29.06.24". Other elements of the date badge (FOUNDED label, orange "29", ".06." separators) unchanged.
+
+### 4. Retro Brutalist Green PC Screen Cover (3 locations)
+Created a shared reusable component `src/components/sigma/shared/ClassifiedCover.tsx` with three variants: `card`, `detail`, `page`. Each renders:
+- Pure black background (`bg-black`)
+- Animated scanlines overlay (`sigma-scanlines` + green repeating-linear-gradient)
+- Radial green glow (rgba(0,255,148,0.12) → transparent)
+- ASCII-art-style double border frame (inset-2 + inset-4, with 30% and 15% accent borders)
+- Top retro terminal status bar ("TSR-OS v3.14" + pulsing "SECURE" indicator)
+- Glitching warning icon (sigma-glitch + ⚠ with green text-shadow)
+- Glitching main text "[ ACCESS RESTRICTED ]" with green glow
+- ASCII divider line "━━━━━━ ▣ ━━━━━━"
+- Blinking cursor subtitle "CONTACT US TO UNLOCK ▮" (sigma-blink)
+- Bottom telemetry strip ("ERR: EACCES" + "0x00FF94")
+- Top + bottom hazard stripes (45° repeating-linear-gradient in #00FF94)
+
+Replaced the old "[ SCREENSHOT CLASSIFIED ]" cover in:
+- `AlphaPortfolio.tsx` (variant="card") — for projects with no `image`
+- `app/portfolio/[slug]/page.tsx` (variant="page") — larger text size
+- `S04Projects.tsx` ProjectCard + ProjectDetail (variant="card" / "detail")
+
+All three locations now use the same component for visual consistency. Green #00FF94 palette throughout.
+
+### 5. Alpha Insights Fixes (`AlphaInsights.tsx`)
+**Popup visibility on PC:**
+- Changed `max-w-3xl` → `max-w-4xl` (wider popup)
+- Added `sm:p-8` padding on outer overlay (was `p-4`)
+- Added `shadow-[0_20px_60px_-15px_rgba(0,0,0,0.7)]` shadow for depth
+- `max-h-[85vh]` already present — confirmed working
+
+**Content expansion:**
+- Expanded each existing insight from 4 sections → 7 sections (added: BACKGROUND/PRIOR ART, ARCHITECTURE/SCOPE, FAILURE MODES, LIMITATIONS, etc. depending on the article)
+- Each section body now ~2-4x longer with concrete numbers, deployment details, and design rationale
+- Header counter updated: "3 PUBLICATIONS · 22 CITATIONS" → "6 PUBLICATIONS · 32 CITATIONS"
+
+**Added 3 new blog posts (total now 6):**
+4. "Edge Inference on Sub-$50 Hardware: Quantization Lessons from the Field" — Llama-3.2-1B on Raspberry Pi 4 cluster (7 sections, 5 citations)
+5. "Distributed Consensus Without Internet: Taungoo Mesh Network Field Notes" — Yjs CRDT over BLE mesh, 17 nodes, 14 months uptime (7 sections, 3 citations)
+6. "Sound Frequencies as Learning Aids: Audio-API Pilot in Lumina" — binaural beats 6-week study with 42 participants (7 sections, 2 citations)
+
+### 6. Verification
+- **Lint:** clean ✅ (eslint . → no output, no errors)
+- **dev.log (tail):** all 200 responses, no errors. `/portfolio/asean-swap` (no image, uses new ClassifiedCover) loads successfully. Multiple `✓ Compiled` lines without warnings.
+- **Build:** no warnings or compilation errors
+
+### Files Modified
+- `src/lib/sigma/projects-data.json` (10 projects rewritten, languages arrays added)
+- `src/lib/sigma/projects.ts` (Project interface +languages field)
+- `src/components/sigma/sections/S04Projects.tsx` (ClassifiedCover in card+detail, full-width languages row)
+- `src/components/sigma/sections/S02Manifesto.tsx` (founded date 24→2016)
+- `src/components/sigma/alpha/AlphaPortfolio.tsx` (ClassifiedCover variant=card)
+- `src/app/portfolio/[slug]/page.tsx` (ClassifiedCover variant=page)
+- `src/components/sigma/alpha/AlphaInsights.tsx` (max-w-4xl popup, 3 new insights, expanded content, header counters)
+
+### Files Created
+- `src/components/sigma/shared/ClassifiedCover.tsx` (reusable retro green PC screen component with card/detail/page variants)
+
+### Cron
+- Job #338235 continues every 15 min (webDevReview)

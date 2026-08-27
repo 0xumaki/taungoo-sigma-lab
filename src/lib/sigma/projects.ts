@@ -6,6 +6,7 @@ export interface Project {
   fullName: string;
   description: string;
   language: string;
+  languages?: string[];
   stars: number;
   forks: number;
   openIssues: number;

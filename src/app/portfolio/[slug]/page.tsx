@@ -6,6 +6,7 @@ import Link from "next/link";
 import { AlphaNav } from "@/components/sigma/alpha/AlphaNav";
 import { AlphaFooter } from "@/components/sigma/alpha/AlphaFooter";
 import { SciFiCard } from "@/components/sigma/alpha/SciFiCard";
+import { ClassifiedCover } from "@/components/sigma/shared/ClassifiedCover";
 import { usePageReveal } from "@/lib/sigma/use-page-reveal";
 
 const PROJECTS: Record<string, {
@@ -224,20 +225,10 @@ export default function PortfolioCaseStudy() {
             {project.image ? (
               <img src={project.image} alt={project.name} className="w-full" />
             ) : (
-              /* "[ SCREENSHOT CLASSIFIED ]" cover for projects without a published screenshot */
-              <div className="flex aspect-video w-full flex-col items-center justify-center gap-3 border-2 border-dashed border-[#FF3D3D]/40 bg-[#FF3D3D]/5">
-                <span className="font-mono text-sm uppercase tracking-[0.3em] text-[#FF3D3D]">
-                  ▸ [ SCREENSHOT CLASSIFIED ]
-                </span>
-                <span className="font-serif text-sm italic text-muted-foreground">
-                  Screenshot access restricted — contact us to view this project
-                </span>
-                <div
-                  className="mt-1 h-1.5 w-24"
-                  style={{
-                    background: "repeating-linear-gradient(45deg, #FF3D3D 0, #FF3D3D 4px, transparent 4px, transparent 8px)",
-                  }}
-                />
+              /* Retro brutalist glitching green PC screen — replaces the old
+                 "[ SCREENSHOT CLASSIFIED ]" cover. */
+              <div className="aspect-video w-full">
+                <ClassifiedCover variant="page" className="h-full w-full" />
               </div>
             )}
             <div className="sigma-scanlines pointer-events-none absolute inset-0 opacity-30" />

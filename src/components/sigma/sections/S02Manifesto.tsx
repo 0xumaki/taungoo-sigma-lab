@@ -160,7 +160,7 @@ export function S02Manifesto() {
             <div className="flex items-baseline gap-1">
               <span className="font-sans text-6xl font-black leading-none text-[#FF4500]">29</span>
               <span className="font-sans text-2xl font-bold text-foreground">.06.</span>
-              <span className="font-sans text-2xl font-bold text-foreground">24</span>
+              <span className="font-sans text-2xl font-bold text-foreground">2016</span>
             </div>
           </div>
 

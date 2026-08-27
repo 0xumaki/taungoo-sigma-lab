@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { PageTransitionLink } from "@/components/sigma/PageTransitionLink";
+import { ClassifiedCover } from "@/components/sigma/shared/ClassifiedCover";
 
 type Project = {
   name: string;
@@ -167,28 +168,9 @@ export function AlphaPortfolio() {
                         }}
                       />
                     ) : (
-                      /* "[ SCREENSHOT CLASSIFIED ]" cover for projects without a published screenshot */
-                      <div
-                        className="flex h-full w-full flex-col items-center justify-center gap-2 border-2 border-dashed"
-                        style={{ borderColor: `${p.accent}50`, background: `${p.accent}08` }}
-                      >
-                        <span
-                          className="font-mono text-[10px] uppercase tracking-[0.3em]"
-                          style={{ color: p.accent }}
-                        >
-                          ▸ [ SCREENSHOT CLASSIFIED ]
-                        </span>
-                        <span className="font-serif text-[10px] italic text-muted-foreground">
-                          Contact us to view this project
-                        </span>
-                        {/* Decorative hazard stripes */}
-                        <div
-                          className="mt-1 h-1 w-16"
-                          style={{
-                            background: `repeating-linear-gradient(45deg, ${p.accent} 0, ${p.accent} 4px, transparent 4px, transparent 8px)`,
-                          }}
-                        />
-                      </div>
+                      /* Retro brutalist glitching green PC screen — replaces the
+                         old "[ SCREENSHOT CLASSIFIED ]" cover. */
+                      <ClassifiedCover variant="card" />
                     )}
 
                     {/* Bottom gradient for legibility */}

@@ -8,6 +8,7 @@ import { useSigmaStore } from "@/lib/sigma/store";
 import { SectionShell } from "../shared/SectionShell";
 import { BrutalButton, Crosshair, Panel, Tag } from "../shared/components";
 import { SigmaParticles } from "../shared/SigmaParticles";
+import { ClassifiedCover } from "../shared/ClassifiedCover";
 import {
   Dialog,
   DialogContent,
@@ -157,27 +158,9 @@ function ProjectCard({ project, onOpen }: { project: Project; onOpen: () => void
           className="absolute inset-0 h-full w-full object-cover object-top opacity-95 transition-all duration-500 group-hover:scale-105 group-hover:opacity-100"
         />
       ) : (
-        /* "[ SCREENSHOT CLASSIFIED ]" cover for projects without a published screenshot */
-        <div
-          className="absolute inset-0 flex h-full w-full flex-col items-center justify-center gap-1.5 border-2 border-dashed"
-          style={{ borderColor: `${project.accent}50`, background: `${project.accent}0a` }}
-        >
-          <span
-            className="px-2 text-center font-mono text-[9px] uppercase tracking-[0.26em]"
-            style={{ color: project.accent }}
-          >
-            ▸ [ SCREENSHOT CLASSIFIED ]
-          </span>
-          <span className="px-2 text-center font-serif text-[9px] italic text-muted-foreground">
-            Contact us to view this project
-          </span>
-          <div
-            className="mt-1 h-1 w-14"
-            style={{
-              background: `repeating-linear-gradient(45deg, ${project.accent} 0, ${project.accent} 4px, transparent 4px, transparent 8px)`,
-            }}
-          />
-        </div>
+        /* Retro brutalist glitching green PC screen — replaces the old
+           "[ SCREENSHOT CLASSIFIED ]" cover. */
+        <ClassifiedCover variant="card" className="absolute inset-0" />
       )}
       <div
         className="absolute inset-0 opacity-20 mix-blend-color transition-opacity group-hover:opacity-40"
@@ -236,26 +219,10 @@ function ProjectDetail({ project }: { project: Project }) {
             className="h-full max-h-[calc(90vh-3rem)] w-full object-cover object-top"
           />
         ) : (
-          /* "[ SCREENSHOT CLASSIFIED ]" cover for projects without a published screenshot */
-          <div
-            className="flex h-full min-h-[240px] w-full flex-col items-center justify-center gap-2 border-2 border-dashed"
-            style={{ borderColor: `${project.accent}50`, background: `${project.accent}0a` }}
-          >
-            <span
-              className="font-mono text-[10px] uppercase tracking-[0.3em]"
-              style={{ color: project.accent }}
-            >
-              ▸ [ SCREENSHOT CLASSIFIED ]
-            </span>
-            <span className="font-serif text-[10px] italic text-muted-foreground">
-              Contact us to view this project
-            </span>
-            <div
-              className="mt-1 h-1 w-16"
-              style={{
-                background: `repeating-linear-gradient(45deg, ${project.accent} 0, ${project.accent} 4px, transparent 4px, transparent 8px)`,
-              }}
-            />
+          /* Retro brutalist glitching green PC screen — replaces the old
+             "[ SCREENSHOT CLASSIFIED ]" cover. */
+          <div className="min-h-[240px] w-full">
+            <ClassifiedCover variant="detail" className="h-full min-h-[240px]" />
           </div>
         )}
         <div className="sigma-scanlines pointer-events-none absolute inset-0 opacity-40" />
@@ -276,14 +243,13 @@ function ProjectDetail({ project }: { project: Project }) {
         </div>
 
         <div className="grid grid-cols-3 gap-2">
-          {[
-            ["LANGUAGE", project.language],
+          {([
             ["LOC", project.loc],
             ["CATEGORY", project.category],
             ["BUDGET", project.budget],
             ["SIZE", `${project.size}KB`],
             ["UPDATED", project.updated],
-          ].map(([k, v]) => (
+          ] as const).map(([k, v]) => (
             <div key={k} className="border border-border p-2">
               <div className="font-mono text-[9px] uppercase tracking-[0.18em] text-muted-foreground">
                 {k}
@@ -291,6 +257,27 @@ function ProjectDetail({ project }: { project: Project }) {
               <div className="font-mono text-sm font-bold text-foreground">{v}</div>
             </div>
           ))}
+          {/* Full-width LANGUAGES row — replaces the old single LANGUAGE cell.
+              Shows the project's top 3–5 languages as styled accent tags. */}
+          <div className="col-span-3 border border-border p-2">
+            <div className="font-mono text-[9px] uppercase tracking-[0.18em] text-muted-foreground">
+              LANGUAGES
+            </div>
+            <div className="mt-1.5 flex flex-wrap gap-1">
+              {(project.languages?.length ? project.languages : [project.language]).map((lang) => (
+                <span
+                  key={lang}
+                  className="border px-1.5 py-0.5 font-mono text-[9px] uppercase tracking-[0.12em]"
+                  style={{
+                    borderColor: `${project.accent}44`,
+                    color: project.accent,
+                  }}
+                >
+                  {lang}
+                </span>
+              ))}
+            </div>
+          </div>
         </div>
 
         <div>
