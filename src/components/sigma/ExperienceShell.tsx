@@ -103,12 +103,30 @@ export function ExperienceShell() {
       }, 0);
       return () => clearTimeout(t); // deep-links skip the boot screen + onboarding
     }
-    // ALWAYS show boot screen on every page load (removed sessionStorage check — user wants to see it on reload)
-    setBooting(true);
+    // Only show boot screen on first load or full page reload — NOT when
+    // returning from detail pages. We detect this by checking if the page
+    // was loaded via browser navigation (back/forward) vs a full reload.
+    // performance.navigation.type === 0 = normal navigation (could be back from detail)
+    // performance.navigation.type === 1 = reload (show boot)
+    // If there's a saved scroll position, it means we're returning from a detail page
+    const isReturning = sessionStorage.getItem("alpha_scroll_position") !== null;
+    const navEntry = performance.getEntriesByType("navigation")[0] as PerformanceNavigationTiming | undefined;
+    const isReload = navEntry?.type === "reload";
+
+    if (!isReturning && !isReload) {
+      // First visit to the site (not returning from detail, not a reload)
+      // → show boot screen
+      setBooting(true);
+    } else if (isReload) {
+      // Full page reload → show boot screen
+      setBooting(true);
+    }
+    // If isReturning → skip boot screen (coming back from detail page)
+
     try {
       // show onboarding only once per browser (localStorage)
       const onboarded = localStorage.getItem("sigma_onboarded");
-      if (!onboarded) {
+      if (!onboarded && !isReturning) {
         // delay onboarding until after boot screen
         const ob = setTimeout(() => setOnboarding(true), 4000);
         return () => clearTimeout(ob);

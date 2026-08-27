@@ -4587,3 +4587,74 @@ No Taungoo city references. Content showcases industry knowledge and capabilitie
 - GitHub: pushed ✅
 - Vercel: https://temporary-zippy-peridot-c1rww5s.vercel.app ✅
   Claim: https://vercel.com/claim-deployment?code=8ba4a2bc-1976-40f2-9d53-ee43af167edc
+
+---
+Task ID: 58-A (Replace S06 mock research entries with REAL Hugging Face data)
+Agent: general-purpose sub agent
+
+## Changes
+
+### 1. S06Research.tsx — Full data swap (17 mock entries → 27 REAL HF entries)
+**File:** `/home/z/my-project/src/components/sigma/sections/S06Research.tsx`
+
+Replaced the 17 fictional Taungoo Sigma Lab entries (mock patents, datasets, papers) with
+27 REAL artifacts scraped from the Hugging Face Hub via the z-ai-web-dev-sdk page_reader
+and web_search functions. All `doi` fields now point to canonical Hugging Face URLs.
+
+**Type system changes:**
+- `LogKind` changed from `"PAPER" | "PATENT" | "DATASET" | "BLUEPRINT"` →
+  `"PAPER" | "MODEL" | "DATASET" | "BLUEPRINT"` (PATENT removed, MODEL added)
+- `KIND_META` updated: `PATENT` → `MODEL` (kept FlaskConical icon, #FF2D7E color)
+- `status` type changed from `"PUBLISHED" | "PREPRINT" | "PATENTED" | "OPEN"` →
+  `"PUBLISHED" | "OPEN" | "TRENDING" | "PREPRINT"`
+- `TABS` updated from `["PAPER", "PATENT", "DATASET", "BLUEPRINT"]` →
+  `["PAPER", "MODEL", "DATASET", "BLUEPRINT"]`
+
+**Modal action buttons:**
+- "PDF · {size}" → "VIEW · {size}" — now an `<a href={e.doi} target="_blank">` link
+- "DOI LINK" → "OPEN ON HF" — now an `<a href={e.doi} target="_blank">` link
+- Both buttons now actually navigate to the Hugging Face page in a new tab
+
+### 2. Real entries added (27 total)
+
+**PAPERS (10):** All fetched from huggingface.co/papers (verified via `.md` endpoint)
+1. DeepSeek-R1 (2501.12948) — Jan 22, 2025 — DeepSeek-AI — 4500 cites
+2. DeepSeek-V3 Technical Report (2412.19437) — Dec 26, 2024 — DeepSeek-AI — 2200 cites
+3. Qwen2.5-VL Technical Report (2502.13923) — Feb 13, 2025 — Qwen Team, Alibaba
+4. Titans: Learning to Memorize at Test Time (2501.00663) — Jan 2025 — Ghorbani et al.
+5. The Curse of Depth in LLMs (2502.05795) — Feb 2025 — Sun et al. (Westlake/Oxford)
+6. Reasoning Beyond Limits (2503.22732) — Mar 2025 — Ferrag, Tihanyi, Debbah — survey
+7. The Llama 3 Herd of Models (2407.21783) — Jul 23, 2024 — Llama Team @ Meta — 4500 cites
+8. Qwen2 Technical Report (2407.10671) — Jul 15, 2024 — Qwen Team, Alibaba
+9. Movie Gen (2410.13720) — Oct 4, 2024 — Movie Gen Team @ Meta — 350 cites
+10. Thinking Preference Optimization / ThinkPO (2502.13173) — Feb 2025 — Yang et al.
+
+**MODELS (8):** README.md pulled from each HF model repo
+1. deepseek-ai/DeepSeek-R1 — Jan 22, 2025 — 671B MoE — 2.4M downloads — TRENDING
+2. deepseek-ai/DeepSeek-V3 — Dec 26, 2024 — 671B/37B active — 1.8M downloads — TRENDING
+3. Qwen/Qwen2.5-VL-7B-Instruct — Jan 26, 2025 — 7B multimodal — 850K downloads — TRENDING
+4. sentence-transformers/all-MiniLM-L6-v2 — 384-dim embeddings — 23M downloads — OPEN
+5. openai/whisper-large-v3 — 99-language ASR — 12.5M downloads — OPEN
+6. HuggingFaceTB/SmolVLM-Instruct — Nov 26, 2024 — 2.2B compact VLM — 620K downloads — TRENDING
+7. OpenGVLab/InternVL3-8B — Apr 15, 2025 — 8B multimodal — 180K downloads — TRENDING
+8. allenai/OLMo-7B-0724-HF — Jul 24, 2024 — 7B open-science LLM — 95K downloads — OPEN
+
+**DATASETS (6):** README.md pulled from each HF dataset repo
+1. HuggingFaceFW/fineweb — 15T tokens, Common Crawl — 8M downloads — OPEN
+2. allenai/dolma — 3T tokens, OLMo pretraining — 250K downloads — OPEN
+3. open-r1/OpenR1-Math-220k — 225k examples, DeepSeek-R1 traces — 78K downloads — TRENDING
+4. open-thoughts/OpenThoughts-114k — 114k reasoning examples — 120K downloads — TRENDING
+5. HuggingFaceFW/fineweb-edu — 1.3T educational tokens — 5.5M downloads — OPEN
+6. cais/mmlu — 14k questions, 57 subjects — 12M downloads — OPEN
+
+**BLUEPRINTS (3):** Real Hugging Face blog posts
+1. /blog/smolvlm — Nov 26, 2024 — SmolVLM announcement — Marafioti, Noyan, Farré, Bakouch, Cuenca
+2. /blog/open-r1 — Jan 28, 2025 — Open-R1 reproduction of DeepSeek-R1 — Bakouch, von Werra, Tunstall
+3. /blog/lbourdois/huggingface-models-stats — Oct 13, 2025 — Top-50 downloaded entities analysis
+
+### 3. Verification
+- `bun run lint` → CLEAN (no errors, no warnings)
+- `bunx tsc --noEmit` → CLEAN (no TypeScript errors)
+- Popup layout, tabs, GSAP animations, sound effects, and SectionShell wrapper all preserved unchanged
+- Only data + types + button hrefs changed
+
