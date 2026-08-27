@@ -37,15 +37,20 @@ export function SigmaHaggle() {
   const [phase, setPhase] = React.useState<HagglePhase>("idle");
   // Progress of the trigger sequence: 0..HAGGLE_TRIGGER_COUNT
   const [triggerProgress, setTriggerProgress] = React.useState(0);
+  // The face rolled in the CURRENT animation cycle (used for the result letter
+  // display on every replay — the basket store keeps the FIRST roll's discount).
+  const [currentRollFace, setCurrentRollFace] = React.useState<number | null>(null);
   const seqCountRef = React.useRef(0);
   const lastKeyTimeRef = React.useRef(0);
 
-  // Subscribe to haggleUsed so we can prevent re-triggering after success.
+  // Subscribe to haggleUsed so we can show "REPLAY" badge in the result letter
+  // when the discount is already locked to the first roll.
+  // NOTE: We do NOT return early here — the keyboard listener stays active so
+  // the user can replay the animation unlimited times. Only the FIRST successful
+  // roll applies the discount; subsequent rolls are pure animation replays.
   const haggleUsed = useBasketStore((s) => s.haggleUsed);
 
   React.useEffect(() => {
-    if (haggleUsed) return; // already used — don't listen for the sequence
-
     const onKey = (e: KeyboardEvent) => {
       // Ignore key presses inside form fields
       const target = e.target as HTMLElement | null;
@@ -84,7 +89,7 @@ export function SigmaHaggle() {
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [haggleUsed]);
+  }, []);
 
   // ESC closes the activation modal only (not during rolling/result)
   React.useEffect(() => {
@@ -115,6 +120,7 @@ export function SigmaHaggle() {
       <ActivationCard
         onCancel={() => setPhase("idle")}
         onSuccess={() => setPhase("rolling")}
+        alreadyHaggled={haggleUsed}
       />
     );
   }
@@ -124,8 +130,14 @@ export function SigmaHaggle() {
       <DiceRoller
         onComplete={(face) => {
           const entry = HAGGLE_DICE_TABLE[face - 1];
-          // Apply the haggle discount to the basket (single-use)
-          useBasketStore.getState().setHaggleResult(entry.face, entry.rate);
+          // Apply the haggle discount to the basket ONLY on the FIRST successful
+          // roll. Subsequent rolls are pure animation replays — the discount stays
+          // locked to the first roll (Option 2: "unlimited replay, no discount change").
+          if (!useBasketStore.getState().haggleUsed) {
+            useBasketStore.getState().setHaggleResult(entry.face, entry.rate);
+          }
+          // Track the CURRENT roll's face for the result letter display
+          setCurrentRollFace(face);
           setPhase("result");
         }}
       />
@@ -133,15 +145,24 @@ export function SigmaHaggle() {
   }
 
   // phase === "result"
-  const roll = useBasketStore.getState().haggleRoll ?? 1;
-  const entry = HAGGLE_DICE_TABLE[roll - 1];
+  // Display the CURRENT roll's face (not the locked discount) so the user
+  // sees their actual dice result on every replay. The `isReplay` flag tells
+  // the result letter whether to show a "discount locked to first roll" hint.
+  const rollFace = currentRollFace ?? useBasketStore.getState().haggleRoll ?? 1;
+  const entry = HAGGLE_DICE_TABLE[rollFace - 1];
+  const isReplay = haggleUsed && currentRollFace !== useBasketStore.getState().haggleRoll;
 
   return (
     <ResultLetter
       face={entry.face}
       rate={entry.rate}
       label={entry.label}
-      onDismiss={() => setPhase("idle")}
+      isReplay={isReplay}
+      lockedRoll={useBasketStore.getState().haggleRoll}
+      onDismiss={() => {
+        setCurrentRollFace(null);
+        setPhase("idle");
+      }}
     />
   );
 }
@@ -243,7 +264,7 @@ function TriggerProgressBadge({
 // PHASE 1 — ACTIVATION CARD
 // ─────────────────────────────────────────────────────────────────────────────
 
-function ActivationCard({ onCancel, onSuccess }: { onCancel: () => void; onSuccess: () => void }) {
+function ActivationCard({ onCancel, onSuccess, alreadyHaggled = false }: { onCancel: () => void; onSuccess: () => void; alreadyHaggled?: boolean }) {
   const rootRef = React.useRef<HTMLDivElement>(null);
   const cardRef = React.useRef<HTMLDivElement>(null);
   const [code, setCode] = React.useState("");
@@ -460,6 +481,14 @@ function ActivationCard({ onCancel, onSuccess }: { onCancel: () => void; onSucce
               <div className="font-mono text-[9px] uppercase tracking-[0.3em] text-muted-foreground">
                 ↑↑↑↑ TRIGGERED · ENTER ACTIVATION CODE TO ROLL
               </div>
+              {alreadyHaggled && (
+                <div
+                  className="mt-2 inline-flex items-center gap-1.5 border border-[#FFD700]/40 bg-[#FFD700]/10 px-2 py-1 font-mono text-[8px] uppercase tracking-[0.18em] text-[#FFD700]"
+                >
+                  <span className="h-1 w-1 animate-pulse bg-[#FFD700]" />
+                  ◆ REPLAY MODE · DISCOUNT LOCKED TO FIRST ROLL
+                </div>
+              )}
             </div>
 
             {/* Prize table preview */}
@@ -1356,11 +1385,15 @@ function ResultLetter({
   rate,
   label,
   onDismiss,
+  isReplay = false,
+  lockedRoll,
 }: {
   face: number;
   rate: number;
   label: string;
   onDismiss: () => void;
+  isReplay?: boolean;
+  lockedRoll?: number | null;
 }) {
   const rootRef = React.useRef<HTMLDivElement>(null);
   const audioRef = React.useRef<HTMLAudioElement | null>(null);
@@ -1531,6 +1564,21 @@ function ResultLetter({
           {isJackpot ? "★ JACKPOT ★" : "★ BONUS ★"}
         </div>
 
+        {/* Replay badge — shows when this is a replay (discount already locked) */}
+        {isReplay && (
+          <div
+            data-rl-line
+            className="mt-2 inline-flex items-center gap-2 border border-[#FFD700] bg-[#FFD700]/10 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.3em] text-[#FFD700]"
+            style={{
+              clipPath: "polygon(6px 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%, 0 6px)",
+              boxShadow: "0 0 16px rgba(255,215,0,0.5)",
+            }}
+          >
+            <span className="h-1.5 w-1.5 animate-pulse bg-[#FFD700]" />
+            ▮ REPLAY · DISCOUNT LOCKED ◆
+          </div>
+        )}
+
         {/* Letter card */}
         <div
           data-rl-card
@@ -1660,9 +1708,23 @@ function ResultLetter({
               data-rl-line
               className="mt-3 font-mono text-[9px] uppercase tracking-[0.18em] text-muted-foreground"
             >
-              ▸ This extra {percent}% stacks on top of your bulk-discount total.
-              <br />
-              ▸ Haggle is single-use per session — your basket has been updated.
+              {isReplay ? (
+                <>
+                  ▸ <span className="text-[#FFD700]">REPLAY</span> — your dice rolled {face} ({percent}% extra).
+                  <br />
+                  ▸ Your discount stays locked to your first roll (<span className="text-[#FFD700]">#{lockedRoll}</span> = {Math.round(HAGGLE_DICE_TABLE[(lockedRoll ?? 1) - 1].rate * 100)}% extra).
+                  <br />
+                  ▸ You can replay the animation unlimited times — the discount never decreases.
+                </>
+              ) : (
+                <>
+                  ▸ This extra {percent}% stacks on top of your bulk-discount total.
+                  <br />
+                  ▸ Haggle discount is now locked to this roll — your basket has been updated.
+                  <br />
+                  ▸ You can replay the animation unlimited times — the discount never decreases.
+                </>
+              )}
             </div>
 
             {/* Signature */}
