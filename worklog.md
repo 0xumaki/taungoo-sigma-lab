@@ -6228,3 +6228,107 @@ Wrote a Python script that applied the v4 matrix systematically:
   devices. Consider adding a `prefers-reduced-motion` fallback.
 - The screen shake might be too intense for some users. Consider adding a setting
   to disable it.
+
+---
+
+## 66 — HAGGLE: UNLIMITED ANIMATION REPLAY, DISCOUNT LOCKED TO FIRST ROLL (OPTION 2)
+
+### Task
+User feedback (verbatim): "I cannot retrigger the haggle animation. Probably I
+already claimed the discount once?"
+
+User approved Option 2: "Unlimited replay, no discount change"
+- Allow re-triggering the animation unlimited times for fun
+- But the discount is locked to the first roll (single-use discount, unlimited animation replays)
+- The basket keeps showing the first roll's discount
+
+### Changes
+**`src/components/sigma/shared/SigmaHaggle.tsx`** (75 insertions, 13 deletions):
+
+1. **Removed the `if (haggleUsed) return` guard** on the keyboard listener
+   `useEffect`. The keyboard listener now stays active for the entire session —
+   users can re-trigger the haggle via ↑↑↑↑ unlimited times.
+
+2. **Conditional `setHaggleResult` call** — only the FIRST successful roll
+   applies the discount. Subsequent rolls are pure animation replays:
+   ```ts
+   if (!useBasketStore.getState().haggleUsed) {
+     useBasketStore.getState().setHaggleResult(entry.face, entry.rate);
+   }
+   setCurrentRollFace(face);  // track current roll's face for display
+   ```
+
+3. **`currentRollFace` state** — new state tracks the face rolled in the CURRENT
+   animation cycle. The result letter now displays the CURRENT roll's face (not
+   the locked discount), so the user sees their actual dice result on every
+   replay.
+
+4. **`isReplay` detection** — when `haggleUsed && currentRollFace !== lockedRoll`,
+   the result letter shows a golden "▮ REPLAY · DISCOUNT LOCKED ◆" badge below
+   the BONUS title. This lets the user know their replay didn't change the
+   discount.
+
+5. **`alreadyHaggled` prop on ActivationCard** — when the user re-triggers the
+   haggle after already claiming, the activation card shows a golden
+   "◆ REPLAY MODE · DISCOUNT LOCKED TO FIRST ROLL" badge below the subtitle.
+
+6. **Updated messaging** in the result letter rules section:
+   - First roll: "▸ Haggle discount is now locked to this roll — your basket has
+     been updated. ▸ You can replay the animation unlimited times — the discount
+     never decreases."
+   - Replay (different number): "▸ REPLAY — your dice rolled N (X% extra).
+     ▸ Your discount stays locked to your first roll (#M = Y% extra).
+     ▸ You can replay the animation unlimited times — the discount never decreases."
+   - Replay (same number): shows first-roll messaging (because the discount IS
+     this roll, so no replay badge needed).
+
+### Verification (agent-browser, end-to-end)
+
+Reset sessionStorage, then triggered the haggle 3 times:
+
+**1st roll (#4 = 9% extra):**
+- Activation card: NO replay badge (first time)
+- Result letter: "HAGGLE CERTIFICATE / ROLL #4 · 9% EXTRA / YOU GOT 9% OF
+  EXTRA DISCOUNT"
+- Rules: "Haggle discount is now locked to this roll — your basket has been
+  updated. You can replay the animation unlimited times."
+- Basket: "◆ HAGGLE (ROLL 4) -1,718,361 MMK"
+
+**2nd roll (#4 = 9% extra — same number):**
+- Activation card: "◆ REPLAY MODE · DISCOUNT LOCKED TO FIRST ROLL" badge ✓
+- Result letter: same as 1st roll (same number = no REPLAY badge needed)
+- Basket: still shows "HAGGLE (ROLL 4)" (no change — same number)
+
+**3rd roll (#5 = 12% extra — different number):**
+- Activation card: "◆ REPLAY MODE · DISCOUNT LOCKED TO FIRST ROLL" badge ✓
+- Result letter: "★ BONUS ★ / ▮ REPLAY · DISCOUNT LOCKED ◆ / HAGGLE
+  CERTIFICATE / ROLL #5 · 12% EXTRA / YOU GOT 12% OF EXTRA DISCOUNT"
+- Rules: "▸ REPLAY — your dice rolled 5 (12% extra). ▸ Your discount stays
+  locked to your first roll (#4 = 9% extra). ▸ You can replay the animation
+  unlimited times — the discount never decreases."
+- Basket (after navigating to /services/voice-ai + adding 2 packages):
+  "◆ HAGGLE (ROLL 4) -1,718,361 MMK" — CONFIRMED the discount is still
+  locked to the FIRST roll (#4 = 9%), NOT replaced by the 3rd roll (#5 = 12%)
+
+### Files changed (1 source file)
+1. `src/components/sigma/shared/SigmaHaggle.tsx` — keyboard listener guard
+   removed, conditional setHaggleResult, currentRollFace state, isReplay
+   detection, ActivationCard alreadyHaggled prop, ResultLetter isReplay +
+   lockedRoll props, updated messaging for both first-roll and replay scenarios
+
+### Deployment
+- Git commit: 3929437
+- Vercel deployment: #6132928418 (state: success)
+- Live URL: https://temporary-rapid-meteor-3pco7jv-2nwnmle1y.vercel.app
+
+### What was NOT touched (deliberately)
+- Dice animation (3D cube + HUD + particles + screen shake) — unchanged from
+  Stage 65
+- Activation codes — unchanged (still 5 codes: SIGMA-777, TAUNGOO-LUCK,
+  HAGGLE-2025, ARCADE-MASTER, JACKPOT-Σ)
+- Dice table (1=2%, 2=4%, 3=6%, 4=9%, 5=12%, 6=15%) — unchanged per user spec
+- Haggle trigger (↑↑↑↑) — unchanged from Stage 64
+- sessionStorage persistence — unchanged (the locked discount still persists
+  across page navigations)
+- Basket display logic — unchanged (still shows "◆ HAGGLE (ROLL N)" with the
+  first roll's number)
