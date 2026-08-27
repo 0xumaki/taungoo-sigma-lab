@@ -265,15 +265,15 @@ export const SERVICE_ADDONS: Record<string, AddOn[]> = {
     { id: "smart-contract-mainnet-monitoring", name: "Mainnet Monitoring", type: "ongoing", description: "Event watch service, anomaly alerts, and monthly on-chain health report", price: "724,000 MMK/mo" },
   ],
 
-  // 24. Bug Bounty ----------------------------------------------------
-  "bug-bounty": [
-    { id: "bug-bounty-severity-tier", name: "Additional Severity Tier", type: "one-time", description: "Custom payout tier with escrow, KYC gate, and dispute-resolution policy", price: "966,000 MMK" },
-    { id: "bug-bounty-hunter-pack", name: "Hunter Recruitment Pack", type: "one-time", description: "Outreach campaign and onboarding flow for twenty-five new bounty hunters", price: "1,330,000 MMK" },
-    { id: "bug-bounty-triage", name: "Triage Service", type: "one-time", description: "First-pass validation, dedupe, and severity scoring for all incoming submissions", price: "1,810,000 MMK" },
-    { id: "bug-bounty-private", name: "Private Program Add-on", type: "one-time", description: "Invite-only cohort with KYC, NDA, and gated access to staging assets", price: "1,210,000 MMK" },
-    { id: "bug-bounty-payout", name: "Payout Management", type: "one-time", description: "Multi-chain payout disbursement with ledger, tax docs, and refund handling", price: "966,000 MMK" },
-    { id: "bug-bounty-hall-of-fame", name: "Hall of Fame Page", type: "one-time", description: "Branded leaderboard with contributor avatars, stats, and assets for your marketing site", price: "483,000 MMK" },
-    { id: "bug-bounty-monthly-triage", name: "Monthly Triage Retainer", type: "ongoing", description: "SLA-backed triage with monthly report and 24-hour response on critical submissions", price: "724,000 MMK/mo" },
+  // 24. RWA Development -----------------------------------------------
+  "rwa-development": [
+    { id: "rwa-asset-onboarding", name: "Additional Asset Class", type: "one-time", description: "Onboard a new asset type (real estate, commodities, invoices, art) with custom valuation oracle", price: "1,810,000 MMK" },
+    { id: "rwa-custody-integration", name: "Institutional Custody Integration", type: "one-time", description: "Connect to Fireblocks, Anchorage, or custom HSM-backed custody for asset backing", price: "2,420,000 MMK" },
+    { id: "rwa-oracle-chainlink", name: "Chainlink Oracle Setup", type: "one-time", description: "Custom Chainlink oracle with asset price feeds, reserve attestation, and proof-of-reserve", price: "1,810,000 MMK" },
+    { id: "rwa-compliance-kyc", name: "KYC/AML Compliance Module", type: "one-time", description: "Investor accreditation, sanctions screening, jurisdiction-gating, and audit trail", price: "2,420,000 MMK" },
+    { id: "rwa-whitelabel-branding", name: "White-Label Branding Pack", type: "one-time", description: "Custom logo, color system, domain mapping, and investor portal white-label", price: "1,210,000 MMK" },
+    { id: "rwa-secondary-market", name: "Secondary Market Module", type: "one-time", description: "Order book, AMM pool, or OTC desk for secondary trading of tokenized assets", price: "3,620,000 MMK" },
+    { id: "rwa-monthly-attestation", name: "Monthly Reserve Attestation", type: "ongoing", description: "Monthly proof-of-reserve report with auditor sign-off and on-chain attestation", price: "1,210,000 MMK/mo" },
   ],
 
   // 25. Money Market Development -------------------------------------

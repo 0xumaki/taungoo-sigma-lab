@@ -113,16 +113,16 @@ export const ADDONS: Record<string, { slug: string; name: string; icon: string; 
     { slug: "security-audit", name: "Security Audit", icon: "ʞ", price: "from 6,040,000 MMK", reason: "Audit minting contracts" },
   ],
   "security-audit": [
-    { slug: "bug-bounty", name: "Bug Bounty", icon: "▣", price: "from 3,620,000 MMK", reason: "Ongoing security testing" },
+    { slug: "rwa-development", name: "RWA Development", icon: "▣", price: "from 9,660,000 MMK", reason: "Tokenize real-world assets" },
     { slug: "smart-contract-development", name: "Smart Contract Dev", icon: "∎", price: "from 9,660,000 MMK", reason: "Fix vulnerabilities found" },
     { slug: "web3-wallets", name: "Web3 Wallets", icon: "⬡", price: "from 18,110,000 MMK", reason: "Secure wallet implementation" },
   ],
   "smart-contract-development": [
     { slug: "security-audit", name: "Security Audit", icon: "ʞ", price: "from 6,040,000 MMK", reason: "Audit before deployment" },
-    { slug: "bug-bounty", name: "Bug Bounty", icon: "▣", price: "from 3,620,000 MMK", reason: "Post-deploy vulnerability testing" },
+    { slug: "rwa-development", name: "RWA Development", icon: "▣", price: "from 9,660,000 MMK", reason: "RWA tokenization for your assets" },
     { slug: "web-webapp", name: "Web / WebApp", icon: "▣", price: "from 6,040,000 MMK", reason: "DApp frontend" },
   ],
-  "bug-bounty": [
+  "rwa-development": [
     { slug: "security-audit", name: "Security Audit", icon: "ʞ", price: "from 6,040,000 MMK", reason: "Comprehensive security audit" },
     { slug: "smart-contract-development", name: "Smart Contract Dev", icon: "∎", price: "from 9,660,000 MMK", reason: "Fix found vulnerabilities" },
     { slug: "web3-wallets", name: "Web3 Wallets", icon: "⬡", price: "from 18,110,000 MMK", reason: "Secure wallet infrastructure" },
@@ -169,7 +169,7 @@ export const SERVICE_PRICES: Record<string, { name: string; icon: string; price:
   "nft-systems": { name: "NFT Systems", icon: "✦", price: "from 12,080,000 MMK" },
   "security-audit": { name: "Security Audit", icon: "ʞ", price: "from 6,040,000 MMK" },
   "smart-contract-development": { name: "Smart Contract Dev", icon: "∎", price: "from 9,660,000 MMK" },
-  "bug-bounty": { name: "Bug Bounty", icon: "▣", price: "from 3,620,000 MMK" },
+  "rwa-development": { name: "Bug Bounty", icon: "▣", price: "from 3,620,000 MMK" },
   "money-market-development": { name: "Money Market Development", icon: "$", price: "from 30,190,000 MMK" },
   "stablecoin-development": { name: "Stablecoin Development", icon: "₵", price: "custom" },
   "mobile-web-game-development": { name: "Mobile/Web Game Dev", icon: "◆", price: "from 7,240,000 MMK" },

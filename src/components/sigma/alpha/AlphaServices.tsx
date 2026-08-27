@@ -27,7 +27,7 @@ const SERVICES = [
   { name: "NFT Systems", icon: "✦", desc: "NFT minting + marketplace + royalty infrastructure.", price: "from 12,080,000 MMK", cat: "WEB3", slug: "nft-systems" },
   { name: "Security Audit", icon: "⚿", desc: "Smart contract audits. Catch exploits before mainnet.", price: "from 6,040,000 MMK", cat: "WEB3", slug: "security-audit" },
   { name: "Smart Contract Dev", icon: "∎", desc: "Solidity/Rust contracts shipped to mainnet. Gas-optimized.", price: "from 9,660,000 MMK", cat: "WEB3", slug: "smart-contract-development" },
-  { name: "Bug Bounty", icon: "▣", desc: "Security testing + vulnerability assessments. Real exploits found.", price: "from 3,620,000 MMK", cat: "WEB3", slug: "bug-bounty" },
+  { name: "RWA Development", icon: "▣", desc: "Real-world asset tokenization + white-label RWA platform licensing", price: "from 9,660,000 MMK", cat: "WEB3", slug: "rwa-development" },
   { name: "Money Market Development", icon: "$", desc: "DeFi lending, borrowing, and yield protocols.", price: "from 30,190,000 MMK", cat: "WEB3", slug: "money-market-development" },
   { name: "Stablecoin Development", icon: "₵", desc: "Banking-grade stablecoin infrastructure at institutional scale.", price: "from 30,190,000 MMK", cat: "WEB3", slug: "stablecoin-development" },
   { name: "Mobile/Web Game Dev", icon: "◆", desc: "Mobile + web games on Unity, Phaser, and WebGL.", price: "from 7,240,000 MMK", cat: "FULL-STACK", slug: "mobile-web-game-development" },
@@ -55,7 +55,7 @@ const DETAIL_SLUGS = new Set([
   "content-copywriting", "online-media-buying", "ui-ux-design",
   "android-ios-app", "web-webapp", "chrome-extensions", "desktop-macbook-apps", "aso",
   "web3-wallets", "amm-dex", "dao-governance", "nft-systems", "security-audit",
-  "smart-contract-development", "bug-bounty", "money-market-development", "stablecoin-development",
+  "smart-contract-development", "rwa-development", "money-market-development", "stablecoin-development",
   "mobile-web-game-development",
 ]);
 
