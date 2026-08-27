@@ -29,7 +29,8 @@
     "category": "Web3",
     "accent": "#00FF94",
     "loc": "~48,000",
-    "budget": "from 18,110,000 MMK"
+    "budget": "from 18,110,000 MMK",
+    "intlBudget": "from $5,250"
   },
   {
     "id": "dukon-pro",
@@ -61,7 +62,8 @@
     "category": "Full-Stack",
     "accent": "#FF4500",
     "loc": "~12,000",
-    "budget": "from 6,040,000 MMK"
+    "budget": "from 6,040,000 MMK",
+    "intlBudget": "from $1,750"
   },
   {
     "id": "vortex-sales-os",
@@ -94,7 +96,8 @@
     "category": "AI Systems",
     "accent": "#00E5FF",
     "loc": "~25,000",
-    "budget": "from 9,660,000 MMK"
+    "budget": "from 9,660,000 MMK",
+    "intlBudget": "from $2,800"
   },
   {
     "id": "gymmaster",
@@ -126,7 +129,8 @@
     "category": "Full-Stack",
     "accent": "#FF2D7E",
     "loc": "~4,200",
-    "budget": "from 6,040,000 MMK"
+    "budget": "from 6,040,000 MMK",
+    "intlBudget": "from $1,750"
   },
   {
     "id": "lumina-tarot",
@@ -160,7 +164,8 @@
     "category": "Design",
     "accent": "#FFB300",
     "loc": "~15,000",
-    "budget": "from 2,415,000 MMK"
+    "budget": "from 2,415,000 MMK",
+    "intlBudget": "from $700"
   },
   {
     "id": "sai-pay",
@@ -192,7 +197,8 @@
     "category": "Full-Stack",
     "accent": "#B388FF",
     "loc": "~3,800",
-    "budget": "from 6,040,000 MMK"
+    "budget": "from 6,040,000 MMK",
+    "intlBudget": "from $1,750"
   },
   {
     "id": "brorus",
@@ -226,7 +232,8 @@
     "category": "Web3",
     "accent": "#FF3D3D",
     "loc": "~2,500",
-    "budget": "from 9,660,000 MMK"
+    "budget": "from 9,660,000 MMK",
+    "intlBudget": "from $2,800"
   },
   {
     "id": "asean-swap",
@@ -259,7 +266,8 @@
     "category": "Web3",
     "accent": "#FFEB3B",
     "loc": "~4,200",
-    "budget": "from 24,150,000 MMK"
+    "budget": "from 24,150,000 MMK",
+    "intlBudget": "from $7,000"
   },
   {
     "id": "manymarket",
@@ -291,6 +299,7 @@
     "category": "Full-Stack",
     "accent": "#2979FF",
     "loc": "~12,000",
-    "budget": "from 7,240,000 MMK"
+    "budget": "from 7,240,000 MMK",
+    "intlBudget": "from $2,100"
   }
 ]

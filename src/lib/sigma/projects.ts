@@ -12,6 +12,7 @@ export interface Project {
   openIssues: number;
   loc: string;
   budget: string;
+  intlBudget: string;
   updated: string;
   created: string;
   topics: string[];

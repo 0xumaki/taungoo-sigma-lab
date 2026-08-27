@@ -247,15 +247,43 @@ function ProjectDetail({ project }: { project: Project }) {
           {([
             ["LOC", project.loc],
             ["CATEGORY", project.category],
-            ["BUDGET", project.budget],
+            ["BUDGET (LOCAL)", project.budget],
+            ["BUDGET (INTL)", project.intlBudget],
             ["SIZE", `${project.size}KB`],
             ["UPDATED", project.updated],
           ] as const).map(([k, v]) => (
-            <div key={k} className="border border-border p-2">
-              <div className="font-mono text-[9px] uppercase tracking-[0.18em] text-muted-foreground">
+            <div
+              key={k}
+              className={`border p-2 ${
+                k === "BUDGET (LOCAL)"
+                  ? "border-[#00FF94]/40"
+                  : k === "BUDGET (INTL)"
+                    ? "border-[#FF4500]/40"
+                    : "border-border"
+              }`}
+            >
+              <div
+                className={`font-mono text-[9px] uppercase tracking-[0.18em] ${
+                  k === "BUDGET (LOCAL)"
+                    ? "text-[#00FF94]"
+                    : k === "BUDGET (INTL)"
+                      ? "text-[#FF4500]"
+                      : "text-muted-foreground"
+                }`}
+              >
                 {k}
               </div>
-              <div className="font-mono text-sm font-bold text-foreground">{v}</div>
+              <div
+                className={`font-mono text-sm font-bold ${
+                  k === "BUDGET (LOCAL)"
+                    ? "text-[#00FF94]"
+                    : k === "BUDGET (INTL)"
+                      ? "text-[#FF4500]"
+                      : "text-foreground"
+                }`}
+              >
+                {v}
+              </div>
             </div>
           ))}
           {/* Full-width LANGUAGES row — replaces the old single LANGUAGE cell.

@@ -4828,3 +4828,150 @@ Files bumped:
 - `GlitchImage.tsx` — background image component
 - Desktop layouts: every change uses `sm:`/`md:`/`lg:` breakpoints so the existing desktop aesthetic (small mono labels, hazard stripes, scanlines, ASCII art) is preserved exactly
 - Dark mode: untouched. Mobile breakpoints apply equally in dark/light mode
+
+---
+
+## 61-A — Dual Pricing (Local MMK + International USD) for all 27 services
+
+### Scope
+Add international USD pricing alongside the existing local MMK pricing on every service
+detail page, with a currency toggle on the page header. Add Budget (local) + Budget (intl)
+to the S04 project popup. Comparison table reflects the active currency.
+
+### Step 1 — International market research (z-ai web_search)
+Ran 26 `z-ai function -n web_search` queries (one per service category — HERMES and CBDC
+are both `custom` and need no market research). Sample findings (all confirmed 15–25% below
+the *lower end* of the agency market range):
+
+| Service | Market range (USD) | Our STARTER | Our PRO |
+|---|---|---|---|
+| AI Chatbot | $5K–$30K [Quickchat, Master of Code, Appinventiv] | $880 | $1,750 |
+| Voice AI | $5K–$25K [Master of Code, p0stman] | $1,750 | $4,200 |
+| Agent Swarm | $5K–$50K+ [ProductCrafters, p0stman] | $2,800 | $5,600 |
+| AI Automation (N8N) | $1K–$15K+ [goodspeed.studio, Reddit r/n8n] | $1,050 | $2,800 |
+| API & MCP | $5K–$150K/yr [Truto, KongHQ] | $1,400 | $2,800 |
+| AI Video Gen | $1K–$5K/mo [Cloudpano, Sovran] | $700 | $1,400 |
+| 3D Modeling | $100–$5K [Alpha3D, Dizzagency] | $525 | $1,050 |
+| Graphic Design | $1K–$50K [Clutch, Digital Polo] | $350 | $525 |
+| Content & Copy | $500–$50K [RobPalmer, ElnaCain] | $280 | $420 |
+| Media Buying | $500–$3K/mo [Clutch, DigitalTimesavers] | $525 | $700 |
+| UI/UX | $13K–$82K [UX4Sight, Fuselab] | $700 | $1,750 |
+| Android/iOS | $10K–$300K [Appinventiv, BusinessOfApps] | $3,500 | $7,000 |
+| Web/WebApp | $5K–$500K [Softermii, Mindk] | $1,750 | $3,500 |
+| Chrome Extensions | $3K–$25K [WebMobTech] | $700 | $1,400 |
+| Desktop/MacBook | $20K–$300K [Microsoft Learn, Couchbase] | $2,800 | $5,600 |
+| ASO | $2.5K–$7K/mo [AppAgent, BusinessOfApps] | $350 | $700 |
+| Web3 Wallets | $15K–$300K+ [PixelPlex, Softean] | $5,250 | $10,500 |
+| AMM/DEX | $20K–$250K+ [OctalSoftware, Appinventiv] | $7,000 | $14,000 |
+| DAO | $15K–$60K (custom) | $5,250 | $10,500 |
+| NFT Systems | $20K–$500K [Bitronix, Perimattic] | $3,500 | $7,000 |
+| Security Audit | $3K–$250K [Sherlock, SoftStack, Ulam] | $1,750 | $5,250 |
+| Smart Contract | $5K–$100K [Softean, Developers.dev] | $2,800 | $7,000 |
+| Bug Bounty | $15K–$150K/yr [HackerOne, Vendr] | $1,050 | $2,800 |
+| Money Market (DeFi) | $25K–$100K (custom) | $8,750 | $17,500 |
+| Game Dev | $10K–$2M+ [JuegoStudio] | $2,100 | $5,250 |
+| HERMES / OpenClaw / Grokbot | custom (proprietary multi-agent) | custom | custom |
+| CBDC | custom (sovereign-tier, no published market) | custom | custom |
+
+Full source-citation table saved to `/home/z/my-project/research-intl-pricing.md`.
+
+### Step 2 — Added `intlPrice` field to all 27 services × 3 packages = 81 entries
+File: `src/app/services/[slug]/page.tsx`
+
+- Extended `ServiceDetail.packages` interface to include `intlPrice?: string`
+- Wrote a one-shot Python script (deleted after run) that used regex to insert
+  `intlPrice:"<USD>"` after every `price:"<MMK>"` field per package, keyed by the
+  service slug. All 27 service definition lines updated.
+- Local MMK prices — UNTOUCHED (verified: 0 lines modified in the local price fields)
+- ENTERPRISE always `intlPrice:"custom"` (matches local `price:"custom"`)
+
+### Step 3 — Currency toggle on detail pages
+Added `CurrencyMode = "LOCAL" | "INTL"` type and `currencyMode` state to
+`ServiceDetailPage`. Default: `"LOCAL"`.
+
+UI:
+- Rendered above the package grid, beside the section header (`flex flex-col sm:flex-row
+  sm:items-end sm:justify-between`)
+- Sci-fi brutalist two-button group inside a `border border-foreground/60` container
+- Each button has a 1.5px status dot (LOCAL=green `#00FF94`, INTL=orange `#FF4500`)
+- Active button: `bg-foreground text-background` (inverted)
+- `aria-pressed` reflects state, `role="group"` on container
+
+Display behavior:
+- LOCAL: shows `pkg.price` (MMK)
+- INTL: shows `pkg.intlPrice` (USD), with the original MMK price rendered as a
+  strikethrough subtitle for reference (only when both prices are non-`custom`)
+
+`PackageAddButton` updated:
+- New props: `intlPrice`, `currencyMode`, `onRequestQuote`
+- LOCAL mode: identical to before (adds MMK price to basket, or "REQUEST QUOTE" if custom)
+- INTL mode: button label becomes "REQUEST QUOTE"; clicking shows a toast
+  "▮ INTERNATIONAL USD — REQUEST A QUOTE" and opens the ContactFormModal.
+  This is intentional — the basket is MMK-only (bulk-discount math assumes MMK).
+  International orders route through manual contact / USD invoicing.
+- Also routes to quote when `intlPrice` is missing or `"custom"` (e.g. HERMES, CBDC)
+
+### Step 4 — S04 popup dual budget
+Files: `src/lib/sigma/projects-data.json`, `src/lib/sigma/projects.ts`,
+`src/components/sigma/sections/S04Projects.tsx`
+
+- Added `intlBudget: string` to the `Project` interface
+- Added `intlBudget` field to all 9 projects in `projects-data.json`. USD values
+  derived by dividing local MMK by 3,450 MMK/USD (the same PPP factor used to
+  generate the original MMK prices):
+  - omnibridge: $5,250 (was 18,110,000 MMK)
+  - dukon-pro: $1,750 (was 6,040,000 MMK)
+  - vortex-sales-os: $2,800 (was 9,660,000 MMK)
+  - gymmaster: $1,750 (was 6,040,000 MMK)
+  - lumina-tarot: $700 (was 2,415,000 MMK)
+  - sai-pay: $1,750 (was 6,040,000 MMK)
+  - brorus: $2,800 (was 9,660,000 MMK)
+  - asean-swap: $7,000 (was 24,150,000 MMK)
+  - manymarket: $2,100 (was 7,240,000 MMK)
+- The metrics grid in `ProjectDetail` (S04 popup) now shows BOTH:
+  - `["BUDGET (LOCAL)", project.budget]` — green-accented card (border + text `#00FF94`)
+  - `["BUDGET (INTL)", project.intlBudget]` — orange-accented card (border + text `#FF4500`)
+- Grid grew from 5 → 6 cells (still 3 cols × 2 rows); LANGUAGES row remains full-width below.
+
+### Step 5 — Comparison table currency indicator
+- Section header now uses `flex flex-col sm:flex-row sm:items-end sm:justify-between`
+- Added a "CURRENCY: MMK / USD" badge on the right that reflects the active toggle.
+  LOCAL → green-bordered "MMK" badge, INTL → orange-bordered "USD" badge.
+
+### Files changed (4 source files + 1 research doc)
+1. `src/app/services/[slug]/page.tsx`
+   - Interface extended with `intlPrice?: string`
+   - `CurrencyMode` type + `currencyMode` state added
+   - Currency toggle UI (LOCAL · MMK / INTL · USD) added above package grid
+   - Price display now switches via `displayPrice(pkg)` helper; MMK shown as strikethrough
+     subtitle in INTL mode
+   - `PackageAddButton` extended: new `intlPrice`, `currencyMode`, `onRequestQuote` props;
+     INTL mode routes to contact form instead of basket
+   - Comparison section: header row + CURRENCY badge reflecting toggle state
+   - 81 `intlPrice` fields inserted across 27 service definition lines (no local prices
+     changed)
+2. `src/lib/sigma/projects-data.json` — added `intlBudget` field to all 9 projects
+3. `src/lib/sigma/projects.ts` — added `intlBudget: string` to `Project` interface
+4. `src/components/sigma/sections/S04Projects.tsx` — `ProjectDetail` metrics grid now
+   renders `BUDGET (LOCAL)` + `BUDGET (INTL)` cards with green/orange accent borders
+
+### Verification
+- `bunx tsc --noEmit` → **CLEAN** (exit 0)
+- `bunx eslint src/ --ext .ts,.tsx,.js,.jsx --max-warnings=0` → **CLEAN** (exit 0, zero
+  errors, zero warnings on source files)
+- `bun run lint` shows 64 errors / 3,058 warnings — ALL in `.vercel/output/` build
+  artifacts (pre-existing issue, eslint config doesn't ignore `.vercel/**`; unrelated to
+  this task — same as 59-A and 59-B verifications)
+
+### What was NOT touched (deliberately)
+- `src/lib/sigma/basket.ts` — basket store remains MMK-only. Adding multi-currency
+  basket math (separate MMK and USD totals, dual bulk-discount tier calc) is out of
+  scope. International orders route through the contact form (see PackageAddButton).
+- `ServiceBasket.tsx` — display component for the floating basket overlay; unchanged.
+- Add-ons (`addons-data.ts`) — add-on pricing is local MMK only; not part of the toggle.
+- Compatible services (`ADDONS` in `ServiceBasket.tsx`) — also local MMK only; the
+  toggle is a display concern of the package cards only.
+- `AlphaServices.tsx` (services section on home page) — uses a separate `price` field
+  on each service entry; not in scope.
+- Local MMK prices on every service — verified unchanged (regex only inserted new
+  fields, never modified existing `price` values).
