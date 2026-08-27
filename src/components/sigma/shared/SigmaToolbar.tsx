@@ -3,6 +3,7 @@
 import * as React from "react";
 import { useSigmaStore } from "@/lib/sigma/store";
 import { sigmaSound } from "@/lib/sigma/sound";
+import { SECTIONS } from "@/lib/sigma/sections";
 import { toast } from "sonner";
 import { Share2, Link2, Shuffle, Zap, Play, Pause, Square, Search } from "lucide-react";
 
@@ -30,7 +31,7 @@ export function SigmaToolbar({
   onTourPause: () => void;
   onTourStop: () => void;
 }) {
-  const { view } = useSigmaStore();
+  const { view, navigate } = useSigmaStore();
   const [copied, setCopied] = React.useState(false);
 
   const share = async () => {
@@ -49,10 +50,13 @@ export function SigmaToolbar({
   };
 
   const random = () => {
+    const candidates = SECTIONS.filter((s) => s.id !== view);
+    const pick = candidates[Math.floor(Math.random() * candidates.length)];
     sigmaSound.play("transition");
-    toast.success("▮ RANDOM JACK-IN");
-    // delegate to keyboard event
-    window.dispatchEvent(new KeyboardEvent("keydown", { key: "r" }));
+    toast.success(`▮ RANDOM JACK-IN → SECTOR ${pick.shortCode}`, {
+      description: `${pick.name} · ${pick.role}`,
+    });
+    navigate(pick.id);
   };
 
   return (

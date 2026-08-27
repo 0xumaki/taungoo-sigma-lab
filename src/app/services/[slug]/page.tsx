@@ -11,6 +11,7 @@ import { SERVICE_ADDONS, type AddOn } from "@/lib/sigma/addons-data";
 import { toast } from "sonner";
 import { Plus, Check } from "lucide-react";
 import { usePageReveal } from "@/lib/sigma/use-page-reveal";
+import { ContactFormModal } from "@/components/sigma/shared/ContactFormModal";
 
 interface ServiceDetail {
   slug: string;
@@ -59,6 +60,7 @@ export default function ServiceDetailPage() {
   const service = SERVICES.find((s) => s.slug === slug);
   // Trigger the page reveal animation (panels retract) when this detail page mounts
   usePageReveal();
+  const [contactOpen, setContactOpen] = React.useState(false);
 
   if (!service) {
     return (
@@ -208,11 +210,12 @@ export default function ServiceDetailPage() {
         <div className="mx-auto max-w-2xl">
           <h2 className="font-sans text-3xl font-black uppercase tracking-tight">NOT SURE WHICH PACKAGE?</h2>
           <p className="mt-2 font-serif text-base italic text-muted-foreground">Contact our team — we'll help you choose the right plan for your needs.</p>
-          <a href="mailto:contact@taungoosigma.lab" className="mt-6 inline-block border border-foreground bg-foreground px-8 py-3 font-mono text-[11px] uppercase tracking-[0.2em] text-background transition-opacity hover:opacity-80">CONTACT OUR TEAM →</a>
+          <button onClick={() => setContactOpen(true)} className="mt-6 inline-block border border-foreground bg-foreground px-8 py-3 font-mono text-[11px] uppercase tracking-[0.2em] text-background transition-opacity hover:opacity-80">CONTACT OUR TEAM →</button>
         </div>
       </section>
       <AlphaFooter />
       <ServiceBasket />
+      <ContactFormModal open={contactOpen} onClose={() => setContactOpen(false)} />
     </div>
   );
 }

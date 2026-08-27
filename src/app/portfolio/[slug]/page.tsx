@@ -8,6 +8,7 @@ import { AlphaFooter } from "@/components/sigma/alpha/AlphaFooter";
 import { SciFiCard } from "@/components/sigma/alpha/SciFiCard";
 import { ClassifiedCover } from "@/components/sigma/shared/ClassifiedCover";
 import { usePageReveal } from "@/lib/sigma/use-page-reveal";
+import { ContactFormModal } from "@/components/sigma/shared/ContactFormModal";
 
 const PROJECTS: Record<string, {
   name: string;
@@ -182,6 +183,7 @@ export default function PortfolioCaseStudy() {
   const project = PROJECTS[slug];
   // Trigger the page reveal animation (panels retract) when this case study mounts
   usePageReveal();
+  const [contactOpen, setContactOpen] = React.useState(false);
 
   if (!project) {
     return (
@@ -308,13 +310,14 @@ export default function PortfolioCaseStudy() {
         <div className="mx-auto max-w-2xl">
           <h2 className="font-sans text-3xl font-black uppercase tracking-tight">WANT A SIMILAR PROJECT?</h2>
           <p className="mt-2 font-serif text-base italic text-muted-foreground">Contact our team — we'll build it for you.</p>
-          <a href="mailto:contact@taungoosigma.lab" className="mt-6 inline-block border border-foreground bg-foreground px-8 py-3 font-mono text-[11px] uppercase tracking-[0.2em] text-background transition-opacity hover:opacity-80">
+          <button onClick={() => setContactOpen(true)} className="mt-6 inline-block border border-foreground bg-foreground px-8 py-3 font-mono text-[11px] uppercase tracking-[0.2em] text-background transition-opacity hover:opacity-80">
             CONTACT OUR TEAM →
-          </a>
+          </button>
         </div>
       </section>
 
       <AlphaFooter />
+      <ContactFormModal open={contactOpen} onClose={() => setContactOpen(false)} />
     </div>
   );
 }
