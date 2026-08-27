@@ -3,15 +3,11 @@
 import * as React from "react";
 
 /**
- * ProfileAvatar — clean, branded avatar placeholder.
- * Replaces the old glitchy SciFiAvatar (green terminal screen + "SCREENSHOT
- * CLASSIFIED" text). This shows:
- *   - A circular cut-corner avatar shape (sci-fi but professional)
- *   - The person's accent color as the background (gradient for depth)
- *   - The person's initials (first letter of name + first letter of role)
- *   - Subtle brutalist accents (corner mark + hazard strip) for aesthetic
- *     continuity with the rest of the site
- * No glitch effect, no terminal screen, no "classified" text.
+ * ProfileAvatar — SCP Foundation × ClassifiedCover hybrid.
+ * Retro brutalist terminal screen with the person's accent color.
+ * Features: scanlines, glitch warning icon, "SUBJECT CLASSIFIED" text,
+ * redaction bars, containment status, blinking cursor.
+ * Each avatar uses the person's accent color instead of green.
  */
 function ProfileAvatar({
   color,
@@ -22,63 +18,138 @@ function ProfileAvatar({
   name: string;
   role: string;
 }) {
-  // Initials = first letter of name + first letter of role, both uppercased.
+  // Initials = first letter of name + first letter of role
   const initials = React.useMemo(() => {
     const n = (name || "").trim()[0] || "?";
     const r = (role || "").trim()[0] || "?";
     return (n + r).toUpperCase();
   }, [name, role]);
 
+  // Darken the accent color for background (mix with black)
+  const darkBg = color + "15"; // very transparent accent
+
   return (
     <div
-      className="relative flex h-full w-full items-center justify-center overflow-hidden"
-      style={{
-        background: `linear-gradient(135deg, ${color} 0%, ${color}cc 60%, ${color}88 100%)`,
-      }}
+      className="relative flex h-full w-full flex-col items-center justify-center gap-2 overflow-hidden bg-black p-3"
+      aria-label={`Subject: ${name}, ${role}`}
     >
-      {/* Subtle scanlines for sci-fi texture (very low opacity, no glitch) */}
+      {/* Scanlines in accent color */}
       <div
-        className="pointer-events-none absolute inset-0 opacity-10"
+        className="sigma-scanlines pointer-events-none absolute inset-0 opacity-40"
         style={{
-          background:
-            "repeating-linear-gradient(0deg, transparent 0px, transparent 3px, rgba(0,0,0,0.4) 4px, rgba(0,0,0,0.4) 5px)",
+          background: `repeating-linear-gradient(0deg, transparent 0px, transparent 2px, ${color}08 3px, ${color}08 4px)`,
         }}
         aria-hidden
       />
-      {/* Hazard stripe top-right corner — tiny brutalist accent */}
+
+      {/* Accent glow */}
       <div
-        className="absolute right-0 top-0 h-8 w-8 opacity-40"
+        className="pointer-events-none absolute inset-0"
         style={{
-          background: `repeating-linear-gradient(45deg, rgba(0,0,0,0.6) 0, rgba(0,0,0,0.6) 3px, transparent 3px, transparent 6px)`,
+          background: `radial-gradient(circle at center, ${color}12, transparent 70%)`,
         }}
         aria-hidden
       />
-      {/* Crosshair mark top-left for sci-fi framing */}
-      <span
-        className="absolute left-2 top-2 h-3 w-3 border-l-2 border-t-2 border-black/30"
+
+      {/* ASCII-art border frame (double border like SCP documents) */}
+      <div
+        className="pointer-events-none absolute inset-2 border"
+        style={{ borderColor: `${color}30` }}
         aria-hidden
       />
-      {/* Circular avatar disc with initials */}
       <div
-        className="relative flex h-2/3 w-2/3 items-center justify-center rounded-full border-2 border-black/30"
-        style={{ background: "rgba(0,0,0,0.45)" }}
+        className="pointer-events-none absolute inset-3 border"
+        style={{ borderColor: `${color}15` }}
+        aria-hidden
+      />
+
+      {/* Top status bar — SCP-style containment header */}
+      <div
+        className="absolute left-0 right-0 top-0 flex items-center justify-between border-b px-2 py-1 font-mono text-[7px] uppercase tracking-[0.2em] sm:text-[8px]"
+        style={{ borderColor: `${color}25`, color: `${color}aa`, background: `${color}08` }}
       >
-        <span className="select-none font-sans text-4xl font-black uppercase tracking-tight text-white sm:text-5xl md:text-6xl">
-          {initials}
+        <span>SCP-TSL</span>
+        <span className="flex items-center gap-1">
+          <span className="sigma-pulse h-1 w-1" style={{ background: color }} />
+          CONTAINED
         </span>
-        {/* Inner ring for depth */}
-        <span
-          className="pointer-events-none absolute inset-1 rounded-full border border-white/20"
-          aria-hidden
+      </div>
+
+      {/* Glitch warning icon */}
+      <div
+        className="sigma-glitch font-mono text-2xl sm:text-3xl"
+        style={{ color, textShadow: `0 0 12px ${color}60` }}
+        data-text="⚠"
+      >
+        ⚠
+      </div>
+
+      {/* "SUBJECT CLASSIFIED" — SCP-style */}
+      <div
+        className="sigma-glitch font-mono text-[9px] font-bold uppercase tracking-[0.25em] sm:text-[11px]"
+        style={{ color, textShadow: `0 0 8px ${color}50` }}
+        data-text="SUBJECT CLASSIFIED"
+      >
+        SUBJECT CLASSIFIED
+      </div>
+
+      {/* Redaction bar over the "name" */}
+      <div className="flex flex-col items-center gap-0.5">
+        <div
+          className="h-3 w-20"
+          style={{ background: `${color}40` }}
+        />
+        <div
+          className="h-3 w-14"
+          style={{ background: `${color}30` }}
         />
       </div>
-      {/* Bottom data label */}
-      <div className="absolute bottom-2 left-2 font-mono text-[10px] uppercase tracking-[0.2em] text-black/70 sm:text-[9px]">
-        ▸ DOSSIER
+
+      {/* Subject ID with initials */}
+      <div
+        className="font-mono text-[8px] uppercase tracking-[0.2em] sm:text-[9px]"
+        style={{ color: `${color}cc` }}
+      >
+        ID: {initials}-{Math.abs(initials.charCodeAt(0) * 7 % 9999)}
       </div>
-      <div className="absolute bottom-2 right-2 font-mono text-[10px] uppercase tracking-[0.2em] text-black/70 sm:text-[9px]">
-        VERIFIED
+
+      {/* Blinking cursor subtitle */}
+      <div
+        className="font-mono text-[8px] uppercase tracking-[0.2em] sm:text-[9px]"
+        style={{ color: `${color}88` }}
+      >
+        CLEARANCE REQ <span className="sigma-blink">▮</span>
       </div>
+
+      {/* Bottom telemetry strip — SCP-style */}
+      <div
+        className="absolute bottom-2 left-0 right-0 flex items-center justify-between px-2 font-mono text-[6px] uppercase tracking-[0.18em] sm:text-[7px]"
+        style={{ color: `${color}50` }}
+      >
+        <span>OBJ CLASS: SAFE</span>
+        <span>LVL-{Math.abs(initials.charCodeAt(1) * 3 % 5) + 1}</span>
+      </div>
+
+      {/* Hazard stripe bottom */}
+      <div
+        className="absolute bottom-0 left-0 right-0 h-1.5"
+        style={{
+          background: `repeating-linear-gradient(45deg, ${color} 0, ${color} 4px, transparent 4px, transparent 8px)`,
+        }}
+        aria-hidden
+      />
+      {/* Hazard stripe top */}
+      <div
+        className="absolute left-0 right-0 top-0 h-[2px]"
+        style={{
+          background: `repeating-linear-gradient(45deg, ${color} 0, ${color} 4px, transparent 4px, transparent 8px)`,
+        }}
+        aria-hidden
+      />
+
+      {/* Corner brackets */}
+      <span className="pointer-events-none absolute left-1 top-1 h-3 w-3 border-l border-t" style={{ borderColor: `${color}60` }} />
+      <span className="pointer-events-none absolute right-1 bottom-1 h-3 w-3 border-b border-r" style={{ borderColor: `${color}60` }} />
     </div>
   );
 }
