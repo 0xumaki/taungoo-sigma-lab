@@ -13,7 +13,7 @@ import * as React from "react";
  */
 export function useTilt3D<T extends HTMLElement = HTMLDivElement>(
   maxDeg = 10
-): React.RefObject<T> {
+): React.RefObject<T | null> {
   const ref = React.useRef<T>(null);
 
   React.useEffect(() => {

@@ -15,7 +15,7 @@ import * as React from "react";
  */
 export function useMagnetic<T extends HTMLElement = HTMLButtonElement>(
   strength = 0.25
-): React.RefObject<T> {
+): React.RefObject<T | null> {
   const ref = React.useRef<T>(null);
 
   React.useEffect(() => {

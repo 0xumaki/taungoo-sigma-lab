@@ -82,7 +82,7 @@ export function SigmaBoot({ onDone }: { onDone: () => void }) {
       // play boot-complete sound
       sigmaSound.play("boot");
       // exit flash + fade
-      const flash = root.querySelector("[data-boot-flash]");
+      const flash = root?.querySelector("[data-boot-flash]");
       const tl = gsap.timeline({
         onComplete: () => {
           sigmaSound.play("complete");

@@ -142,8 +142,8 @@ export function SigmaTour() {
             key={s.id}
             className="h-1 w-1 transition-all"
             style={{
-              background: i === tourIdx ? s.accent : i < tourIdx ? s.accent + "66" : "rgba(255,255,255,0.15)",
-              width: i === tourIdx ? 8 : 4,
+              background: i === tourIndex ? s.accent : i < tourIndex ? s.accent + "66" : "rgba(255,255,255,0.15)",
+              width: i === tourIndex ? 8 : 4,
             }}
           />
         ))}
