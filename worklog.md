@@ -4556,3 +4556,34 @@ All three locations now use the same component for visual consistency. Green #00
 
 ### Cron
 - Job #338235 continues every 15 min (webDevReview)
+
+---
+Task ID: CRON-ROUND-57 (Industry Insights + Scroll Position Restoration)
+Agent: main (orchestrator)
+
+## Changes
+
+### 1. Insights Content Rewritten — Industry-Based, Not Taungoo-Specific
+All 6 insights now focus on industry capabilities with global trends:
+1. **Myanmar Mekong Archipelago Financial Center: CBDC Blueprint** — BIS mBridge, tiered privacy, rural economy integration, GDP impact modeling
+2. **Elevating Rural Economies Through Decentralized Infrastructure** — IoT mesh, DeFi micro-credit, tokenized agricultural output, scaling economics, policy implications
+3. **Multi-Model AI Orchestration for Financial Services** — 7 model families, fraud detection, credit scoring for unbanked, automated compliance, ROI
+4. **Cross-Chain Interoperability: Bridging ASEAN Digital Assets** — BFT bridge, atomic settlement, regulatory compliance, performance
+5. **Edge AI for Agricultural Intelligence** — $22/node, crop disease detection, yield prediction, 50x ROI
+6. **Programmable Money: Smart Contracts for Trade Finance** — Smart LC, tokenized documents, supply chain finance, $300B trade finance gap
+
+No Taungoo city references. Content showcases industry knowledge and capabilities.
+
+### 2. Scroll Position Restoration — Fixed
+**Problem:** Returning from detail view (service/portfolio/insight) always scrolled to top.
+**Root cause:** AlphaInterface's `forceScrollTop()` always set scrollTop=0 on mount.
+**Fix:**
+- PageTransitionLink now saves scroll position to `sessionStorage` before navigating
+- AlphaInterface reads the saved position on mount and restores it
+- If no saved position (fresh load), scrolls to top (original behavior)
+- Saved position is consumed (removed) after restoration
+
+### 3. Deployed
+- GitHub: pushed ✅
+- Vercel: https://temporary-zippy-peridot-c1rww5s.vercel.app ✅
+  Claim: https://vercel.com/claim-deployment?code=8ba4a2bc-1976-40f2-9d53-ee43af167edc
