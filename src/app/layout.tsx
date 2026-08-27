@@ -43,7 +43,9 @@ export const metadata: Metadata = {
   creator: "Taungoo Sigma Lab",
   publisher: "Taungoo Sigma Lab",
   icons: {
-    icon: "https://z-cdn.chatglm.cn/z-ai/static/logo.svg",
+    icon: "/favicon.svg",
+    shortcut: "/favicon.svg",
+    apple: "/icon.png",
   },
   openGraph: {
     title: "TAUNGOO SIGMA LAB",
