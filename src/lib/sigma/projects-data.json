@@ -30,7 +30,7 @@
     "accent": "#00FF94",
     "loc": "~48,000",
     "budget": "from 18,110,000 MMK",
-    "intlBudget": "from $5,250"
+    "intlBudget": "from $8,400"
   },
   {
     "id": "dukon-pro",
@@ -63,7 +63,7 @@
     "accent": "#FF4500",
     "loc": "~12,000",
     "budget": "from 6,040,000 MMK",
-    "intlBudget": "from $1,750"
+    "intlBudget": "from $3,350"
   },
   {
     "id": "vortex-sales-os",
@@ -97,7 +97,7 @@
     "accent": "#00E5FF",
     "loc": "~25,000",
     "budget": "from 9,660,000 MMK",
-    "intlBudget": "from $2,800"
+    "intlBudget": "from $1,900"
   },
   {
     "id": "gymmaster",
@@ -130,7 +130,7 @@
     "accent": "#FF2D7E",
     "loc": "~4,200",
     "budget": "from 6,040,000 MMK",
-    "intlBudget": "from $1,750"
+    "intlBudget": "from $3,350"
   },
   {
     "id": "lumina-tarot",
@@ -165,7 +165,7 @@
     "accent": "#FFB300",
     "loc": "~15,000",
     "budget": "from 2,415,000 MMK",
-    "intlBudget": "from $700"
+    "intlBudget": "from $3,350"
   },
   {
     "id": "sai-pay",
@@ -198,7 +198,7 @@
     "accent": "#B388FF",
     "loc": "~3,800",
     "budget": "from 6,040,000 MMK",
-    "intlBudget": "from $1,750"
+    "intlBudget": "from $3,350"
   },
   {
     "id": "brorus",
@@ -233,7 +233,7 @@
     "accent": "#FF3D3D",
     "loc": "~2,500",
     "budget": "from 9,660,000 MMK",
-    "intlBudget": "from $2,800"
+    "intlBudget": "from $4,500"
   },
   {
     "id": "asean-swap",
@@ -267,7 +267,7 @@
     "accent": "#FFEB3B",
     "loc": "~4,200",
     "budget": "from 24,150,000 MMK",
-    "intlBudget": "from $7,000"
+    "intlBudget": "from $10,500"
   },
   {
     "id": "manymarket",
@@ -300,6 +300,6 @@
     "accent": "#2979FF",
     "loc": "~12,000",
     "budget": "from 7,240,000 MMK",
-    "intlBudget": "from $2,100"
+    "intlBudget": "from $3,350"
   }
 ]
