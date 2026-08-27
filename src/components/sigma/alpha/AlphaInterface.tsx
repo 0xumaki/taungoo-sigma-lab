@@ -63,43 +63,53 @@ export function AlphaInterface() {
       history.replaceState(null, "", window.location.pathname + window.location.search);
     }
 
-    // 3. Force-scroll to top — direct scrollTop assignment bypasses CSS smooth-scroll
-    const forceScrollTop = () => {
+    // 3. Check if we're returning from a detail page (has saved scroll position)
+    const savedScroll = sessionStorage.getItem("alpha_scroll_position");
+    const targetScroll = savedScroll ? parseInt(savedScroll, 10) : 0;
+
+    // Clear the saved position so it doesn't persist on next mount
+    if (savedScroll) {
+      sessionStorage.removeItem("alpha_scroll_position");
+    }
+
+    // 4. Restore scroll position (to top for fresh loads, to saved position for returns)
+    const restoreScroll = () => {
       const el = scrollRef.current;
       if (el) {
         el.style.scrollBehavior = "auto"; // temporarily disable smooth
-        el.scrollTop = 0; // direct property set — always instant
+        el.scrollTop = targetScroll;
         el.scrollLeft = 0;
       }
-      // Also scroll window/body/html to 0 as a safety net
-      window.scrollTo(0, 0);
-      if (document.documentElement) document.documentElement.scrollTop = 0;
-      if (document.body) document.body.scrollTop = 0;
+      // Also set window scroll as safety net
+      if (targetScroll === 0) {
+        window.scrollTo(0, 0);
+        if (document.documentElement) document.documentElement.scrollTop = 0;
+        if (document.body) document.body.scrollTop = 0;
+      }
     };
 
     // Run immediately + on multiple frames to defeat any deferred scroll
-    forceScrollTop();
-    requestAnimationFrame(forceScrollTop);
-    requestAnimationFrame(() => requestAnimationFrame(forceScrollTop));
+    restoreScroll();
+    requestAnimationFrame(restoreScroll);
+    requestAnimationFrame(() => requestAnimationFrame(restoreScroll));
 
     const timers = [
-      setTimeout(forceScrollTop, 50),
-      setTimeout(forceScrollTop, 150),
-      setTimeout(forceScrollTop, 300),
-      setTimeout(forceScrollTop, 600),  // after Chidori transition (~4s timeline, mode swap at ~2s)
-      setTimeout(forceScrollTop, 1200),
-      setTimeout(forceScrollTop, 2000),
-      setTimeout(forceScrollTop, 3500),
+      setTimeout(restoreScroll, 50),
+      setTimeout(restoreScroll, 150),
+      setTimeout(restoreScroll, 300),
+      setTimeout(restoreScroll, 600),
+      setTimeout(restoreScroll, 1200),
+      setTimeout(restoreScroll, 2000),
     ];
 
-    // 4. Re-enable smooth-scroll for anchor navigation (after initial scroll is locked in)
+    // 5. Re-enable smooth-scroll for anchor navigation (after initial scroll is locked in)
     const reenableSmooth = setTimeout(() => {
       if (scrollRef.current) {
         scrollRef.current.style.scrollBehavior = "smooth";
       }
-    }, 4000);
+    }, 2500);
 
-    // 5. Hash navigation handler — ONLY for user-initiated hashchange events
+    // 6. Hash navigation handler — ONLY for user-initiated hashchange events
     const handleHash = () => {
       const hash = window.location.hash;
       if (!hash) return;

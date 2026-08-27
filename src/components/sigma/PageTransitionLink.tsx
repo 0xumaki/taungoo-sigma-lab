@@ -53,6 +53,12 @@ export function PageTransitionLink({
     }
 
     e.preventDefault();
+    // Save scroll position so we can restore it when the user comes back
+    if (typeof window !== "undefined") {
+      const scrollContainer = document.querySelector("[data-alpha-scroll]");
+      const scrollTop = scrollContainer?.scrollTop ?? window.scrollY;
+      sessionStorage.setItem("alpha_scroll_position", String(scrollTop));
+    }
     onBeforeNavigate?.();
     startCover(href, label, kind, finalAccent);
   };
