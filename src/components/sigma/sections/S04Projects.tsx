@@ -209,24 +209,25 @@ function ProjectCard({ project, onOpen }: { project: Project; onOpen: () => void
 }
 
 function ProjectDetail({ project }: { project: Project }) {
+  const hasImage = !!project.image;
   return (
     <div className="grid max-h-[calc(90vh-3rem)] grid-cols-1 gap-0 overflow-y-auto md:grid-cols-2 sigma-scroll-hidden">
-      <div className="relative border-r border-border bg-black">
-        {project.image ? (
+      {hasImage ? (
+        <div className="relative border-r border-border bg-black">
           <img
-            src={project.image}
+            src={project.image!}
             alt={project.name}
             className="h-full max-h-[calc(90vh-3rem)] w-full object-cover object-top"
           />
-        ) : (
-          /* Retro brutalist glitching green PC screen — replaces the old
-             "[ SCREENSHOT CLASSIFIED ]" cover. */
-          <div className="min-h-[240px] w-full">
-            <ClassifiedCover variant="detail" className="h-full min-h-[240px]" />
-          </div>
-        )}
-        <div className="sigma-scanlines pointer-events-none absolute inset-0 opacity-40" />
-      </div>
+          <div className="sigma-scanlines pointer-events-none absolute inset-0 opacity-40" />
+        </div>
+      ) : (
+        /* When no image: ClassifiedCover spans FULL width (both columns) as a
+           full-screen banner, then content flows below it. No negative space. */
+        <div className="col-span-1 md:col-span-2 relative bg-black" style={{ minHeight: "200px" }}>
+          <ClassifiedCover variant="detail" className="h-full" />
+        </div>
+      )}
       <div className="flex flex-col gap-4 p-6">
         <div>
           <div className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">

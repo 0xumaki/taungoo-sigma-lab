@@ -40,7 +40,7 @@ export function SigmaBreadcrumb() {
   if (visitedSectors.length < 2) return null;
 
   return (
-    <div className="fixed left-1/2 top-9 z-[79] hidden -translate-x-1/2 items-center gap-1 border border-border bg-background/80 px-2 py-1 backdrop-blur-sm md:flex">
+    <div className="fixed left-1/2 top-[68px] z-[77] hidden -translate-x-1/2 items-center gap-1 border border-border bg-background/80 px-2 py-1 backdrop-blur-sm md:flex">
       <span className="mr-1 font-mono text-[8px] uppercase tracking-[0.2em] text-muted-foreground">
         TRAIL
       </span>
