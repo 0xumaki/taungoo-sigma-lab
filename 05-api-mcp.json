@@ -1,0 +1,47 @@
+[
+  {
+    "url": "https://truto.one/blog/build-vs-buy-the-hidden-costs-of-custom-mcp-servers",
+    "name": "Build vs. Buy: The Hidden Costs of Custom MCP Servers",
+    "snippet": "Building and maintaining a single custom MCP server in-house typically costs between $ 50,000 and $150,000 per integration per year . That number comes up ... Read more",
+    "host_name": "truto.one",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://launchdayadvisors.com/guides/mcp-server-cost",
+    "name": "MCP Server Cost: 2026 Pricing Guide",
+    "snippet": "May 29, 2026 — In 2026, a partner-built MCP server costs $ 100K–$300K for a level-1 read-only single-client app and $300K–$700K for a level-2 actions app.",
+    "host_name": "launchdayadvisors.com",
+    "rank": 1,
+    "date": "May 29, 2026",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.reddit.com/r/mcp/comments/1mbpjr1/is_building_paidpremium_mcp_servers_actually_a",
+    "name": "Is building paid/premium MCP servers actually a viable",
+    "snippet": "An MCP server can range from a 30 line wrapper around one API endpoint to a full on multi tenant SaaS app that embeds it's own agent loops. Read more",
+    "host_name": "www.reddit.com",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.zenml.io/llmops-database/building-and-pricing-a-commercial-mcp-server-for-documentation-search",
+    "name": "Building and Pricing a Commercial MCP Server for",
+    "snippet": "They developed a credit-based pricing model charging $0.009 per search with 200 free non-expiring credits and a $9/month subscription for 1,000 credits.",
+    "host_name": "www.zenml.io",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://nango.dev/blog/best-mcp-servers-for-agent-api-integrations",
+    "name": "Best MCP servers for agent API integrations in 2026",
+    "snippet": "Jul 15, 2026 — This post compares four MCP server platforms for agent API integrations in 2026 (Nango, Arcade.dev, Composio, and Pipedream MCP ): what each ...",
+    "host_name": "nango.dev",
+    "rank": 4,
+    "date": "Jul 15, 2026",
+    "favicon": ""
+  }
+]

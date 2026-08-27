@@ -1,6 +1,7 @@
 "use client";
 
 import { create } from "zustand";
+import { persist, createJSONStorage } from "zustand/middleware";
 
 export interface BasketItem {
   slug: string;        // unique item ID (service slug OR add-on ID)
@@ -103,77 +104,108 @@ export function formatMMK(amount: number): string {
   return amount.toLocaleString("en-US") + " MMK";
 }
 
-export const useBasketStore = create<BasketState>((set, get) => ({
-  items: [],
-  isOpen: false,
-  addItem: (item) =>
-    set((state) => {
-      // Don't add duplicates (by slug — each service or add-on can only be in basket once)
-      if (state.items.some((i) => i.slug === item.slug)) return state;
-      return { items: [...state.items, item] };
+export const useBasketStore = create<BasketState>()(
+  persist(
+    (set, get) => ({
+      items: [],
+      isOpen: false,
+      addItem: (item) =>
+        set((state) => {
+          // Don't add duplicates (by slug — each service or add-on can only be in basket once)
+          if (state.items.some((i) => i.slug === item.slug)) return state;
+          return { items: [...state.items, item] };
+        }),
+      removeItem: (slug) =>
+        set((state) => ({
+          items: state.items.filter((i) => i.slug !== slug),
+        })),
+      clearBasket: () => set({ items: [] }),
+      toggleOpen: () => set((state) => ({ isOpen: !state.isOpen })),
+      setOpen: (open) => set({ isOpen: open }),
+      getTotal: () => {
+        const items = get().items;
+        return items.reduce((sum, i) => sum + i.price, 0);
+      },
+      getServicesTotal: () => {
+        const items = get().items;
+        return items.filter((i) => i.type === "service").reduce((sum, i) => sum + i.price, 0);
+      },
+      getAddonsTotal: () => {
+        const items = get().items;
+        return items.filter((i) => i.type === "addon").reduce((sum, i) => sum + i.price, 0);
+      },
+      getDiscount: () => {
+        // Discount applies ONLY to main services subtotal, NOT add-ons
+        const items = get().items;
+        const serviceCount = items.filter((i) => i.type === "service").length;
+        const rate = getDiscountRate(serviceCount);
+        const servicesTotal = items
+          .filter((i) => i.type === "service")
+          .reduce((sum, i) => sum + i.price, 0);
+        return Math.round(servicesTotal * rate);
+      },
+      getDiscountedTotal: () => {
+        // Total = services (after discount) + add-ons (no discount)
+        return get().getServicesTotal() - get().getDiscount() + get().getAddonsTotal();
+      },
+      getServiceCount: () => {
+        return get().items.filter((i) => i.type === "service").length;
+      },
+      getAddonCount: () => {
+        return get().items.filter((i) => i.type === "addon").length;
+      },
+      // === HAGGLE SYSTEM ===
+      haggleUsed: false,
+      haggleDiscountRate: 0,
+      haggleRoll: null,
+      setHaggleResult: (roll, rate) =>
+        set({
+          haggleUsed: true,
+          haggleRoll: roll,
+          haggleDiscountRate: rate,
+        }),
+      resetHaggle: () =>
+        set({ haggleUsed: false, haggleRoll: null, haggleDiscountRate: 0 }),
+      getHaggleDiscount: () => {
+        // Haggle discount applies to the post-bulk-discount total (services + add-ons)
+        // so it stacks on top of the bulk discount.
+        if (!get().haggleUsed) return 0;
+        const base = get().getDiscountedTotal();
+        return Math.round(base * get().haggleDiscountRate);
+      },
+      getGrandTotal: () => {
+        // Grand total = post-bulk-discount total minus haggle discount
+        return get().getDiscountedTotal() - get().getHaggleDiscount();
+      },
     }),
-  removeItem: (slug) =>
-    set((state) => ({
-      items: state.items.filter((i) => i.slug !== slug),
-    })),
-  clearBasket: () => set({ items: [] }),
-  toggleOpen: () => set((state) => ({ isOpen: !state.isOpen })),
-  setOpen: (open) => set({ isOpen: open }),
-  getTotal: () => {
-    const items = get().items;
-    return items.reduce((sum, i) => sum + i.price, 0);
-  },
-  getServicesTotal: () => {
-    const items = get().items;
-    return items.filter((i) => i.type === "service").reduce((sum, i) => sum + i.price, 0);
-  },
-  getAddonsTotal: () => {
-    const items = get().items;
-    return items.filter((i) => i.type === "addon").reduce((sum, i) => sum + i.price, 0);
-  },
-  getDiscount: () => {
-    // Discount applies ONLY to main services subtotal, NOT add-ons
-    const items = get().items;
-    const serviceCount = items.filter((i) => i.type === "service").length;
-    const rate = getDiscountRate(serviceCount);
-    const servicesTotal = items
-      .filter((i) => i.type === "service")
-      .reduce((sum, i) => sum + i.price, 0);
-    return Math.round(servicesTotal * rate);
-  },
-  getDiscountedTotal: () => {
-    // Total = services (after discount) + add-ons (no discount)
-    return get().getServicesTotal() - get().getDiscount() + get().getAddonsTotal();
-  },
-  getServiceCount: () => {
-    return get().items.filter((i) => i.type === "service").length;
-  },
-  getAddonCount: () => {
-    return get().items.filter((i) => i.type === "addon").length;
-  },
-  // === HAGGLE SYSTEM ===
-  haggleUsed: false,
-  haggleDiscountRate: 0,
-  haggleRoll: null,
-  setHaggleResult: (roll, rate) =>
-    set({
-      haggleUsed: true,
-      haggleRoll: roll,
-      haggleDiscountRate: rate,
-    }),
-  resetHaggle: () =>
-    set({ haggleUsed: false, haggleRoll: null, haggleDiscountRate: 0 }),
-  getHaggleDiscount: () => {
-    // Haggle discount applies to the post-bulk-discount total (services + add-ons)
-    // so it stacks on top of the bulk discount.
-    if (!get().haggleUsed) return 0;
-    const base = get().getDiscountedTotal();
-    return Math.round(base * get().haggleDiscountRate);
-  },
-  getGrandTotal: () => {
-    // Grand total = post-bulk-discount total minus haggle discount
-    return get().getDiscountedTotal() - get().getHaggleDiscount();
-  },
-}));
+    {
+      // Persist basket items + haggle state to sessionStorage so they survive
+      // across page navigations within the same browser session. This is critical
+      // because the haggle is single-use per session — if it didn't persist, a
+      // user who haggles on the homepage and then navigates to a service detail
+      // page would lose the discount. sessionStorage (not localStorage) means
+      // the state is cleared when the browser tab is closed.
+      name: "tsl-basket",
+      storage: createJSONStorage(() => {
+        // SSR-safe: guard against `window` being undefined during SSR
+        if (typeof window === "undefined") {
+          return {
+            getItem: () => null,
+            setItem: () => {},
+            removeItem: () => {},
+          };
+        }
+        return window.sessionStorage;
+      }),
+      partialize: (state) => ({
+        // Only persist data fields, not the action functions
+        items: state.items,
+        haggleUsed: state.haggleUsed,
+        haggleDiscountRate: state.haggleDiscountRate,
+        haggleRoll: state.haggleRoll,
+      }),
+    }
+  )
+);
 
 export { getDiscountRate };

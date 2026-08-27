@@ -8,31 +8,37 @@ import { sigmaSound } from "@/lib/sigma/sound";
 /**
  * SigmaHaggle — the secret haggle system.
  *
- * Flow:
- *  1. User types the key binding H-A-G-G-L-E in sequence (anywhere on the page,
- *     except when focused in an input/textarea).
- *  2. An arcade-style "ACTIVATION CARD" modal pops up prompting for a code.
- *  3. If the code is valid → "INSERT COIN" sound plays, modal closes,
- *     and the dice-roller view appears.
- *  4. The dice rolls with an arcade neon animation; after the roll, the final
- *     face (1–6) determines the extra discount rate (2% / 4% / 6% / 9% / 12% / 15%).
- *  5. After the final number is revealed → "SUPER SMASH BROS BONUS" song plays,
- *     confetti bursts, and a big "CONGRATULATIONS — you got X% EXTRA discount
- *     on your HAGGLE" letter is displayed.
- *  6. The discount is persisted in the basket store (single-use per session),
- *     stacking on top of the bulk discount.
+ * === ACTIVATION TRIGGER (Konami-style) ===
+ * The user presses the **↑ (Up Arrow) key 4 times** in a row.
+ * This is intentionally simpler than the full Konami code (which is already
+ * used by SigmaKonami for a different easter egg). 4 up-arrows is the simplest
+ * possible secret-code pattern: easy to type, easy to remember ("up up up up"),
+ * and easy to verify with the on-screen progress indicator.
  *
- * The component is mounted once globally (via SigmaHaggleProvider) and self-
- * contained — it manages its own visibility state.
+ * As the user presses ↑, a small badge appears in the bottom-right corner
+ * showing progress (1/4 → 2/4 → 3/4 → 4/4). The badge auto-hides after 2s of
+ * inactivity. Any non-↑ keypress resets the counter to 0.
+ *
+ * === FLOW ===
+ *  1. Trigger fires → arcade-style "ACTIVATION CARD" modal pops up
+ *  2. User enters activation code → "INSERT COIN" sound plays
+ *  3. Dice roller with arcade neon animation
+ *  4. After landing → "SUPER SMASH BROS BONUS" song + confetti + result letter
+ *  5. Discount is persisted in the basket store (single-use per session),
+ *     stacking on top of the bulk discount
  */
 
-const HAGGLE_KEYS = ["h", "a", "g", "g", "l", "e"];
+const HAGGLE_TRIGGER_KEY = "ArrowUp";
+const HAGGLE_TRIGGER_COUNT = 4; // press ↑ 4 times
 
 type HagglePhase = "idle" | "activation" | "rolling" | "result";
 
 export function SigmaHaggle() {
   const [phase, setPhase] = React.useState<HagglePhase>("idle");
-  const seqRef = React.useRef<string[]>([]);
+  // Progress of the trigger sequence: 0..HAGGLE_TRIGGER_COUNT
+  const [triggerProgress, setTriggerProgress] = React.useState(0);
+  const seqCountRef = React.useRef(0);
+  const lastKeyTimeRef = React.useRef(0);
 
   // Subscribe to haggleUsed so we can prevent re-triggering after success.
   const haggleUsed = useBasketStore((s) => s.haggleUsed);
@@ -41,25 +47,39 @@ export function SigmaHaggle() {
     if (haggleUsed) return; // already used — don't listen for the sequence
 
     const onKey = (e: KeyboardEvent) => {
-      // Ignore key presses inside form fields (so users can type "haggle" in a
-      // contact form without triggering the easter egg)
+      // Ignore key presses inside form fields
       const target = e.target as HTMLElement | null;
       if (target) {
         const tag = target.tagName;
         if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT" || target.isContentEditable) {
           return;
         }
-        // Also ignore when any modifier is held (so Cmd+H doesn't trigger)
         if (e.metaKey || e.ctrlKey || e.altKey) return;
       }
 
-      const key = e.key.length === 1 ? e.key.toLowerCase() : e.key;
-      seqRef.current = [...seqRef.current, key].slice(-HAGGLE_KEYS.length);
-      if (seqRef.current.join(",") === HAGGLE_KEYS.join(",")) {
-        seqRef.current = [];
-        // Init sound on first interaction (browser autoplay policy)
-        sigmaSound.init();
-        setPhase("activation");
+      // Reset if more than 2s elapsed since the last correct keypress
+      const now = Date.now();
+      if (now - lastKeyTimeRef.current > 2000) {
+        seqCountRef.current = 0;
+      }
+      lastKeyTimeRef.current = now;
+
+      if (e.key === HAGGLE_TRIGGER_KEY) {
+        seqCountRef.current = Math.min(seqCountRef.current + 1, HAGGLE_TRIGGER_COUNT);
+        setTriggerProgress(seqCountRef.current);
+
+        if (seqCountRef.current >= HAGGLE_TRIGGER_COUNT) {
+          seqCountRef.current = 0;
+          // Init sound on first interaction (browser autoplay policy)
+          sigmaSound.init();
+          setPhase("activation");
+          // Hide the progress indicator after trigger fires
+          setTimeout(() => setTriggerProgress(0), 200);
+        }
+      } else {
+        // Any other key resets the counter
+        seqCountRef.current = 0;
+        setTriggerProgress(0);
       }
     };
     window.addEventListener("keydown", onKey);
@@ -76,7 +96,19 @@ export function SigmaHaggle() {
     return () => window.removeEventListener("keydown", onKey);
   }, [phase]);
 
-  if (phase === "idle") return null;
+  if (phase === "idle") {
+    // Render the progress indicator badge if user has started typing
+    return triggerProgress > 0 ? (
+      <TriggerProgressBadge
+        count={triggerProgress}
+        total={HAGGLE_TRIGGER_COUNT}
+        onTimeout={() => {
+          seqCountRef.current = 0;
+          setTriggerProgress(0);
+        }}
+      />
+    ) : null;
+  }
 
   if (phase === "activation") {
     return (
@@ -111,6 +143,99 @@ export function SigmaHaggle() {
       label={entry.label}
       onDismiss={() => setPhase("idle")}
     />
+  );
+}
+
+/**
+ * TriggerProgressBadge — a small floating indicator in the bottom-right corner
+ * that shows the user how many ↑ keys they've pressed out of the required 4.
+ *
+ * This solves the "I don't know if I'm typing right or wrong" problem from the
+ * user feedback. As the user presses ↑, the badge lights up one segment at a
+ * time. If they pause for more than 2s, the badge auto-hides and the counter
+ * resets.
+ */
+function TriggerProgressBadge({
+  count,
+  total,
+  onTimeout,
+}: {
+  count: number;
+  total: number;
+  onTimeout: () => void;
+}) {
+  const rootRef = React.useRef<HTMLDivElement>(null);
+  const timerRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Auto-hide after 2s of inactivity
+  React.useEffect(() => {
+    if (timerRef.current) clearTimeout(timerRef.current);
+    timerRef.current = setTimeout(onTimeout, 2000);
+    return () => {
+      if (timerRef.current) clearTimeout(timerRef.current);
+    };
+  }, [count, onTimeout]);
+
+  // Pop-in animation when count changes
+  React.useEffect(() => {
+    if (!rootRef.current) return;
+    gsap.fromTo(
+      rootRef.current,
+      { scale: 0.85 },
+      { scale: 1, duration: 0.18, ease: "back.out(2)" }
+    );
+  }, [count]);
+
+  return (
+    <div
+      ref={rootRef}
+      className="fixed bottom-6 right-6 z-[170] pointer-events-none select-none"
+      role="status"
+      aria-live="polite"
+      aria-label={`Haggle trigger progress: ${count} of ${total} up-arrow presses`}
+    >
+      <div
+        className="flex items-center gap-2 border-2 border-[#FFD700] bg-black/90 px-3 py-2 backdrop-blur-md"
+        style={{
+          clipPath:
+            "polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px)",
+          boxShadow: "0 0 16px rgba(255,215,0,0.5)",
+        }}
+      >
+        {/* Spinner coin icon */}
+        <svg className="sigma-spin-slow h-5 w-5" viewBox="0 0 24 24" aria-hidden>
+          <circle cx="12" cy="12" r="10" fill="#FFD700" stroke="#FF4500" strokeWidth="2" />
+          <text x="12" y="16" textAnchor="middle" fontSize="10" fontWeight="900" fill="#000">$</text>
+        </svg>
+        <div className="flex flex-col gap-0.5">
+          <span className="font-mono text-[8px] uppercase tracking-[0.2em] text-[#FFD700]/80">
+            ▮ SECRET CODE ▮
+          </span>
+          {/* Progress dots */}
+          <div className="flex items-center gap-1">
+            {Array.from({ length: total }).map((_, i) => {
+              const filled = i < count;
+              return (
+                <span
+                  key={i}
+                  className="font-mono text-sm font-black"
+                  style={{
+                    color: filled ? "#FFD700" : "#444",
+                    textShadow: filled ? "0 0 6px rgba(255,215,0,0.8)" : "none",
+                    transition: "color 0.1s, text-shadow 0.1s",
+                  }}
+                >
+                  ↑
+                </span>
+              );
+            })}
+            <span className="ml-1.5 font-mono text-[8px] uppercase tracking-[0.18em] text-muted-foreground">
+              {count}/{total}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -333,7 +458,7 @@ function ActivationCard({ onCancel, onSuccess }: { onCancel: () => void; onSucce
                 ▸ INSERT COIN ◂
               </div>
               <div className="font-mono text-[9px] uppercase tracking-[0.3em] text-muted-foreground">
-                ENTER ACTIVATION CODE TO ROLL FOR DISCOUNT
+                ↑↑↑↑ TRIGGERED · ENTER ACTIVATION CODE TO ROLL
               </div>
             </div>
 
