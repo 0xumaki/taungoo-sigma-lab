@@ -567,22 +567,27 @@ function ActivationCard({ onCancel, onSuccess }: { onCancel: () => void; onSucce
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// PHASE 2 — DICE ROLLER (arcade neon, animated 3D-ish dice)
+// PHASE 2 — DICE ROLLER (significantly improved: 3D-perspective cube + HUD overlay
+//                          + particle sparks + screen shake + chromatic aberration
+//                          + lock-on reticle)
 // ─────────────────────────────────────────────────────────────────────────────
 
 function DiceRoller({ onComplete }: { onComplete: (face: number) => void }) {
   const rootRef = React.useRef<HTMLDivElement>(null);
   const diceRef = React.useRef<HTMLDivElement>(null);
+  const cubeRef = React.useRef<HTMLDivElement>(null);
+  const shakeRef = React.useRef<HTMLDivElement>(null);
   const [displayFace, setDisplayFace] = React.useState(1);
   const [finalFace, setFinalFace] = React.useState<number | null>(null);
   const [rolling, setRolling] = React.useState(true);
+  const [powerLevel, setPowerLevel] = React.useState(0); // 0..100 power meter
+  const [showReticle, setShowReticle] = React.useState(false);
   const audioRef = React.useRef<HTMLAudioElement | null>(null);
 
   // Pre-pick the final face so the animation can "land" on it
   const targetFace = React.useMemo(() => Math.floor(Math.random() * 6) + 1, []);
 
   React.useEffect(() => {
-    // Start arcade ambient hum
     sigmaSound.play("transition");
 
     const ctx = gsap.context(() => {
@@ -595,7 +600,15 @@ function DiceRoller({ onComplete }: { onComplete: (face: number) => void }) {
         { opacity: 1, duration: 0.3, ease: "power2.out" }
       );
 
-      // Title slam
+      // HUD frame fade-in (corner brackets + top/bottom bars)
+      tl.fromTo(
+        "[data-dr-hud]",
+        { opacity: 0, scale: 0.95 },
+        { opacity: 1, scale: 1, duration: 0.4, ease: "power2.out" },
+        "-=0.1"
+      );
+
+      // Title slam with chromatic aberration
       tl.fromTo(
         "[data-dr-title]",
         { opacity: 0, scale: 3, filter: "blur(20px)" },
@@ -609,7 +622,6 @@ function DiceRoller({ onComplete }: { onComplete: (face: number) => void }) {
         "-=0.15"
       );
 
-      // Subtitle
       tl.fromTo(
         "[data-dr-sub]",
         { opacity: 0, y: 12 },
@@ -617,41 +629,80 @@ function DiceRoller({ onComplete }: { onComplete: (face: number) => void }) {
         "-=0.1"
       );
 
-      // Dice scale-in
+      // Dice scale-in with rotation
       tl.fromTo(
         "[data-dr-dice]",
         { opacity: 0, scale: 0 },
         {
           opacity: 1,
           scale: 1,
-          duration: 0.4,
+          duration: 0.6,
           ease: "back.out(1.7)",
         },
         "-=0.1"
       );
 
-      // Start cycling faces (the "rumble")
+      // Start the 3D tumble + face cycling + screen shake + power meter fill
       tl.call(() => {
+        // === POWER METER FILL ===
+        const powerObj = { val: 0 };
+        gsap.to(powerObj, {
+          val: 100,
+          duration: 2.4,
+          ease: "power1.in",
+          onUpdate: () => setPowerLevel(Math.round(powerObj.val)),
+        });
+
+        // === 3D TUMBLE ===
+        if (cubeRef.current) {
+          gsap.to(cubeRef.current, {
+            rotateX: "+=1080", // 3 full X rotations
+            rotateY: "+=1440", // 4 full Y rotations
+            rotateZ: "+=360",  // 1 full Z rotation
+            duration: 2.4,
+            ease: "power1.inOut",
+          });
+        }
+
+        // === SCREEN SHAKE ===
+        if (shakeRef.current) {
+          const shakeTl = gsap.timeline();
+          for (let i = 0; i < 24; i++) {
+            const intensity = Math.min(i / 24, 1) * 8; // ramp up to 8px
+            shakeTl.to(shakeRef.current, {
+              x: (Math.random() - 0.5) * intensity * 2,
+              y: (Math.random() - 0.5) * intensity * 2,
+              duration: 0.1,
+              ease: "none",
+            });
+          }
+          shakeTl.to(shakeRef.current, {
+            x: 0, y: 0, duration: 0.3, ease: "power2.out",
+          });
+        }
+
+        // === FACE CYCLING (the "rumble") ===
         let cycles = 0;
         const maxCycles = 28;
         const interval = setInterval(() => {
-          // Show a random face during the rumble
           setDisplayFace(Math.floor(Math.random() * 6) + 1);
+          spawnSpark();
           cycles++;
           if (cycles >= maxCycles) {
             clearInterval(interval);
-            // Final approach: settle in 3 slow ticks toward target
             let slowTicks = 0;
             const slowInterval = setInterval(() => {
               slowTicks++;
               if (slowTicks < 3) {
                 setDisplayFace(Math.floor(Math.random() * 6) + 1);
+                spawnSpark();
               } else {
                 clearInterval(slowInterval);
-                // Land on target
                 setDisplayFace(targetFace);
                 setFinalFace(targetFace);
                 setRolling(false);
+                setShowReticle(true);
+                spawnLandingBurst();
               }
             }, 180);
           }
@@ -666,13 +717,27 @@ function DiceRoller({ onComplete }: { onComplete: (face: number) => void }) {
         if (diceRef.current) {
           gsap.fromTo(
             diceRef.current,
-            { scale: 1.3, filter: "brightness(2)" },
-            { scale: 1, filter: "brightness(1)", duration: 0.4, ease: "power2.out" }
+            { scale: 1.25, filter: "brightness(2)" },
+            { scale: 1, filter: "brightness(1)", duration: 0.5, ease: "power2.out" }
           );
         }
       });
 
-      // "RESULT REVEAL" flash
+      // Lock-on reticle animation
+      tl.fromTo(
+        "[data-dr-reticle]",
+        { opacity: 0, scale: 3, rotate: -90 },
+        {
+          opacity: 1,
+          scale: 1,
+          rotate: 0,
+          duration: 0.4,
+          ease: "back.out(1.7)",
+        },
+        "-=0.3"
+      );
+
+      // Result flash strobe
       tl.fromTo(
         "[data-dr-flash]",
         { opacity: 0 },
@@ -699,7 +764,6 @@ function DiceRoller({ onComplete }: { onComplete: (face: number) => void }) {
         "-=0.1"
       );
 
-      // Hold banner for 1.8s, then call onComplete (transitions to result letter)
       tl.to({}, { duration: 1.8 });
       tl.call(() => {
         onComplete(targetFace);
@@ -715,128 +779,403 @@ function DiceRoller({ onComplete }: { onComplete: (face: number) => void }) {
     };
   }, [targetFace, onComplete]);
 
+  // Spawn a single neon spark particle that flies outward + fades
+  const spawnSpark = () => {
+    if (!rootRef.current) return;
+    const container = rootRef.current.querySelector("[data-dr-sparks]");
+    if (!container) return;
+    const spark = document.createElement("div");
+    spark.setAttribute("data-spark", "");
+    const colors = ["#FFD700", "#FF4500", "#00FFFF", "#FFFFFF"];
+    const color = colors[Math.floor(Math.random() * colors.length)];
+    const size = 3 + Math.random() * 4;
+    spark.style.cssText = `
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: ${size}px;
+      height: ${size}px;
+      background: ${color};
+      border-radius: 50%;
+      box-shadow: 0 0 ${size * 2}px ${color};
+      pointer-events: none;
+      z-index: 5;
+    `;
+    container.appendChild(spark);
+    const angle = Math.random() * Math.PI * 2;
+    const dist = 80 + Math.random() * 120;
+    gsap.to(spark, {
+      x: Math.cos(angle) * dist,
+      y: Math.sin(angle) * dist,
+      opacity: 0,
+      scale: 0,
+      duration: 0.5 + Math.random() * 0.3,
+      ease: "power2.out",
+      onComplete: () => spark.remove(),
+    });
+  };
+
+  const spawnLandingBurst = () => {
+    if (!rootRef.current) return;
+    for (let i = 0; i < 32; i++) {
+      setTimeout(() => spawnSpark(), i * 12);
+    }
+  };
+
   return (
     <div
       ref={rootRef}
       className="fixed inset-0 z-[181] flex items-center justify-center overflow-hidden"
     >
-      {/* Background */}
-      <div data-dr-bg className="absolute inset-0 bg-black/95" />
+      {/* === SCREEN SHAKE WRAPPER === */}
+      <div ref={shakeRef} className="absolute inset-0 flex items-center justify-center">
+        {/* Background */}
+        <div data-dr-bg className="absolute inset-0 bg-black/95" />
 
-      {/* Grid + scanlines + hazard stripes (arcade vibe) */}
-      <div className="sigma-grid pointer-events-none absolute inset-0 opacity-40" />
-      <div className="sigma-scanlines pointer-events-none absolute inset-0 opacity-70" />
-      <div
-        className="absolute inset-x-0 top-0 h-2"
-        style={{
-          background:
-            "repeating-linear-gradient(45deg, #FFD700 0, #FFD700 8px, #000 8px, #000 16px)",
-        }}
-      />
-      <div
-        className="absolute inset-x-0 bottom-0 h-2"
-        style={{
-          background:
-            "repeating-linear-gradient(45deg, #FFD700 0, #FFD700 8px, #000 8px, #000 16px)",
-        }}
-      />
-
-      {/* Result flash */}
-      <div data-dr-flash className="absolute inset-0 bg-[#FFD700]/30 opacity-0" />
-
-      {/* Main content */}
-      <div className="relative z-10 flex flex-col items-center px-4">
-        {/* Title */}
+        {/* Grid + scanlines + hazard stripes */}
+        <div className="sigma-grid pointer-events-none absolute inset-0 opacity-40" />
+        <div className="sigma-scanlines pointer-events-none absolute inset-0 opacity-70" />
         <div
-          data-dr-title
-          className="font-sans text-3xl font-black uppercase tracking-tight sm:text-5xl"
+          className="absolute inset-x-0 top-0 h-2"
           style={{
-            color: "#FFD700",
-            textShadow:
-              "0 0 16px rgba(255,215,0,0.8), 0 0 32px rgba(255,69,0,0.5), -3px 0 0 #FF0000, 3px 0 0 #00FFFF",
-            WebkitTextStroke: "1px #fff",
+            background:
+              "repeating-linear-gradient(45deg, #FFD700 0, #FFD700 8px, #000 8px, #000 16px)",
           }}
-        >
-          {rolling ? "ROLLING..." : "RESULT!"}
-        </div>
+        />
         <div
-          data-dr-sub
-          className="mt-2 font-mono text-[10px] uppercase tracking-[0.3em] text-[#FFD700]/70"
-        >
-          ▮ HAGGLE-DICE · ARCADE-PROTOCOL ▮
-        </div>
+          className="absolute inset-x-0 bottom-0 h-2"
+          style={{
+            background:
+              "repeating-linear-gradient(45deg, #FFD700 0, #FFD700 8px, #000 8px, #000 16px)",
+          }}
+        />
 
-        {/* Dice */}
-        <div
-          data-dr-dice
-          ref={diceRef}
-          className="mt-10"
-        >
-          <ArcadeDice face={displayFace} rolling={rolling} finalFace={finalFace} />
-        </div>
+        {/* Result flash */}
+        <div data-dr-flash className="absolute inset-0 bg-[#FFD700]/30 opacity-0" />
 
-        {/* Result banner */}
-        <div data-dr-banner className="mt-8 opacity-0">
-          <div
-            className="border-2 border-[#FFD700] bg-black/80 px-6 py-4 text-center"
-            style={{
-              clipPath:
-                "polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px)",
-              boxShadow:
-                "0 0 32px rgba(255,215,0,0.6), inset 0 0 16px rgba(255,215,0,0.1)",
-            }}
-          >
-            <div className="font-mono text-[10px] uppercase tracking-[0.3em] text-[#FFD700]/70">
-              ▮ DICE LANDED ON ▮
+        {/* === HUD FRAME === */}
+        <div data-dr-hud className="pointer-events-none absolute inset-0 opacity-0">
+          {/* Corner brackets */}
+          {[
+            "left-6 top-6 border-l-2 border-t-2",
+            "right-6 top-6 border-r-2 border-t-2",
+            "bottom-6 left-6 border-b-2 border-l-2",
+            "bottom-6 right-6 border-b-2 border-r-2",
+          ].map((cls, i) => (
+            <span
+              key={i}
+              className={`absolute h-8 w-8 ${cls} border-[#FFD700]/80`}
+              style={{ boxShadow: "0 0 12px rgba(255,215,0,0.5)" }}
+            />
+          ))}
+
+          {/* Top status bar */}
+          <div className="absolute left-1/2 top-6 flex -translate-x-1/2 items-center gap-3 border border-[#FFD700]/40 bg-black/80 px-3 py-1 backdrop-blur-sm">
+            <span className="h-1.5 w-1.5 animate-pulse bg-[#FF0000]" />
+            <span className="font-mono text-[9px] uppercase tracking-[0.3em] text-[#FFD700]/80">
+              ▮ ARCADE PROTOCOL · LIVE ▮
+            </span>
+            <span className="h-1.5 w-1.5 animate-pulse bg-[#FF0000]" />
+          </div>
+
+          {/* Left vertical rail — coordinates */}
+          <div className="absolute left-6 top-1/2 -translate-y-1/2 font-mono text-[8px] uppercase tracking-[0.2em] text-[#FFD700]/40 [writing-mode:vertical-rl]">
+            SIG=RANDOMIZE · MODE=ARCADE · SEED=Σ777
+          </div>
+
+          {/* Right vertical rail — power meter */}
+          <div className="absolute right-6 top-1/2 flex -translate-y-1/2 flex-col items-center gap-2">
+            <span className="font-mono text-[8px] uppercase tracking-[0.2em] text-[#FFD700]/80">
+              PWR
+            </span>
+            <div className="relative h-48 w-3 border border-[#FFD700]/40 bg-black/60">
+              <div
+                className="absolute bottom-0 left-0 w-full transition-all duration-100"
+                style={{
+                  height: `${powerLevel}%`,
+                  background: powerLevel > 80
+                    ? "linear-gradient(to top, #FFD700, #FF0000)"
+                    : "linear-gradient(to top, #FF4500, #FFD700)",
+                  boxShadow: "0 0 8px rgba(255,215,0,0.8)",
+                }}
+              />
+              {[25, 50, 75].map((tick) => (
+                <div
+                  key={tick}
+                  className="absolute left-0 h-px w-full bg-[#FFD700]/30"
+                  style={{ bottom: `${tick}%` }}
+                />
+              ))}
             </div>
+            <span className="font-mono text-[10px] font-bold text-[#FFD700]">
+              {powerLevel}%
+            </span>
+          </div>
+
+          {/* Bottom status bar — face counter (slot-machine style) */}
+          <div className="absolute bottom-6 left-1/2 flex -translate-x-1/2 items-center gap-3 border border-[#FFD700]/40 bg-black/80 px-4 py-1.5 backdrop-blur-sm">
+            <span className="font-mono text-[8px] uppercase tracking-[0.2em] text-[#FFD700]/60">
+              FACE
+            </span>
             <div
-              className="mt-1 font-sans text-5xl font-black text-[#FFD700] sm:text-6xl"
+              className="font-sans text-2xl font-black tabular-nums text-[#FFD700]"
               style={{
-                textShadow:
-                  "0 0 20px rgba(255,215,0,1), 0 0 40px rgba(255,215,0,0.6)",
+                textShadow: "0 0 12px rgba(255,215,0,0.8)",
+                minWidth: "1.2em",
+                textAlign: "center",
               }}
             >
-              {finalFace ?? "?"}
+              {displayFace}
             </div>
-            <div className="mt-1 font-mono text-[11px] uppercase tracking-[0.18em] text-[#00FF94]">
-              ▸ {HAGGLE_DICE_TABLE[(finalFace ?? 1) - 1].label} DISCOUNT ◂
+            <span className="font-mono text-[8px] uppercase tracking-[0.2em] text-[#FFD700]/60">
+              / 6
+            </span>
+            <div className="ml-2 h-1 w-12 bg-[#FFD700]/20">
+              <div
+                className="h-full bg-[#FFD700] transition-all duration-100"
+                style={{ width: `${(displayFace / 6) * 100}%` }}
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* === MAIN CONTENT === */}
+        <div className="relative z-10 flex flex-col items-center px-4">
+          {/* Title with chromatic aberration during roll */}
+          <div
+            data-dr-title
+            className="font-sans text-3xl font-black uppercase tracking-tight sm:text-5xl"
+            style={{
+              color: "#FFD700",
+              textShadow: rolling
+                ? `0 0 16px rgba(255,215,0,0.8),
+                   0 0 32px rgba(255,69,0,0.5),
+                   -4px 0 0 #FF0000,
+                   4px 0 0 #00FFFF`
+                : `0 0 24px rgba(255,215,0,1)`,
+              WebkitTextStroke: "1px #fff",
+              transition: "text-shadow 0.2s",
+            }}
+          >
+            {rolling ? "ROLLING..." : "RESULT!"}
+          </div>
+          <div
+            data-dr-sub
+            className="mt-2 font-mono text-[10px] uppercase tracking-[0.3em] text-[#FFD700]/70"
+          >
+            ▮ HAGGLE-DICE · ARCADE-PROTOCOL ▮
+          </div>
+
+          {/* === DICE + RETICLE + SPARKS CONTAINER === */}
+          <div
+            data-dr-dice
+            ref={diceRef}
+            className="relative mt-10"
+            style={{
+              perspective: "800px",
+              perspectiveOrigin: "50% 50%",
+            }}
+          >
+            {/* Spark particle container */}
+            <div
+              data-dr-sparks
+              className="pointer-events-none absolute left-1/2 top-1/2 z-20"
+              style={{ transform: "translate(-50%, -50%)" }}
+            />
+
+            {/* Lock-on reticle (appears after landing) */}
+            {showReticle && (
+              <div
+                data-dr-reticle
+                className="pointer-events-none absolute left-1/2 top-1/2 z-30"
+                style={{ transform: "translate(-50%, -50%)" }}
+              >
+                <svg
+                  width="320"
+                  height="320"
+                  viewBox="0 0 320 320"
+                  fill="none"
+                  style={{
+                    filter: "drop-shadow(0 0 8px rgba(255,215,0,0.8))",
+                  }}
+                >
+                  <circle
+                    cx="160"
+                    cy="160"
+                    r="140"
+                    stroke="#FFD700"
+                    strokeWidth="2"
+                    strokeDasharray="4 8"
+                    opacity="0.6"
+                  />
+                  <circle
+                    cx="160"
+                    cy="160"
+                    r="110"
+                    stroke="#FFD700"
+                    strokeWidth="1.5"
+                    strokeDasharray="2 6"
+                    opacity="0.8"
+                  />
+                  {[
+                    { x: 20, y: 20, rot: 0 },
+                    { x: 300, y: 20, rot: 90 },
+                    { x: 300, y: 300, rot: 180 },
+                    { x: 20, y: 300, rot: 270 },
+                  ].map((br, i) => (
+                    <g key={i} transform={`translate(${br.x}, ${br.y}) rotate(${br.rot})`}>
+                      <path
+                        d="M 0 20 L 0 0 L 20 0"
+                        stroke="#FFD700"
+                        strokeWidth="3"
+                        fill="none"
+                      />
+                    </g>
+                  ))}
+                  <line x1="160" y1="0" x2="160" y2="20" stroke="#FFD700" strokeWidth="2" />
+                  <line x1="160" y1="300" x2="160" y2="320" stroke="#FFD700" strokeWidth="2" />
+                  <line x1="0" y1="160" x2="20" y2="160" stroke="#FFD700" strokeWidth="2" />
+                  <line x1="300" y1="160" x2="320" y2="160" stroke="#FFD700" strokeWidth="2" />
+                </svg>
+              </div>
+            )}
+
+            {/* The 3D cube */}
+            <Cube3D ref={cubeRef} face={displayFace} rolling={rolling} finalFace={finalFace} />
+          </div>
+
+          {/* Result banner */}
+          <div data-dr-banner className="mt-8 opacity-0">
+            <div
+              className="border-2 border-[#FFD700] bg-black/80 px-6 py-4 text-center"
+              style={{
+                clipPath:
+                  "polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px)",
+                boxShadow:
+                  "0 0 32px rgba(255,215,0,0.6), inset 0 0 16px rgba(255,215,0,0.1)",
+              }}
+            >
+              <div className="font-mono text-[10px] uppercase tracking-[0.3em] text-[#FFD700]/70">
+                ▮ DICE LANDED ON ▮
+              </div>
+              <div
+                className="mt-1 font-sans text-5xl font-black text-[#FFD700] sm:text-6xl"
+                style={{
+                  textShadow:
+                    "0 0 20px rgba(255,215,0,1), 0 0 40px rgba(255,215,0,0.6)",
+                }}
+              >
+                {finalFace ?? "?"}
+              </div>
+              <div className="mt-1 font-mono text-[11px] uppercase tracking-[0.18em] text-[#00FF94]">
+                ▸ {HAGGLE_DICE_TABLE[(finalFace ?? 1) - 1].label} DISCOUNT ◂
+              </div>
             </div>
           </div>
         </div>
       </div>
-
-      {/* Corner crosshairs */}
-      {[
-        "left-6 top-6 border-l-2 border-t-2",
-        "right-6 top-6 border-r-2 border-t-2",
-        "bottom-6 left-6 border-b-2 border-l-2",
-        "bottom-6 right-6 border-b-2 border-r-2",
-      ].map((cls, i) => (
-        <span
-          key={i}
-          className={`absolute h-6 w-6 ${cls} border-[#FFD700]/80`}
-          style={{ boxShadow: "0 0 10px rgba(255,215,0,0.5)" }}
-        />
-      ))}
     </div>
   );
 }
 
 /**
- * ArcadeDice — a 2D dice with neon pip rendering, "rumble" wobble when rolling.
- * Designed to feel like a vintage arcade slot-machine reel.
+ * Cube3D — a proper 3D cube using CSS `transform-style: preserve-3d`.
+ * Renders 6 faces, each properly positioned at 90° offsets to form a cube.
+ * The parent applies rotateX/rotateY/rotateZ to tumble the whole cube.
+ *
+ * Face positions (standard dice layout — opposite faces sum to 7):
+ *   1 → front  (translateZ +size/2)
+ *   6 → back   (translateZ -size/2, rotateY 180°)
+ *   2 → right  (rotateY 90°, translateZ +size/2)
+ *   5 → left   (rotateY -90°, translateZ +size/2)
+ *   3 → top    (rotateX 90°, translateZ +size/2)
+ *   4 → bottom (rotateX -90°, translateZ +size/2)
  */
-function ArcadeDice({
-  face,
-  rolling,
-  finalFace,
+const Cube3D = React.forwardRef<
+  HTMLDivElement,
+  { face: number; rolling: boolean; finalFace: number | null }
+>(function Cube3D({ face, rolling, finalFace }, cubeRef) {
+  const settled = !rolling && finalFace !== null;
+  const accent = settled ? "#FFD700" : "#FF4500";
+  const glow = settled ? "rgba(255,215,0,0.8)" : "rgba(255,69,0,0.7)";
+
+  const size = 200;
+  const half = size / 2;
+
+  const faces: Array<[number, string]> = [
+    [1, `translateZ(${half}px)`],
+    [6, `rotateY(180deg) translateZ(${half}px)`],
+    [2, `rotateY(90deg) translateZ(${half}px)`],
+    [5, `rotateY(-90deg) translateZ(${half}px)`],
+    [3, `rotateX(90deg) translateZ(${half}px)`],
+    [4, `rotateX(-90deg) translateZ(${half}px)`],
+  ];
+
+  return (
+    <div
+      style={{
+        width: `${size}px`,
+        height: `${size}px`,
+        position: "relative",
+      }}
+    >
+      {/* Outer glow */}
+      <div
+        className="absolute -inset-8 -z-10"
+        style={{
+          background: `radial-gradient(circle, ${glow} 0%, transparent 70%)`,
+        }}
+      />
+
+      {/* 3D scene */}
+      <div
+        ref={cubeRef}
+        style={{
+          width: "100%",
+          height: "100%",
+          position: "relative",
+          transformStyle: "preserve-3d",
+          transform: "rotateX(-20deg) rotateY(20deg)",
+        }}
+      >
+        {faces.map(([faceNum, transform]) => (
+          <CubeFace
+            key={faceNum}
+            faceNum={faceNum}
+            isActive={face === faceNum}
+            size={size}
+            transform={transform}
+            accent={accent}
+            glow={glow}
+            rolling={rolling}
+            settled={settled}
+          />
+        ))}
+      </div>
+    </div>
+  );
+});
+
+/**
+ * CubeFace — a single face of the 3D cube with proper pip layout.
+ */
+function CubeFace({
+  faceNum,
+  isActive,
+  size,
+  transform,
+  accent,
+  glow,
 }: {
-  face: number;
+  faceNum: number;
+  isActive: boolean;
+  size: number;
+  transform: string;
+  accent: string;
+  glow: string;
   rolling: boolean;
-  finalFace: number | null;
+  settled: boolean;
 }) {
-  // Pip positions for each face (1–6), in a 3x3 grid
-  // Coordinates: (col, row) — 0,1,2
   const PIPS: Record<number, [number, number][]> = {
     1: [[1, 1]],
     2: [[0, 0], [2, 2]],
@@ -846,63 +1185,59 @@ function ArcadeDice({
     6: [[0, 0], [2, 0], [0, 1], [2, 1], [0, 2], [2, 2]],
   };
 
-  const settled = !rolling && finalFace !== null;
-  const borderColor = settled ? "#FFD700" : "#FF4500";
-  const glowColor = settled ? "rgba(255,215,0,0.8)" : "rgba(255,69,0,0.7)";
+  const pips = PIPS[faceNum] || [];
 
   return (
     <div
-      className="relative"
       style={{
-        width: "clamp(180px, 30vw, 260px)",
-        height: "clamp(180px, 30vw, 260px)",
+        position: "absolute",
+        width: `${size}px`,
+        height: `${size}px`,
+        transform,
+        backfaceVisibility: "visible",
       }}
     >
-      {/* Outer glow */}
       <div
-        className="absolute -inset-4 -z-10"
+        className="relative h-full w-full"
         style={{
-          background: `radial-gradient(circle, ${glowColor} 0%, transparent 70%)`,
-        }}
-      />
-
-      {/* Dice body */}
-      <div
-        className="relative h-full w-full border-4 bg-gradient-to-br from-[#1a0a00] via-[#0a0a0a] to-[#1a0a00]"
-        style={{
-          borderColor,
-          boxShadow: `0 0 32px ${glowColor}, inset 0 0 24px rgba(0,0,0,0.8)`,
+          background: isActive
+            ? `linear-gradient(135deg, ${accent}22 0%, #0a0a0a 50%, ${accent}11 100%)`
+            : `linear-gradient(135deg, #1a0a00 0%, #0a0a0a 50%, #1a0a00 100%)`,
+          border: `2px solid ${isActive ? accent : `${accent}60`}`,
+          boxShadow: isActive
+            ? `0 0 24px ${glow}, inset 0 0 24px ${glow}`
+            : `inset 0 0 16px rgba(0,0,0,0.8)`,
           clipPath:
-            "polygon(16px 0, 100% 0, 100% calc(100% - 16px), calc(100% - 16px) 100%, 0 100%, 0 16px)",
-          transform: rolling ? "rotate(0deg)" : "rotate(0deg)",
-          transition: "transform 0.1s",
+            "polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px)",
+          transition: "background 0.1s, border-color 0.1s, box-shadow 0.1s",
+          opacity: isActive ? 1 : 0.85,
         }}
       >
         {/* Inner frame */}
         <div
           className="absolute inset-2 border"
-          style={{ borderColor: `${borderColor}40` }}
+          style={{ borderColor: `${accent}40` }}
         />
 
         {/* Pip grid */}
-        <div className="absolute inset-6 grid grid-cols-3 grid-rows-3 gap-1">
+        <div className="absolute inset-5 grid grid-cols-3 grid-rows-3 gap-1">
           {Array.from({ length: 9 }).map((_, idx) => {
             const col = idx % 3;
             const row = Math.floor(idx / 3);
-            const pips = PIPS[face] || [];
             const hasPip = pips.some(([c, r]) => c === col && r === row);
             return (
               <div key={idx} className="flex items-center justify-center">
                 {hasPip && (
                   <div
-                    className="h-[18%] w-[18%] rounded-full"
+                    className="rounded-full"
                     style={{
-                      width: "16px",
-                      height: "16px",
-                      background: settled ? "#FFD700" : "#FF4500",
-                      boxShadow: settled
-                        ? "0 0 12px #FFD700, 0 0 20px rgba(255,215,0,0.6)"
-                        : "0 0 10px #FF4500, 0 0 16px rgba(255,69,0,0.5)",
+                      width: "18px",
+                      height: "18px",
+                      background: isActive ? accent : `${accent}cc`,
+                      boxShadow: isActive
+                        ? `0 0 12px ${accent}, 0 0 20px ${glow}`
+                        : `0 0 8px ${accent}80`,
+                      transition: "background 0.1s, box-shadow 0.1s",
                     }}
                   />
                 )}
@@ -911,24 +1246,36 @@ function ArcadeDice({
           })}
         </div>
 
-        {/* Face number badge */}
+        {/* Face number badge (top-right corner) */}
         <div
-          className="absolute -right-3 -top-3 flex h-10 w-10 items-center justify-center border-2 bg-black font-sans text-base font-black"
+          className="absolute -right-2 -top-2 flex h-9 w-9 items-center justify-center border-2 bg-black font-sans text-base font-black"
           style={{
-            borderColor,
-            color: borderColor,
+            borderColor: accent,
+            color: accent,
             clipPath:
               "polygon(6px 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%, 0 6px)",
-            boxShadow: `0 0 12px ${glowColor}`,
+            boxShadow: `0 0 12px ${glow}`,
           }}
         >
-          {face}
+          {faceNum}
         </div>
 
-        {/* "TAUNGOO" wordmark at bottom */}
+        {/* "TAUNGOO·ARCADE" wordmark at bottom */}
         <div className="absolute bottom-2 left-0 right-0 text-center font-mono text-[7px] uppercase tracking-[0.4em] text-muted-foreground/60">
           TAUNGOO·ARCADE
         </div>
+
+        {/* Active face indicator */}
+        {isActive && (
+          <div
+            className="absolute left-2 top-2 h-1.5 w-1.5 rounded-full"
+            style={{
+              background: accent,
+              boxShadow: `0 0 6px ${accent}`,
+              animation: "pulse 1s ease-in-out infinite",
+            }}
+          />
+        )}
       </div>
     </div>
   );
