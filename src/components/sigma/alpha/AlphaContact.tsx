@@ -64,7 +64,7 @@ export function AlphaContact() {
           <div>
             <div className="font-mono text-[10px] uppercase tracking-[0.3em] text-[#FF4500]">▸ 10 / CONTACT</div>
             <h2 className="mt-2 font-sans text-3xl font-black uppercase leading-tight tracking-tight sm:text-5xl md:text-6xl">
-              LET'S BUILD <span style={{ color: "#FF4500" }}>SOMETHING.</span>
+              LET'S SHIP <span style={{ color: "#FF4500" }}>SOMETHING.</span>
             </h2>
           </div>
           <div className="hidden shrink-0 font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground sm:block sm:text-[9px]">
@@ -173,7 +173,7 @@ export function AlphaContact() {
                 <textarea
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
-                  placeholder="> describe your project, timeline, and budget..."
+                  placeholder="> describe your project, timeline, and what success looks like..."
                   className="min-h-[120px] w-full flex-1 resize-none border border-border bg-background px-3 py-2.5 font-mono text-sm leading-relaxed text-foreground outline-none transition focus:border-[#FF4500] focus:bg-[#FF45000a]"
                 />
               </div>
@@ -194,7 +194,7 @@ export function AlphaContact() {
                 disabled={transmitting}
                 className="w-full border border-[#FF4500] bg-[#FF4500] py-3 font-mono text-[11px] uppercase tracking-[0.2em] text-black transition-opacity hover:opacity-80 disabled:opacity-50"
               >
-                {transmitting ? "▮ TRANSMITTING..." : "◂ TRANSMIT MESSAGE ▸"}
+                {transmitting ? "▮ TRANSMITTING..." : "▸ TRANSMIT MESSAGE ▸"}
               </button>
             </div>
           </div>
@@ -241,7 +241,7 @@ export function AlphaContact() {
             <div className="alpha-card-hover flex flex-1 flex-col border border-border bg-card/40 p-4" style={{ "--sigma-hover-accent": "#00FF94" } as React.CSSProperties}>
               <div className="font-mono text-[10px] uppercase tracking-[0.2em] text-[#00FF94] sm:text-[9px]">▸ ACCESS TIER</div>
               <p className="mt-2 flex-1 font-serif text-sm italic text-muted-foreground">
-                Lab access is tiered. Public-read is open to all. Write access is earned through the sigma-review process — submit a credible signal and the collective will respond. All channels are monitored. We do not sell, share, or train on your signal.
+                Lab access is tiered. Public-read is open. Write access is earned through sigma-review — submit a credible signal and the collective responds. All channels monitored. We do not sell, share, or train on your signal.
               </p>
               <div className="mt-3 flex flex-wrap gap-2">
                 <span className="border border-[#00FF94]/40 px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.14em] text-[#00FF94] sm:text-[8px]">PUBLIC READ</span>

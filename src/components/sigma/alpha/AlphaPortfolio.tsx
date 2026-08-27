@@ -59,7 +59,7 @@ export function AlphaPortfolio() {
                 SELECTED <span style={{ color: "#FF4500" }}>WORK.</span>
               </h2>
               <p className="mt-3 max-w-xl font-serif text-base italic text-muted-foreground sm:text-lg">
-                10 production projects shipped — real repos, real deployments, real users.
+                10 production systems. Real repos, real deployments, real users. Zero demos.
               </p>
             </div>
             <div className="flex shrink-0 items-end gap-5 sm:gap-7">
@@ -322,10 +322,10 @@ export function AlphaPortfolio() {
             <div>
               <div className="font-mono text-[10px] uppercase tracking-[0.3em] text-[#FF4500] sm:text-[9px]">▸ ARCHIVE</div>
               <div className="mt-1 font-sans text-lg font-black uppercase tracking-tight sm:text-xl md:text-2xl">
-                WANT TO SEE <span style={{ color: "#FF4500" }}>MORE?</span>
+                WANT THE <span style={{ color: "#FF4500" }}>FULL ARCHIVE?</span>
               </div>
               <p className="mt-1 font-serif text-sm italic text-muted-foreground">
-                Our project vault contains 50+ shipped systems. Contact us to request a private viewing of the full archive.
+                50+ systems in the private vault. Request access to see what's not public.
               </p>
             </div>
             <a
@@ -333,7 +333,7 @@ export function AlphaPortfolio() {
               className="sigma-magnetic group relative flex shrink-0 items-center justify-center gap-3 border border-foreground bg-foreground px-5 py-3 font-mono text-[10px] uppercase tracking-[0.25em] text-background transition-all hover:shadow-[5px_5px_0_0_#FF4500] sm:text-[10px]"
             >
               <span className="sigma-pulse h-1.5 w-1.5 bg-[#FF4500]" aria-hidden />
-              CONTACT US
+              REQUEST ACCESS
               <span className="sigma-card-arrow transition-transform group-hover:translate-x-1" aria-hidden>→</span>
             </a>
           </div>

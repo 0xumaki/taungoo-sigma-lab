@@ -4,33 +4,33 @@ import * as React from "react";
 import { PageTransitionLink } from "@/components/sigma/PageTransitionLink";
 
 const SERVICES = [
-  { name: "AI Chatbot", icon: "◐", desc: "Custom AI chatbots with multi-model orchestration", price: "from 3,020,000 MMK", cat: "AI", slug: "ai-chatbot" },
-  { name: "Voice AI", icon: "♫", desc: "Voice agents for sales, support, and automation", price: "from 6,040,000 MMK", cat: "AI", slug: "voice-ai" },
-  { name: "Agent Swarm", icon: "⬡", desc: "Multi-agent systems for complex workflows", price: "from 9,660,000 MMK", cat: "AI", slug: "agent-swarm" },
-  { name: "AI Automation", icon: "⚙", desc: "N8N workflows, process automation, CRM loops", price: "from 3,620,000 MMK", cat: "AI", slug: "ai-automation" },
-  { name: "API & MCP", icon: "⌗", desc: "Custom APIs, MCP servers, and integration services", price: "from 4,830,000 MMK", cat: "AI", slug: "api-mcp" },
-  { name: "HERMES / Openclaw / GrokBot", icon: "⚡", desc: "Specialized AI agent platforms and integrations", price: "custom", cat: "AI", slug: "hermes-openclaw-grokbot" },
-  { name: "AI Video Generation", icon: "▶", desc: "Commercial and MV video generation pipelines", price: "from 2,415,000 MMK", cat: "DESIGN", slug: "ai-video-generation" },
-  { name: "3D Modeling", icon: "◈", desc: "Product visualization, architectural, and game assets", price: "from 1,810,000 MMK", cat: "DESIGN", slug: "3d-modeling" },
-  { name: "Graphic Design", icon: "◆", desc: "Brand identity, marketing collateral, and UI kits", price: "from 1,210,000 MMK", cat: "DESIGN", slug: "graphic-design" },
-  { name: "Content & Copywriting", icon: "✎", desc: "Technical writing, marketing copy, and documentation", price: "from 966,000 MMK", cat: "DESIGN", slug: "content-copywriting" },
-  { name: "Online Media Buying", icon: "▲", desc: "Ad campaigns, media strategy, and performance marketing", price: "from 1,810,000 MMK", cat: "DESIGN", slug: "online-media-buying" },
-  { name: "UI/UX Design", icon: "◡", desc: "Product design, design systems, and prototyping", price: "from 2,415,000 MMK", cat: "DESIGN", slug: "ui-ux-design" },
-  { name: "Android & iOS App", icon: "▣", desc: "Native and cross-platform mobile applications", price: "from 12,080,000 MMK", cat: "FULL-STACK", slug: "android-ios-app" },
-  { name: "Web / WebApp", icon: "▣", desc: "Full-stack web applications with modern frameworks", price: "from 6,040,000 MMK", cat: "FULL-STACK", slug: "web-webapp" },
-  { name: "Chrome Extensions", icon: "⬚", desc: "Browser automation and productivity extensions", price: "from 2,415,000 MMK", cat: "FULL-STACK", slug: "chrome-extensions" },
-  { name: "Desktop / MacBook Apps", icon: "◱", desc: "Cross-platform desktop applications (Electron/Tauri)", price: "from 9,660,000 MMK", cat: "FULL-STACK", slug: "desktop-macbook-apps" },
-  { name: "ASO", icon: "⊙", desc: "App Store Optimization for mobile and web stores", price: "from 1,210,000 MMK", cat: "FULL-STACK", slug: "aso" },
-  { name: "Web3 Wallets", icon: "⬡", desc: "Non-custodial wallet development and integration", price: "from 18,110,000 MMK", cat: "WEB3", slug: "web3-wallets" },
-  { name: "AMM / DEX", icon: "⇄", desc: "Automated market maker and DEX protocol development", price: "from 24,150,000 MMK", cat: "WEB3", slug: "amm-dex" },
-  { name: "DAO Governance", icon: "◍", desc: "DAO frameworks, voting, and treasury management", price: "from 18,110,000 MMK", cat: "WEB3", slug: "dao-governance" },
-  { name: "NFT Systems", icon: "✦", desc: "NFT minting, marketplace, and royalty infrastructure", price: "from 12,080,000 MMK", cat: "WEB3", slug: "nft-systems" },
-  { name: "Security Audit", icon: "⚿", desc: "Smart contract and protocol security audits", price: "from 6,040,000 MMK", cat: "WEB3", slug: "security-audit" },
-  { name: "Smart Contract Dev", icon: "∎", desc: "Solidity/Rust contract development and deployment", price: "from 9,660,000 MMK", cat: "WEB3", slug: "smart-contract-development" },
-  { name: "Bug Bounty", icon: "▣", desc: "Security testing and vulnerability assessment programs", price: "from 3,620,000 MMK", cat: "WEB3", slug: "bug-bounty" },
-  { name: "Money Market Development", icon: "$", desc: "DeFi lending, borrowing, and yield protocols", price: "from 30,190,000 MMK", cat: "WEB3", slug: "money-market-development" },
-  { name: "CBDC Development", icon: "₵", desc: "Central bank digital currency infrastructure", price: "custom", cat: "WEB3", slug: "cbdc-development" },
-  { name: "Mobile/Web Game Dev", icon: "◆", desc: "Mobile and web-based game development with Unity, Phaser, and WebGL", price: "from 7,240,000 MMK", cat: "FULL-STACK", slug: "mobile-web-game-development" },
+  { name: "AI Chatbot", icon: "◐", desc: "AI chatbots that handle real workloads — sales, support, onboarding.", price: "from 3,020,000 MMK", cat: "AI", slug: "ai-chatbot" },
+  { name: "Voice AI", icon: "♫", desc: "Voice agents that close sales and resolve support tickets.", price: "from 6,040,000 MMK", cat: "AI", slug: "voice-ai" },
+  { name: "Agent Swarm", icon: "⬡", desc: "Multi-agent swarms for complex, real-world workflows.", price: "from 9,660,000 MMK", cat: "AI", slug: "agent-swarm" },
+  { name: "AI Automation", icon: "⚙", desc: "N8N workflows + CRM loops that run themselves.", price: "from 3,620,000 MMK", cat: "AI", slug: "ai-automation" },
+  { name: "API & MCP", icon: "⌗", desc: "Custom APIs and MCP servers that integrate with anything.", price: "from 4,830,000 MMK", cat: "AI", slug: "api-mcp" },
+  { name: "HERMES / Openclaw / GrokBot", icon: "⚡", desc: "Specialized AI agent platforms built for specific workflows.", price: "custom", cat: "AI", slug: "hermes-openclaw-grokbot" },
+  { name: "AI Video Generation", icon: "▶", desc: "Commercial-grade video pipelines. MVs, ads, brand content.", price: "from 2,415,000 MMK", cat: "DESIGN", slug: "ai-video-generation" },
+  { name: "3D Modeling", icon: "◈", desc: "Product viz, architectural, and game-ready 3D assets.", price: "from 1,810,000 MMK", cat: "DESIGN", slug: "3d-modeling" },
+  { name: "Graphic Design", icon: "◆", desc: "Brand identity, collateral, and UI kits that get remembered.", price: "from 1,210,000 MMK", cat: "DESIGN", slug: "graphic-design" },
+  { name: "Content & Copywriting", icon: "✎", desc: "Technical writing, marketing copy, docs that convert.", price: "from 966,000 MMK", cat: "DESIGN", slug: "content-copywriting" },
+  { name: "Online Media Buying", icon: "▲", desc: "Ad campaigns + media strategy with measurable ROI.", price: "from 1,810,000 MMK", cat: "DESIGN", slug: "online-media-buying" },
+  { name: "UI/UX Design", icon: "◡", desc: "Product design + design systems that scale with users.", price: "from 2,415,000 MMK", cat: "DESIGN", slug: "ui-ux-design" },
+  { name: "Android & iOS App", icon: "▣", desc: "Native + cross-platform apps. App Store-ready releases.", price: "from 12,080,000 MMK", cat: "FULL-STACK", slug: "android-ios-app" },
+  { name: "Web / WebApp", icon: "▣", desc: "Full-stack web apps on Next.js 16 + React 19.", price: "from 6,040,000 MMK", cat: "FULL-STACK", slug: "web-webapp" },
+  { name: "Chrome Extensions", icon: "⬚", desc: "Browser automation + productivity extensions. Ship in days.", price: "from 2,415,000 MMK", cat: "FULL-STACK", slug: "chrome-extensions" },
+  { name: "Desktop / MacBook Apps", icon: "◱", desc: "Cross-platform desktop apps on Electron + Tauri.", price: "from 9,660,000 MMK", cat: "FULL-STACK", slug: "desktop-macbook-apps" },
+  { name: "ASO", icon: "⊙", desc: "App Store Optimization that ranks. From keyword to install.", price: "from 1,210,000 MMK", cat: "FULL-STACK", slug: "aso" },
+  { name: "Web3 Wallets", icon: "⬡", desc: "Non-custodial wallets with hardware-grade security.", price: "from 18,110,000 MMK", cat: "WEB3", slug: "web3-wallets" },
+  { name: "AMM / DEX", icon: "⇄", desc: "AMM + DEX protocols that settle on mainnet. Audited.", price: "from 24,150,000 MMK", cat: "WEB3", slug: "amm-dex" },
+  { name: "DAO Governance", icon: "◍", desc: "DAO frameworks with on-chain voting + treasury control.", price: "from 18,110,000 MMK", cat: "WEB3", slug: "dao-governance" },
+  { name: "NFT Systems", icon: "✦", desc: "NFT minting + marketplace + royalty infrastructure.", price: "from 12,080,000 MMK", cat: "WEB3", slug: "nft-systems" },
+  { name: "Security Audit", icon: "⚿", desc: "Smart contract audits. Catch exploits before mainnet.", price: "from 6,040,000 MMK", cat: "WEB3", slug: "security-audit" },
+  { name: "Smart Contract Dev", icon: "∎", desc: "Solidity/Rust contracts shipped to mainnet. Gas-optimized.", price: "from 9,660,000 MMK", cat: "WEB3", slug: "smart-contract-development" },
+  { name: "Bug Bounty", icon: "▣", desc: "Security testing + vulnerability assessments. Real exploits found.", price: "from 3,620,000 MMK", cat: "WEB3", slug: "bug-bounty" },
+  { name: "Money Market Development", icon: "$", desc: "DeFi lending, borrowing, and yield protocols.", price: "from 30,190,000 MMK", cat: "WEB3", slug: "money-market-development" },
+  { name: "Stablecoin Development", icon: "₵", desc: "Banking-grade stablecoin infrastructure at institutional scale.", price: "from 30,190,000 MMK", cat: "WEB3", slug: "stablecoin-development" },
+  { name: "Mobile/Web Game Dev", icon: "◆", desc: "Mobile + web games on Unity, Phaser, and WebGL.", price: "from 7,240,000 MMK", cat: "FULL-STACK", slug: "mobile-web-game-development" },
 ];
 
 const CATEGORIES = [
@@ -55,7 +55,7 @@ const DETAIL_SLUGS = new Set([
   "content-copywriting", "online-media-buying", "ui-ux-design",
   "android-ios-app", "web-webapp", "chrome-extensions", "desktop-macbook-apps", "aso",
   "web3-wallets", "amm-dex", "dao-governance", "nft-systems", "security-audit",
-  "smart-contract-development", "bug-bounty", "money-market-development", "cbdc-development",
+  "smart-contract-development", "bug-bounty", "money-market-development", "stablecoin-development",
   "mobile-web-game-development",
 ]);
 
@@ -78,10 +78,10 @@ export function AlphaServices() {
           <div>
             <div className="font-mono text-[10px] uppercase tracking-[0.3em] text-[#FF4500]">▸ 03 / SERVICES</div>
             <h2 className="mt-2 font-sans text-3xl font-black uppercase leading-tight tracking-tight sm:text-5xl md:text-6xl">
-              WHAT WE <span style={{ color: "#FF4500" }}>BUILD.</span>
+              WHAT WE <span style={{ color: "#FF4500" }}>SHIP.</span>
             </h2>
             <p className="mt-2 font-serif text-sm italic text-muted-foreground sm:text-base">
-              27 services across AI, Web3, and full-stack development. Each with detail pages, pricing packages, and comparison tables.
+              27 services across AI, Web3, and full-stack. Each ships with detail pages, pricing packages, and comparison tables.
             </p>
           </div>
           <div className="hidden shrink-0 font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground sm:block sm:text-[9px]">
@@ -180,8 +180,8 @@ export function AlphaServices() {
 
         {/* Bottom CTA */}
         <div className="mt-6 flex flex-col items-stretch gap-3 border border-border/60 bg-card/30 p-4 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
-          <div className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground sm:text-[10px]">▸ NOT SURE WHICH SERVICE YOU NEED?</div>
-          <a href="#contact" className="shrink-0 border border-foreground bg-foreground px-4 py-2 text-center font-mono text-[10px] uppercase tracking-[0.2em] text-background transition-opacity hover:opacity-80 sm:text-[10px]">CONTACT OUR TEAM →</a>
+          <div className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground sm:text-[10px]">▸ NOT SURE WHERE TO START?</div>
+          <a href="#contact" className="shrink-0 border border-foreground bg-foreground px-4 py-2 text-center font-mono text-[10px] uppercase tracking-[0.2em] text-background transition-opacity hover:opacity-80 sm:text-[10px]">START YOUR PROJECT →</a>
         </div>
       </div>
     </section>

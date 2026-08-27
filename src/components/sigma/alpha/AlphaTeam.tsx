@@ -28,7 +28,7 @@ export function AlphaTeam() {
             <h2 className="mt-2 font-sans text-3xl font-black uppercase leading-tight tracking-tight sm:text-5xl md:text-6xl">
               THE <span style={{ color: "#FF4500" }}>COLLECTIVE.</span>
             </h2>
-            <p className="mt-2 font-serif text-sm italic text-muted-foreground sm:text-base">8 operators. No egos. Each with deep expertise and a handle, not a title.</p>
+            <p className="mt-2 font-serif text-sm italic text-muted-foreground sm:text-base">8 operators. Zero egos. Deep expertise, handles instead of titles. Code that ships.</p>
           </div>
           <div className="hidden shrink-0 font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground sm:block sm:text-[9px]">
             <span className="text-[#FF4500]">8</span> OPERATORS · <span className="text-[#00FF94]">0</span> EGOS

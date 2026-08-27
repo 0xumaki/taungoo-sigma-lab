@@ -3,10 +3,10 @@
 import * as React from "react";
 
 const STEPS: { num: string; title: string; desc: string; color: string; deliverables: string[]; duration: string }[] = [
-  { num: "01", title: "DISCOVERY", color: "#FF4500", duration: "1-2 weeks", desc: "Deep dive into requirements, constraints, and goals. We define scope, timeline, and success metrics.", deliverables: ["Scope document", "Timeline estimate", "Tech stack proposal", "Risk assessment"] },
-  { num: "02", title: "ARCHITECTURE", color: "#00E5FF", duration: "1 week", desc: "System design, tech stack selection, and infrastructure planning. Architecture diagrams, API contracts, database schemas.", deliverables: ["Architecture diagrams", "API contracts", "Database schemas", "Infrastructure plan"] },
-  { num: "03", title: "BUILD", color: "#C6FF00", duration: "2-8 weeks", desc: "Rapid development with CI/CD, automated testing, and daily deployments to staging. You see progress every day.", deliverables: ["Daily staging deploys", "Automated tests", "Code reviews", "Progress dashboard"] },
-  { num: "04", title: "DEPLOY", color: "#00FF94", duration: "1 week +", desc: "Production deployment with monitoring, documentation, and handoff. We don't ship and forget.", deliverables: ["Production deployment", "Monitoring setup", "Documentation", "30-day support"] },
+  { num: "01", title: "DISCOVERY", color: "#FF4500", duration: "1-2 weeks", desc: "Deep dive on requirements, constraints, and goals. Scope, timeline, and success metrics defined before a single line of code is written.", deliverables: ["Scope document", "Timeline estimate", "Tech stack proposal", "Risk assessment"] },
+  { num: "02", title: "ARCHITECTURE", color: "#00E5FF", duration: "1 week", desc: "System design and infrastructure planning locked. Architecture diagrams, API contracts, database schemas — all signed off before build starts.", deliverables: ["Architecture diagrams", "API contracts", "Database schemas", "Infrastructure plan"] },
+  { num: "03", title: "BUILD", color: "#C6FF00", duration: "2-8 weeks", desc: "Rapid dev with CI/CD, automated tests, and daily staging deploys. You see progress every day — no surprises at the end.", deliverables: ["Daily staging deploys", "Automated tests", "Code reviews", "Progress dashboard"] },
+  { num: "04", title: "DEPLOY", color: "#00FF94", duration: "1 week +", desc: "Production deploy with monitoring, docs, and 30-day handoff. We don't ship and forget — we ship and standby.", deliverables: ["Production deployment", "Monitoring setup", "Documentation", "30-day support"] },
 ];
 
 const PRINCIPLES: { icon: string; text: string; color: string }[] = [
@@ -32,9 +32,9 @@ export function AlphaProcess() {
           <div>
             <div className="font-mono text-[10px] uppercase tracking-[0.3em] text-[#FF4500]">▸ 05 / PROCESS</div>
             <h2 className="mt-2 font-sans text-3xl font-black uppercase leading-tight tracking-tight sm:text-5xl md:text-6xl">
-              OUR <span style={{ color: "#FF4500" }}>PROCESS.</span>
+              HOW WE <span style={{ color: "#FF4500" }}>SHIP.</span>
             </h2>
-            <p className="mt-2 font-serif text-sm italic text-muted-foreground sm:text-base">4 phases. Zero black boxes. Every deliverable documented.</p>
+            <p className="mt-2 font-serif text-sm italic text-muted-foreground sm:text-base">4 phases. Zero black boxes. 16 deliverables, all documented.</p>
           </div>
           <div className="hidden shrink-0 font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground sm:block sm:text-[9px]">
             <span className="text-[#FF4500]">4</span> PHASES · <span className="text-[#00FF94]">16</span> DELIVERABLES

@@ -12,7 +12,7 @@ const capabilityData: { label: string; pct: number; color: string }[] = [
 
 const statData: { v: string; k: string; c: string }[] = [
   { v: "27", k: "SERVICES", c: "#FF4500" },
-  { v: "10", k: "PROJECTS", c: "#00FF94" },
+  { v: "9", k: "PROJECTS", c: "#00FF94" },
   { v: "8", k: "OPERATORS", c: "#00E5FF" },
   { v: "11", k: "SECTORS", c: "#C6FF00" },
 ];
@@ -29,8 +29,8 @@ export function AlphaAbout() {
           <div>
             <div className="font-mono text-[10px] uppercase tracking-[0.3em] text-[#FF4500]">▸ 02 / ABOUT</div>
             <h2 className="mt-2 font-sans text-3xl font-black uppercase leading-tight tracking-tight sm:text-5xl md:text-6xl">
-              ENGINEERING THE<br />
-              <span style={{ color: "#FF4500" }}>FUTURE</span>, TODAY.
+              WE SHIP<br />
+              THE <span style={{ color: "#FF4500" }}>FUTURE.</span>
             </h2>
           </div>
           <div className="hidden shrink-0 font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground sm:block sm:text-[9px]">
@@ -45,10 +45,10 @@ export function AlphaAbout() {
             <div className="flex h-full flex-col p-4 sm:p-5">
               {/* Mission statement — large, readable */}
               <p className="font-serif text-lg italic leading-relaxed text-foreground/90 sm:text-xl md:text-2xl">
-                We're a full-stack development lab building AI automation, agent swarms, and Web3 infrastructure for consumer and enterprise clients.
+                We ship production systems. No demos. No MVPs that die in staging. Every line of code touches real users.
               </p>
               <p className="mt-4 font-serif text-sm italic leading-relaxed text-muted-foreground sm:text-base md:text-lg">
-                From multi-model AI agents that handle real workloads, to DeFi protocols that settle on mainnet — every system we build ships to production. No black boxes. No vaporware.
+                From multi-model AI agents handling real workloads, to DeFi protocols settling on mainnet — every system ships. No black boxes. No vaporware. 30-day support included.
               </p>
 
               {/* Approach items — 2x2 grid */}

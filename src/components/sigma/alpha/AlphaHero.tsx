@@ -183,7 +183,7 @@ export function AlphaHero() {
                 className="mt-4 font-sans font-black uppercase leading-[0.88] tracking-tight"
                 style={{ fontSize: "clamp(2.75rem, 7vw, 5.5rem)" }}
               >
-                <span className="block">WE BUILD</span>
+                <span className="block">WE SHIP</span>
                 <span
                   className="sigma-glitch block"
                   data-text="INTELLIGENT"
@@ -199,9 +199,8 @@ export function AlphaHero() {
 
               {/* Subtitle */}
               <p className="mt-5 max-w-xl font-serif text-sm italic text-muted-foreground sm:text-base lg:text-lg">
-                A full-stack development lab engineering AI services, automation,
-                Web3, and consumer/enterprise applications. From agent swarms to
-                smart contracts — we ship production systems.
+                AI agents. Web3 protocols. Full-stack platforms. All shipped to
+                production — battle-tested across 50+ live systems. Zero vaporware.
               </p>
 
               {/* Feature pills */}
@@ -225,7 +224,7 @@ export function AlphaHero() {
                   <span className="flex h-4 w-4 items-center justify-center border border-black/30 text-[8px]">
                     ▸
                   </span>
-                  EXPLORE SERVICES
+                  BROWSE SERVICES
                   <span className="hidden text-[8px] opacity-70 sm:inline">27 SERVICES</span>
                 </a>
                 <a
@@ -235,8 +234,8 @@ export function AlphaHero() {
                   <span className="flex h-4 w-4 items-center justify-center border border-foreground/30 text-[8px]">
                     ▸
                   </span>
-                  VIEW WORK
-                  <span className="hidden text-[8px] opacity-60 sm:inline">10 PROJECTS</span>
+                  INSPECT WORK
+                  <span className="hidden text-[8px] opacity-60 sm:inline">9 PROJECTS</span>
                 </a>
                 <a
                   href="#contact"
@@ -245,7 +244,7 @@ export function AlphaHero() {
                   <span className="flex h-4 w-4 items-center justify-center border border-foreground/30 text-[8px]">
                     ✉
                   </span>
-                  CONTACT
+                  START NOW
                   <span className="hidden text-[8px] opacity-60 sm:inline">72H RESPONSE</span>
                 </a>
               </div>

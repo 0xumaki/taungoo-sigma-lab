@@ -12,9 +12,9 @@ import { MANIFESTO_TEXT } from "@/lib/sigma/manifesto";
 gsap.registerPlugin(useGSAP);
 
 const PILLARS = [
-  "RE-MODEL how a lab in Taungoo can ship software the world uses.",
-  "RE-TRAIN a generation of operators on real, deployed systems.",
-  "RE-DEPLOY capital, code, and community as one sigma variable.",
+  "RE-MODEL: ship software from Taungoo the world actually uses.",
+  "RE-TRAIN: operators on real, deployed systems — not toy projects.",
+  "RE-DEPLOY: capital, code, and community as one sigma variable.",
 ];
 
 const STATS = [
@@ -52,7 +52,7 @@ export function S02Manifesto() {
     <SectionShell
       id="s02"
       title="MANIFESTO"
-      tagline="Sector 02 is the mission statement — we build AI, Web3, and community tech that ships to production."
+      tagline="Sector 02 is the mission. We ship AI, Web3, and community tech to production."
     >
       <div ref={root} className="relative grid h-full grid-cols-12 gap-3 overflow-y-auto overflow-x-hidden sigma-scroll-hidden">
         {/* Ambient particles */}
@@ -121,7 +121,7 @@ export function S02Manifesto() {
             </span>
           </h2>
           <p data-m-line className="mt-5 max-w-md font-serif text-lg italic text-foreground/80">
-            A research lab in Taungoo building at the intersection of AI, Web3,
+            A research lab in Taungoo operating at the intersection of AI, Web3,
             and community resilience. We treat the lab itself as a sigma — the
             unmeasured deviation that bends the curve.
           </p>

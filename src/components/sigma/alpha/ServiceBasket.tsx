@@ -132,7 +132,7 @@ export const ADDONS: Record<string, { slug: string; name: string; icon: string; 
     { slug: "smart-contract-development", name: "Smart Contract Dev", icon: "∎", price: "from 9,660,000 MMK", reason: "Additional contract modules" },
     { slug: "amm-dex", name: "AMM / DEX", icon: "⇄", price: "from 24,150,000 MMK", reason: "Integrated swap functionality" },
   ],
-  "cbdc-development": [
+  "stablecoin-development": [
     { slug: "security-audit", name: "Security Audit", icon: "ʞ", price: "from 6,040,000 MMK", reason: "Government-grade security" },
     { slug: "smart-contract-development", name: "Smart Contract Dev", icon: "∎", price: "from 9,660,000 MMK", reason: "Core infrastructure contracts" },
     { slug: "web-webapp", name: "Web / WebApp", icon: "▣", price: "from 6,040,000 MMK", reason: "Admin and user portals" },
@@ -171,7 +171,7 @@ export const SERVICE_PRICES: Record<string, { name: string; icon: string; price:
   "smart-contract-development": { name: "Smart Contract Dev", icon: "∎", price: "from 9,660,000 MMK" },
   "bug-bounty": { name: "Bug Bounty", icon: "▣", price: "from 3,620,000 MMK" },
   "money-market-development": { name: "Money Market Development", icon: "$", price: "from 30,190,000 MMK" },
-  "cbdc-development": { name: "CBDC Development", icon: "₵", price: "custom" },
+  "stablecoin-development": { name: "Stablecoin Development", icon: "₵", price: "custom" },
   "mobile-web-game-development": { name: "Mobile/Web Game Dev", icon: "◆", price: "from 7,240,000 MMK" },
 };
 

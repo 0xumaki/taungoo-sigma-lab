@@ -58,7 +58,7 @@ const BOOT_LINES = [
   "[ 0.251 ] HUD: all systems nominal … OK",
   "[ 0.257 ] kernel: boot sequence complete …",
   "[ 0.263 ] ████████████████████ 100%",
-  "[ 0.268 ] WELCOME, OPERATOR.",
+  "[ 0.268 ] WELCOME, OPERATOR. SIGMA LIVE.",
   "[ 0.271 ] THE SIGMA VARIABLE IS 1.0000.",
   "[ 0.274 ] ▮ STANDING BY FOR INPUT ▮",
 ];
@@ -138,7 +138,7 @@ export function S01Initializing() {
     <SectionShell
       id="s01"
       title="INITIALIZING"
-      tagline="Sector 01 is the boot kernel — the sigma variable goes live and the lab comes online. Sigma holds at 1.0000."
+      tagline="Sector 01 is the boot kernel. Sigma goes live. The lab comes online. Sigma holds at 1.0000."
     >
       <div ref={root} className="relative grid h-full grid-cols-12 gap-3 overflow-y-auto overflow-x-hidden sigma-scroll-hidden">
         {/* Ambient boot particles */}
@@ -253,7 +253,7 @@ export function S01Initializing() {
                 ENTER THE MAP
               </BrutalButton>
               <BrutalButton accent="#FF4500" onClick={() => navigate("s02")}>
-                PROCEED TO MANIFESTO
+                READ THE MANIFESTO
               </BrutalButton>
             </div>
           </div>

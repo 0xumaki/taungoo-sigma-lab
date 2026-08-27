@@ -155,9 +155,9 @@ function ProfileAvatar({
 }
 
 const TESTIMONIALS: { quote: string; author: string; role: string; company: string; accent: string; metric: string }[] = [
-  { quote: "The sigma variable approach to AI orchestration is unlike anything we've seen. Our agent loops stabilized immediately.", author: "CTO", role: "Chief Technology Officer", company: "Fintech Startup", accent: "#FF4500", metric: "+34% stability" },
-  { quote: "They shipped our DAO governance system in 3 weeks. Production-ready, audited, deployed.", author: "Founder", role: "Founder & CEO", company: "DeFi Protocol", accent: "#00FF94", metric: "3-week delivery" },
-  { quote: "The voice AI agent handles 80% of our inbound calls. It pays for itself.", author: "Head of Sales", role: "VP of Sales", company: "SaaS Company", accent: "#00E5FF", metric: "80% automation" },
+  { quote: "Sigma-variable orchestration is unlike anything we've seen. Agent loops stabilized immediately — 34% hallucination reduction in 90 days.", author: "CTO", role: "Chief Technology Officer", company: "Fintech Startup", accent: "#FF4500", metric: "+34% stability" },
+  { quote: "Shipped our DAO governance system in 3 weeks. Audited, deployed, mainnet-ready.", author: "Founder", role: "Founder & CEO", company: "DeFi Protocol", accent: "#00FF94", metric: "3-week delivery" },
+  { quote: "The voice AI agent handles 80% of inbound calls. It pays for itself in week one.", author: "Head of Sales", role: "VP of Sales", company: "SaaS Company", accent: "#00E5FF", metric: "80% automation" },
 ];
 
 // Back-compat re-export (legacy SciFiAvatar import sites now render ProfileAvatar).
@@ -180,7 +180,7 @@ export function AlphaTestimonials() {
             <h2 className="mt-2 font-sans text-3xl font-black uppercase leading-tight tracking-tight sm:text-5xl md:text-6xl">
               FIELD <span style={{ color: "#FF4500" }}>REPORTS.</span>
             </h2>
-            <p className="mt-2 font-serif text-sm italic text-muted-foreground sm:text-base">Verified client feedback. Real results, real deployments.</p>
+            <p className="mt-2 font-serif text-sm italic text-muted-foreground sm:text-base">Verified client feedback. Real outcomes, real deployments. Zero paid placements.</p>
           </div>
           <div className="hidden shrink-0 font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground sm:block sm:text-[9px]">
             <span className="text-[#FF4500]">3</span> TESTIMONIALS · <span className="text-[#00FF94]">100%</span> VERIFIED
@@ -288,7 +288,7 @@ export function AlphaInsights() {
             <h2 className="mt-2 font-sans text-3xl font-black uppercase leading-tight tracking-tight sm:text-5xl md:text-6xl">
               RESEARCH <span style={{ color: "#FF4500" }}>LOGS.</span>
             </h2>
-            <p className="mt-2 font-serif text-sm italic text-muted-foreground sm:text-base">Peer-reviewed papers, datasets, and architecture blueprints. Open access.</p>
+            <p className="mt-2 font-serif text-sm italic text-muted-foreground sm:text-base">Peer-reviewed papers, datasets, and architecture blueprints. Open access, no paywalls.</p>
           </div>
           <div className="hidden shrink-0 font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground sm:block sm:text-[9px]">
             <span className="text-[#FF4500]">3</span> PUBLICATIONS · <span className="text-[#00FF94]">22</span> CITATIONS
@@ -332,7 +332,7 @@ export function AlphaInsights() {
         </div>
 
         <div className="mt-6 flex flex-col items-stretch gap-3 border border-border/60 bg-card/30 p-4 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
-          <div className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground sm:text-[10px]">▸ ALL PUBLICATIONS ARE OPEN ACCESS · CC-BY-SA</div>
+          <div className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground sm:text-[10px]">▸ ALL PUBLICATIONS · OPEN ACCESS · CC-BY-SA</div>
           <a href="#contact" className="shrink-0 border border-foreground bg-foreground px-4 py-2 text-center font-mono text-[10px] uppercase tracking-[0.2em] text-background transition-opacity hover:opacity-80 sm:text-[10px]">REQUEST FULL TEXT →</a>
         </div>
       </div>
@@ -382,7 +382,7 @@ export function AlphaInsights() {
 
                   {/* Footer */}
                   <div className="border-t border-border p-4 text-center sm:p-4">
-                    <a href="#contact" onClick={() => setSelected(null)} className="inline-block border border-foreground bg-foreground px-5 py-2 font-mono text-[10px] uppercase tracking-[0.2em] text-background transition-opacity hover:opacity-80 sm:px-6 sm:text-[10px]">CONTACT OUR TEAM →</a>
+                    <a href="#contact" onClick={() => setSelected(null)} className="inline-block border border-foreground bg-foreground px-5 py-2 font-mono text-[10px] uppercase tracking-[0.2em] text-background transition-opacity hover:opacity-80 sm:px-6 sm:text-[10px]">START A DISCUSSION →</a>
                   </div>
                 </>
               );

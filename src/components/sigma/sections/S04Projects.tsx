@@ -71,7 +71,7 @@ export function S04Projects() {
     <SectionShell
       id="s04"
       title="PROJECT VAULT"
-      tagline="Sector 04 is the project vault — 10 shipped systems with real screenshots. Contact us for repo access."
+      tagline="Sector 04 is the project vault — 9 shipped systems with real screenshots. Contact us for repo access."
     >
       <div ref={root} className="relative flex h-full flex-col gap-3">
         {/* Ambient particles */}

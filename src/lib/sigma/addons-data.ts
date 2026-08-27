@@ -287,15 +287,15 @@ export const SERVICE_ADDONS: Record<string, AddOn[]> = {
     { id: "money-market-risk-monitoring", name: "Market Risk Monitoring", type: "ongoing", description: "Daily risk alerts, scenario simulation, and monthly risk committee report", price: "1,810,000 MMK/mo" },
   ],
 
-  // 26. CBDC Development ----------------------------------------------
-  "cbdc-development": [
-    { id: "cbdc-node-validator", name: "Additional Node Validator", type: "one-time", description: "Permissioned validator setup with HSM-backed keys and consensus participation", price: "1,810,000 MMK" },
-    { id: "cbdc-kyc-aml", name: "KYC / AML Integration", type: "one-time", description: "Sumsub or comparable KYC with sanctions screening, risk scoring, and audit trail", price: "2,420,000 MMK" },
-    { id: "cbdc-offline-payments", name: "Offline Payment Module", type: "one-time", description: "Secure-element integration with deferred sync and double-spend prevention", price: "3,620,000 MMK" },
-    { id: "cbdc-privacy-tranche", name: "Privacy Tranche", type: "one-time", description: "Zero-knowledge proof layer with selective disclosure for regulator and citizen views", price: "3,620,000 MMK" },
-    { id: "cbdc-central-bank-dashboard", name: "Central Bank Dashboard", type: "one-time", description: "Supply, flow, and policy controls with role-based access and immutable action log", price: "2,420,000 MMK" },
-    { id: "cbdc-cross-border-bridge", name: "Cross-border Bridge", type: "one-time", description: "CBDC-to-CBDC atomic settlement with FX oracle and compliance gate", price: "3,620,000 MMK" },
-    { id: "cbdc-compliance-reporting", name: "Compliance Reporting", type: "ongoing", description: "Weekly regulatory reports, audit log exports, and policy change attestation", price: "1,810,000 MMK/mo" },
+  // 26. Stablecoin Development ----------------------------------------------
+  "stablecoin-development": [
+    { id: "stablecoin-node-validator", name: "Additional Node Validator", type: "one-time", description: "Permissioned validator setup with HSM-backed keys and consensus participation", price: "1,810,000 MMK" },
+    { id: "stablecoin-kyc-aml", name: "KYC / AML Integration", type: "one-time", description: "Sumsub or comparable KYC with sanctions screening, risk scoring, and audit trail", price: "2,420,000 MMK" },
+    { id: "stablecoin-offline-payments", name: "Offline Payment Module", type: "one-time", description: "Secure-element integration with deferred sync and double-spend prevention", price: "3,620,000 MMK" },
+    { id: "stablecoin-privacy-tranche", name: "Privacy Tranche", type: "one-time", description: "Zero-knowledge proof layer with selective disclosure for regulator and citizen views", price: "3,620,000 MMK" },
+    { id: "stablecoin-central-bank-dashboard", name: "Banking & Corporate Dashboard", type: "one-time", description: "Supply, flow, and policy controls with role-based access and immutable action log", price: "2,420,000 MMK" },
+    { id: "stablecoin-cross-border-bridge", name: "Cross-border Bridge", type: "one-time", description: "Stablecoin-to-Stablecoin atomic settlement with FX oracle and compliance gate", price: "3,620,000 MMK" },
+    { id: "stablecoin-compliance-reporting", name: "Compliance Reporting", type: "ongoing", description: "Weekly regulatory reports, audit log exports, and policy change attestation", price: "1,810,000 MMK/mo" },
   ],
 
   // 27. Mobile/Web Game Dev ------------------------------------------

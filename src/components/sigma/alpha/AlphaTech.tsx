@@ -65,7 +65,7 @@ export function AlphaTech() {
               TOOLS WE <span style={{ color: "#FF4500" }}>WIELD.</span>
             </h2>
             <p className="mt-2 font-serif text-sm italic text-muted-foreground sm:text-base">
-              6 categories. 50+ tools. Verified from our actual GitHub repos — not marketing fluff.
+              6 categories. 50+ tools. Verified from our package.json — not marketing fluff.
             </p>
           </div>
           <div className="hidden shrink-0 font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground sm:block sm:text-[9px]">
@@ -124,7 +124,7 @@ export function AlphaTech() {
         <div className="mt-4 border border-border/40 bg-card/20 p-3">
           <div className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground sm:text-[8px]">
             <span className="text-[#00FF94]">▸</span>
-            TECH STACK VERIFIED FROM PACKAGE.JSON · UPDATED 2025/2026 · NO MARKETING FLUFF
+            STACK VERIFIED FROM PACKAGE.JSON · UPDATED 2025/2026 · ZERO MARKETING FLUFF
           </div>
         </div>
       </div>

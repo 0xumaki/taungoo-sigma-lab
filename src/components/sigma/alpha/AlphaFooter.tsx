@@ -41,7 +41,7 @@ export function AlphaFooter() {
               </div>
             </div>
             <p className="mt-3 font-serif text-xs italic text-muted-foreground">
-              We are the sigma variable. Building AI, Web3, and full-stack systems that ship to production.
+              We are the sigma variable. AI, Web3, full-stack systems — shipped to production, not prototyped.
             </p>
             {/* Status indicators */}
             <div className="mt-3 space-y-1">
