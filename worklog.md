@@ -5108,3 +5108,429 @@ technical data was changed.**
 6. **Action-oriented** — every CTA is now an imperative verb with arrow:
    "START NOW", "START YOUR PROJECT →", "REQUEST ACCESS", "READ THE MANIFESTO",
    "REQUEST FULL TEXT →", "START A DISCUSSION →"
+
+---
+
+## RESEARCH-1 — Premium-Tier Pricing Research v2 (Credible Premium Positioning)
+
+### Task
+Research current 2024-2025 market pricing for 27 specific software/service
+categories from real agencies and studios, then produce a NEW pricing table that
+positions Taungoo Sigma Lab at a CREDIBLE PREMIUM tier (not "dirt cheap" — the v1
+pricing from stage 61-A was 15-25% below the lower end of market range, too cheap
+to be trusted by serious enterprise customers).
+
+### Agent
+pricing-research-subagent (general-purpose)
+
+### Work Log
+
+**Step 1 — Context load**
+- Read worklog.md stages 61-A (Dual Pricing) and 62-A (Copywriting) for context
+- Read `/home/z/my-project/research-intl-pricing.md` (v1 research output)
+- Confirmed v1 pricing positioned STARTER ~85% below market low end for many
+  services (e.g., UI/UX STARTER $700 vs market $13K-$82K — 95% below; Bug Bounty
+  STARTER $1,050 vs market $15K-$150K/yr — 93% below)
+- Extracted 27 actual service slugs from `src/app/services/[slug]/page.tsx`:
+  ai-chatbot, voice-ai, agent-swarm, ai-automation, api-mcp, ai-video-generation,
+  3d-modeling, graphic-design, content-copywriting, online-media-buying,
+  ui-ux-design, android-ios-app, web-webapp, chrome-extensions,
+  desktop-macbook-apps, aso, web3-wallets, amm-dex, dao-governance, nft-systems,
+  security-audit, smart-contract-development, money-market-development,
+  stablecoin-development, mobile-web-game-development, rwa-development
+  (plus `bug-bounty` proposed as new slug — project currently has
+  hermes-openclaw-grokbot at that slot; ServiceBasket.tsx maps rwa-development
+  → "Bug Bounty" name in error — separate cleanup task for future)
+
+**Step 2 — Live web research via web-search skill**
+- Invoked `Skill(command="web-search")` to load the z-ai CLI usage
+- Ran 27 + 3 follow-up `bunx z-ai function -n web_search` queries
+  (one per service; 3 retries for desktop/macbook, RWA, stablecoin which initially
+  returned framework/market-data instead of agency pricing)
+- All raw JSON results saved to `/tmp/pricing-research/01-*.json` through
+  `27b-*.json` (29 files total, ~75KB)
+
+**Step 3 — Market range extraction**
+For each of 27 services, extracted:
+- LOW end of real agency pricing (USD)
+- MID market rate (typical agency pricing, USD)
+- HIGH end (premium agency pricing, USD)
+- Source URLs (2-3 per service from actual agencies/studios, not aggregators)
+
+Key sources (non-exhaustive):
+- AI Chatbot: masterofcode.com, quickchat.ai, crescendo.ai — $5K-$150K range
+- Voice AI: masterofcode.com, biz4group.com, p0stman.com — $20K-$200K range
+- Agent Swarm: markovate.com, raftlabs.com, productcrafters.io — $30K-$400K range
+- N8N Automation: goodspeed.studio, n8n.io, r/n8n — $5K-$30K project range
+- API & MCP: zuplo.com, konghq.com, truto.one — $5K-$80K custom dev range
+- AI Video Gen: cloudpano.com, synthesia.io — $1K-$15K project range
+- 3D Modeling: alpha3d.io, dizzagency.com, cadcrowd.com — $100-$5K range
+- Graphic Design: designpickle.com, penji.co, digitalpolo.com — $500-$10K range
+- Content & Copy: elnacain.com — $300-$5K per engagement
+- Media Buying: webfx.com — $1K-$20K/mo retainer range
+- UI/UX: ux4sight.com, fuselabcreative.com, uxstudioteam.com — $10K-$82K range
+- Android/iOS: appinventiv.com, businessofapps.com, cheesecakelabs.com — $5K-$300K
+- Web/WebApp: softermii.com, mindk.com, noloco.io — $5K-$300K range
+- Chrome Extensions: webmobtech.com — $3K-$25K typical
+- Desktop/MacBook: learn.microsoft.com, artezio.com, fuselio.com — $20K-$300K
+- ASO: appagent.com, trysonar.app, appfollow.io — $2.5K-$15K/mo
+- Web3 Wallets: pixelplex.io, softean.com — $15K-$60K+ (MVP to enterprise)
+- AMM/DEX: octalsoftware.com, appinventiv.com — $40K-$350K range
+- DAO Governance: evacodes.com, ideasoft.io, 4irelabs.com — $15K-$80K mid
+- NFT Systems: perimattic.com, appinventiv.com, coinsclone.com — $25K-$300K
+- Security Audit: softstack.io, sherlock.xyz, certik.com — $5K-$80K+
+- Smart Contract: softean.com, pixelplex.io, developers.dev — $5K-$100K
+- Bug Bounty: vendr.com (HackerOne, Bugcrowd, Intigriti), cipherssecurity.com — $30K-$150K/yr
+- Money Market (DeFi): vocal.media, suffescom.com — $40K-$200K (Aave/Compound fork)
+- Stablecoin: pixelplex.io ($30K+), shamlatech.com ($15K-$80K) — $15K-$80K mid
+- Game Dev: quytech.com ($20K+), juegostudio.com ($10K-$300K+) — $10K-$300K
+- RWA Tokenization: antier.com ($40K-$60K avg), stobox.io — $40K-$300K
+
+**Step 4 — New pricing derivation (positioning rule)**
+- STARTER: set at LOW end of real agency market range (~35th percentile)
+- PRO: set at MID market rate (~50th percentile)
+- ENTERPRISE: always "custom"
+- USD prices: rounded to nearest $50 or $100 for clean numbers
+- Local MMK conversion: 1 USD = 4,800 MMK (realistic 2025 street rate, NOT the
+  3,450 MMK/USD official CBM rate used in v1 — v1 was 28% undervalued)
+- MMK prices: rounded to nearest 100,000 MMK for clean numbers
+- marketPrice strikethrough: set to 1.35× our published price (midpoint of the
+  30-45% range specified in the brief)
+
+**Step 5 — Deliverable written**
+- `/home/z/my-project/research-pricing-v2.md` (NEW file, ~22KB)
+- Structure:
+  1. Header with positioning rule + exchange rate note
+  2. Summary table (27 rows: #, slug, service, STARTER USD, PRO USD, market range)
+  3. 27 service detail sections, each with:
+     - Sources (2-3 actual agency URLs)
+     - Market range (USD)
+     - Mid-market rate (USD)
+     - STARTER (local MMK + intl USD + marketPrice strikethrough)
+     - PRO (local MMK + intl USD + marketPrice)
+     - ENTERPRISE (custom / custom)
+  4. Positioning Notes section with:
+     - v1 → v2 multiplier table (per-service % increase)
+     - 35th-65th percentile sanity check
+     - MMK conversion sanity check
+     - marketPrice strikethrough logic explanation
+     - ENTERPRISE always-custom confirmation
+
+### Aggregate impact (v1 → v2)
+
+| Metric | v1 STARTER total | v2 STARTER total | Δ |
+|---|---|---|---|
+| Sum of 27 STARTER USD | ~$56,000 (custom dropped) | $393,500 | +602% |
+| Sum of 27 PRO USD | ~$142,000 (custom dropped) | $1,044,500 | +635% |
+| Median STARTER multiplier | — | 5.7× | — |
+| Median PRO multiplier | — | 5.3× | — |
+
+Largest single multiplier: UI/UX Design STARTER (v1 $700 → v2 $12,000, 17.1×)
+Smallest single multiplier: Smart Contract STARTER (v1 $2,800 → v2 $5,000, 1.8×)
+New services (v1 was custom, v2 has STARTER/PRO): Stablecoin ($30K/$80K), RWA
+Tokenization ($40K/$100K)
+
+### What was NOT touched (deliberately)
+- No source code files modified — RESEARCH ONLY
+- No changes to `src/app/services/[slug]/page.tsx` (the file with 81 intlPrice
+  fields from stage 61-A remains as-is)
+- No changes to `src/lib/sigma/projects-data.json` or `projects.ts`
+- No changes to `src/components/sigma/sections/S04Projects.tsx`
+- No changes to `src/lib/sigma/basket.ts` or `ServiceBasket.tsx`
+- No changes to `src/components/sigma/alpha/AlphaServices.tsx`
+- v1 research file (`/home/z/my-project/research-intl-pricing.md`) left in place
+  for historical reference — new file is separate (`research-pricing-v2.md`)
+
+### Next actions (recommended, not done in this task)
+1. Implement v2 pricing into `src/app/services/[slug]/page.tsx` — replace all 81
+   `intlPrice:"$X,XXX"` and 27 `marketPrice:"$X,XXX"` fields with v2 values from
+   `research-pricing-v2.md`
+2. Re-derive local MMK prices from v2 USD using 4,800 MMK/USD rate (v1 used 3,450)
+3. Update S04 project budgets (`intlBudget` field in `projects-data.json`) using
+   new exchange rate
+4. Fix the ServiceBasket.tsx bug where `"rwa-development"` is mapped to name
+   "Bug Bounty" — should be "RWA Tokenization"
+5. Consider adding `bug-bounty` as a 28th service page (currently bundled under
+   Security Audit ENTERPRISE tier per existing comparison rows)
+6. Update `AlphaServices.tsx` starting price displays to match v2 (e.g., "from
+   3,020,000 MMK" → "from 24,000,000 MMK" for AI Chatbot)
+
+### Verification
+- This task created a research document only — no code was modified
+- All 27 service sections in `research-pricing-v2.md` validated:
+  - Every STARTER has both MMK and USD fields
+  - Every PRO has both MMK and USD fields
+  - Every ENTERPRISE is "custom / custom"
+  - Every marketPrice is exactly 1.35× the published price (rounded to nearest $50)
+  - All MMK values are multiples of 100,000 (rounding rule respected)
+  - All USD prices are multiples of $50 or $100 (rounding rule respected)
+
+### Files changed (1 — research document only)
+1. `/home/z/my-project/research-pricing-v2.md` (NEW, ~22KB) — full pricing
+   research with summary table + 27 service detail sections + positioning notes
+
+### Stage Summary
+Conducted fresh 2024-2025 market pricing research across 27 service categories
+using z-ai web_search CLI, querying actual agency pricing pages (masterofcode,
+quickchat, appinventiv, pixelplex, softstack, sherlock, webfx, ux4sight,
+fuselabcreative, goodspeed, truto, kong, hacken, certik, hackerone, etc.).
+Positioned Taungoo Sigma Lab at the LOW end of real agency market range for
+STARTER tier and at the MID market rate for PRO tier — a credible premium
+positioning that signals "real studio with real engineers" to enterprise
+procurement, instead of the v1 "too cheap to be trusted" signal.
+
+Exchange rate updated to 4,800 MMK/USD (realistic 2025 street rate) vs v1's
+3,450 MMK/USD (official CBM rate, undervalued by 28%). All MMK prices rounded
+to nearest 100,000; all USD prices rounded to nearest $50/$100. marketPrice
+strikethrough set at 1.35× published price (midpoint of brief's 30-45% range).
+
+Result: aggregate STARTER pricing rose ~5.7× median; PRO pricing rose ~5.3×
+median. Largest single jump was UI/UX Design STARTER ($700 → $12,000, 17.1×)
+because v1 had it at 95% below market. Smallest was Smart Contract STARTER
+($2,800 → $5,000, 1.8×) because v1 was already close to market low.
+
+RESEARCH-1 complete. Implementation into the Next.js codebase is a separate
+follow-up task (not part of this research scope).
+
+---
+
+## 63 — PREMIUM PRICING REMODEL + SECRET HAGGLE ARCADE SYSTEM
+
+### Task
+User request: "These prices (Both Local And International) are dirt cheap and potential customers will not trust them once they see this pricing. Re-model the pricing properly after thoroughly researching across the internet first. Also include the secret haggle system where if a user type a certain key binding there will be Code activation card will be pop up, if user have activation code then they can haggle for once the dice animations with arcade like effect will be display and the randomly get numbers will be their final rate for example if they got 1 the got 2% discount extra if they got 6 they will get 15% extra discount on total value. Use insert coin sound if user is successfully activated the code and run super smash bros song after the final random dice number has been reveal with confetti effects and a big congratulations you got x% of Extra discount on your Haggle kinda letter. Manage them accordingly and perfectly to make sure we are the global top 10 award-winning level."
+
+### Stage 1 — Pricing research (Task ID: RESEARCH-1, subagent)
+Ran 30 `bunx z-ai function -n web_search` queries across all 27 service categories to
+confirm 2024-2025 market pricing from real agencies (Master of Code, Quickchat,
+Appinventiv, PixelPlex, Sherlock, CertiK, HackerOne, WebFX, UX4Sight, Fuselab,
+Goodspeed, Truto, Kong, etc.). Saved full deliverable to
+`/home/z/my-project/research-pricing-v2.md` (~32KB).
+
+Key positioning change: v1 prices were 15–25% BELOW the lower end of market range
+(too cheap to be trusted). v2 positions STARTER at the LOW end of real agency market
+range (~35th percentile) and PRO at the MID market rate (~50th percentile), giving
+a credible-premium signal. Exchange rate updated from 3,450 MMK/USD (official CBM,
+undervalued) to 4,800 MMK/USD (realistic 2025 street rate).
+
+### Stage 2 — Pricing remodel (78 price fields updated)
+Wrote a Python script that parsed `/tmp/prices-v2.json` (built from
+`research-pricing-v2.md`) and systematically updated all 27 services:
+
+**`src/app/services/[slug]/page.tsx`** — 26 services × 3 packages = 78 price fields:
+- Replaced `price:"<OLD> MMK"` with v2 STARTER/PRO local MMK prices (e.g., AI Chatbot
+  STARTER 3,020,000 MMK → 38,400,000 MMK; PRO 6,040,000 MMK → 120,000,000 MMK)
+- Replaced `intlPrice:"$<OLD>"` with v2 USD prices (e.g., AI Chatbot STARTER $1,900 →
+  $8,000; PRO $4,550 → $25,000)
+- Replaced `marketPrice:"$<OLD>"` strikethrough with v2 market reference (set at
+  +35% above our published price)
+- ENTERPRISE stays as `price:"custom"` + `intlPrice:"custom"` (correct — those are
+  custom-quoted, no change)
+- `bug-bounty` slug skipped (it's bundled under `security-audit` ENTERPRISE in this
+  build; not a standalone service page)
+
+**`src/components/sigma/alpha/ServiceBasket.tsx`** — `SERVICE_PRICES` map (26 entries)
+and `ADDONS` compatible-services map (81 entries across 27 service pages) all updated
+to v2 STARTER prices. Also fixed a long-standing bug where `rwa-development` was
+mislabeled "Bug Bounty" — corrected to "RWA Tokenization".
+
+**`src/components/sigma/alpha/AlphaServices.tsx`** — 26 services on the home page
+services section now show v2 starting prices.
+
+Aggregate price movement: STARTER prices rose ~5–9× (e.g., AI Chatbot $1,900 →
+$8,000); PRO prices rose ~4–6× (e.g., AI Chatbot $4,550 → $25,000). This moves Taungoo
+Sigma Lab from "too cheap to be trusted" into the lower-mid to mid agency tier —
+credible for serious enterprise procurement.
+
+### Stage 3 — Haggle basket-store extensions
+**`src/lib/sigma/basket.ts`** — extended `BasketState` interface with:
+- `haggleUsed: boolean` (true after successful haggle, single-use per session)
+- `haggleDiscountRate: number` (0–0.15, applied to post-bulk-discount total)
+- `haggleRoll: number | null` (the dice face rolled 1–6)
+- `setHaggleResult(roll, rate)` action
+- `resetHaggle()` action (for testing/new session)
+- `getHaggleDiscount()` selector → returns computed MMK amount
+- `getGrandTotal()` selector → post-bulk-discount total minus haggle discount
+
+Added exports:
+- `HAGGLE_DICE_TABLE` — 6 entries mapping dice face → rate + label:
+  1=2%, 2=4%, 3=6%, 4=9%, 5=12%, 6=15% (per user spec)
+- `HAGGLE_ACTIVATION_CODES` — 5 secret codes:
+  `SIGMA-777`, `TAUNGOO-LUCK`, `HAGGLE-2025`, `ARCADE-MASTER`, `JACKPOT-Σ`
+- `isValidActivationCode(input)` — case-insensitive validator
+
+### Stage 4 — SigmaHaggle component (1,267 lines, single file)
+**`src/components/sigma/shared/SigmaHaggle.tsx`** — the full secret haggle system:
+
+**Phase 0 — Keyboard listener:** Listens for the sequence H-A-G-G-L-E (case
+insensitive). Ignores keystrokes when target is INPUT/TEXTAREA/SELECT/contentEditable
+(so users can type "haggle" inside the contact form without triggering the easter
+egg). Also ignores modifier-held keystrokes (Cmd+H, Ctrl+A, etc.). Auto-inits the
+sound engine on first key press (browser autoplay policy). Once `haggleUsed` is true,
+the listener is removed (single-use enforcement).
+
+**Phase 1 — Activation Card (`ActivationCard`):** Full-screen arcade modal:
+- Spinning $ coin SVG with golden glow
+- Blinking "▸ INSERT COIN ◂" prompt (yoyo GSAP animation)
+- Prize table preview showing all 6 dice faces and their discount rates
+- Code input field with golden caret + uppercase tracking
+- "INSERT COIN" button + "[ESC]" cancel button
+- On invalid code: shake animation + red error message + synth error beep
+- On valid code: plays `/sounds/insert-coin.mp3` (uploaded file) and proceeds to
+  dice phase
+- Card slides in with `back.out(1.6)` ease; on success, scales up briefly then
+  blurs out
+
+**Phase 2 — Dice Roller (`DiceRoller` + `ArcadeDice`):**
+- Pre-picks a random target face (1–6) before the animation starts
+- 28 fast face cycles (65ms each = ~1.8s) → 3 slow cycles (180ms each) → lands on
+  target
+- After landing: dice pulses (scale 1.3 → 1.0 with brightness flash), result flash
+  strobes 3×, then the result banner slams in with `back.out(1.6)` ease
+- Banner shows the face number (huge golden text with neon glow) + the discount
+  label (e.g., "12% EXTRA DISCOUNT")
+- Custom `ArcadeDice` sub-component renders a 2D dice with:
+  - Pip positions per face (1–6) on a 3×3 grid
+  - Orange pips while rolling, golden pips when settled
+  - Face number badge in top-right corner
+  - "TAUNGOO·ARCADE" wordmark at bottom
+  - Outer glow that intensifies on settle
+
+**Phase 3 — Result Letter (`ResultLetter` + `spawnConfettiParticles`):**
+- Plays `/sounds/smash-bonus.mp3` (uploaded "Super Smash Bros Bonus Results" song)
+- Spawns 140 confetti particles (220 if jackpot = roll 6) directly into `document.body`
+- Confetti particles: 6-color palette for jackpot (gold, orange, green, cyan, pink,
+  white) or 4-color for normal rolls. Each particle is a square or rectangle, bursts
+  outward from center with random angle, then falls with simulated gravity + rotation
+- "★ BONUS ★" or "★ JACKPOT ★" title slams in with chromatic aberration (red/cyan
+  offset shadows) + heavy text-shadow glow
+- Letter card slides in with clip-path angular corners:
+  - Header: "▮ HAGGLE CERTIFICATE ▮" + "ROLL #N · X% EXTRA"
+  - Big % number (7xl-8xl) with neon glow + WebkitTextStroke
+  - "YOU GOT X% OF EXTRA DISCOUNT" headline (per user spec)
+  - "on your Haggle" italic subtitle (per user spec)
+  - 2-cell stats grid (DICE FACE, EXTRA DISCOUNT)
+  - Footer: signature "TAUNGOO SIGMA LAB · HAGGLE-PROTOCOL · ARCADE DIVISION" +
+    rotated Σ stamp
+- For non-jackpot rolls: hint "▸ ROLL A 6 NEXT TIME FOR THE 15% JACKPOT ◂"
+- Auto-dismisses after 9 seconds OR on click anywhere
+- Cleans up all confetti DOM nodes on unmount
+
+### Stage 5 — Basket display integration
+**`src/components/sigma/alpha/ServiceBasket.tsx`** — wired the new store selectors
+into the basket UI:
+- Destructures `haggleUsed`, `haggleRoll`, `haggleDiscountRate`, `getHaggleDiscount`,
+  `getGrandTotal` from `useBasketStore`
+- New breakdown line: "◆ HAGGLE (ROLL N)" in gold (#FFD700) showing the dice roll
+  + the computed haggle discount amount
+- TOTAL label switches from "TOTAL" (orange) to "GRAND TOTAL" (gold with text-shadow)
+  when a haggle is active, and uses `getGrandTotal()` instead of `getDiscountedTotal()`
+- "SAVED VS LIST" row shows the cumulative discount vs the pre-discount subtotal
+- RFQ submission payload (`submitRFQ`) now includes haggle metadata (haggleUsed,
+  haggleRoll, haggleDiscountRate, haggleDiscount, grandTotal) so the sales team
+  sees the dice roll + applied discount on the back-end
+
+### Stage 6 — Global mounting
+**`src/components/sigma/ExperienceShell.tsx`** — added `<SigmaHaggle />` next to
+`<SigmaKonami />` (both modes — Sigma hub AND Alpha scrolling site).
+
+**Three standalone detail pages** also mount `<SigmaHaggle />` (they bypass
+ExperienceShell):
+- `src/app/services/[slug]/page.tsx` — after `<ServiceBasket />` and
+  `<ContactFormModal />`
+- `src/app/portfolio/[slug]/page.tsx` — after `<ContactFormModal />`
+- `src/app/insights/[slug]/page.tsx` — after `<AlphaFooter />`
+
+### Stage 7 — Audio assets
+Copied user-uploaded files to public web-served paths:
+- `upload/insert-coin-arcade-machine.mp3` → `public/sounds/insert-coin.mp3`
+  (16KB — plays on activation card success)
+- `upload/super-smash-bros-bonus-results.mp3` → `public/sounds/smash-bonus.mp3`
+  (66KB — plays when the dice lands + result letter appears)
+
+Both files are loaded via `new Audio("/sounds/<file>.mp3")` at runtime (not bundled),
+with `volume = 0.85`. Each has a fallback synth beep via `sigmaSound.play("complete")`
+if browser autoplay policies block the audio.
+
+### Verification (agent-browser, end-to-end)
+
+**Homepage (Sigma mode)** — confirmed `<SigmaHaggle />` is mounted:
+- DOM query `document.querySelectorAll("[data-ha-bg]").length` → 0 (before trigger)
+- Type `h a g g l e` via `agent-browser press` → activation card appears (DOM = 1)
+- Card shows: "▮ HAGGLE PROTOCOL ▮ v1.0 · ARCADE", "▸ INSERT COIN ◂", prize table
+  (1=2%, 2=4%, 3=6%, 4=9%, 5=12%, 6=15%), input field, "▸ INSERT COIN" button
+
+**Activation + dice roll:**
+- Fill input with `SIGMA-777` + click INSERT COIN → activation card blurs out
+- Dice phase: "ROLLING..." title, dice cycles faces (orange pips, glowing border)
+- After ~3s, dice lands → pulses (scale 1.3 → 1.0) → result banner slams in
+- Verified two rolls end-to-end:
+  - Roll #4 → "9% EXTRA DISCOUNT" → result letter "YOU GOT 9% OF EXTRA DISCOUNT"
+  - Roll #5 → "12% EXTRA DISCOUNT" → result letter "YOU GOT 12% OF EXTRA DISCOUNT"
+- Result letter shows full certificate layout, golden Σ stamp, auto-dismisses after 9s
+
+**Service detail page (`/services/voice-ai`):**
+- Added 2 packages to basket (Voice AI STARTER + PRO = 225,600,000 MMK subtotal)
+- Triggered haggle via `agent-browser press h a g g l e` → activation card opens
+  (initially failed because SigmaHaggle wasn't mounted on detail pages — fixed in
+  Stage 6 by adding `<SigmaHaggle />` to all 3 detail pages)
+- Filled code `SIGMA-777` → dice rolled → Roll #5 → 12% extra
+- Opened basket, verified breakdown:
+  ```
+  SERVICES SUBTOTAL  225,600,000 MMK
+  DISCOUNT (BULK)   -15,792,000 MMK   (7% bulk discount, 2 services)
+  ◆ HAGGLE (ROLL 5) -25,176,960 MMK  (12% extra from haggle)
+  GRAND TOTAL       184,631,040 MMK  (post-bulk-discount − haggle discount)
+  SAVED VS LIST     -40,968,960 MMK  (cumulative vs pre-discount subtotal)
+  ```
+- Verified single-use: pressing `h a g g l e` again → no activation card appears
+  (DOM count stays at 0). The existing basket still shows "HAGGLE (ROLL 5)" line.
+
+**Pricing verification:**
+- `/services/ai-chatbot` renders STARTER $8,000 / PRO $25,000 (USD toggle) with
+  strikethrough marketPrice ($10,800 / $33,750) + "▾ BELOW MARKET AVG" badge
+- `/services/amm-dex` renders STARTER $40,000 / PRO $90,000 with strikethrough
+  $54,000 / $121,500 — confirmed via `agent-browser read` output
+- All 27 service detail pages return 200 OK with no runtime errors in dev.log
+
+**Lint + TypeScript:**
+- `bunx tsc --noEmit` → CLEAN (exit 0)
+- `bunx eslint src/ --max-warnings=0` → CLEAN (exit 0, zero errors, zero warnings)
+
+### Files changed (8 source files + 1 research doc + 2 audio assets)
+1. `src/lib/sigma/basket.ts` — added haggle state, actions, selectors, dice table,
+   activation codes, validator
+2. `src/components/sigma/shared/SigmaHaggle.tsx` — NEW, 1,267 lines: activation card
+   + dice roller + arcade dice + confetti + result letter (single component,
+   phases managed by internal state machine)
+3. `src/components/sigma/alpha/ServiceBasket.tsx` — wired haggle selectors + new
+   breakdown lines (HAGGLE, GRAND TOTAL, SAVED VS LIST) + RFQ payload extension
+   + SERVICE_PRICES/ADDONS price updates (26+81 entries) + rwa-development mislabel
+   fix
+4. `src/components/sigma/ExperienceShell.tsx` — mount `<SigmaHaggle />` globally
+5. `src/app/services/[slug]/page.tsx` — 78 price fields updated + mount SigmaHaggle
+6. `src/app/portfolio/[slug]/page.tsx` — mount SigmaHaggle
+7. `src/app/insights/[slug]/page.tsx` — mount SigmaHaggle
+8. `src/components/sigma/alpha/AlphaServices.tsx` — 26 home-page service cards
+   updated to v2 starting prices
+9. `research-pricing-v2.md` — NEW, full pricing research deliverable
+10. `public/sounds/insert-coin.mp3` — copied from user upload
+11. `public/sounds/smash-bonus.mp3` — copied from user upload
+
+### Unresolved / Next-phase recommendations
+- The haggle discount state is in-memory only (zustand). If a user haggles then
+  hard-navigates between pages, the state is lost on full page reload. To make it
+  persist across navigations, persist `haggleUsed/haggleRoll/haggleDiscountRate`
+  in `sessionStorage` (or use `zustand/middleware persist`). For now, it persists
+  across client-side navigations only (which is the common path — users add to
+  basket via client-side nav, then haggle).
+- Activation codes are hardcoded in `HAGGLE_ACTIVATION_CODES`. Consider moving them
+  to an environment variable or a server-side validation API (`/api/sigma/haggle`)
+  for true secrecy — currently they're visible in the client bundle. Acceptable for
+  a "secret" easter egg, but if the user wants real scarcity, they should be
+  server-validated.
+- The Konami code (SigmaKonami) and the Haggle system are independent easter eggs.
+  Could add a third "ultimate" easter egg that requires the Konami code FIRST,
+  then the Haggle activation — for a 25% mega-discount.
+- Could add a sound toggle specifically for the long soundtrack (smash-bonus.mp3
+  plays for ~9s) so users can mute just the celebration music without muting the
+  UI SFX.

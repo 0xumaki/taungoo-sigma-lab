@@ -8,175 +8,175 @@ import { ShoppingBag, X, Trash2, Send } from "lucide-react";
 // Add-on data — researched compatible services for upselling
 export const ADDONS: Record<string, { slug: string; name: string; icon: string; price: string; reason: string }[]> = {
   "ai-chatbot": [
-    { slug: "voice-ai", name: "Voice AI", icon: "♫", price: "from 6,040,000 MMK", reason: "Add voice capabilities to your chatbot" },
-    { slug: "ai-automation", name: "AI Automation", icon: "⚙", price: "from 3,620,000 MMK", reason: "Automate chatbot-triggered workflows" },
-    { slug: "api-mcp", name: "API & MCP", icon: "⌗", price: "from 4,830,000 MMK", reason: "Expose chatbot via API for integrations" },
+    { slug: "voice-ai", name: "Voice AI", icon: "♫", price: "from 57,600,000 MMK", reason: "Add voice capabilities to your chatbot" },
+    { slug: "ai-automation", name: "AI Automation", icon: "⚙", price: "from 24,000,000 MMK", reason: "Automate chatbot-triggered workflows" },
+    { slug: "api-mcp", name: "API & MCP", icon: "⌗", price: "from 38,400,000 MMK", reason: "Expose chatbot via API for integrations" },
   ],
   "voice-ai": [
-    { slug: "ai-chatbot", name: "AI Chatbot", icon: "◐", price: "from 3,020,000 MMK", reason: "Text fallback when voice unavailable" },
-    { slug: "ai-automation", name: "AI Automation", icon: "⚙", price: "from 3,620,000 MMK", reason: "Automate post-call workflows" },
-    { slug: "content-copywriting", name: "Content & Copywriting", icon: "✎", price: "from 966,000 MMK", reason: "Call scripts and conversation flows" },
+    { slug: "ai-chatbot", name: "AI Chatbot", icon: "◐", price: "from 38,400,000 MMK", reason: "Text fallback when voice unavailable" },
+    { slug: "ai-automation", name: "AI Automation", icon: "⚙", price: "from 24,000,000 MMK", reason: "Automate post-call workflows" },
+    { slug: "content-copywriting", name: "Content & Copywriting", icon: "✎", price: "from 3,800,000 MMK", reason: "Call scripts and conversation flows" },
   ],
   "agent-swarm": [
-    { slug: "ai-automation", name: "AI Automation", icon: "⚙", price: "from 3,620,000 MMK", reason: "Orchestrate swarm via N8N workflows" },
-    { slug: "api-mcp", name: "API & MCP", icon: "⌗", price: "from 4,830,000 MMK", reason: "Expose swarm via MCP for external triggers" },
-    { slug: "ai-chatbot", name: "AI Chatbot", icon: "◐", price: "from 3,020,000 MMK", reason: "Human-like interface for swarm outputs" },
+    { slug: "ai-automation", name: "AI Automation", icon: "⚙", price: "from 24,000,000 MMK", reason: "Orchestrate swarm via N8N workflows" },
+    { slug: "api-mcp", name: "API & MCP", icon: "⌗", price: "from 38,400,000 MMK", reason: "Expose swarm via MCP for external triggers" },
+    { slug: "ai-chatbot", name: "AI Chatbot", icon: "◐", price: "from 38,400,000 MMK", reason: "Human-like interface for swarm outputs" },
   ],
   "ai-automation": [
-    { slug: "api-mcp", name: "API & MCP", icon: "⌗", price: "from 4,830,000 MMK", reason: "Custom APIs for workflow integrations" },
-    { slug: "web-webapp", name: "Web / WebApp", icon: "▣", price: "from 6,040,000 MMK", reason: "Dashboard for monitoring automations" },
-    { slug: "ai-chatbot", name: "AI Chatbot", icon: "◐", price: "from 3,020,000 MMK", reason: "Chatbot interface for triggering workflows" },
+    { slug: "api-mcp", name: "API & MCP", icon: "⌗", price: "from 38,400,000 MMK", reason: "Custom APIs for workflow integrations" },
+    { slug: "web-webapp", name: "Web / WebApp", icon: "▣", price: "from 48,000,000 MMK", reason: "Dashboard for monitoring automations" },
+    { slug: "ai-chatbot", name: "AI Chatbot", icon: "◐", price: "from 38,400,000 MMK", reason: "Chatbot interface for triggering workflows" },
   ],
   "api-mcp": [
-    { slug: "ai-automation", name: "AI Automation", icon: "⚙", price: "from 3,620,000 MMK", reason: "Automate API-triggered workflows" },
-    { slug: "web-webapp", name: "Web / WebApp", icon: "▣", price: "from 6,040,000 MMK", reason: "Admin dashboard for API management" },
-    { slug: "security-audit", name: "Security Audit", icon: "⚿", price: "from 6,040,000 MMK", reason: "Audit API for vulnerabilities" },
+    { slug: "ai-automation", name: "AI Automation", icon: "⚙", price: "from 24,000,000 MMK", reason: "Automate API-triggered workflows" },
+    { slug: "web-webapp", name: "Web / WebApp", icon: "▣", price: "from 48,000,000 MMK", reason: "Admin dashboard for API management" },
+    { slug: "security-audit", name: "Security Audit", icon: "⚿", price: "from 38,400,000 MMK", reason: "Audit API for vulnerabilities" },
   ],
   "hermes-openclaw-grokbot": [
-    { slug: "agent-swarm", name: "Agent Swarm", icon: "⬡", price: "from 9,660,000 MMK", reason: "Multi-agent orchestration layer" },
-    { slug: "ai-automation", name: "AI Automation", icon: "⚙", price: "from 3,620,000 MMK", reason: "Workflow automation integration" },
-    { slug: "api-mcp", name: "API & MCP", icon: "⌗", price: "from 4,830,000 MMK", reason: "MCP server for external access" },
+    { slug: "agent-swarm", name: "Agent Swarm", icon: "⬡", price: "from 96,000,000 MMK", reason: "Multi-agent orchestration layer" },
+    { slug: "ai-automation", name: "AI Automation", icon: "⚙", price: "from 24,000,000 MMK", reason: "Workflow automation integration" },
+    { slug: "api-mcp", name: "API & MCP", icon: "⌗", price: "from 38,400,000 MMK", reason: "MCP server for external access" },
   ],
   "ai-video-generation": [
-    { slug: "graphic-design", name: "Graphic Design", icon: "◆", price: "from 1,210,000 MMK", reason: "Brand-consistent video thumbnails" },
-    { slug: "content-copywriting", name: "Content & Copywriting", icon: "✎", price: "from 966,000 MMK", reason: "Video scripts and descriptions" },
-    { slug: "online-media-buying", name: "Online Media Buying", icon: "▲", price: "from 1,810,000 MMK", reason: "Distribute videos as ad campaigns" },
+    { slug: "graphic-design", name: "Graphic Design", icon: "◆", price: "from 5,800,000 MMK", reason: "Brand-consistent video thumbnails" },
+    { slug: "content-copywriting", name: "Content & Copywriting", icon: "✎", price: "from 3,800,000 MMK", reason: "Video scripts and descriptions" },
+    { slug: "online-media-buying", name: "Online Media Buying", icon: "▲", price: "from 7,200,000 MMK", reason: "Distribute videos as ad campaigns" },
   ],
   "3d-modeling": [
-    { slug: "ui-ux-design", name: "UI/UX Design", icon: "◡", price: "from 2,415,000 MMK", reason: "Integrate 3D assets into product UI" },
-    { slug: "graphic-design", name: "Graphic Design", icon: "◆", price: "from 1,210,000 MMK", reason: "Branded materials with 3D visuals" },
-    { slug: "web-webapp", name: "Web / WebApp", icon: "▣", price: "from 6,040,000 MMK", reason: "WebGL/Three.js integration for 3D" },
+    { slug: "ui-ux-design", name: "UI/UX Design", icon: "◡", price: "from 57,600,000 MMK", reason: "Integrate 3D assets into product UI" },
+    { slug: "graphic-design", name: "Graphic Design", icon: "◆", price: "from 5,800,000 MMK", reason: "Branded materials with 3D visuals" },
+    { slug: "web-webapp", name: "Web / WebApp", icon: "▣", price: "from 48,000,000 MMK", reason: "WebGL/Three.js integration for 3D" },
   ],
   "graphic-design": [
-    { slug: "ui-ux-design", name: "UI/UX Design", icon: "◡", price: "from 2,415,000 MMK", reason: "Apply designs to product interfaces" },
-    { slug: "online-media-buying", name: "Online Media Buying", icon: "▲", price: "from 1,810,000 MMK", reason: "Run ad campaigns with designs" },
-    { slug: "content-copywriting", name: "Content & Copywriting", icon: "✎", price: "from 966,000 MMK", reason: "Copy to accompany designs" },
+    { slug: "ui-ux-design", name: "UI/UX Design", icon: "◡", price: "from 57,600,000 MMK", reason: "Apply designs to product interfaces" },
+    { slug: "online-media-buying", name: "Online Media Buying", icon: "▲", price: "from 7,200,000 MMK", reason: "Run ad campaigns with designs" },
+    { slug: "content-copywriting", name: "Content & Copywriting", icon: "✎", price: "from 3,800,000 MMK", reason: "Copy to accompany designs" },
   ],
   "content-copywriting": [
-    { slug: "graphic-design", name: "Graphic Design", icon: "◆", price: "from 1,210,000 MMK", reason: "Visual assets for written content" },
-    { slug: "online-media-buying", name: "Online Media Buying", icon: "▲", price: "from 1,810,000 MMK", reason: "Distribute content via ad campaigns" },
-    { slug: "ai-automation", name: "AI Automation", icon: "⚙", price: "from 3,620,000 MMK", reason: "Automate content publishing pipelines" },
+    { slug: "graphic-design", name: "Graphic Design", icon: "◆", price: "from 5,800,000 MMK", reason: "Visual assets for written content" },
+    { slug: "online-media-buying", name: "Online Media Buying", icon: "▲", price: "from 7,200,000 MMK", reason: "Distribute content via ad campaigns" },
+    { slug: "ai-automation", name: "AI Automation", icon: "⚙", price: "from 24,000,000 MMK", reason: "Automate content publishing pipelines" },
   ],
   "online-media-buying": [
-    { slug: "graphic-design", name: "Graphic Design", icon: "◆", price: "from 1,210,000 MMK", reason: "Ad creatives and visuals" },
-    { slug: "content-copywriting", name: "Content & Copywriting", icon: "✎", price: "from 966,000 MMK", reason: "Ad copy and headlines" },
-    { slug: "ai-video-generation", name: "AI Video Generation", icon: "▶", price: "from 2,415,000 MMK", reason: "Video ads for campaigns" },
+    { slug: "graphic-design", name: "Graphic Design", icon: "◆", price: "from 5,800,000 MMK", reason: "Ad creatives and visuals" },
+    { slug: "content-copywriting", name: "Content & Copywriting", icon: "✎", price: "from 3,800,000 MMK", reason: "Ad copy and headlines" },
+    { slug: "ai-video-generation", name: "AI Video Generation", icon: "▶", price: "from 7,200,000 MMK", reason: "Video ads for campaigns" },
   ],
   "ui-ux-design": [
-    { slug: "web-webapp", name: "Web / WebApp", icon: "▣", price: "from 6,040,000 MMK", reason: "Implement designs in production" },
-    { slug: "android-ios-app", name: "Android & iOS App", icon: "▣", price: "from 12,080,000 MMK", reason: "Mobile implementation of designs" },
-    { slug: "graphic-design", name: "Graphic Design", icon: "◆", price: "from 1,210,000 MMK", reason: "Brand assets to match UI" },
+    { slug: "web-webapp", name: "Web / WebApp", icon: "▣", price: "from 48,000,000 MMK", reason: "Implement designs in production" },
+    { slug: "android-ios-app", name: "Android & iOS App", icon: "▣", price: "from 96,000,000 MMK", reason: "Mobile implementation of designs" },
+    { slug: "graphic-design", name: "Graphic Design", icon: "◆", price: "from 5,800,000 MMK", reason: "Brand assets to match UI" },
   ],
   "android-ios-app": [
-    { slug: "aso", name: "ASO", icon: "⊙", price: "from 1,210,000 MMK", reason: "Optimize app store visibility" },
-    { slug: "web-webapp", name: "Web / WebApp", icon: "▣", price: "from 6,040,000 MMK", reason: "Companion web app" },
-    { slug: "ui-ux-design", name: "UI/UX Design", icon: "◡", price: "from 2,415,000 MMK", reason: "Polished mobile UI/UX" },
+    { slug: "aso", name: "ASO", icon: "⊙", price: "from 14,400,000 MMK", reason: "Optimize app store visibility" },
+    { slug: "web-webapp", name: "Web / WebApp", icon: "▣", price: "from 48,000,000 MMK", reason: "Companion web app" },
+    { slug: "ui-ux-design", name: "UI/UX Design", icon: "◡", price: "from 57,600,000 MMK", reason: "Polished mobile UI/UX" },
   ],
   "web-webapp": [
-    { slug: "ai-chatbot", name: "AI Chatbot", icon: "◐", price: "from 3,020,000 MMK", reason: "Add AI support to your web app" },
-    { slug: "ui-ux-design", name: "UI/UX Design", icon: "◡", price: "from 2,415,000 MMK", reason: "Professional design system" },
-    { slug: "security-audit", name: "Security Audit", icon: "⚿", price: "from 6,040,000 MMK", reason: "Security audit before launch" },
+    { slug: "ai-chatbot", name: "AI Chatbot", icon: "◐", price: "from 38,400,000 MMK", reason: "Add AI support to your web app" },
+    { slug: "ui-ux-design", name: "UI/UX Design", icon: "◡", price: "from 57,600,000 MMK", reason: "Professional design system" },
+    { slug: "security-audit", name: "Security Audit", icon: "⚿", price: "from 38,400,000 MMK", reason: "Security audit before launch" },
   ],
   "chrome-extensions": [
-    { slug: "web-webapp", name: "Web / WebApp", icon: "▣", price: "from 6,040,000 MMK", reason: "Companion web dashboard" },
-    { slug: "api-mcp", name: "API & MCP", icon: "⌗", price: "from 4,830,000 MMK", reason: "Backend API for extension" },
-    { slug: "graphic-design", name: "Graphic Design", icon: "◆", price: "from 1,210,000 MMK", reason: "Extension icons and branding" },
+    { slug: "web-webapp", name: "Web / WebApp", icon: "▣", price: "from 48,000,000 MMK", reason: "Companion web dashboard" },
+    { slug: "api-mcp", name: "API & MCP", icon: "⌗", price: "from 38,400,000 MMK", reason: "Backend API for extension" },
+    { slug: "graphic-design", name: "Graphic Design", icon: "◆", price: "from 5,800,000 MMK", reason: "Extension icons and branding" },
   ],
   "desktop-macbook-apps": [
-    { slug: "web-webapp", name: "Web / WebApp", icon: "▣", price: "from 6,040,000 MMK", reason: "Web companion" },
-    { slug: "ui-ux-design", name: "UI/UX Design", icon: "◡", price: "from 2,415,000 MMK", reason: "Native desktop UI design" },
-    { slug: "security-audit", name: "Security Audit", icon: "⚿", price: "from 6,040,000 MMK", reason: "Code signing + security review" },
+    { slug: "web-webapp", name: "Web / WebApp", icon: "▣", price: "from 48,000,000 MMK", reason: "Web companion" },
+    { slug: "ui-ux-design", name: "UI/UX Design", icon: "◡", price: "from 57,600,000 MMK", reason: "Native desktop UI design" },
+    { slug: "security-audit", name: "Security Audit", icon: "⚿", price: "from 38,400,000 MMK", reason: "Code signing + security review" },
   ],
   "aso": [
-    { slug: "android-ios-app", name: "Android & iOS App", icon: "▣", price: "from 12,080,000 MMK", reason: "App development if not yet built" },
-    { slug: "graphic-design", name: "Graphic Design", icon: "◆", price: "from 1,210,000 MMK", reason: "Store screenshots and icons" },
-    { slug: "online-media-buying", name: "Online Media Buying", icon: "▲", price: "from 1,810,000 MMK", reason: "Boost app installs with ads" },
+    { slug: "android-ios-app", name: "Android & iOS App", icon: "▣", price: "from 96,000,000 MMK", reason: "App development if not yet built" },
+    { slug: "graphic-design", name: "Graphic Design", icon: "◆", price: "from 5,800,000 MMK", reason: "Store screenshots and icons" },
+    { slug: "online-media-buying", name: "Online Media Buying", icon: "▲", price: "from 7,200,000 MMK", reason: "Boost app installs with ads" },
   ],
   "web3-wallets": [
-    { slug: "security-audit", name: "Security Audit", icon: "⚿", price: "from 6,040,000 MMK", reason: "Critical for wallet security" },
-    { slug: "smart-contract-development", name: "Smart Contract Dev", icon: "∎", price: "from 9,660,000 MMK", reason: "Wallet smart contracts" },
-    { slug: "web-webapp", name: "Web / WebApp", icon: "▣", price: "from 6,040,000 MMK", reason: "Web interface for wallet" },
+    { slug: "security-audit", name: "Security Audit", icon: "⚿", price: "from 38,400,000 MMK", reason: "Critical for wallet security" },
+    { slug: "smart-contract-development", name: "Smart Contract Dev", icon: "∎", price: "from 24,000,000 MMK", reason: "Wallet smart contracts" },
+    { slug: "web-webapp", name: "Web / WebApp", icon: "▣", price: "from 48,000,000 MMK", reason: "Web interface for wallet" },
   ],
   "amm-dex": [
-    { slug: "smart-contract-development", name: "Smart Contract Dev", icon: "∎", price: "from 9,660,000 MMK", reason: "Core DEX contracts" },
-    { slug: "security-audit", name: "Security Audit", icon: "⚿", price: "from 6,040,000 MMK", reason: "Audit before mainnet" },
-    { slug: "web-webapp", name: "Web / WebApp", icon: "▣", price: "from 6,040,000 MMK", reason: "DEX frontend dashboard" },
+    { slug: "smart-contract-development", name: "Smart Contract Dev", icon: "∎", price: "from 24,000,000 MMK", reason: "Core DEX contracts" },
+    { slug: "security-audit", name: "Security Audit", icon: "⚿", price: "from 38,400,000 MMK", reason: "Audit before mainnet" },
+    { slug: "web-webapp", name: "Web / WebApp", icon: "▣", price: "from 48,000,000 MMK", reason: "DEX frontend dashboard" },
   ],
   "dao-governance": [
-    { slug: "smart-contract-development", name: "Smart Contract Dev", icon: "∎", price: "from 9,660,000 MMK", reason: "Governance contracts" },
-    { slug: "web-webapp", name: "Web / WebApp", icon: "▣", price: "from 6,040,000 MMK", reason: "Governance dashboard" },
-    { slug: "security-audit", name: "Security Audit", icon: "⚿", price: "from 6,040,000 MMK", reason: "Audit governance contracts" },
+    { slug: "smart-contract-development", name: "Smart Contract Dev", icon: "∎", price: "from 24,000,000 MMK", reason: "Governance contracts" },
+    { slug: "web-webapp", name: "Web / WebApp", icon: "▣", price: "from 48,000,000 MMK", reason: "Governance dashboard" },
+    { slug: "security-audit", name: "Security Audit", icon: "⚿", price: "from 38,400,000 MMK", reason: "Audit governance contracts" },
   ],
   "nft-systems": [
-    { slug: "smart-contract-development", name: "Smart Contract Dev", icon: "∎", price: "from 9,660,000 MMK", reason: "Minting contracts" },
-    { slug: "web-webapp", name: "Web / WebApp", icon: "▣", price: "from 6,040,000 MMK", reason: "Marketplace frontend" },
-    { slug: "security-audit", name: "Security Audit", icon: "ʞ", price: "from 6,040,000 MMK", reason: "Audit minting contracts" },
+    { slug: "smart-contract-development", name: "Smart Contract Dev", icon: "∎", price: "from 24,000,000 MMK", reason: "Minting contracts" },
+    { slug: "web-webapp", name: "Web / WebApp", icon: "▣", price: "from 48,000,000 MMK", reason: "Marketplace frontend" },
+    { slug: "security-audit", name: "Security Audit", icon: "ʞ", price: "from 38,400,000 MMK", reason: "Audit minting contracts" },
   ],
   "security-audit": [
-    { slug: "rwa-development", name: "RWA Development", icon: "▣", price: "from 9,660,000 MMK", reason: "Tokenize real-world assets" },
-    { slug: "smart-contract-development", name: "Smart Contract Dev", icon: "∎", price: "from 9,660,000 MMK", reason: "Fix vulnerabilities found" },
-    { slug: "web3-wallets", name: "Web3 Wallets", icon: "⬡", price: "from 18,110,000 MMK", reason: "Secure wallet implementation" },
+    { slug: "rwa-development", name: "RWA Development", icon: "▣", price: "from 192,000,000 MMK", reason: "Tokenize real-world assets" },
+    { slug: "smart-contract-development", name: "Smart Contract Dev", icon: "∎", price: "from 24,000,000 MMK", reason: "Fix vulnerabilities found" },
+    { slug: "web3-wallets", name: "Web3 Wallets", icon: "⬡", price: "from 86,400,000 MMK", reason: "Secure wallet implementation" },
   ],
   "smart-contract-development": [
-    { slug: "security-audit", name: "Security Audit", icon: "ʞ", price: "from 6,040,000 MMK", reason: "Audit before deployment" },
-    { slug: "rwa-development", name: "RWA Development", icon: "▣", price: "from 9,660,000 MMK", reason: "RWA tokenization for your assets" },
-    { slug: "web-webapp", name: "Web / WebApp", icon: "▣", price: "from 6,040,000 MMK", reason: "DApp frontend" },
+    { slug: "security-audit", name: "Security Audit", icon: "ʞ", price: "from 38,400,000 MMK", reason: "Audit before deployment" },
+    { slug: "rwa-development", name: "RWA Development", icon: "▣", price: "from 192,000,000 MMK", reason: "RWA tokenization for your assets" },
+    { slug: "web-webapp", name: "Web / WebApp", icon: "▣", price: "from 48,000,000 MMK", reason: "DApp frontend" },
   ],
   "rwa-development": [
-    { slug: "security-audit", name: "Security Audit", icon: "ʞ", price: "from 6,040,000 MMK", reason: "Comprehensive security audit" },
-    { slug: "smart-contract-development", name: "Smart Contract Dev", icon: "∎", price: "from 9,660,000 MMK", reason: "Fix found vulnerabilities" },
-    { slug: "web3-wallets", name: "Web3 Wallets", icon: "⬡", price: "from 18,110,000 MMK", reason: "Secure wallet infrastructure" },
+    { slug: "security-audit", name: "Security Audit", icon: "ʞ", price: "from 38,400,000 MMK", reason: "Comprehensive security audit" },
+    { slug: "smart-contract-development", name: "Smart Contract Dev", icon: "∎", price: "from 24,000,000 MMK", reason: "Fix found vulnerabilities" },
+    { slug: "web3-wallets", name: "Web3 Wallets", icon: "⬡", price: "from 86,400,000 MMK", reason: "Secure wallet infrastructure" },
   ],
   "money-market-development": [
-    { slug: "security-audit", name: "Security Audit", icon: "ʞ", price: "from 6,040,000 MMK", reason: "Critical for DeFi protocols" },
-    { slug: "smart-contract-development", name: "Smart Contract Dev", icon: "∎", price: "from 9,660,000 MMK", reason: "Additional contract modules" },
-    { slug: "amm-dex", name: "AMM / DEX", icon: "⇄", price: "from 24,150,000 MMK", reason: "Integrated swap functionality" },
+    { slug: "security-audit", name: "Security Audit", icon: "ʞ", price: "from 38,400,000 MMK", reason: "Critical for DeFi protocols" },
+    { slug: "smart-contract-development", name: "Smart Contract Dev", icon: "∎", price: "from 24,000,000 MMK", reason: "Additional contract modules" },
+    { slug: "amm-dex", name: "AMM / DEX", icon: "⇄", price: "from 192,000,000 MMK", reason: "Integrated swap functionality" },
   ],
   "stablecoin-development": [
-    { slug: "security-audit", name: "Security Audit", icon: "ʞ", price: "from 6,040,000 MMK", reason: "Government-grade security" },
-    { slug: "smart-contract-development", name: "Smart Contract Dev", icon: "∎", price: "from 9,660,000 MMK", reason: "Core infrastructure contracts" },
-    { slug: "web-webapp", name: "Web / WebApp", icon: "▣", price: "from 6,040,000 MMK", reason: "Admin and user portals" },
+    { slug: "security-audit", name: "Security Audit", icon: "ʞ", price: "from 38,400,000 MMK", reason: "Government-grade security" },
+    { slug: "smart-contract-development", name: "Smart Contract Dev", icon: "∎", price: "from 24,000,000 MMK", reason: "Core infrastructure contracts" },
+    { slug: "web-webapp", name: "Web / WebApp", icon: "▣", price: "from 48,000,000 MMK", reason: "Admin and user portals" },
   ],
   "mobile-web-game-development": [
-    { slug: "ui-ux-design", name: "UI/UX Design", icon: "◡", price: "from 2,415,000 MMK", reason: "Game UI/UX and level design" },
-    { slug: "3d-modeling", name: "3D Modeling", icon: "◈", price: "from 1,810,000 MMK", reason: "Game assets and environments" },
-    { slug: "android-ios-app", name: "Android & iOS App", icon: "▣", price: "from 12,080,000 MMK", reason: "Native mobile game port" },
+    { slug: "ui-ux-design", name: "UI/UX Design", icon: "◡", price: "from 57,600,000 MMK", reason: "Game UI/UX and level design" },
+    { slug: "3d-modeling", name: "3D Modeling", icon: "◈", price: "from 7,200,000 MMK", reason: "Game assets and environments" },
+    { slug: "android-ios-app", name: "Android & iOS App", icon: "▣", price: "from 96,000,000 MMK", reason: "Native mobile game port" },
   ],
 };
 
 // Main service prices for basket
 export const SERVICE_PRICES: Record<string, { name: string; icon: string; price: string }> = {
-  "ai-chatbot": { name: "AI Chatbot", icon: "◐", price: "from 3,020,000 MMK" },
-  "voice-ai": { name: "Voice AI", icon: "♫", price: "from 6,040,000 MMK" },
-  "agent-swarm": { name: "Agent Swarm", icon: "⬡", price: "from 9,660,000 MMK" },
-  "ai-automation": { name: "AI Automation", icon: "⚙", price: "from 3,620,000 MMK" },
-  "api-mcp": { name: "API & MCP", icon: "⌗", price: "from 4,830,000 MMK" },
+  "ai-chatbot": { name: "AI Chatbot", icon: "◐", price: "from 38,400,000 MMK" },
+  "voice-ai": { name: "Voice AI", icon: "♫", price: "from 57,600,000 MMK" },
+  "agent-swarm": { name: "Agent Swarm", icon: "⬡", price: "from 96,000,000 MMK" },
+  "ai-automation": { name: "AI Automation", icon: "⚙", price: "from 24,000,000 MMK" },
+  "api-mcp": { name: "API & MCP", icon: "⌗", price: "from 38,400,000 MMK" },
   "hermes-openclaw-grokbot": { name: "HERMES / Openclaw / GrokBot", icon: "⚡", price: "custom" },
-  "ai-video-generation": { name: "AI Video Generation", icon: "▶", price: "from 2,415,000 MMK" },
-  "3d-modeling": { name: "3D Modeling", icon: "◈", price: "from 1,810,000 MMK" },
-  "graphic-design": { name: "Graphic Design", icon: "◆", price: "from 1,210,000 MMK" },
-  "content-copywriting": { name: "Content & Copywriting", icon: "✎", price: "from 966,000 MMK" },
-  "online-media-buying": { name: "Online Media Buying", icon: "▲", price: "from 1,810,000 MMK" },
-  "ui-ux-design": { name: "UI/UX Design", icon: "◡", price: "from 2,415,000 MMK" },
-  "android-ios-app": { name: "Android & iOS App", icon: "▣", price: "from 12,080,000 MMK" },
-  "web-webapp": { name: "Web / WebApp", icon: "▣", price: "from 6,040,000 MMK" },
-  "chrome-extensions": { name: "Chrome Extensions", icon: "⬚", price: "from 2,415,000 MMK" },
-  "desktop-macbook-apps": { name: "Desktop / MacBook Apps", icon: "◱", price: "from 9,660,000 MMK" },
-  "aso": { name: "ASO", icon: "⊙", price: "from 1,210,000 MMK" },
-  "web3-wallets": { name: "Web3 Wallets", icon: "⬡", price: "from 18,110,000 MMK" },
-  "amm-dex": { name: "AMM / DEX", icon: "⇄", price: "from 24,150,000 MMK" },
-  "dao-governance": { name: "DAO Governance", icon: "◍", price: "from 18,110,000 MMK" },
-  "nft-systems": { name: "NFT Systems", icon: "✦", price: "from 12,080,000 MMK" },
-  "security-audit": { name: "Security Audit", icon: "ʞ", price: "from 6,040,000 MMK" },
-  "smart-contract-development": { name: "Smart Contract Dev", icon: "∎", price: "from 9,660,000 MMK" },
-  "rwa-development": { name: "Bug Bounty", icon: "▣", price: "from 3,620,000 MMK" },
-  "money-market-development": { name: "Money Market Development", icon: "$", price: "from 30,190,000 MMK" },
-  "stablecoin-development": { name: "Stablecoin Development", icon: "₵", price: "custom" },
-  "mobile-web-game-development": { name: "Mobile/Web Game Dev", icon: "◆", price: "from 7,240,000 MMK" },
+  "ai-video-generation": { name: "AI Video Generation", icon: "▶", price: "from 7,200,000 MMK" },
+  "3d-modeling": { name: "3D Modeling", icon: "◈", price: "from 7,200,000 MMK" },
+  "graphic-design": { name: "Graphic Design", icon: "◆", price: "from 5,800,000 MMK" },
+  "content-copywriting": { name: "Content & Copywriting", icon: "✎", price: "from 3,800,000 MMK" },
+  "online-media-buying": { name: "Online Media Buying", icon: "▲", price: "from 7,200,000 MMK" },
+  "ui-ux-design": { name: "UI/UX Design", icon: "◡", price: "from 57,600,000 MMK" },
+  "android-ios-app": { name: "Android & iOS App", icon: "▣", price: "from 96,000,000 MMK" },
+  "web-webapp": { name: "Web / WebApp", icon: "▣", price: "from 48,000,000 MMK" },
+  "chrome-extensions": { name: "Chrome Extensions", icon: "⬚", price: "from 19,200,000 MMK" },
+  "desktop-macbook-apps": { name: "Desktop / MacBook Apps", icon: "◱", price: "from 120,000,000 MMK" },
+  "aso": { name: "ASO", icon: "⊙", price: "from 14,400,000 MMK" },
+  "web3-wallets": { name: "Web3 Wallets", icon: "⬡", price: "from 86,400,000 MMK" },
+  "amm-dex": { name: "AMM / DEX", icon: "⇄", price: "from 192,000,000 MMK" },
+  "dao-governance": { name: "DAO Governance", icon: "◍", price: "from 96,000,000 MMK" },
+  "nft-systems": { name: "NFT Systems", icon: "✦", price: "from 144,000,000 MMK" },
+  "security-audit": { name: "Security Audit", icon: "ʞ", price: "from 38,400,000 MMK" },
+  "smart-contract-development": { name: "Smart Contract Dev", icon: "∎", price: "from 24,000,000 MMK" },
+  "rwa-development": { name: "RWA Tokenization", icon: "▣", price: "from 192,000,000 MMK" },
+  "money-market-development": { name: "Money Market Development", icon: "$", price: "from 216,000,000 MMK" },
+  "stablecoin-development": { name: "Stablecoin Development", icon: "₵", price: "from 144,000,000 MMK" },
+  "mobile-web-game-development": { name: "Mobile/Web Game Dev", icon: "◆", price: "from 72,000,000 MMK" },
 };
 
 export function ServiceBasket() {
-  const { items, isOpen, toggleOpen, removeItem, clearBasket, getTotal, getServicesTotal, getAddonsTotal, getDiscount, getDiscountedTotal, getServiceCount, getAddonCount } = useBasketStore();
+  const { items, isOpen, toggleOpen, removeItem, clearBasket, getTotal, getServicesTotal, getAddonsTotal, getDiscount, getDiscountedTotal, getServiceCount, getAddonCount, haggleUsed, haggleRoll, haggleDiscountRate, getHaggleDiscount, getGrandTotal } = useBasketStore();
   const [submitting, setSubmitting] = React.useState(false);
 
   const submitRFQ = async () => {
@@ -199,6 +199,11 @@ export function ServiceBasket() {
             final: getDiscountedTotal(),
             serviceCount: getServiceCount(),
             addonCount: getAddonCount(),
+            haggleUsed,
+            haggleRoll,
+            haggleDiscountRate,
+            haggleDiscount: getHaggleDiscount(),
+            grandTotal: getGrandTotal(),
           }),
         }),
       });
@@ -393,14 +398,37 @@ export function ServiceBasket() {
                   )}
                   {getDiscount() > 0 && (
                     <div className="flex justify-between">
-                      <span className="text-[#00FF94]">DISCOUNT (ON SERVICES)</span>
+                      <span className="text-[#00FF94]">DISCOUNT (BULK)</span>
                       <span className="text-[#00FF94]">-{formatMMK(getDiscount())}</span>
                     </div>
                   )}
+                  {haggleUsed && (
+                    <div className="flex justify-between border-t border-border/40 pt-1">
+                      <span className="text-[#FFD700]" title={`Haggle dice rolled: ${haggleRoll} → ${Math.round(haggleDiscountRate * 100)}% extra`}>
+                        ◆ HAGGLE (ROLL {haggleRoll})
+                      </span>
+                      <span className="text-[#FFD700]">-{formatMMK(getHaggleDiscount())}</span>
+                    </div>
+                  )}
                   <div className="flex justify-between border-t border-border/40 pt-1">
-                    <span className="text-[#FF4500]">TOTAL</span>
-                    <span className="font-sans text-lg font-black text-[#FF4500]">{formatMMK(getDiscountedTotal())}</span>
+                    <span className={haggleUsed ? "text-[#FFD700]" : "text-[#FF4500]"}>
+                      {haggleUsed ? "GRAND TOTAL" : "TOTAL"}
+                    </span>
+                    <span
+                      className={`font-sans text-lg font-black ${haggleUsed ? "text-[#FFD700]" : "text-[#FF4500]"}`}
+                      style={haggleUsed ? { textShadow: "0 0 12px rgba(255,215,0,0.6)" } : undefined}
+                    >
+                      {formatMMK(haggleUsed ? getGrandTotal() : getDiscountedTotal())}
+                    </span>
                   </div>
+                  {haggleUsed && (
+                    <div className="flex justify-between pt-0.5">
+                      <span className="text-[8px] text-muted-foreground/80">SAVED VS LIST</span>
+                      <span className="text-[8px] text-[#00FF94]">
+                        -{formatMMK(getTotal() - (haggleUsed ? getGrandTotal() : getDiscountedTotal()))}
+                      </span>
+                    </div>
+                  )}
                 </div>
 
                 {/* RFQ button */}

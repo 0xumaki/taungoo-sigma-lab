@@ -13,6 +13,7 @@ import { SigmaBoot } from "./shared/SigmaBoot";
 import { SigmaCommand } from "./shared/SigmaCommand";
 import { SigmaProgress } from "./shared/SigmaProgress";
 import { SigmaKonami } from "./shared/SigmaKonami";
+import { SigmaHaggle } from "./shared/SigmaHaggle";
 import { SigmaSoundToggle } from "./shared/SigmaSoundToggle";
 import { SigmaHelp } from "./shared/SigmaHelp";
 import { SigmaBreadcrumb } from "./shared/SigmaBreadcrumb";
@@ -539,6 +540,9 @@ export function ExperienceShell() {
 
       {/* Konami code easter egg (both modes) */}
       <SigmaKonami />
+
+      {/* Secret haggle system (type H-A-G-G-L-E to activate) */}
+      <SigmaHaggle />
 
       {/* Command palette (Cmd/Ctrl+K or /, both modes) */}
       <SigmaCommand open={cmdOpen} onClose={() => setCmdOpen(false)} />

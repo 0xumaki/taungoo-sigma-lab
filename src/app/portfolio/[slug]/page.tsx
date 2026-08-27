@@ -9,6 +9,7 @@ import { SciFiCard } from "@/components/sigma/alpha/SciFiCard";
 import { ClassifiedCover } from "@/components/sigma/shared/ClassifiedCover";
 import { usePageReveal } from "@/lib/sigma/use-page-reveal";
 import { ContactFormModal } from "@/components/sigma/shared/ContactFormModal";
+import { SigmaHaggle } from "@/components/sigma/shared/SigmaHaggle";
 
 const PROJECTS: Record<string, {
   name: string;
@@ -303,6 +304,7 @@ export default function PortfolioCaseStudy() {
 
       <AlphaFooter />
       <ContactFormModal open={contactOpen} onClose={() => setContactOpen(false)} />
+      <SigmaHaggle />
     </div>
   );
 }

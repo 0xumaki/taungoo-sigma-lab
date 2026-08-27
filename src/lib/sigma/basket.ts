@@ -27,6 +27,14 @@ interface BasketState {
   getDiscountedTotal: () => number;   // total - discount
   getServiceCount: () => number;      // count of main services (for tier calc)
   getAddonCount: () => number;         // count of add-ons
+  // === HAGGLE SYSTEM ===
+  haggleUsed: boolean;                // true after a successful haggle (single-use per session)
+  haggleDiscountRate: number;          // extra discount rate from haggle (0–0.15), applied to post-bulk-discount total
+  haggleRoll: number | null;           // the dice face rolled (1–6), null if not rolled
+  setHaggleResult: (roll: number, rate: number) => void;  // apply haggle result (single-use)
+  resetHaggle: () => void;            // reset haggle (for testing or new session)
+  getHaggleDiscount: () => number;    // computed haggle discount amount (MMK)
+  getGrandTotal: () => number;        // post-bulk-discount total minus haggle discount
 }
 
 // Bulk discount tiers
@@ -52,6 +60,33 @@ export function getNextTier(serviceCount: number): { count: number; rate: number
     if (serviceCount < tier.count) return tier;
   }
   return null;
+}
+
+// === HAGGLE SYSTEM ===
+// Dice face → extra discount rate mapping (per user spec)
+// 1 = 2%, 2 = 4%, 3 = 6%, 4 = 9%, 5 = 12%, 6 = 15%
+export const HAGGLE_DICE_TABLE = [
+  { face: 1, rate: 0.02, label: "2% EXTRA" },
+  { face: 2, rate: 0.04, label: "4% EXTRA" },
+  { face: 3, rate: 0.06, label: "6% EXTRA" },
+  { face: 4, rate: 0.09, label: "9% EXTRA" },
+  { face: 5, rate: 0.12, label: "12% EXTRA" },
+  { face: 6, rate: 0.15, label: "15% EXTRA" },
+] as const;
+
+// Secret activation codes (obscured). The user can share these with selected prospects.
+// Format: a string the user types into the activation card.
+export const HAGGLE_ACTIVATION_CODES = [
+  "SIGMA-777",
+  "TAUNGOO-LUCK",
+  "HAGGLE-2025",
+  "ARCADE-MASTER",
+  "JACKPOT-Σ",
+];
+
+export function isValidActivationCode(input: string): boolean {
+  const normalized = input.trim().toUpperCase();
+  return HAGGLE_ACTIVATION_CODES.some((c) => c.toUpperCase() === normalized);
 }
 
 // Parse price string to number (MMK)
@@ -115,6 +150,29 @@ export const useBasketStore = create<BasketState>((set, get) => ({
   },
   getAddonCount: () => {
     return get().items.filter((i) => i.type === "addon").length;
+  },
+  // === HAGGLE SYSTEM ===
+  haggleUsed: false,
+  haggleDiscountRate: 0,
+  haggleRoll: null,
+  setHaggleResult: (roll, rate) =>
+    set({
+      haggleUsed: true,
+      haggleRoll: roll,
+      haggleDiscountRate: rate,
+    }),
+  resetHaggle: () =>
+    set({ haggleUsed: false, haggleRoll: null, haggleDiscountRate: 0 }),
+  getHaggleDiscount: () => {
+    // Haggle discount applies to the post-bulk-discount total (services + add-ons)
+    // so it stacks on top of the bulk discount.
+    if (!get().haggleUsed) return 0;
+    const base = get().getDiscountedTotal();
+    return Math.round(base * get().haggleDiscountRate);
+  },
+  getGrandTotal: () => {
+    // Grand total = post-bulk-discount total minus haggle discount
+    return get().getDiscountedTotal() - get().getHaggleDiscount();
   },
 }));
 

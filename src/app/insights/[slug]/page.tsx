@@ -5,6 +5,7 @@ import { useParams } from "next/navigation";
 import Link from "next/link";
 import { AlphaNav } from "@/components/sigma/alpha/AlphaNav";
 import { AlphaFooter } from "@/components/sigma/alpha/AlphaFooter";
+import { SigmaHaggle } from "@/components/sigma/shared/SigmaHaggle";
 
 const INSIGHTS: Record<string, {
   title: string;
@@ -119,6 +120,7 @@ export default function InsightDetailPage() {
       </section>
 
       <AlphaFooter />
+      <SigmaHaggle />
     </div>
   );
 }
