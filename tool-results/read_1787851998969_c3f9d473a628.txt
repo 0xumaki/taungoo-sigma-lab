@@ -1,0 +1,883 @@
+     1→@import "tailwindcss";
+     2→@import "tw-animate-css";
+     3→
+     4→@custom-variant dark (&:is(.dark *));
+     5→
+     6→@theme inline {
+     7→  --color-background: var(--background);
+     8→  --color-foreground: var(--foreground);
+     9→  --font-sans: var(--font-sans);
+    10→  --font-mono: var(--font-mono);
+    11→  --font-display: var(--font-display);
+    12→  --font-serif: var(--font-serif);
+    13→  --color-sidebar-ring: var(--sidebar-ring);
+    14→  --color-sidebar-border: var(--sidebar-border);
+    15→  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+    16→  --color-sidebar-accent: var(--sidebar-accent);
+    17→  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+    18→  --color-sidebar-primary: var(--sidebar-primary);
+    19→  --color-sidebar-foreground: var(--sidebar-foreground);
+    20→  --color-sidebar: var(--sidebar);
+    21→  --color-chart-5: var(--chart-5);
+    22→  --color-chart-4: var(--chart-4);
+    23→  --color-chart-3: var(--chart-3);
+    24→  --color-chart-2: var(--chart-2);
+    25→  --color-chart-1: var(--chart-1);
+    26→  --color-ring: var(--ring);
+    27→  --color-input: var(--input);
+    28→  --color-border: var(--border);
+    29→  --color-destructive: var(--destructive);
+    30→  --color-accent-foreground: var(--accent-foreground);
+    31→  --color-accent: var(--accent);
+    32→  --color-muted-foreground: var(--muted-foreground);
+    33→  --color-muted: var(--muted);
+    34→  --color-secondary-foreground: var(--secondary-foreground);
+    35→  --color-secondary: var(--secondary);
+    36→  --color-primary-foreground: var(--primary-foreground);
+    37→  --color-primary: var(--primary);
+    38→  --color-popover-foreground: var(--popover-foreground);
+    39→  --color-popover: var(--popover);
+    40→  --color-card-foreground: var(--card-foreground);
+    41→  --color-card: var(--card);
+    42→  --radius-sm: calc(var(--radius) - 4px);
+    43→  --radius-md: calc(var(--radius) - 2px);
+    44→  --radius-lg: var(--radius);
+    45→  --radius-xl: calc(var(--radius) + 4px);
+    46→}
+    47→
+    48→:root {
+    49→  --radius: 0px;
+    50→  /* Sigma Brutalism base — near-black canvas, near-white ink */
+    51→  --background: oklch(0.07 0 0);
+    52→  --foreground: oklch(0.97 0 0);
+    53→  --card: oklch(0.13 0 0);
+    54→  --card-foreground: oklch(0.97 0 0);
+    55→  --popover: oklch(0.13 0 0);
+    56→  --popover-foreground: oklch(0.97 0 0);
+    57→  --primary: oklch(0.97 0 0);
+    58→  --primary-foreground: oklch(0.07 0 0);
+    59→  --secondary: oklch(0.18 0 0);
+    60→  --secondary-foreground: oklch(0.97 0 0);
+    61→  --muted: oklch(0.18 0 0);
+    62→  --muted-foreground: oklch(0.62 0 0);
+    63→  --accent: oklch(0.22 0 0);
+    64→  --accent-foreground: oklch(0.97 0 0);
+    65→  --destructive: oklch(0.62 0.24 25);
+    66→  --border: oklch(1 0 0 / 22%);
+    67→  --input: oklch(1 0 0 / 22%);
+    68→  --ring: oklch(0.7 0 0);
+    69→  --chart-1: oklch(0.65 0.22 41);
+    70→  --chart-2: oklch(0.7 0.18 195);
+    71→  --chart-3: oklch(0.75 0.19 80);
+    72→  --chart-4: oklch(0.7 0.2 330);
+    73→  --chart-5: oklch(0.72 0.19 145);
+    74→  --sidebar: oklch(0.10 0 0);
+    75→  --sidebar-foreground: oklch(0.97 0 0);
+    76→  --sidebar-primary: oklch(0.97 0 0);
+    77→  --sidebar-primary-foreground: oklch(0.07 0 0);
+    78→  --sidebar-accent: oklch(0.16 0 0);
+    79→  --sidebar-accent-foreground: oklch(0.97 0 0);
+    80→  --sidebar-border: oklch(1 0 0 / 12%);
+    81→  --sidebar-ring: oklch(0.7 0 0);
+    82→}
+    83→
+    84→.dark {
+    85→  --background: oklch(0.07 0 0);
+    86→  --foreground: oklch(0.97 0 0);
+    87→  --card: oklch(0.13 0 0);
+    88→  --card-foreground: oklch(0.97 0 0);
+    89→  --popover: oklch(0.13 0 0);
+    90→  --popover-foreground: oklch(0.97 0 0);
+    91→  --primary: oklch(0.97 0 0);
+    92→  --primary-foreground: oklch(0.07 0 0);
+    93→  --secondary: oklch(0.18 0 0);
+    94→  --secondary-foreground: oklch(0.97 0 0);
+    95→  --muted: oklch(0.18 0 0);
+    96→  --muted-foreground: oklch(0.62 0 0);
+    97→  --accent: oklch(0.22 0 0);
+    98→  --accent-foreground: oklch(0.97 0 0);
+    99→  --destructive: oklch(0.7 0.2 22);
+   100→  --border: oklch(1 0 0 / 22%);
+   101→  --input: oklch(1 0 0 / 22%);
+   102→  --ring: oklch(0.7 0 0);
+   103→  --sidebar: oklch(0.10 0 0);
+   104→  --sidebar-foreground: oklch(0.97 0 0);
+   105→  --sidebar-primary: oklch(0.97 0 0);
+   106→  --sidebar-primary-foreground: oklch(0.07 0 0);
+   107→  --sidebar-accent: oklch(0.16 0 0);
+   108→  --sidebar-accent-foreground: oklch(0.97 0 0);
+   109→  --sidebar-border: oklch(1 0 0 / 12%);
+   110→  --sidebar-ring: oklch(0.7 0 0);
+   111→}
+   112→
+   113→/* SIGMA LIGHT — high-contrast white variant */
+   114→.light {
+   115→  --background: oklch(0.97 0 0);
+   116→  --foreground: oklch(0.10 0 0);
+   117→  --card: oklch(0.90 0 0);
+   118→  --card-foreground: oklch(0.10 0 0);
+   119→  --popover: oklch(0.90 0 0);
+   120→  --popover-foreground: oklch(0.10 0 0);
+   121→  --primary: oklch(0.10 0 0);
+   122→  --primary-foreground: oklch(0.97 0 0);
+   123→  --secondary: oklch(0.85 0 0);
+   124→  --secondary-foreground: oklch(0.10 0 0);
+   125→  --muted: oklch(0.85 0 0);
+   126→  --muted-foreground: oklch(0.35 0 0);
+   127→  --accent: oklch(0.80 0 0);
+   128→  --accent-foreground: oklch(0.10 0 0);
+   129→  --destructive: oklch(0.50 0.24 25);
+   130→  --border: oklch(0 0 0 / 30%);
+   131→  --input: oklch(0 0 0 / 30%);
+   132→  --ring: oklch(0.25 0 0);
+   133→  --sidebar: oklch(0.90 0 0);
+   134→  --sidebar-foreground: oklch(0.10 0 0);
+   135→  --sidebar-primary: oklch(0.10 0 0);
+   136→  --sidebar-primary-foreground: oklch(0.97 0 0);
+   137→  --sidebar-accent: oklch(0.85 0 0);
+   138→  --sidebar-accent-foreground: oklch(0.10 0 0);
+   139→  --sidebar-border: oklch(0 0 0 / 20%);
+   140→  --sidebar-ring: oklch(0.25 0 0);
+   141→}
+   142→.light .sigma-scanlines::after { opacity: 0.06; }
+   143→.light .sigma-noise::before { opacity: 0.02; }
+   144→.light .sigma-grid { opacity: 0.4 !important; }
+   145→.light .text-muted-foreground { color: oklch(0.30 0 0) !important; }
+   146→.light .text-foreground\/80 { color: oklch(0.15 0 0) !important; }
+   147→.light .text-foreground\/70 { color: oklch(0.20 0 0) !important; }
+   148→.light .text-foreground\/60 { color: oklch(0.25 0 0) !important; }
+   149→.light .text-foreground\/50 { color: oklch(0.30 0 0) !important; }
+   150→.light .text-foreground\/40 { color: oklch(0.35 0 0) !important; }
+   151→.light .text-foreground\/15 { color: oklch(0.40 0 0) !important; }
+   152→.light .text-foreground\/\[0\.025\] { color: oklch(0.50 0 0) !important; }
+   153→.light .text-foreground\/\[0\.04\] { color: oklch(0.55 0 0) !important; }
+   154→.light .text-\[\#00FF94\] { color: oklch(0.40 0.18 145) !important; }
+   155→.light .text-\[\#FF4500\] { color: oklch(0.45 0.20 30) !important; }
+   156→.light .text-\[\#00E5FF\] { color: oklch(0.40 0.15 195) !important; }
+   157→.light .text-\[\#C6FF00\] { color: oklch(0.42 0.18 125) !important; }
+   158→.light .text-\[\#FF2D7E\] { color: oklch(0.45 0.20 345) !important; }
+   159→.light .text-\[\#FFB300\] { color: oklch(0.45 0.16 65) !important; }
+   160→.light .text-\[\#FF3D3D\] { color: oklch(0.45 0.20 20) !important; }
+   161→.light .text-\[\#B388FF\] { color: oklch(0.40 0.16 285) !important; }
+   162→.light .text-\[\#FFEB3B\] { color: oklch(0.42 0.17 85) !important; }
+   163→.light .text-\[\#2979FF\] { color: oklch(0.40 0.18 250) !important; }
+   164→.light .bg-\[\#00FF94\] { background-color: oklch(0.55 0.18 145) !important; }
+   165→.light .bg-\[\#FF4500\] { background-color: oklch(0.50 0.20 30) !important; }
+   166→.light .bg-\[\#00E5FF\] { background-color: oklch(0.60 0.15 195) !important; }
+   167→.light .bg-\[\#FF4500\]\/5 { background-color: oklch(0.50 0.20 30 / 5%) !important; }
+   168→.light .border-\[\#FF4500\] { border-color: oklch(0.45 0.20 30) !important; }
+   169→.light .border-\[\#00FF94\]\/40 { border-color: oklch(0.40 0.18 145 / 40%) !important; }
+   170→
+   171→@layer base {
+   172→  * {
+   173→    @apply border-border outline-ring/50;
+   174→  }
+   175→  html, body {
+   176→    @apply bg-background text-foreground;
+   177→    height: 100%;
+   178→  }
+   179→  body {
+   180→    font-family: var(--font-sans), system-ui, sans-serif;
+   181→    -webkit-font-smoothing: antialiased;
+   182→    overscroll-behavior: none;
+   183→  }
+   184→  /* brutalist sharp corners everywhere */
+   185→  * {
+   186→    border-radius: 0 !important;
+   187→  }
+   188→  /* ensure fixed inset-0 elements fill the viewport */
+   189→  .fixed.inset-0 {
+   190→    width: 100vw;
+   191→    height: 100vh;
+   192→  }
+   193→  /* custom scrollbar */
+   194→  ::-webkit-scrollbar { width: 8px; height: 8px; }
+   195→  ::-webkit-scrollbar-track { background: oklch(0.10 0 0); }
+   196→  ::-webkit-scrollbar-thumb { background: oklch(0.30 0 0); }
+   197→  ::-webkit-scrollbar-thumb:hover { background: oklch(0.50 0 0); }
+   198→  ::selection { background: #FF4500; color: #000; }
+   199→}
+   200→
+   201→/* Light theme overrides — soften brutalist effects for white background */
+   202→.light {
+   203→  /* scanlines: use dark lines instead of black */
+   204→  --scanline-color: rgba(0, 0, 0, 0.08);
+   205→  /* noise: reduce opacity */
+   206→  --noise-opacity: 0.03;
+   207→  /* grid: darker lines */
+   208→  --grid-color: rgba(0, 0, 0, 0.06);
+   209→}
+   210→.light ::-webkit-scrollbar-track { background: oklch(0.92 0 0); }
+   211→.light ::-webkit-scrollbar-thumb { background: oklch(0.50 0 0); }
+   212→.light ::-webkit-scrollbar-thumb:hover { background: oklch(0.30 0 0); }
+   213→.light ::selection { background: #FF4500; color: #fff; }
+   214→
+   215→/* Reduced motion: disable all animations */
+   216→@media (prefers-reduced-motion: reduce) {
+   217→  *, *::before, *::after {
+   218→    animation-duration: 0.01ms !important;
+   219→    animation-iteration-count: 1 !important;
+   220→    transition-duration: 0.01ms !important;
+   221→  }
+   222→  .sigma-spin-slow, .sigma-pulse, .sigma-blink, .sigma-sweep, .sigma-ticker, .sigma-glow-ring, .sigma-shimmer {
+   223→    animation: none !important;
+   224→  }
+   225→}
+   226→
+   227→/* ============================================================
+   228→   SIGMA BRUTALISM — design system utilities
+   229→   ============================================================ */
+   230→
+   231→/* Grid background */
+   232→.sigma-grid {
+   233→  background-image:
+   234→    linear-gradient(to right, rgba(255,255,255,0.04) 1px, transparent 1px),
+   235→    linear-gradient(to bottom, rgba(255,255,255,0.04) 1px, transparent 1px);
+   236→  background-size: 48px 48px;
+   237→}
+   238→.sigma-grid-fine {
+   239→  background-image:
+   240→    linear-gradient(to right, rgba(255,255,255,0.05) 1px, transparent 1px),
+   241→    linear-gradient(to bottom, rgba(255,255,255,0.05) 1px, transparent 1px);
+   242→  background-size: 24px 24px;
+   243→}
+   244→.sigma-dotgrid {
+   245→  background-image: radial-gradient(rgba(255,255,255,0.18) 1px, transparent 1px);
+   246→  background-size: 22px 22px;
+   247→}
+   248→
+   249→/* Scanline overlay */
+   250→.sigma-scanlines {
+   251→  position: relative;
+   252→}
+   253→.sigma-scanlines::after {
+   254→  content: "";
+   255→  position: absolute;
+   256→  inset: 0;
+   257→  pointer-events: none;
+   258→  background: repeating-linear-gradient(
+   259→    to bottom,
+   260→    rgba(255,255,255,0.0) 0px,
+   261→    rgba(255,255,255,0.0) 2px,
+   262→    rgba(0,0,0,0.18) 3px,
+   263→    rgba(0,0,0,0.18) 4px
+   264→  );
+   265→  mix-blend-mode: multiply;
+   266→  z-index: 50;
+   267→}
+   268→
+   269→/* Noise / grain overlay */
+   270→.sigma-noise::before {
+   271→  content: "";
+   272→  position: absolute;
+   273→  inset: -50%;
+   274→  pointer-events: none;
+   275→  opacity: 0.05;
+   276→  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+   277→  z-index: 60;
+   278→  animation: sigma-noise-shift 0.6s steps(3) infinite;
+   279→}
+   280→@keyframes sigma-noise-shift {
+   281→  0% { transform: translate(0,0); }
+   282→  33% { transform: translate(-2%, 1%); }
+   283→  66% { transform: translate(1%, -2%); }
+   284→  100% { transform: translate(0,0); }
+   285→}
+   286→
+   287→/* Hazard diagonal stripes */
+   288→.sigma-hazard {
+   289→  background-image: repeating-linear-gradient(
+   290→    45deg,
+   291→    rgba(255,255,255,0.12) 0,
+   292→    rgba(255,255,255,0.12) 10px,
+   293→    transparent 10px,
+   294→    transparent 20px
+   295→  );
+   296→}
+   297→.sigma-hazard-orange {
+   298→  background-image: repeating-linear-gradient(
+   299→    45deg,
+   300→    #FF4500 0,
+   301→    #FF4500 12px,
+   302→    #0a0a0a 12px,
+   303→    #0a0a0a 24px
+   304→  );
+   305→}
+   306→
+   307→/* Crosshair corners */
+   308→.sigma-crosshair {
+   309→  position: relative;
+   310→}
+   311→.sigma-crosshair::before,
+   312→.sigma-crosshair::after {
+   313→  content: "";
+   314→  position: absolute;
+   315→  width: 14px;
+   316→  height: 14px;
+   317→  border: 1px solid currentColor;
+   318→  pointer-events: none;
+   319→}
+   320→.sigma-crosshair::before {
+   321→  top: -1px; left: -1px;
+   322→  border-right: none; border-bottom: none;
+   323→}
+   324→.sigma-crosshair::after {
+   325→  bottom: -1px; right: -1px;
+   326→  border-left: none; border-top: none;
+   327→}
+   328→
+   329→/* Glitch text */
+   330→.sigma-glitch {
+   331→  position: relative;
+   332→  display: inline-block;
+   333→}
+   334→.sigma-glitch::before,
+   335→.sigma-glitch::after {
+   336→  content: attr(data-text);
+   337→  position: absolute;
+   338→  top: 0; left: 0;
+   339→  width: 100%;
+   340→  overflow: hidden;
+   341→  pointer-events: none;
+   342→}
+   343→.sigma-glitch::before {
+   344→  color: #FF2D7E;
+   345→  transform: translate(-2px, 0);
+   346→  clip-path: polygon(0 0, 100% 0, 100% 45%, 0 45%);
+   347→  mix-blend-mode: screen;
+   348→  animation: sigma-glitch-1 3.2s infinite steps(1);
+   349→}
+   350→.sigma-glitch::after {
+   351→  color: #00E5FF;
+   352→  transform: translate(2px, 0);
+   353→  clip-path: polygon(0 55%, 100% 55%, 100% 100%, 0 100%);
+   354→  mix-blend-mode: screen;
+   355→  animation: sigma-glitch-2 2.7s infinite steps(1);
+   356→}
+   357→@keyframes sigma-glitch-1 {
+   358→  0%, 92%, 100% { transform: translate(0,0); opacity: 0; }
+   359→  93% { transform: translate(-3px, 1px); opacity: 0.9; }
+   360→  95% { transform: translate(2px, -1px); opacity: 0.7; }
+   361→  97% { transform: translate(-1px, 0); opacity: 0.8; }
+   362→}
+   363→@keyframes sigma-glitch-2 {
+   364→  0%, 88%, 100% { transform: translate(0,0); opacity: 0; }
+   365→  89% { transform: translate(2px, -1px); opacity: 0.8; }
+   366→  91% { transform: translate(-2px, 1px); opacity: 0.9; }
+   367→  93% { transform: translate(1px, 0); opacity: 0.6; }
+   368→}
+   369→
+   370→/* Blinking cursor */
+   371→.sigma-blink { animation: sigma-blink 1.05s steps(2) infinite; }
+   372→@keyframes sigma-blink { 0%,49% { opacity: 1; } 50%,100% { opacity: 0; } }
+   373→
+   374→/* Ticker / marquee */
+   375→.sigma-ticker { display: inline-block; white-space: nowrap; animation: sigma-ticker 28s linear infinite; }
+   376→@keyframes sigma-ticker { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+   377→
+   378→/* Pulse dot */
+   379→.sigma-pulse { animation: sigma-pulse 1.6s ease-in-out infinite; }
+   380→@keyframes sigma-pulse {
+   381→  0%,100% { opacity: 1; transform: scale(1); }
+   382→  50% { opacity: 0.4; transform: scale(0.7); }
+   383→}
+   384→
+   385→/* Slow spin */
+   386→.sigma-spin-slow { animation: sigma-spin 24s linear infinite; }
+   387→@keyframes sigma-spin { from { transform: rotate(0); } to { transform: rotate(360deg); } }
+   388→
+   389→/* Sweep scan */
+   390→.sigma-sweep { position: relative; overflow: hidden; }
+   391→.sigma-sweep::after {
+   392→  content: "";
+   393→  position: absolute; inset: 0;
+   394→  background: linear-gradient(180deg, transparent 0%, rgba(255,255,255,0.10) 50%, transparent 100%);
+   395→  animation: sigma-sweep 3.4s ease-in-out infinite;
+   396→}
+   397→@keyframes sigma-sweep {
+   398→  0% { transform: translateY(-100%); }
+   399→  100% { transform: translateY(100%); }
+   400→}
+   401→
+   402→/* Tracking helpers */
+   403→.sigma-track-sm { letter-spacing: 0.08em; }
+   404→.sigma-track-md { letter-spacing: 0.18em; }
+   405→.sigma-track-lg { letter-spacing: 0.32em; }
+   406→
+   407→/* Vignette */
+   408→.sigma-vignette::after {
+   409→  content: "";
+   410→  position: absolute; inset: 0;
+   411→  pointer-events: none;
+   412→  box-shadow: inset 0 0 200px 40px rgba(0,0,0,0.7);
+   413→}
+   414→
+   415→/* Hide scrollbars within scroll panels but keep functionality */
+   416→.sigma-scroll-hidden { scrollbar-width: none; -ms-overflow-style: none; }
+   417→.sigma-scroll-hidden::-webkit-scrollbar { display: none; }
+   418→
+   419→/* Brutal shadow (offset, no blur) */
+   420→.sigma-shadow-brutal { box-shadow: 6px 6px 0 0 currentColor; }
+   421→
+   422→/* Magnetic button hover — subtle translate toward cursor */
+   423→.sigma-magnetic {
+   424→  transition: transform 0.15s ease-out;
+   425→  will-change: transform;
+   426→}
+   427→
+   428→/* Glitch RGB split on hover */
+   429→.sigma-rgb-split {
+   430→  position: relative;
+   431→  transition: text-shadow 0.2s;
+   432→}
+   433→.sigma-rgb-split:hover {
+   434→  text-shadow:
+   435→    -2px 0 0 #FF2D7E,
+   436→    2px 0 0 #00E5FF;
+   437→}
+   438→
+   439→/* Pulse glow ring */
+   440→.sigma-glow-ring {
+   441→  animation: sigma-glow-ring 2s ease-in-out infinite;
+   442→}
+   443→@keyframes sigma-glow-ring {
+   444→  0%, 100% { box-shadow: 0 0 0 0 currentColor; }
+   445→  50% { box-shadow: 0 0 0 4px transparent; }
+   446→}
+   447→
+   448→/* Loading bar shimmer */
+   449→.sigma-shimmer {
+   450→  background: linear-gradient(
+   451→    90deg,
+   452→    transparent 0%,
+   453→    rgba(255,255,255,0.1) 50%,
+   454→    transparent 100%
+   455→  );
+   456→  background-size: 200% 100%;
+   457→  animation: sigma-shimmer 2s linear infinite;
+   458→}
+   459→@keyframes sigma-shimmer {
+   460→  0% { background-position: 200% 0; }
+   461→  100% { background-position: -200% 0; }
+   462→}
+   463→
+   464→/* Terminal cursor block */
+   465→.sigma-cursor-block {
+   466→  display: inline-block;
+   467→  width: 0.6em;
+   468→  height: 1em;
+   469→  background: currentColor;
+   470→  vertical-align: text-bottom;
+   471→  animation: sigma-blink 1s steps(2) infinite;
+   472→}
+   473→
+   474→/* Data stream line draw */
+   475→.sigma-line-draw {
+   476→  stroke-dasharray: 1000;
+   477→  stroke-dashoffset: 1000;
+   478→  animation: sigma-line-draw 2s ease-out forwards;
+   479→}
+   480→@keyframes sigma-line-draw {
+   481→  to { stroke-dashoffset: 0; }
+   482→}
+   483→
+   484→/* Corner bracket expand on hover */
+   485→.sigma-bracket-hover {
+   486→  position: relative;
+   487→}
+   488→.sigma-bracket-hover::before,
+   489→.sigma-bracket-hover::after {
+   490→  content: "";
+   491→  position: absolute;
+   492→  width: 0;
+   493→  height: 0;
+   494→  border: 1px solid currentColor;
+   495→  transition: width 0.3s, height 0.3s;
+   496→}
+   497→.sigma-bracket-hover::before {
+   498→  top: 0; left: 0;
+   499→  border-right: none; border-bottom: none;
+   500→}
+   501→.sigma-bracket-hover::after {
+   502→  bottom: 0; right: 0;
+   503→  border-left: none; border-top: none;
+   504→}
+   505→.sigma-bracket-hover:hover::before,
+   506→.sigma-bracket-hover:hover::after {
+   507→  width: 12px;
+   508→  height: 12px;
+   509→}
+   510→
+   511→/* ============================================================
+   512→   SIGMA PROJECT CARD — award-winning premium hover system
+   513→   Wrapper lifts, frame border adopts accent, glow blooms behind.
+   514→   The article carries clip-path so the glow lives on a sibling
+   515→   div (clip-path would clip a box-shadow).
+   516→   ============================================================ */
+   517→.sigma-card {
+   518→  transition: transform 0.35s cubic-bezier(0.2, 0.7, 0.2, 1);
+   519→  will-change: transform;
+   520→  isolation: isolate;
+   521→}
+   522→.sigma-card:hover {
+   523→  transform: translateY(-4px);
+   524→}
+   525→.sigma-card .sigma-card-frame {
+   526→  transition: border-color 0.3s ease;
+   527→}
+   528→.sigma-card:hover .sigma-card-frame {
+   529→  border-color: var(--card-accent, oklch(1 0 0 / 40%));
+   530→}
+   531→.sigma-card .sigma-card-glow {
+   532→  opacity: 0;
+   533→  transition: opacity 0.5s ease;
+   534→}
+   535→.sigma-card:hover .sigma-card-glow {
+   536→  opacity: 1;
+   537→}
+   538→/* Image zoom inside card */
+   539→.sigma-card .sigma-card-img {
+   540→  transition: transform 0.8s cubic-bezier(0.2, 0.7, 0.2, 1);
+   541→  will-change: transform;
+   542→}
+   543→.sigma-card:hover .sigma-card-img {
+   544→  transform: scale(1.08);
+   545→}
+   546→/* Cinematic hover overlay (fade + scan-line) */
+   547→.sigma-card .sigma-card-overlay {
+   548→  opacity: 0;
+   549→  transition: opacity 0.45s ease;
+   550→}
+   551→.sigma-card:hover .sigma-card-overlay {
+   552→  opacity: 1;
+   553→}
+   554→.sigma-card .sigma-card-scanline {
+   555→  width: 0;
+   556→  transition: width 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
+   557→}
+   558→.sigma-card:hover .sigma-card-scanline {
+   559→  width: 75%;
+   560→}
+   561→/* Corner brackets expand on hover */
+   562→.sigma-card .sigma-card-corner {
+   563→  transition: width 0.35s ease, height 0.35s ease;
+   564→  width: 12px;
+   565→  height: 12px;
+   566→}
+   567→.sigma-card:hover .sigma-card-corner {
+   568→  width: 20px;
+   569→  height: 20px;
+   570→}
+   571→/* Arrow nudge */
+   572→.sigma-card .sigma-card-arrow {
+   573→  transition: transform 0.3s ease;
+   574→}
+   575→.sigma-card:hover .sigma-card-arrow {
+   576→  transform: translateX(4px);
+   577→}
+   578→/* Accent strips intensify */
+   579→.sigma-card .sigma-card-strip {
+   580→  transition: opacity 0.35s ease;
+   581→}
+   582→/* Reduced motion */
+   583→@media (prefers-reduced-motion: reduce) {
+   584→  .sigma-card,
+   585→  .sigma-card .sigma-card-frame,
+   586→  .sigma-card .sigma-card-img,
+   587→  .sigma-card .sigma-card-overlay,
+   588→  .sigma-card .sigma-card-scanline,
+   589→  .sigma-card .sigma-card-corner,
+   590→  .sigma-card .sigma-card-arrow,
+   591→  .sigma-card .sigma-card-strip {
+   592→    transition: opacity 0.2s ease, border-color 0.2s ease;
+   593→  }
+   594→  .sigma-card:hover { transform: none; }
+   595→  .sigma-card:hover .sigma-card-img { transform: none; }
+   596→}
+   597→
+   598→/* ============================================================
+   599→   SIGMA BRAND — TAUNGOO Σ LAB wordmark with gradient sweep
+   600→   Alternative effect (replaces RGB-split glitch):
+   601→   - Animated gradient sweep across text (like Stripe, Linear, Vercel)
+   602→   - 3-color gradient: foreground → accent → foreground
+   603→   - 5s ease-in-out infinite (slow, premium "molten metal" feel)
+   604→   - Σ glyph keeps pulse animation (scale 1→1.06, NO rotation)
+   605→   ============================================================ */
+   606→.sigma-brand {
+   607→  display: inline-flex;
+   608→  align-items: center;
+   609→  gap: 0.5rem;
+   610→  position: relative;
+   611→  text-decoration: none;
+   612→  cursor: pointer;
+   613→}
+   614→
+   615→/* Σ glyph — pulse + drop-shadow glow at peak (NO rotation) */
+   616→.sigma-brand__glyph {
+   617→  font-family: var(--font-sans), system-ui, sans-serif;
+   618→  font-weight: 900;
+   619→  color: #FF4500;
+   620→  display: inline-block;
+   621→  animation: sigma-brand-pulse 2.4s ease-in-out infinite;
+   622→  will-change: transform, filter;
+   623→}
+   624→@keyframes sigma-brand-pulse {
+   625→  0%, 100% {
+   626→    opacity: 1;
+   627→    transform: scale(1);
+   628→    filter: drop-shadow(0 0 0 rgba(255, 69, 0, 0));
+   629→  }
+   630→  50% {
+   631→    opacity: 0.92;
+   632→    transform: scale(1.06);
+   633→    filter: drop-shadow(0 0 6px rgba(255, 69, 0, 0.85));
+   634→  }
+   635→}
+   636→
+   637→/* Brand text — gradient sweep effect (alternative to RGB glitch)
+   638→   Uses background-clip: text with an animated 3-color gradient.
+   639→   The gradient moves left→right, creating a "light passing through" effect. */
+   640→.sigma-brand__text {
+   641→  font-family: var(--font-sans), system-ui, sans-serif;
+   642→  font-weight: 900;
+   643→  letter-spacing: 0.1em;
+   644→  background: linear-gradient(
+   645→    100deg,
+   646→    var(--color-foreground, #fff) 0%,
+   647→    var(--color-foreground, #fff) 35%,
+   648→    #FF4500 50%,
+   649→    var(--color-foreground, #fff) 65%,
+   650→    var(--color-foreground, #fff) 100%
+   651→  );
+   652→  background-size: 250% 100%;
+   653→  background-position: 100% 0;
+   654→  -webkit-background-clip: text;
+   655→  background-clip: text;
+   656→  -webkit-text-fill-color: transparent;
+   657→  color: transparent;
+   658→  animation: sigma-brand-sweep 5s ease-in-out infinite;
+   659→  will-change: background-position;
+   660→  transition: filter 0.3s ease;
+   661→}
+   662→@keyframes sigma-brand-sweep {
+   663→  0%, 100% { background-position: 100% 0; }
+   664→  50% { background-position: 0% 0; }
+   665→}
+   666→/* Hover — speed up sweep + subtle brightness boost */
+   667→.sigma-brand:hover .sigma-brand__text {
+   668→  animation-duration: 1.5s;
+   669→  filter: brightness(1.15);
+   670→}
+   671→
+   672→/* Σ symbol inside the wordmark (the sigma between TAUNGOO and LAB) */
+   673→.sigma-brand__sigma {
+   674→  color: #FF4500;
+   675→  -webkit-text-fill-color: #FF4500;
+   676→  font-weight: 900;
+   677→}
+   678→
+   679→/* Sub-label — "LAB" or "AI · WEB3 · FULL-STACK" */
+   680→.sigma-brand__sub {
+   681→  font-family: var(--font-mono), monospace;
+   682→  font-size: 0.625rem;
+   683→  letter-spacing: 0.22em;
+   684→  color: var(--color-muted-foreground, #888);
+   685→  text-transform: uppercase;
+   686→  align-self: center;
+   687→  white-space: nowrap;
+   688→}
+   689→
+   690→/* ============================================================
+   691→   CARD REVEAL — Awwwards SOTD scroll-triggered animation
+   692→   Battle-tested params (from GSAP forum + lab.good-fella):
+   693→   - y: 60px lift, opacity 0→1, duration 0.8s, ease power3.out
+   694→   - Trigger: "top 85%" (fires when ~15% visible)
+   695→   - once: true (one-shot, no reverse on scroll-up)
+   696→   - stagger: 0.08s per card
+   697→   ============================================================ */
+   698→.sigma-card-reveal {
+   699→  opacity: 0;
+   700→  transform: translateY(60px);
+   701→  will-change: transform, opacity;
+   702→}
+   703→.sigma-card-reveal.sigma-card-revealed {
+   704→  opacity: 1;
+   705→  transform: translateY(0);
+   706→  transition:
+   707→    opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1),
+   708→    transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+   709→}
+   710→
+   711→/* ============================================================
+   712→   SIGMA CARD HOVER STACK — 5-layer micro-interaction
+   713→   (per Awwwards SOTD hover pattern from research findings)
+   714→   1. Card lift: translateY(-6px) @ 0.4s
+   715→   2. Border shift to accent @ 0.3s
+   716→   3. Accent glow (box-shadow) @ 0.4s
+   717→   4. Image zoom (if .sigma-hover-img present) @ 0.6s
+   718→   5. Overlay reveal (if .sigma-hover-overlay present) @ 0.3s + 0.05s delay
+   719→   ============================================================ */
+   720→.sigma-hover-card {
+   721→  position: relative;
+   722→  transition:
+   723→    transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+   724→    border-color 0.3s ease,
+   725→    box-shadow 0.4s ease;
+   726→  will-change: transform;
+   727→}
+   728→.sigma-hover-card:hover {
+   729→  transform: translateY(-6px);
+   730→  border-color: var(--sigma-hover-accent, #FF4500);
+   731→  box-shadow:
+   732→    0 0 0 1px var(--sigma-hover-accent, #FF4500),
+   733→    0 0 24px -4px var(--sigma-hover-accent, #FF4500),
+   734→    0 20px 40px -12px rgba(0, 0, 0, 0.8);
+   735→}
+   736→.sigma-hover-img {
+   737→  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+   738→  will-change: transform;
+   739→}
+   740→.sigma-hover-card:hover .sigma-hover-img {
+   741→  transform: scale(1.08);
+   742→}
+   743→.sigma-hover-overlay {
+   744→  opacity: 0;
+   745→  transform: translateY(8px);
+   746→  transition:
+   747→    opacity 0.3s ease 0.05s,
+   748→    transform 0.3s cubic-bezier(0.22, 1, 0.36, 1) 0.05s;
+   749→  will-change: transform, opacity;
+   750→}
+   751→.sigma-hover-card:hover .sigma-hover-overlay {
+   752→  opacity: 1;
+   753→  transform: translateY(0);
+   754→}
+   755→
+   756→/* ============================================================
+   757→   EXPANDED REDUCED MOTION — covers brand + card animations
+   758→   (Awwwards juror accessibility check — non-negotiable)
+   759→   ============================================================ */
+   760→@media (prefers-reduced-motion: reduce) {
+   761→  .sigma-brand__glyph,
+   762→  .sigma-brand__text {
+   763→    animation: none !important;
+   764→  }
+   765→  .sigma-brand__text {
+   766→    -webkit-text-fill-color: var(--color-foreground, #fff) !important;
+   767→    color: var(--color-foreground, #fff) !important;
+   768→    background: none !important;
+   769→  }
+   770→  .sigma-card-reveal {
+   771→    opacity: 1 !important;
+   772→    transform: none !important;
+   773→  }
+   774→  .sigma-hover-card,
+   775→  .sigma-hover-card:hover,
+   776→  .sigma-hover-img,
+   777→  .sigma-hover-card:hover .sigma-hover-img,
+   778→  .sigma-hover-overlay,
+   779→  .sigma-hover-card:hover .sigma-hover-overlay {
+   780→    transition: opacity 0.2s ease, border-color 0.2s ease !important;
+   781→    transform: none !important;
+   782→  }
+   783→}
+   784→
+   785→/* ============================================================
+   786→   ALPHA CARD ANIMATION — alternative simpler approach
+   787→   Replaces the 5-layer hover stack with a cleaner 2-layer effect:
+   788→   1. Border color shift to accent @ 0.3s
+   789→   2. Soft accent glow (box-shadow, no lift) @ 0.4s
+   790→   No scroll-triggered reveal — cards are visible immediately on load.
+   791→   This is cleaner and less "busy" than the previous approach.
+   792→   ============================================================ */
+   793→.alpha-card-hover {
+   794→  transition:
+   795→    border-color 0.3s ease,
+   796→    box-shadow 0.4s ease;
+   797→  will-change: border-color, box-shadow;
+   798→}
+   799→.alpha-card-hover:hover {
+   800→  border-color: var(--sigma-hover-accent, #FF4500);
+   801→  box-shadow:
+   802→    0 0 0 1px var(--sigma-hover-accent, #FF4500),
+   803→    0 0 20px -4px var(--sigma-hover-accent, #FF4500);
+   804→}
+   805→
+   806→/* Reduced motion for alpha cards */
+   807→@media (prefers-reduced-motion: reduce) {
+   808→  .alpha-card-hover,
+   809→  .alpha-card-hover:hover {
+   810→    transition: border-color 0.2s ease !important;
+   811→    box-shadow: none !important;
+   812→  }
+   813→}
+   814→
+   815→/* ============================================================
+   816→   PERFORMANCE OPTIMIZATIONS — reduce repaints and reflows
+   817→   All effects remain 100% intact, these only hint the browser
+   818→   ============================================================ */
+   819→
+   820→/* will-change hints for animated elements — tells browser to
+   821→   pre-compute layers, reducing jank on transform/opacity animations */
+   822→.sigma-spin-slow { will-change: transform; }
+   823→.sigma-pulse { will-change: transform, opacity; }
+   824→.sigma-glitch { will-change: transform, opacity; }
+   825→.sigma-brand__text { will-change: background-position; }
+   826→.sigma-brand__glyph { will-change: transform, filter; }
+   827→.sigma-card-reveal { will-change: transform, opacity; }
+   828→.alpha-card-hover { will-change: border-color, box-shadow; }
+   829→
+   830→/* contain: layout style paint — isolates rendering boundaries.
+   831→   Each section renders independently, so changes in one section
+   832→   don't trigger recalculations in others. */
+   833→.sigma-scroll-hidden {
+   834→  scrollbar-width: none;
+   835→  -ms-overflow-style: none;
+   836→}
+   837→.sigma-scroll-hidden::-webkit-scrollbar {
+   838→  display: none;
+   839→}
+   840→
+   841→/* content-visibility: auto — browser skips rendering for
+   842→   off-screen sections entirely (huge performance win for
+   843→   11 sections where only 1 is visible at a time) */
+   844→[data-alpha-scroll] > section,
+   845→[data-alpha-scroll] > div {
+   846→  content-visibility: auto;
+   847→  contain-intrinsic-size: auto 800px;
+   848→}
+   849→
+   850→/* Reduce paint complexity on scanline overlays — use transform
+   851→   instead of opacity for GPU compositing */
+   852→.sigma-scanlines {
+   853→  will-change: transform;
+   854→  transform: translateZ(0); /* force GPU layer */
+   855→}
+   856→.sigma-grid {
+   857→  transform: translateZ(0); /* force GPU layer */
+   858→}
+   859→.sigma-hazard-orange {
+   860→  transform: translateZ(0);
+   861→}
+   862→
+   863→/* backface-visibility for 3D flip cards — already set inline
+   864→   but adding here as safety net for all preserve-3d elements */
+   865→[style*="preserve-3d"] {
+   866→  backface-visibility: hidden;
+   867→  transform: translateZ(0);
+   868→}
+   869→
+   870→/* Optimize recharts containers — prevent layout thrashing */
+   871→.recharts-wrapper {
+   872→  contain: layout style paint;
+   873→}
+   874→
+   875→/* Reduced motion — already handled but ensure transitions are instant */
+   876→@media (prefers-reduced-motion: reduce) {
+   877→  * {
+   878→    animation-duration: 0.01ms !important;
+   879→    animation-iteration-count: 1 !important;
+   880→    transition-duration: 0.01ms !important;
+   881→  }
+   882→}
+   883→

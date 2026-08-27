@@ -2,39 +2,84 @@
 
 import * as React from "react";
 
-// Inline SciFiAvatar component
-function SciFiAvatar({ color, seed }: { color: string; seed: number }) {
-  const shapes: React.ReactNode[] = [];
-  for (let i = 0; i < 6; i++) {
-    const cx = 50 + Math.sin(seed + i * 1.7) * 25;
-    const cy = 50 + Math.cos(seed + i * 2.3) * 25;
-    const r = 8 + Math.sin(seed + i * 3.1) * 6;
-    shapes.push(
-      <circle key={i} cx={cx} cy={cy} r={Math.max(r, 3)} fill="none" stroke={color} strokeWidth="0.5" opacity={0.3 + (i / 6) * 0.4} />
-    );
-  }
-  const headY = 35;
-  const bodyY = 55;
+/**
+ * ProfileAvatar — clean, branded avatar placeholder.
+ * Replaces the old glitchy SciFiAvatar (green terminal screen + "SCREENSHOT
+ * CLASSIFIED" text). This shows:
+ *   - A circular cut-corner avatar shape (sci-fi but professional)
+ *   - The person's accent color as the background (gradient for depth)
+ *   - The person's initials (first letter of name + first letter of role)
+ *   - Subtle brutalist accents (corner mark + hazard strip) for aesthetic
+ *     continuity with the rest of the site
+ * No glitch effect, no terminal screen, no "classified" text.
+ */
+function ProfileAvatar({
+  color,
+  name,
+  role,
+}: {
+  color: string;
+  name: string;
+  role: string;
+}) {
+  // Initials = first letter of name + first letter of role, both uppercased.
+  const initials = React.useMemo(() => {
+    const n = (name || "").trim()[0] || "?";
+    const r = (role || "").trim()[0] || "?";
+    return (n + r).toUpperCase();
+  }, [name, role]);
+
   return (
-    <svg viewBox="0 0 100 100" className="h-full w-full">
-      <defs>
-        <pattern id={`grid-${seed}`} width="10" height="10" patternUnits="userSpaceOnUse">
-          <path d="M 10 0 L 0 0 0 10" fill="none" stroke={color} strokeWidth="0.2" opacity="0.15" />
-        </pattern>
-      </defs>
-      <rect width="100" height="100" fill={`url(#grid-${seed})`} />
-      {shapes}
-      <circle cx="50" cy={headY} r="12" fill="none" stroke={color} strokeWidth="1" opacity="0.6" />
-      <circle cx="50" cy={headY} r="6" fill={color} opacity="0.2" />
-      <line x1="42" y1={headY - 2} x2="58" y2={headY - 2} stroke={color} strokeWidth="0.5" opacity="0.8" />
-      <path d={`M 35 ${bodyY} L 50 ${bodyY - 8} L 65 ${bodyY} L 60 ${bodyY + 15} L 40 ${bodyY + 15} Z`} fill="none" stroke={color} strokeWidth="1" opacity="0.5" />
-      <line x1="50" y1={bodyY} x2="50" y2={bodyY + 12} stroke={color} strokeWidth="0.5" opacity="0.4" />
-      <circle cx="50" cy={bodyY + 5} r="2" fill={color} opacity="0.6" />
-      <path d="M 5 5 L 15 5 M 5 5 L 5 15" stroke={color} strokeWidth="1" opacity="0.4" />
-      <path d="M 95 5 L 85 5 M 95 5 L 95 15" stroke={color} strokeWidth="1" opacity="0.4" />
-      <path d="M 5 95 L 15 95 M 5 95 L 5 85" stroke={color} strokeWidth="1" opacity="0.4" />
-      <path d="M 95 95 L 85 95 M 95 95 L 95 85" stroke={color} strokeWidth="1" opacity="0.4" />
-    </svg>
+    <div
+      className="relative flex h-full w-full items-center justify-center overflow-hidden"
+      style={{
+        background: `linear-gradient(135deg, ${color} 0%, ${color}cc 60%, ${color}88 100%)`,
+      }}
+    >
+      {/* Subtle scanlines for sci-fi texture (very low opacity, no glitch) */}
+      <div
+        className="pointer-events-none absolute inset-0 opacity-10"
+        style={{
+          background:
+            "repeating-linear-gradient(0deg, transparent 0px, transparent 3px, rgba(0,0,0,0.4) 4px, rgba(0,0,0,0.4) 5px)",
+        }}
+        aria-hidden
+      />
+      {/* Hazard stripe top-right corner — tiny brutalist accent */}
+      <div
+        className="absolute right-0 top-0 h-8 w-8 opacity-40"
+        style={{
+          background: `repeating-linear-gradient(45deg, rgba(0,0,0,0.6) 0, rgba(0,0,0,0.6) 3px, transparent 3px, transparent 6px)`,
+        }}
+        aria-hidden
+      />
+      {/* Crosshair mark top-left for sci-fi framing */}
+      <span
+        className="absolute left-2 top-2 h-3 w-3 border-l-2 border-t-2 border-black/30"
+        aria-hidden
+      />
+      {/* Circular avatar disc with initials */}
+      <div
+        className="relative flex h-2/3 w-2/3 items-center justify-center rounded-full border-2 border-black/30"
+        style={{ background: "rgba(0,0,0,0.45)" }}
+      >
+        <span className="select-none font-sans text-4xl font-black uppercase tracking-tight text-white sm:text-5xl md:text-6xl">
+          {initials}
+        </span>
+        {/* Inner ring for depth */}
+        <span
+          className="pointer-events-none absolute inset-1 rounded-full border border-white/20"
+          aria-hidden
+        />
+      </div>
+      {/* Bottom data label */}
+      <div className="absolute bottom-2 left-2 font-mono text-[10px] uppercase tracking-[0.2em] text-black/70 sm:text-[9px]">
+        ▸ DOSSIER
+      </div>
+      <div className="absolute bottom-2 right-2 font-mono text-[10px] uppercase tracking-[0.2em] text-black/70 sm:text-[9px]">
+        VERIFIED
+      </div>
+    </div>
   );
 }
 
@@ -44,33 +89,34 @@ const TESTIMONIALS: { quote: string; author: string; role: string; company: stri
   { quote: "The voice AI agent handles 80% of our inbound calls. It pays for itself.", author: "Head of Sales", role: "VP of Sales", company: "SaaS Company", accent: "#00E5FF", metric: "80% automation" },
 ];
 
-function SciFiAvatarInline({ color, seed }: { color: string; seed: number }) {
-  return <SciFiAvatar color={color} seed={seed} />;
+// Back-compat re-export (legacy SciFiAvatar import sites now render ProfileAvatar).
+function SciFiAvatarInline({ color, name, role }: { color: string; name?: string; role?: string }) {
+  return <ProfileAvatar color={color} name={name || ""} role={role || ""} />;
 }
 
 export { SciFiAvatarInline as SciFiAvatar };
 
 export function AlphaTestimonials() {
   return (
-    <section id="testimonials" className="relative border-t border-border px-3 py-20">
+    <section id="testimonials" className="relative border-t border-border px-3 py-12 sm:px-6 sm:py-20">
       <div className="sigma-grid pointer-events-none absolute inset-0 opacity-10" />
       <div className="sigma-scanlines pointer-events-none absolute inset-0 opacity-15" />
 
       <div className="relative z-10 mx-auto w-full max-w-[1600px]">
-        <div className="flex items-end justify-between gap-4 border-b border-border pb-4">
+        <div className="flex flex-col gap-3 border-b border-border pb-4 sm:flex-row sm:items-end sm:justify-between sm:gap-4">
           <div>
-            <div className="font-mono text-[10px] uppercase tracking-[0.3em] text-[#FF4500]">▸ 08 / TESTIMONIALS</div>
-            <h2 className="mt-2 font-sans text-4xl font-black uppercase tracking-tight sm:text-6xl">
+            <div className="font-mono text-[10px] uppercase tracking-[0.3em] text-[#FF4500] sm:text-[10px]">▸ 08 / TESTIMONIALS</div>
+            <h2 className="mt-2 font-sans text-3xl font-black uppercase leading-tight tracking-tight sm:text-5xl md:text-6xl">
               FIELD <span style={{ color: "#FF4500" }}>REPORTS.</span>
             </h2>
-            <p className="mt-2 font-serif text-base italic text-muted-foreground">Verified client feedback. Real results, real deployments.</p>
+            <p className="mt-2 font-serif text-sm italic text-muted-foreground sm:text-base">Verified client feedback. Real results, real deployments.</p>
           </div>
-          <div className="hidden shrink-0 font-mono text-[9px] uppercase tracking-[0.2em] text-muted-foreground sm:block">
+          <div className="hidden shrink-0 font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground sm:block sm:text-[9px]">
             <span className="text-[#FF4500]">3</span> TESTIMONIALS · <span className="text-[#00FF94]">100%</span> VERIFIED
           </div>
         </div>
 
-        <div className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-3">
+        <div className="mt-6 grid grid-cols-1 gap-4 sm:mt-8 md:grid-cols-3">
           {TESTIMONIALS.map((t, i) => (
             <div
               key={i}
@@ -78,26 +124,27 @@ export function AlphaTestimonials() {
               style={{ "--sigma-hover-accent": t.accent, clipPath: "polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px)" } as React.CSSProperties}
             >
               <div className="h-1 w-full" style={{ background: t.accent }} />
+              {/* Avatar zone — replaced glitch SciFiAvatar with clean ProfileAvatar */}
               <div className="relative overflow-hidden border-b border-border/40">
-                <div className="aspect-square">
-                  <SciFiAvatar color={t.accent} seed={i + 1} />
+                <div className="aspect-[4/3] sm:aspect-square">
+                  <ProfileAvatar color={t.accent} name={t.author} role={t.role} />
                 </div>
-                <div className="absolute right-2 top-2 border px-2 py-1 text-right" style={{ borderColor: `${t.accent}44` }}>
-                  <div className="font-sans text-sm font-black" style={{ color: t.accent }}>{t.metric}</div>
-                  <div className="font-mono text-[7px] uppercase tracking-[0.12em] text-muted-foreground">RESULT</div>
+                <div className="absolute right-2 top-2 border bg-background/85 px-2 py-1 text-right backdrop-blur-sm" style={{ borderColor: `${t.accent}66` }}>
+                  <div className="font-sans text-xs font-black sm:text-sm" style={{ color: t.accent }}>{t.metric}</div>
+                  <div className="font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground sm:text-[9px]">RESULT</div>
                 </div>
               </div>
-              <div className="p-4">
-                <div className="font-sans text-4xl font-black leading-none" style={{ color: `${t.accent}33` }}>"</div>
-                <p className="-mt-3 font-serif text-sm italic leading-relaxed">{t.quote}</p>
+              <div className="p-4 sm:p-5">
+                <div className="font-sans text-4xl font-black leading-none sm:text-5xl" style={{ color: `${t.accent}33` }}>“</div>
+                <p className="-mt-3 font-serif text-sm italic leading-relaxed sm:text-base">{t.quote}</p>
                 <div className="mt-3 flex items-center gap-2">
                   <span className="h-px w-8" style={{ background: t.accent }} />
-                  <span className="font-mono text-[8px] uppercase tracking-[0.16em] text-muted-foreground">VERIFIED</span>
+                  <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground">VERIFIED</span>
                 </div>
                 <div className="mt-2 flex items-center gap-2">
                   <div>
-                    <div className="font-sans text-xs font-bold uppercase">{t.author}</div>
-                    <div className="font-mono text-[8px] uppercase tracking-[0.14em] text-muted-foreground">{t.role} · {t.company}</div>
+                    <div className="font-sans text-sm font-bold uppercase sm:text-base">{t.author}</div>
+                    <div className="mt-0.5 font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground sm:text-[11px]">{t.role} · {t.company}</div>
                   </div>
                 </div>
                 <div className="mt-2 flex gap-0.5">
@@ -159,25 +206,25 @@ export function AlphaInsights() {
   const tagColors: Record<string, string> = { AI: "#00FF94", Web3: "#C6FF00", NLP: "#00E5FF" };
 
   return (
-    <section id="insights" className="relative border-t border-border px-3 py-20">
+    <section id="insights" className="relative border-t border-border px-3 py-12 sm:px-6 sm:py-20">
       <div className="sigma-grid pointer-events-none absolute inset-0 opacity-10" />
       <div className="sigma-scanlines pointer-events-none absolute inset-0 opacity-15" />
 
       <div className="relative z-10 mx-auto w-full max-w-[1600px]">
-        <div className="flex items-end justify-between gap-4 border-b border-border pb-4">
+        <div className="flex flex-col gap-3 border-b border-border pb-4 sm:flex-row sm:items-end sm:justify-between sm:gap-4">
           <div>
             <div className="font-mono text-[10px] uppercase tracking-[0.3em] text-[#FF4500]">▸ 09 / INSIGHTS</div>
-            <h2 className="mt-2 font-sans text-4xl font-black uppercase tracking-tight sm:text-6xl">
+            <h2 className="mt-2 font-sans text-3xl font-black uppercase leading-tight tracking-tight sm:text-5xl md:text-6xl">
               RESEARCH <span style={{ color: "#FF4500" }}>LOGS.</span>
             </h2>
-            <p className="mt-2 font-serif text-base italic text-muted-foreground">Peer-reviewed papers, datasets, and architecture blueprints. Open access.</p>
+            <p className="mt-2 font-serif text-sm italic text-muted-foreground sm:text-base">Peer-reviewed papers, datasets, and architecture blueprints. Open access.</p>
           </div>
-          <div className="hidden shrink-0 font-mono text-[9px] uppercase tracking-[0.2em] text-muted-foreground sm:block">
+          <div className="hidden shrink-0 font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground sm:block sm:text-[9px]">
             <span className="text-[#FF4500]">3</span> PUBLICATIONS · <span className="text-[#00FF94]">22</span> CITATIONS
           </div>
         </div>
 
-        <div className="mt-8 grid grid-cols-1 gap-3 md:grid-cols-3">
+        <div className="mt-6 grid grid-cols-1 gap-3 sm:mt-8 md:grid-cols-3">
           {INSIGHTS_DATA.map((ins, i) => {
             const color = tagColors[ins.tag] || "#FF4500";
             return (
@@ -188,22 +235,22 @@ export function AlphaInsights() {
                 style={{ "--sigma-hover-accent": color, clipPath: "polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px)" } as React.CSSProperties}
               >
                 <div className="h-1 w-full" style={{ background: color }} />
-                <div className="p-4">
-                  <div className="flex items-center justify-between">
-                    <span className="border px-2 py-0.5 font-mono text-[8px] uppercase tracking-[0.16em]" style={{ borderColor: `${color}44`, color }}>{ins.tag}</span>
-                    <div className="flex items-center gap-2 font-mono text-[8px] uppercase tracking-[0.14em] text-muted-foreground">
+                <div className="p-4 sm:p-5">
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="border px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.16em] sm:text-[10px]" style={{ borderColor: `${color}44`, color }}>{ins.tag}</span>
+                    <div className="flex items-center gap-1 font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground sm:text-[10px] sm:tracking-[0.14em]">
                       <span>{ins.date}</span>
-                      <span>·</span>
+                      <span className="opacity-50">·</span>
                       <span>{ins.readTime}</span>
                     </div>
                   </div>
-                  <h3 className="mt-3 font-sans text-base font-bold uppercase leading-tight tracking-tight transition-colors group-hover:text-[#FF4500]">{ins.title}</h3>
-                  <p className="mt-2 font-serif text-xs italic leading-relaxed text-muted-foreground line-clamp-3">{ins.desc}</p>
+                  <h3 className="mt-3 font-sans text-base font-bold uppercase leading-tight tracking-tight transition-colors group-hover:text-[#FF4500] sm:text-lg">{ins.title}</h3>
+                  <p className="mt-2 font-serif text-xs italic leading-relaxed text-muted-foreground line-clamp-3 sm:text-sm">{ins.desc}</p>
                   <div className="mt-3 flex items-center justify-between border-t border-border/40 pt-2">
-                    <span className="font-mono text-[9px] uppercase tracking-[0.14em] text-muted-foreground">
+                    <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground sm:text-[10px]">
                       <span style={{ color }}>{ins.citations}</span> CITATIONS
                     </span>
-                    <span className="font-mono text-[9px] uppercase tracking-[0.14em] text-muted-foreground transition-colors group-hover:text-foreground">READ →</span>
+                    <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground transition-colors group-hover:text-foreground sm:text-[10px]">READ →</span>
                   </div>
                 </div>
                 <div className="pointer-events-none absolute inset-0 z-0 opacity-10" style={{ background: "repeating-linear-gradient(0deg, transparent 0px, transparent 2px, rgba(0,0,0,0.15) 3px, rgba(0,0,0,0.15) 4px)" }} />
@@ -213,18 +260,18 @@ export function AlphaInsights() {
           })}
         </div>
 
-        <div className="mt-6 flex items-center justify-between border border-border/60 bg-card/30 p-4">
-          <div className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground">▸ ALL PUBLICATIONS ARE OPEN ACCESS · CC-BY-SA</div>
-          <a href="#contact" className="border border-foreground bg-foreground px-4 py-2 font-mono text-[10px] uppercase tracking-[0.2em] text-background transition-opacity hover:opacity-80">REQUEST FULL TEXT →</a>
+        <div className="mt-6 flex flex-col items-stretch gap-3 border border-border/60 bg-card/30 p-4 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
+          <div className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground sm:text-[10px]">▸ ALL PUBLICATIONS ARE OPEN ACCESS · CC-BY-SA</div>
+          <a href="#contact" className="shrink-0 border border-foreground bg-foreground px-4 py-2 text-center font-mono text-[10px] uppercase tracking-[0.2em] text-background transition-opacity hover:opacity-80 sm:text-[10px]">REQUEST FULL TEXT →</a>
         </div>
       </div>
 
       {/* Research Log Popup Modal */}
       {selected !== null && INSIGHTS_DATA[selected] && (
-        <div className="fixed inset-0 z-[150] flex items-center justify-center p-4" onClick={() => setSelected(null)}>
+        <div className="fixed inset-0 z-[150] flex items-center justify-center p-3 sm:p-4" onClick={() => setSelected(null)}>
           <div className="absolute inset-0 bg-background/90 backdrop-blur-md" />
           <div
-            className="relative z-10 max-h-[85vh] w-full max-w-3xl overflow-y-auto border border-border bg-card"
+            className="relative z-10 max-h-[88vh] w-full max-w-3xl overflow-y-auto border border-border bg-card"
             style={{ clipPath: "polygon(16px 0, 100% 0, 100% calc(100% - 16px), calc(100% - 16px) 100%, 0 100%, 0 16px)" }}
             onClick={(e) => e.stopPropagation()}
           >
@@ -234,37 +281,37 @@ export function AlphaInsights() {
               return (
                 <>
                   {/* Header */}
-                  <div className="sticky top-0 z-10 flex items-center justify-between border-b border-border bg-card/95 px-6 py-3 backdrop-blur-sm">
-                    <div className="flex items-center gap-3">
-                      <span className="border px-2 py-0.5 font-mono text-[8px] uppercase tracking-[0.16em]" style={{ borderColor: `${color}44`, color }}>{ins.tag}</span>
-                      <span className="font-mono text-[9px] uppercase tracking-[0.14em] text-muted-foreground">{ins.date} · {ins.readTime}</span>
+                  <div className="sticky top-0 z-10 flex items-center justify-between gap-2 border-b border-border bg-card/95 px-4 py-3 backdrop-blur-sm sm:px-6">
+                    <div className="flex min-w-0 items-center gap-2 sm:gap-3">
+                      <span className="shrink-0 border px-2 py-0.5 font-mono text-[9px] uppercase tracking-[0.16em] sm:text-[10px]" style={{ borderColor: `${color}44`, color }}>{ins.tag}</span>
+                      <span className="truncate font-mono text-[9px] uppercase tracking-[0.14em] text-muted-foreground sm:text-[10px]">{ins.date} · {ins.readTime}</span>
                     </div>
-                    <button onClick={() => setSelected(null)} className="border border-border px-2 py-1 font-mono text-[9px] uppercase tracking-[0.18em] text-muted-foreground transition-colors hover:bg-foreground/10">✕ CLOSE</button>
+                    <button onClick={() => setSelected(null)} className="shrink-0 border border-border px-2 py-1 font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground transition-colors hover:bg-foreground/10 sm:text-[10px]">✕ CLOSE</button>
                   </div>
 
                   {/* Top accent bar */}
                   <div className="h-1 w-full" style={{ background: color }} />
 
                   {/* Title + abstract */}
-                  <div className="p-6">
-                    <h1 className="font-sans text-2xl font-black uppercase tracking-tight sm:text-3xl">{ins.title}</h1>
-                    <p className="mt-3 font-serif text-base italic text-muted-foreground">{ins.desc}</p>
-                    <div className="mt-3 font-mono text-[9px] uppercase tracking-[0.18em] text-muted-foreground">▸ AUTHORS: {ins.authors}</div>
+                  <div className="p-4 sm:p-6">
+                    <h1 className="font-sans text-xl font-black uppercase leading-tight tracking-tight sm:text-2xl md:text-3xl">{ins.title}</h1>
+                    <p className="mt-3 font-serif text-sm italic text-muted-foreground sm:text-base">{ins.desc}</p>
+                    <div className="mt-3 font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground sm:text-[10px]">▸ AUTHORS: {ins.authors}</div>
                   </div>
 
                   {/* Sections */}
-                  <div className="px-6 pb-6 space-y-4">
+                  <div className="space-y-4 px-4 pb-6 sm:px-6">
                     {ins.sections.map((s, i) => (
-                      <div key={i} className="border-l-2 pl-4" style={{ borderColor: color }}>
-                        <h2 className="font-mono text-[10px] uppercase tracking-[0.3em]" style={{ color }}>▸ {s.heading}</h2>
-                        <p className="mt-2 font-serif text-sm leading-relaxed text-foreground/85">{s.body}</p>
+                      <div key={i} className="border-l-2 pl-3 sm:pl-4" style={{ borderColor: color }}>
+                        <h2 className="font-mono text-[10px] uppercase tracking-[0.3em] sm:text-[10px]" style={{ color }}>▸ {s.heading}</h2>
+                        <p className="mt-2 font-serif text-sm leading-relaxed text-foreground/85 sm:text-base">{s.body}</p>
                       </div>
                     ))}
                   </div>
 
                   {/* Footer */}
-                  <div className="border-t border-border p-4 text-center">
-                    <a href="#contact" onClick={() => setSelected(null)} className="inline-block border border-foreground bg-foreground px-6 py-2 font-mono text-[10px] uppercase tracking-[0.2em] text-background transition-opacity hover:opacity-80">CONTACT OUR TEAM →</a>
+                  <div className="border-t border-border p-4 text-center sm:p-4">
+                    <a href="#contact" onClick={() => setSelected(null)} className="inline-block border border-foreground bg-foreground px-5 py-2 font-mono text-[10px] uppercase tracking-[0.2em] text-background transition-opacity hover:opacity-80 sm:px-6 sm:text-[10px]">CONTACT OUR TEAM →</a>
                   </div>
                 </>
               );

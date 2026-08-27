@@ -136,7 +136,7 @@ export function AlphaHero() {
               2) DATA STRIP — system readouts (mono, like HUD telemetry)
               Compact on mobile, full on desktop. No overflow.
              ============================================================ */}
-          <div className="relative z-10 flex items-center justify-between gap-2 overflow-x-auto border-b border-border/40 bg-background/40 px-2 py-1 font-mono text-[8px] uppercase tracking-[0.16em] text-muted-foreground sm:px-4 sm:text-[9px] sm:tracking-[0.18em] sigma-scroll-hidden">
+          <div className="relative z-10 flex items-center justify-between gap-2 overflow-x-auto border-b border-border/40 bg-background/40 px-2 py-1.5 font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground sm:px-4 sm:py-1 sm:text-[9px] sm:tracking-[0.18em] sigma-scroll-hidden">
             <div className="flex shrink-0 items-center gap-2 sm:gap-3">
               <span className="flex items-center gap-1.5">
                 <span className="sigma-pulse h-1.5 w-1.5 bg-[#00FF94]" />
@@ -209,7 +209,7 @@ export function AlphaHero() {
                 {FEATURE_TAGS.map((tag) => (
                   <span
                     key={tag}
-                    className="border border-border/60 bg-background/40 px-2 py-0.5 font-mono text-[8px] uppercase tracking-[0.16em] text-muted-foreground backdrop-blur-sm transition-colors hover:border-foreground/60 hover:text-foreground"
+                    className="border border-border/60 bg-background/40 px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground backdrop-blur-sm transition-colors hover:border-foreground/60 hover:text-foreground sm:text-[8px]"
                   >
                     {tag}
                   </span>
@@ -367,7 +367,7 @@ export function AlphaHero() {
                 >
                   {v}
                 </div>
-                <div className="mt-0.5 font-mono text-[8px] uppercase tracking-[0.14em] text-muted-foreground sm:text-[9px] sm:tracking-[0.18em]">
+                <div className="mt-0.5 font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground sm:text-[9px] sm:tracking-[0.18em]">
                   {k}
                 </div>
                 {/* Bottom-right crosshair tick */}
@@ -383,12 +383,12 @@ export function AlphaHero() {
               5) FOOTER STRIP — scroll cue + build info
               Compact on mobile, full on desktop
              ============================================================ */}
-          <div className="relative z-10 flex items-center justify-between gap-2 border-t border-border/40 bg-background/40 px-2 py-1.5 font-mono text-[8px] uppercase tracking-[0.2em] text-muted-foreground sm:px-5 sm:text-[9px] sm:tracking-[0.3em]">
+          <div className="relative z-10 flex items-center justify-between gap-2 border-t border-border/40 bg-background/40 px-2 py-1.5 font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground sm:px-5 sm:text-[9px] sm:tracking-[0.3em]">
             <div className="flex shrink-0 items-center gap-1.5">
               <span className="sigma-blink text-[#FF4500]">▼</span>
               <span>SCROLL</span>
             </div>
-            <div className="hidden items-center gap-2 text-[7px] tracking-[0.16em] sm:flex sm:text-[8px] sm:tracking-[0.2em]">
+            <div className="hidden items-center gap-2 text-[10px] tracking-[0.16em] sm:flex sm:text-[8px] sm:tracking-[0.2em]">
               <span>BUILD 2.7.SIGMA</span>
               <span className="text-border">·</span>
               <span>DUAL MODE: Σ/Α</span>

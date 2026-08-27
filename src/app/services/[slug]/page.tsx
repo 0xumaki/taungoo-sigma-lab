@@ -36,7 +36,7 @@ const SERVICES: ServiceDetail[] = [
   { slug:"graphic-design",name:"Graphic Design",icon:"◆",tagline:"Brand identity, marketing collateral, and UI kits",description:"Full-spectrum graphic design — brand identity, marketing collateral, UI kits, and social media assets.",features:["Brand identity design","Marketing collateral","UI/UX design kits","Social media templates","Print-ready files","Vector + raster assets"],packages:[{name:"STARTER",price:"1,210,000 MMK",features:["20 deliverables","Standard quality","1 revision","Email support"]},{name:"PRO",price:"3,620,000 MMK",features:["30 deliverables","Premium quality","3 revisions","Brand guidelines","Priority support"],popular:true},{name:"ENTERPRISE",price:"custom",features:["Custom plan","Negotiate with us","Special pricing","Full brand system","SLA + 24/7"]}],comparison:[{feature:"Deliverables",starter:"20",pro:"30",enterprise:"custom"},{feature:"Quality",starter:"standard",pro:"premium",enterprise:"custom"},{feature:"Revisions",starter:"1",pro:"3",enterprise:"custom"},{feature:"Brand guide",starter:"—",pro:"✓",enterprise:"✓"},{feature:"SLA",starter:"—",pro:"—",enterprise:"✓"}]},
   { slug:"content-copywriting",name:"Content & Copywriting",icon:"✎",tagline:"Technical writing, marketing copy, and documentation",description:"Technical writing, marketing copy, API documentation, and content strategy. AI-assisted + human-edited.",features:["Technical documentation","Marketing copywriting","API docs (OpenAPI)","Blog + article writing","Content strategy","SEO-optimized content"],packages:[{name:"STARTER",price:"966,000 MMK",features:["20 pieces","Standard quality","1 revision","Email support"]},{name:"PRO",price:"2,415,000 MMK",features:["30 pieces","Premium quality","3 revisions","SEO optimization","Priority support"],popular:true},{name:"ENTERPRISE",price:"custom",features:["Custom plan","Negotiate with us","Special pricing","Content strategy","SLA + 24/7"]}],comparison:[{feature:"Pieces",starter:"20",pro:"30",enterprise:"custom"},{feature:"Quality",starter:"standard",pro:"premium",enterprise:"custom"},{feature:"Revisions",starter:"1",pro:"3",enterprise:"custom"},{feature:"SEO",starter:"—",pro:"✓",enterprise:"✓"},{feature:"SLA",starter:"—",pro:"—",enterprise:"✓"}]},
   { slug:"online-media-buying",name:"Online Media Buying",icon:"▲",tagline:"Ad campaigns, media strategy, and performance marketing",description:"Data-driven ad campaigns across Meta, Google, TikTok with real-time optimization.",features:["Meta Ads management","Google Ads management","TikTok Ads","Creative testing","Conversion tracking","ROI reporting"],packages:[{name:"STARTER",price:"1,810,000 MMK",features:["20 ad creatives","Basic campaign","Weekly reports","Email support"]},{name:"PRO",price:"4,830,000 MMK",features:["30 ad creatives","Advanced campaign","Daily reports","Creative testing","Priority support"],popular:true},{name:"ENTERPRISE",price:"custom",features:["Custom plan","Negotiate with us","Special pricing","Dedicated manager","SLA + 24/7"]}],comparison:[{feature:"Ad creatives",starter:"20",pro:"30",enterprise:"custom"},{feature:"Campaign",starter:"basic",pro:"advanced",enterprise:"custom"},{feature:"Reports",starter:"weekly",pro:"daily",enterprise:"real-time"},{feature:"Testing",starter:"—",pro:"✓",enterprise:"✓"},{feature:"SLA",starter:"—",pro:"—",enterprise:"✓"}]},
-  { slug:"ui-ux-design",name:"UI/UX Design",icon:"◡",tagline:"Product design, design systems, and prototyping",description:"End-to-end product design — user research, wireframes, high-fidelity prototypes, and design systems.",features:["User research + personas","Wireframing + prototyping","High-fidelity UI design","Design system creation","Usability testing","Figma handoff"],packages:[{name:"STARTER",price:"2,415,000 MMK",features:["1 screen flow","Standard design system","Wireframes","Figma handoff"]},{name:"PRO",price:"6,040,000 MMK",features:["1 screen flow","Premium design system","Advanced prototyping","Hi-fi UI","Priority support"],popular:true},{name:"ENTERPRISE",price:"custom",features:["Custom plan","Enterprise design system","Design ops","Dedicated team","Negotiate with us"]}],comparison:[{feature:"Design system",starter:"standard",pro:"premium",enterprise:"enterprise + ops"},{feature:"Screen flows",starter:"1",pro:"1",enterprise:"custom"},{feature:"Prototyping",starter:"wireframe",pro:"advanced",enterprise:"custom"},{feature:"Hi-fi",starter:"—",pro:"✓",enterprise:"✓"},{feature:"SLA",starter:"—",pro:"—",enterprise:"✓"}]},
+  { slug:"ui-ux-design",name:"UI/UX Design",icon:"◡",tagline:"Product design, design systems, and prototyping",description:"End-to-end product design — user research, wireframes, high-fidelity prototypes, and design systems.",features:["User research + personas","Wireframing + prototyping","High-fidelity UI design","Design system creation","Usability testing","Figma handoff"],packages:[{name:"STARTER",price:"2,415,000 MMK",features:["10 screens","Standard design system","Wireframes","Figma handoff"]},{name:"PRO",price:"6,040,000 MMK",features:["Up to 30 screens","Premium design system","Advanced prototyping","Hi-fi UI","Priority support"],popular:true},{name:"ENTERPRISE",price:"custom",features:["Custom plan","Enterprise design system","Design ops","Dedicated team","Negotiate with us"]}],comparison:[{feature:"Design system",starter:"standard",pro:"premium",enterprise:"enterprise + ops"},{feature:"Screens",starter:"10",pro:"up to 30",enterprise:"custom"},{feature:"Prototyping",starter:"wireframe",pro:"advanced",enterprise:"custom"},{feature:"Hi-fi",starter:"—",pro:"✓",enterprise:"✓"},{feature:"SLA",starter:"—",pro:"—",enterprise:"✓"}]},
   { slug:"android-ios-app",name:"Android & iOS App",icon:"▣",tagline:"Native and cross-platform mobile applications",description:"Cross-platform mobile apps with React Native / Expo, or native Swift/Kotlin. From MVP to production.",features:["React Native / Expo","Native Swift / Kotlin","Offline-first architecture","Push notifications","In-app purchases","App Store / Play Store submission"],packages:[{name:"STARTER",price:"12,080,000 MMK",features:["MVP app","Basic features","Single platform","Email support"]},{name:"PRO",price:"30,190,000 MMK",features:["Production app","Advanced features","Both platforms","Push notifications","Priority support"],popular:true},{name:"ENTERPRISE",price:"custom",features:["Enterprise app","All features","Custom integrations","Dedicated team","SLA + 24/7 — negotiate with us"]}],comparison:[{feature:"App tier",starter:"MVP",pro:"production",enterprise:"enterprise"},{feature:"Platforms",starter:"1",pro:"both",enterprise:"both + custom"},{feature:"Features",starter:"basic",pro:"advanced",enterprise:"all"},{feature:"Integrations",starter:"—",pro:"push",enterprise:"custom"},{feature:"SLA",starter:"—",pro:"—",enterprise:"✓"}]},
   { slug:"web-webapp",name:"Web / WebApp",icon:"▣",tagline:"Full-stack web applications with modern frameworks",description:"Production web applications built with Next.js, React, and TypeScript. From landing pages to SaaS dashboards.",features:["Next.js + React + TypeScript","Server-side rendering + ISR","Database design (PostgreSQL + Prisma)","Authentication (NextAuth)","Real-time features (WebSocket)","CI/CD pipeline"],packages:[{name:"STARTER",price:"6,040,000 MMK",features:["MVP webapp","Basic pages","Standard design","Email support"]},{name:"PRO",price:"18,110,000 MMK",features:["Production webapp","Advanced features","Responsive","Auth + database","Priority support"],popular:true},{name:"ENTERPRISE",price:"custom",features:["Enterprise webapp","Custom features","SLA + 24/7","Dedicated team","Negotiate with us"]}],comparison:[{feature:"Tier",starter:"MVP",pro:"production",enterprise:"enterprise"},{feature:"Design",starter:"standard",pro:"responsive",enterprise:"custom"},{feature:"Auth + DB",starter:"—",pro:"✓",enterprise:"✓"},{feature:"Features",starter:"basic",pro:"advanced",enterprise:"custom"},{feature:"SLA",starter:"—",pro:"—",enterprise:"✓"}]},
   { slug:"chrome-extensions",name:"Chrome Extensions",icon:"⬚",tagline:"Browser automation and productivity extensions",description:"Custom Chrome extensions for browser automation, productivity, and workflow enhancement.",features:["Manifest V3 development","Content script injection","Background service workers","Popup + options pages","Chrome Web Store submission","Cross-browser support (Firefox/Edge)"],packages:[{name:"STARTER",price:"2,415,000 MMK",features:["Basic extension","Core features","1 revision","Email support"]},{name:"PRO",price:"6,040,000 MMK",features:["Advanced extension","Full API integration","3 revisions","Web Store submission","Priority support"],popular:true},{name:"ENTERPRISE",price:"custom",features:["Custom extension","Enterprise features","Custom APIs","SLA + 24/7","Negotiate with us"]}],comparison:[{feature:"Extension tier",starter:"basic",pro:"advanced",enterprise:"custom"},{feature:"API integration",starter:"—",pro:"full",enterprise:"custom"},{feature:"Revisions",starter:"1",pro:"3",enterprise:"custom"},{feature:"Web Store",starter:"—",pro:"✓",enterprise:"✓"},{feature:"SLA",starter:"—",pro:"—",enterprise:"✓"}]},
@@ -64,11 +64,11 @@ export default function ServiceDetailPage() {
 
   if (!service) {
     return (
-      <div className="min-h-screen bg-background p-6">
+      <div className="min-h-screen bg-background p-4 sm:p-6">
         <AlphaNav />
-        <div className="mx-auto mt-20 max-w-2xl text-center">
-          <h1 className="font-sans text-4xl font-black uppercase">SERVICE NOT FOUND</h1>
-          <Link href="/#services" className="mt-4 inline-block border border-foreground px-4 py-2 font-mono text-[10px] uppercase tracking-[0.2em]">← BACK TO SERVICES</Link>
+        <div className="mx-auto mt-12 max-w-2xl text-center sm:mt-20">
+          <h1 className="font-sans text-3xl font-black uppercase sm:text-4xl">SERVICE NOT FOUND</h1>
+          <Link href="/#services" className="mt-4 inline-block border border-foreground px-4 py-2 font-mono text-[10px] uppercase tracking-[0.2em] sm:text-[10px]">← BACK TO SERVICES</Link>
         </div>
       </div>
     );
@@ -77,47 +77,47 @@ export default function ServiceDetailPage() {
   return (
     <div className="min-h-screen bg-background">
       <AlphaNav />
-      <section className="px-3 pt-24 pb-8">
+      <section className="px-3 pt-20 pb-8 sm:px-6 sm:pt-24">
         <div className="mx-auto w-full max-w-[1600px]">
-          <Link href="/#services" className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground hover:text-foreground">← ALL SERVICES</Link>
-          <div className="mt-4 flex items-center gap-4">
-            <span className="font-sans text-6xl font-black text-[#FF4500]">{service.icon}</span>
+          <Link href="/#services" className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground hover:text-foreground sm:text-[10px]">← ALL SERVICES</Link>
+          <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
+            <span className="font-sans text-5xl font-black text-[#FF4500] sm:text-6xl">{service.icon}</span>
             <div>
-              <h1 className="font-sans text-4xl font-black uppercase tracking-tight sm:text-6xl">{service.name}</h1>
-              <p className="font-serif text-lg italic text-muted-foreground">{service.tagline}</p>
+              <h1 className="font-sans text-3xl font-black uppercase tracking-tight sm:text-4xl md:text-6xl">{service.name}</h1>
+              <p className="mt-1 font-serif text-base italic text-muted-foreground sm:text-lg">{service.tagline}</p>
             </div>
           </div>
-          <p className="mt-6 max-w-3xl font-serif text-base leading-relaxed text-muted-foreground">{service.description}</p>
+          <p className="mt-6 max-w-3xl font-serif text-sm leading-relaxed text-muted-foreground sm:text-base">{service.description}</p>
         </div>
       </section>
-      <section className="px-3 py-8">
+      <section className="px-3 py-8 sm:px-6">
         <div className="mx-auto w-full max-w-[1600px]">
-          <h2 className="font-mono text-[10px] uppercase tracking-[0.3em] text-muted-foreground">▸ WHAT'S INCLUDED</h2>
+          <h2 className="font-mono text-[10px] uppercase tracking-[0.3em] text-muted-foreground sm:text-[10px]">▸ WHAT'S INCLUDED</h2>
           <div className="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-2">
             {service.features.map((f) => (
-              <div key={f} className="flex items-center gap-2 border border-border/60 p-2">
+              <div key={f} className="flex items-center gap-2 border border-border/60 p-2 sm:p-2">
                 <span className="text-[#00FF94]">▸</span>
-                <span className="font-mono text-xs text-foreground/80">{f}</span>
+                <span className="font-mono text-xs text-foreground/80 sm:text-xs">{f}</span>
               </div>
             ))}
           </div>
         </div>
       </section>
-      <section className="px-3 py-8">
+      <section className="px-3 py-8 sm:px-6">
         <div className="mx-auto w-full max-w-[1600px]">
-          <h2 className="font-mono text-[10px] uppercase tracking-[0.3em] text-muted-foreground">▸ PRICING — ADD ANY PACKAGE TO BASKET</h2>
-          <p className="mt-1 font-serif text-sm italic text-muted-foreground">Each package is a standalone main service. Add multiple packages to qualify for bulk discounts.</p>
+          <h2 className="font-mono text-[10px] uppercase tracking-[0.3em] text-muted-foreground sm:text-[10px]">▸ PRICING — ADD ANY PACKAGE TO BASKET</h2>
+          <p className="mt-1 font-serif text-sm italic text-muted-foreground sm:text-sm">Each package is a standalone main service. Add multiple packages to qualify for bulk discounts.</p>
           <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-3">
             {service.packages.map((pkg) => (
               <div key={pkg.name} className={`relative flex flex-col border p-4 transition-all ${pkg.popular ? "border-[#FF4500] bg-[#FF4500]/5" : "border-border hover:border-foreground/40"}`} style={pkg.popular ? { boxShadow: "0 0 0 1px #FF4500" } : undefined}>
-                {pkg.popular && <div className="mb-2 inline-block self-start bg-[#FF4500] px-2 py-0.5 font-mono text-[9px] uppercase tracking-[0.18em] text-white">MOST POPULAR</div>}
-                <h3 className="font-sans text-xl font-bold uppercase">{pkg.name}</h3>
-                <div className="mt-1 font-sans text-3xl font-black">{pkg.price}</div>
+                {pkg.popular && <div className="mb-2 inline-block self-start bg-[#FF4500] px-2 py-0.5 font-mono text-[9px] uppercase tracking-[0.18em] text-white sm:text-[9px]">MOST POPULAR</div>}
+                <h3 className="font-sans text-lg font-bold uppercase sm:text-xl">{pkg.name}</h3>
+                <div className="mt-1 font-sans text-2xl font-black sm:text-3xl">{pkg.price}</div>
                 <div className="mt-3 flex-1 space-y-1">
                   {pkg.features.map((f) => (
-                    <div key={f} className="flex items-center gap-1.5">
+                    <div key={f} className="flex items-start gap-1.5">
                       <span className="text-[#00FF94]">✓</span>
-                      <span className="font-mono text-[10px] text-foreground/80">{f}</span>
+                      <span className="font-mono text-[10px] leading-snug text-foreground/80 sm:text-[10px]">{f}</span>
                     </div>
                   ))}
                 </div>
@@ -133,26 +133,26 @@ export default function ServiceDetailPage() {
           </div>
         </div>
       </section>
-      <section className="px-3 py-8">
+      <section className="px-3 py-8 sm:px-6">
         <div className="mx-auto w-full max-w-[1600px]">
-          <h2 className="font-mono text-[10px] uppercase tracking-[0.3em] text-muted-foreground">▸ COMPARISON</h2>
-          <div className="mt-4 overflow-x-auto">
-            <table className="w-full border border-border">
+          <h2 className="font-mono text-[10px] uppercase tracking-[0.3em] text-muted-foreground sm:text-[10px]">▸ COMPARISON</h2>
+          <div className="mt-4 overflow-x-auto sigma-scroll-hidden">
+            <table className="w-full min-w-[480px] border border-border">
               <thead>
                 <tr className="border-b border-border bg-card">
-                  <th className="p-3 text-left font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground">Feature</th>
-                  <th className="p-3 text-left font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground">STARTER</th>
-                  <th className="p-3 text-left font-mono text-[10px] uppercase tracking-[0.18em] text-[#FF4500]">PRO</th>
-                  <th className="p-3 text-left font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground">ENTERPRISE</th>
+                  <th className="p-2 text-left font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground sm:p-3 sm:text-[10px]">Feature</th>
+                  <th className="p-2 text-left font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground sm:p-3 sm:text-[10px]">STARTER</th>
+                  <th className="p-2 text-left font-mono text-[10px] uppercase tracking-[0.18em] text-[#FF4500] sm:p-3 sm:text-[10px]">PRO</th>
+                  <th className="p-2 text-left font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground sm:p-3 sm:text-[10px]">ENTERPRISE</th>
                 </tr>
               </thead>
               <tbody>
                 {service.comparison.map((row, i) => (
                   <tr key={row.feature} className={i % 2 === 0 ? "bg-card/30" : ""}>
-                    <td className="p-3 font-mono text-xs text-foreground/80">{row.feature}</td>
-                    <td className="p-3 font-mono text-xs text-muted-foreground">{row.starter}</td>
-                    <td className="p-3 font-mono text-xs text-foreground">{row.pro}</td>
-                    <td className="p-3 font-mono text-xs text-muted-foreground">{row.enterprise}</td>
+                    <td className="p-2 font-mono text-[11px] text-foreground/80 sm:p-3 sm:text-xs">{row.feature}</td>
+                    <td className="p-2 font-mono text-[11px] text-muted-foreground sm:p-3 sm:text-xs">{row.starter}</td>
+                    <td className="p-2 font-mono text-[11px] text-foreground sm:p-3 sm:text-xs">{row.pro}</td>
+                    <td className="p-2 font-mono text-[11px] text-muted-foreground sm:p-3 sm:text-xs">{row.enterprise}</td>
                   </tr>
                 ))}
               </tbody>
@@ -163,14 +163,14 @@ export default function ServiceDetailPage() {
 
       {/* ADD-ONS & EXTRAS — researched upsell add-ons for this specific service */}
       {SERVICE_ADDONS[service.slug] && SERVICE_ADDONS[service.slug].length > 0 && (
-        <section className="border-t border-border px-3 py-8">
+        <section className="border-t border-border px-3 py-8 sm:px-6">
           <div className="mx-auto w-full max-w-[1600px]">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
               <div>
-                <h2 className="font-mono text-[10px] uppercase tracking-[0.3em] text-[#00FF94]">▸ ADD-ONS &amp; EXTRAS</h2>
-                <p className="mt-1 font-serif text-sm italic text-muted-foreground">Enhance {service.name} with these researched add-ons. Add-on prices are not discounted.</p>
+                <h2 className="font-mono text-[10px] uppercase tracking-[0.3em] text-[#00FF94] sm:text-[10px]">▸ ADD-ONS &amp; EXTRAS</h2>
+                <p className="mt-1 font-serif text-sm italic text-muted-foreground sm:text-sm">Enhance {service.name} with these researched add-ons. Add-on prices are not discounted.</p>
               </div>
-              <span className="hidden shrink-0 font-mono text-[9px] uppercase tracking-[0.2em] text-muted-foreground sm:block">
+              <span className="hidden shrink-0 font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground sm:block sm:text-[9px]">
                 <span className="text-[#00FF94]">{SERVICE_ADDONS[service.slug].length}</span> ADD-ONS
               </span>
             </div>
@@ -185,14 +185,14 @@ export default function ServiceDetailPage() {
 
       {/* COMPATIBLE SERVICES — other main services that pair well */}
       {ADDONS[service.slug] && ADDONS[service.slug].length > 0 && (
-        <section className="border-t border-border px-3 py-8">
+        <section className="border-t border-border px-3 py-8 sm:px-6">
           <div className="mx-auto w-full max-w-[1600px]">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
               <div>
-                <h2 className="font-mono text-[10px] uppercase tracking-[0.3em] text-[#FF4500]">▸ COMPATIBLE SERVICES</h2>
-                <p className="mt-1 font-serif text-sm italic text-muted-foreground">Other main services that pair perfectly with {service.name}. Add them to qualify for bulk discounts.</p>
+                <h2 className="font-mono text-[10px] uppercase tracking-[0.3em] text-[#FF4500] sm:text-[10px]">▸ COMPATIBLE SERVICES</h2>
+                <p className="mt-1 font-serif text-sm italic text-muted-foreground sm:text-sm">Other main services that pair perfectly with {service.name}. Add them to qualify for bulk discounts.</p>
               </div>
-              <span className="hidden shrink-0 font-mono text-[9px] uppercase tracking-[0.2em] text-muted-foreground sm:block">
+              <span className="hidden shrink-0 font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground sm:block sm:text-[9px]">
                 <span className="text-[#FF4500]">{ADDONS[service.slug].length}</span> COMPATIBLE
               </span>
             </div>
@@ -206,11 +206,11 @@ export default function ServiceDetailPage() {
       )}
 
       {/* CTA */}
-      <section className="border-t border-border px-3 py-16 text-center">
+      <section className="border-t border-border px-3 py-12 text-center sm:px-6 sm:py-16">
         <div className="mx-auto max-w-2xl">
-          <h2 className="font-sans text-3xl font-black uppercase tracking-tight">NOT SURE WHICH PACKAGE?</h2>
-          <p className="mt-2 font-serif text-base italic text-muted-foreground">Contact our team — we'll help you choose the right plan for your needs.</p>
-          <button onClick={() => setContactOpen(true)} className="mt-6 inline-block border border-foreground bg-foreground px-8 py-3 font-mono text-[11px] uppercase tracking-[0.2em] text-background transition-opacity hover:opacity-80">CONTACT OUR TEAM →</button>
+          <h2 className="font-sans text-2xl font-black uppercase tracking-tight sm:text-3xl">NOT SURE WHICH PACKAGE?</h2>
+          <p className="mt-2 font-serif text-sm italic text-muted-foreground sm:text-base">Contact our team — we'll help you choose the right plan for your needs.</p>
+          <button onClick={() => setContactOpen(true)} className="mt-6 inline-block border border-foreground bg-foreground px-6 py-3 font-mono text-[11px] uppercase tracking-[0.2em] text-background transition-opacity hover:opacity-80 sm:px-8 sm:text-[11px]">CONTACT OUR TEAM →</button>
         </div>
       </section>
       <AlphaFooter />
@@ -318,20 +318,20 @@ function AddOnCard({ addon }: { addon: AddOn }) {
       style={{ clipPath: "polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px)" }}
     >
       <div className="flex items-center justify-between border-b border-border/40 px-2 py-1">
-        <span className={`font-mono text-[7px] uppercase tracking-[0.14em] ${addon.type === "ongoing" ? "text-[#FFB300]" : "text-[#00FF94]"}`}>
+        <span className={`font-mono text-[10px] uppercase tracking-[0.14em] sm:text-[7px] ${addon.type === "ongoing" ? "text-[#FFB300]" : "text-[#00FF94]"}`}>
           {addon.type === "ongoing" ? "◈ ONGOING" : "▸ ONE-TIME"}
         </span>
       </div>
       <div className="h-0.5 w-full bg-[#00FF94]/30" />
       <div className="p-3">
-        <h4 className="font-sans text-xs font-bold uppercase tracking-tight">{addon.name}</h4>
-        <p className="mt-0.5 font-serif text-[10px] italic text-muted-foreground line-clamp-2">{addon.description}</p>
-        <div className="mt-2 flex items-center justify-between">
-          <span className="font-mono text-[8px] uppercase tracking-[0.12em] text-[#00FF94]">{addon.price}</span>
+        <h4 className="font-sans text-xs font-bold uppercase tracking-tight sm:text-xs">{addon.name}</h4>
+        <p className="mt-0.5 font-serif text-[10px] italic text-muted-foreground line-clamp-2 sm:text-[10px]">{addon.description}</p>
+        <div className="mt-2 flex items-center justify-between gap-2">
+          <span className="min-w-0 flex-1 truncate font-mono text-[10px] uppercase tracking-[0.12em] text-[#00FF94] sm:text-[8px]" title={addon.price}>{addon.price}</span>
           <button
             onClick={handleAdd}
             disabled={inBasket}
-            className={`flex items-center gap-1 border px-2 py-1 font-mono text-[8px] uppercase tracking-[0.14em] transition-all ${
+            className={`flex shrink-0 items-center gap-1 border px-2 py-1 font-mono text-[10px] uppercase tracking-[0.14em] transition-all sm:text-[8px] ${
               inBasket ? "border-[#00FF94]/40 text-[#00FF94]" : "border-border text-muted-foreground hover:border-[#00FF94] hover:text-[#00FF94]"
             }`}
           >
@@ -364,16 +364,16 @@ function CompatibleServiceCard({ cs }: { cs: { slug: string; name: string; icon:
       <div className="h-0.5 w-full bg-[#FF4500]/40" />
       <div className="p-3">
         <div className="flex items-start gap-3">
-          <span className="font-sans text-xl text-[#FF4500]">{cs.icon}</span>
-          <div className="flex-1">
-            <h4 className="font-sans text-xs font-bold uppercase tracking-tight">{cs.name}</h4>
-            <p className="mt-0.5 font-serif text-[10px] italic text-muted-foreground">{cs.reason}</p>
-            <div className="mt-2 flex items-center justify-between">
-              <span className="font-mono text-[8px] uppercase tracking-[0.12em] text-[#FF4500]">{cs.price}</span>
+          <span className="font-sans text-lg text-[#FF4500] sm:text-xl">{cs.icon}</span>
+          <div className="min-w-0 flex-1">
+            <h4 className="font-sans text-xs font-bold uppercase tracking-tight sm:text-xs">{cs.name}</h4>
+            <p className="mt-0.5 font-serif text-[10px] italic text-muted-foreground sm:text-[10px]">{cs.reason}</p>
+            <div className="mt-2 flex items-center justify-between gap-2">
+              <span className="min-w-0 flex-1 truncate font-mono text-[10px] uppercase tracking-[0.12em] text-[#FF4500] sm:text-[8px]" title={cs.price}>{cs.price}</span>
               <button
                 onClick={handleAdd}
                 disabled={inBasket}
-                className={`flex items-center gap-1 border px-2 py-1 font-mono text-[8px] uppercase tracking-[0.14em] transition-all ${
+                className={`flex shrink-0 items-center gap-1 border px-2 py-1 font-mono text-[10px] uppercase tracking-[0.14em] transition-all sm:text-[8px] ${
                   inBasket ? "border-[#00FF94]/40 text-[#00FF94]" : "border-border text-muted-foreground hover:border-[#00FF94] hover:text-[#00FF94]"
                 }`}
               >

@@ -68,29 +68,29 @@ export function AlphaServices() {
   }, [activeCat]);
 
   return (
-    <section id="services" className="relative border-t border-border px-3 py-20">
+    <section id="services" className="relative border-t border-border px-3 py-12 sm:px-6 sm:py-20">
       <div className="sigma-grid pointer-events-none absolute inset-0 opacity-10" />
       <div className="sigma-scanlines pointer-events-none absolute inset-0 opacity-15" />
 
       <div className="relative z-10 mx-auto w-full max-w-[1600px]">
         {/* Header */}
-        <div className="flex items-end justify-between gap-4 border-b border-border pb-4">
+        <div className="flex flex-col gap-3 border-b border-border pb-4 sm:flex-row sm:items-end sm:justify-between sm:gap-4">
           <div>
             <div className="font-mono text-[10px] uppercase tracking-[0.3em] text-[#FF4500]">▸ 03 / SERVICES</div>
-            <h2 className="mt-2 font-sans text-4xl font-black uppercase tracking-tight sm:text-6xl">
+            <h2 className="mt-2 font-sans text-3xl font-black uppercase leading-tight tracking-tight sm:text-5xl md:text-6xl">
               WHAT WE <span style={{ color: "#FF4500" }}>BUILD.</span>
             </h2>
-            <p className="mt-2 font-serif text-base italic text-muted-foreground">
+            <p className="mt-2 font-serif text-sm italic text-muted-foreground sm:text-base">
               27 services across AI, Web3, and full-stack development. Each with detail pages, pricing packages, and comparison tables.
             </p>
           </div>
-          <div className="hidden shrink-0 font-mono text-[9px] uppercase tracking-[0.2em] text-muted-foreground sm:block">
+          <div className="hidden shrink-0 font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground sm:block sm:text-[9px]">
             <span className="text-[#FF4500]">27</span> SERVICES · <span className="text-[#00FF94]">{filtered.length}</span> SHOWN
           </div>
         </div>
 
         {/* Working category filters */}
-        <div className="mt-6 flex flex-wrap gap-1">
+        <div className="mt-6 flex flex-wrap gap-1 sm:mt-6">
           {CATEGORIES.map((cat) => {
             const isActive = activeCat === cat.id;
             const count = cat.id === "ALL" ? SERVICES.length : SERVICES.filter((s) => s.cat === cat.id).length;
@@ -98,13 +98,13 @@ export function AlphaServices() {
               <button
                 key={cat.id}
                 onClick={() => setActiveCat(cat.id)}
-                className={`flex items-center gap-1.5 border px-3 py-1.5 font-mono text-[9px] uppercase tracking-[0.18em] transition-all ${
+                className={`flex min-h-[36px] items-center gap-1.5 border px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.18em] transition-all sm:text-[9px] ${
                   isActive ? "text-black" : "border-border text-muted-foreground hover:border-foreground/40 hover:text-foreground"
                 }`}
                 style={isActive ? { background: cat.color, borderColor: cat.color } : undefined}
               >
                 {cat.label}
-                <span className={`flex h-4 min-w-4 items-center justify-center px-1 text-[8px] ${isActive ? "bg-black/20" : "bg-foreground/10"}`}>{count}</span>
+                <span className={`flex h-4 min-w-4 items-center justify-center px-1 text-[10px] sm:text-[8px] ${isActive ? "bg-black/20" : "bg-foreground/10"}`}>{count}</span>
               </button>
             );
           })}
@@ -137,10 +137,10 @@ export function AlphaServices() {
                   {/* Left hazard dot + cat label */}
                   <div className="flex items-center gap-1">
                     <span className="h-1.5 w-1.5" style={{ background: catColor }} />
-                    <span className="font-mono text-[6px] uppercase tracking-[0.16em]" style={{ color: catColor }}>{s.cat}</span>
+                    <span className="font-mono text-[10px] uppercase tracking-[0.16em] sm:text-[6px]" style={{ color: catColor }}>{s.cat}</span>
                   </div>
                   {/* Right index */}
-                  <span className="font-mono text-[6px] uppercase tracking-[0.12em] text-muted-foreground">{String(i + 1).padStart(2, "0")}/{String(filtered.length).padStart(2, "0")}</span>
+                  <span className="font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground sm:text-[6px]">{String(i + 1).padStart(2, "0")}/{String(filtered.length).padStart(2, "0")}</span>
                 </div>
 
                 {/* === ICON ZONE === */}
@@ -150,21 +150,21 @@ export function AlphaServices() {
                   {/* Crosshair marks */}
                   <span className="absolute right-1 top-1 h-1.5 w-1.5 border-r border-t" style={{ borderColor: `${catColor}44` }} />
                   {/* Large icon */}
-                  <span className="font-sans text-3xl font-black transition-transform group-hover:scale-110" style={{ color: catColor }}>{s.icon}</span>
+                  <span className="font-sans text-2xl font-black transition-transform group-hover:scale-110 sm:text-3xl" style={{ color: catColor }}>{s.icon}</span>
                   {/* Scanlines on icon area */}
                   <div className="pointer-events-none absolute inset-0 opacity-15" style={{ background: "repeating-linear-gradient(0deg, transparent 0px, transparent 2px, rgba(0,0,0,0.15) 3px, rgba(0,0,0,0.15) 4px)" }} />
                 </div>
 
                 {/* === CONTENT === */}
                 <div className="flex flex-1 flex-col p-2">
-                  <h3 className="font-sans text-xs font-bold uppercase leading-tight tracking-tight transition-colors group-hover:text-[#FF4500]">{s.name}</h3>
-                  <p className="mt-0.5 font-serif text-[10px] italic text-muted-foreground line-clamp-2">{s.desc}</p>
+                  <h3 className="font-sans text-[11px] font-bold uppercase leading-tight tracking-tight transition-colors group-hover:text-[#FF4500] sm:text-xs">{s.name}</h3>
+                  <p className="mt-0.5 font-serif text-[10px] italic text-muted-foreground line-clamp-2 sm:text-[10px]">{s.desc}</p>
                 </div>
 
                 {/* === FOOTER BAR === */}
-                <div className="flex items-center justify-between border-t border-border/40 px-2 py-1.5">
-                  <span className="font-mono text-[8px] uppercase tracking-[0.12em] text-[#00FF94]">{s.price}</span>
-                  <span className="font-mono text-[7px] uppercase tracking-[0.12em] text-muted-foreground transition-colors group-hover:text-foreground">
+                <div className="flex items-center justify-between gap-1 border-t border-border/40 px-2 py-1.5">
+                  <span className="min-w-0 flex-1 truncate font-mono text-[10px] uppercase tracking-[0.12em] text-[#00FF94] sm:text-[8px]" title={s.price}>{s.price}</span>
+                  <span className="shrink-0 font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground transition-colors group-hover:text-foreground sm:text-[7px]">
                     {hasDetail ? "▸ DETAILS" : "▸ INQUIRE"}
                   </span>
                 </div>
@@ -179,9 +179,9 @@ export function AlphaServices() {
         </div>
 
         {/* Bottom CTA */}
-        <div className="mt-6 flex items-center justify-between border border-border/60 bg-card/30 p-4">
-          <div className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground">▸ NOT SURE WHICH SERVICE YOU NEED?</div>
-          <a href="#contact" className="border border-foreground bg-foreground px-4 py-2 font-mono text-[10px] uppercase tracking-[0.2em] text-background transition-opacity hover:opacity-80">CONTACT OUR TEAM →</a>
+        <div className="mt-6 flex flex-col items-stretch gap-3 border border-border/60 bg-card/30 p-4 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
+          <div className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground sm:text-[10px]">▸ NOT SURE WHICH SERVICE YOU NEED?</div>
+          <a href="#contact" className="shrink-0 border border-foreground bg-foreground px-4 py-2 text-center font-mono text-[10px] uppercase tracking-[0.2em] text-background transition-opacity hover:opacity-80 sm:text-[10px]">CONTACT OUR TEAM →</a>
         </div>
       </div>
     </section>

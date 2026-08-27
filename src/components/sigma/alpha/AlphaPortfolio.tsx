@@ -41,7 +41,7 @@ export function AlphaPortfolio() {
         {/* === HEADER === */}
         <header>
           {/* Top telemetry strip */}
-          <div className="flex flex-wrap items-center gap-x-4 gap-y-1 border-b border-border/50 pb-3 font-mono text-[9px] uppercase tracking-[0.22em] text-muted-foreground">
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-1 border-b border-border/50 pb-3 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground sm:text-[9px]">
             <span className="text-[#FF4500]">▸ 04 / PORTFOLIO</span>
             <span className="opacity-40">·</span>
             <span>SECTOR VLT</span>
@@ -65,12 +65,12 @@ export function AlphaPortfolio() {
             </div>
             <div className="flex shrink-0 items-end gap-5 sm:gap-7">
               <div className="flex flex-col items-start">
-                <span className="font-mono text-3xl font-black leading-none sm:text-4xl" style={{ color: "#FF4500" }}>10</span>
-                <span className="mt-1 font-mono text-[8px] uppercase tracking-[0.22em] text-muted-foreground">PROJECTS</span>
+                <span className="font-mono text-2xl font-black leading-none sm:text-3xl md:text-4xl" style={{ color: "#FF4500" }}>10</span>
+                <span className="mt-1 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground sm:text-[8px]">PROJECTS</span>
               </div>
               <div className="flex flex-col items-start">
-                <span className="font-mono text-3xl font-black leading-none sm:text-4xl" style={{ color: "#00FF94" }}>100<span className="text-lg sm:text-xl">%</span></span>
-                <span className="mt-1 font-mono text-[8px] uppercase tracking-[0.22em] text-muted-foreground">DEPLOYED</span>
+                <span className="font-mono text-2xl font-black leading-none sm:text-3xl md:text-4xl" style={{ color: "#00FF94" }}>100<span className="text-base sm:text-lg md:text-xl">%</span></span>
+                <span className="mt-1 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground sm:text-[8px]">DEPLOYED</span>
               </div>
               <div className="hidden flex-col items-start sm:flex">
                 <span className="font-mono text-3xl font-black leading-none sm:text-4xl" style={{ color: "#00E5FF" }}>42</span>
@@ -294,7 +294,7 @@ export function AlphaPortfolio() {
                       {p.tech.map((t) => (
                         <span
                           key={t}
-                          className="border bg-background/40 px-1.5 py-0.5 font-mono text-[8px] uppercase tracking-[0.12em] text-foreground/75 sm:text-[9px]"
+                          className="border bg-background/40 px-1.5 py-0.5 font-mono text-[10px] uppercase tracking-[0.12em] text-foreground/75 sm:text-[9px]"
                           style={{ borderColor: `${p.accent}33` }}
                         >
                           {t}
@@ -319,10 +319,10 @@ export function AlphaPortfolio() {
 
         {/* === BOTTOM CTA === */}
         <div className="mt-8 overflow-hidden border border-border/60 bg-card/30">
-          <div className="flex flex-col items-stretch gap-4 p-5 sm:flex-row sm:items-center sm:justify-between sm:gap-6 sm:p-6">
+          <div className="flex flex-col items-stretch gap-4 p-4 sm:flex-row sm:items-center sm:justify-between sm:gap-6 sm:p-5 md:p-6">
             <div>
-              <div className="font-mono text-[9px] uppercase tracking-[0.3em] text-[#FF4500]">▸ ARCHIVE</div>
-              <div className="mt-1 font-sans text-xl font-black uppercase tracking-tight sm:text-2xl">
+              <div className="font-mono text-[10px] uppercase tracking-[0.3em] text-[#FF4500] sm:text-[9px]">▸ ARCHIVE</div>
+              <div className="mt-1 font-sans text-lg font-black uppercase tracking-tight sm:text-xl md:text-2xl">
                 WANT TO SEE <span style={{ color: "#FF4500" }}>MORE?</span>
               </div>
               <p className="mt-1 font-serif text-sm italic text-muted-foreground">
@@ -331,7 +331,7 @@ export function AlphaPortfolio() {
             </div>
             <a
               href="#contact"
-              className="sigma-magnetic group relative flex shrink-0 items-center gap-3 border border-foreground bg-foreground px-5 py-3 font-mono text-[10px] uppercase tracking-[0.25em] text-background transition-all hover:shadow-[5px_5px_0_0_#FF4500]"
+              className="sigma-magnetic group relative flex shrink-0 items-center justify-center gap-3 border border-foreground bg-foreground px-5 py-3 font-mono text-[10px] uppercase tracking-[0.25em] text-background transition-all hover:shadow-[5px_5px_0_0_#FF4500] sm:text-[10px]"
             >
               <span className="sigma-pulse h-1.5 w-1.5 bg-[#FF4500]" aria-hidden />
               CONTACT US

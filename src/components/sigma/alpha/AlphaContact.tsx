@@ -54,41 +54,41 @@ export function AlphaContact() {
   };
 
   return (
-    <section id="contact" className="relative border-t border-border px-3 py-20">
+    <section id="contact" className="relative border-t border-border px-3 py-12 sm:px-6 sm:py-20">
       <div className="sigma-grid pointer-events-none absolute inset-0 opacity-10" />
       <div className="sigma-scanlines pointer-events-none absolute inset-0 opacity-15" />
 
       <div className="relative z-10 mx-auto w-full max-w-[1600px]">
         {/* Header */}
-        <div className="flex items-end justify-between gap-4 border-b border-border pb-4">
+        <div className="flex flex-col gap-3 border-b border-border pb-4 sm:flex-row sm:items-end sm:justify-between sm:gap-4">
           <div>
             <div className="font-mono text-[10px] uppercase tracking-[0.3em] text-[#FF4500]">▸ 10 / CONTACT</div>
-            <h2 className="mt-2 font-sans text-4xl font-black uppercase tracking-tight sm:text-6xl">
+            <h2 className="mt-2 font-sans text-3xl font-black uppercase leading-tight tracking-tight sm:text-5xl md:text-6xl">
               LET'S BUILD <span style={{ color: "#FF4500" }}>SOMETHING.</span>
             </h2>
           </div>
-          <div className="hidden shrink-0 font-mono text-[9px] uppercase tracking-[0.2em] text-muted-foreground sm:block">
+          <div className="hidden shrink-0 font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground sm:block sm:text-[9px]">
             RESPONSE: 72H<br />ENCRYPTION: AES-256
           </div>
         </div>
 
-        <div className="mt-8 grid grid-cols-1 items-stretch gap-6 lg:grid-cols-2">
+        <div className="mt-6 grid grid-cols-1 items-stretch gap-6 sm:mt-8 lg:grid-cols-2">
           {/* Left: Contact form — sci-fi terminal style */}
           <div className="alpha-card-hover flex flex-col border border-border bg-card/40" style={{ "--sigma-hover-accent": "#FF4500" } as React.CSSProperties}>
             {/* Terminal header */}
-            <div className="flex items-center justify-between border-b border-border/60 px-4 py-2">
+            <div className="flex items-center justify-between border-b border-border/60 px-3 py-2 sm:px-4">
               <div className="flex items-center gap-2">
                 <span className="sigma-pulse h-1.5 w-1.5 bg-[#00FF94]" />
-                <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-muted-foreground">SECURE TERMINAL</span>
+                <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground sm:text-[9px]">SECURE TERMINAL</span>
               </div>
-              <span className="font-mono text-[9px] uppercase tracking-[0.16em] text-[#00FF94]">ONLINE</span>
+              <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-[#00FF94] sm:text-[9px]">ONLINE</span>
             </div>
 
             {/* Form body — flex-1 so the form stretches to match the right column height */}
-            <div className="flex flex-1 flex-col p-4 gap-4">
+            <div className="flex flex-1 flex-col p-4 gap-4 sm:p-4">
               {/* Identity */}
               <div>
-                <label className="mb-1 block font-mono text-[9px] uppercase tracking-[0.22em] text-muted-foreground">
+                <label className="mb-1 block font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground sm:text-[9px]">
                   ▸ IDENTITY HANDLE / EMAIL
                 </label>
                 <input
@@ -101,7 +101,7 @@ export function AlphaContact() {
 
               {/* Channel selector */}
               <div>
-                <label className="mb-1 block font-mono text-[9px] uppercase tracking-[0.22em] text-muted-foreground">
+                <label className="mb-1 block font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground sm:text-[9px]">
                   ▸ CHANNEL
                 </label>
                 <div className="flex flex-wrap gap-1">
@@ -109,7 +109,7 @@ export function AlphaContact() {
                     <button
                       key={c}
                       onClick={() => setChannel(c)}
-                      className={`border px-2.5 py-1 font-mono text-[9px] uppercase tracking-[0.18em] transition ${
+                      className={`min-h-[36px] border px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.18em] transition sm:text-[9px] ${
                         channel === c
                           ? "border-[#FF4500] bg-[#FF4500] text-black"
                           : "border-border text-muted-foreground hover:text-foreground"
@@ -123,7 +123,7 @@ export function AlphaContact() {
 
               {/* Service selector */}
               <div>
-                <label className="mb-1 block font-mono text-[9px] uppercase tracking-[0.22em] text-muted-foreground">
+                <label className="mb-1 block font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground sm:text-[9px]">
                   ▸ SERVICE INTEREST
                 </label>
                 <div className="flex flex-wrap gap-1">
@@ -131,7 +131,7 @@ export function AlphaContact() {
                     <button
                       key={s}
                       onClick={() => setService(s)}
-                      className={`border px-2 py-0.5 font-mono text-[8px] uppercase tracking-[0.14em] transition ${
+                      className={`min-h-[32px] border px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.14em] transition sm:text-[8px] ${
                         service === s
                           ? "border-[#00FF94] bg-[#00FF94] text-black"
                           : "border-border text-muted-foreground hover:text-foreground"
@@ -145,7 +145,7 @@ export function AlphaContact() {
 
               {/* Budget range selector */}
               <div>
-                <label className="mb-1 block font-mono text-[9px] uppercase tracking-[0.22em] text-muted-foreground">
+                <label className="mb-1 block font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground sm:text-[9px]">
                   ▸ BUDGET RANGE
                 </label>
                 <div className="flex flex-wrap gap-1">
@@ -153,7 +153,7 @@ export function AlphaContact() {
                     <button
                       key={b}
                       onClick={() => setBudget(b)}
-                      className={`border px-2.5 py-1 font-mono text-[9px] uppercase tracking-[0.18em] transition ${
+                      className={`min-h-[36px] border px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.18em] transition sm:text-[9px] ${
                         budget === b
                           ? "border-[#FFB300] bg-[#FFB300] text-black"
                           : "border-border text-muted-foreground hover:text-foreground"
@@ -167,7 +167,7 @@ export function AlphaContact() {
 
               {/* Message — flex-1 so textarea grows to fill remaining space */}
               <div className="flex flex-1 flex-col">
-                <label className="mb-1 block font-mono text-[9px] uppercase tracking-[0.22em] text-muted-foreground">
+                <label className="mb-1 block font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground sm:text-[9px]">
                   ▸ ENCRYPTED MESSAGE
                 </label>
                 <textarea
@@ -179,7 +179,7 @@ export function AlphaContact() {
               </div>
 
               {/* Transmit log */}
-              <div className="border border-border/60 bg-black p-2 font-mono text-[10px] leading-relaxed text-[#00FF94] h-20 overflow-y-auto sigma-scroll-hidden">
+              <div className="h-20 overflow-y-auto border border-border/60 bg-black p-2 font-mono text-[10px] leading-relaxed text-[#00FF94] sm:text-[10px] sigma-scroll-hidden">
                 {logLines.length === 0 ? (
                   <span className="text-muted-foreground">▮ standing by. compose + transmit to open channel.</span>
                 ) : (
@@ -203,7 +203,7 @@ export function AlphaContact() {
           <div className="flex h-full flex-col gap-3">
             {/* Direct channels — flex-1 so it grows */}
             <div className="alpha-card-hover flex flex-1 flex-col border border-border bg-card/40 p-4" style={{ "--sigma-hover-accent": "#FF4500" } as React.CSSProperties}>
-              <div className="font-mono text-[9px] uppercase tracking-[0.2em] text-[#FF4500]">▸ DIRECT CHANNELS</div>
+              <div className="font-mono text-[10px] uppercase tracking-[0.2em] text-[#FF4500] sm:text-[9px]">▸ DIRECT CHANNELS</div>
               <div className="mt-3 flex-1 divide-y divide-border/40">
                 {[
                   ["EMAIL", "contact@taungoosigma.lab", "#00FF94"],
@@ -211,10 +211,10 @@ export function AlphaContact() {
                   ["GITHUB", "[ ACCESS RESTRICTED ]", "#C6FF00"],
                   ["LOCATION", "Yangon, MM", "#FF2D7E"],
                 ].map(([k, v, c]) => (
-                  <div key={k} className="flex items-center gap-3 py-2.5">
-                    <span className="h-2 w-2" style={{ background: c }} />
-                    <span className="w-20 font-mono text-[9px] uppercase tracking-[0.16em] text-muted-foreground">{k}</span>
-                    <span className="flex-1 font-mono text-sm text-foreground">{v}</span>
+                  <div key={k} className="flex items-center gap-2 py-2.5 sm:gap-3">
+                    <span className="h-2 w-2 shrink-0" style={{ background: c }} />
+                    <span className="w-16 shrink-0 font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground sm:w-20 sm:text-[9px]">{k}</span>
+                    <span className="min-w-0 flex-1 break-words font-mono text-xs text-foreground sm:text-sm">{v}</span>
                   </div>
                 ))}
               </div>
@@ -222,16 +222,16 @@ export function AlphaContact() {
 
             {/* Response time panel */}
             <div className="alpha-card-hover border border-border bg-card/40 p-4" style={{ "--sigma-hover-accent": "#00E5FF" } as React.CSSProperties}>
-              <div className="font-mono text-[9px] uppercase tracking-[0.2em] text-[#00E5FF]">▸ RESPONSE PROTOCOL</div>
+              <div className="font-mono text-[10px] uppercase tracking-[0.2em] text-[#00E5FF] sm:text-[9px]">▸ RESPONSE PROTOCOL</div>
               <div className="mt-3 grid grid-cols-3 gap-2">
                 {[
-                  ["72H", "RESPONSE TIME", "#FF4500"],
+                  ["72H", "RESPONSE", "#FF4500"],
                   ["24/7", "SUPPORT", "#00FF94"],
-                  ["AES-256", "ENCRYPTION", "#00E5FF"],
+                  ["AES-256", "ENCRYPT", "#00E5FF"],
                 ].map(([v, k, c]) => (
                   <div key={k} className="border border-border/40 p-2 text-center">
-                    <div className="font-sans text-xl font-black" style={{ color: c }}>{v}</div>
-                    <div className="font-mono text-[8px] uppercase tracking-[0.14em] text-muted-foreground">{k}</div>
+                    <div className="font-sans text-base font-black sm:text-xl" style={{ color: c }}>{v}</div>
+                    <div className="font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground sm:text-[8px]">{k}</div>
                   </div>
                 ))}
               </div>
@@ -239,22 +239,22 @@ export function AlphaContact() {
 
             {/* Access tier — flex-1 so it grows */}
             <div className="alpha-card-hover flex flex-1 flex-col border border-border bg-card/40 p-4" style={{ "--sigma-hover-accent": "#00FF94" } as React.CSSProperties}>
-              <div className="font-mono text-[9px] uppercase tracking-[0.2em] text-[#00FF94]">▸ ACCESS TIER</div>
+              <div className="font-mono text-[10px] uppercase tracking-[0.2em] text-[#00FF94] sm:text-[9px]">▸ ACCESS TIER</div>
               <p className="mt-2 flex-1 font-serif text-sm italic text-muted-foreground">
                 Lab access is tiered. Public-read is open to all. Write access is earned through the sigma-review process — submit a credible signal and the collective will respond. All channels are monitored. We do not sell, share, or train on your signal.
               </p>
-              <div className="mt-3 flex gap-2">
-                <span className="border border-[#00FF94]/40 px-2 py-0.5 font-mono text-[8px] uppercase tracking-[0.14em] text-[#00FF94]">PUBLIC READ</span>
-                <span className="border border-border px-2 py-0.5 font-mono text-[8px] uppercase tracking-[0.14em] text-muted-foreground">WRITE: EARNED</span>
+              <div className="mt-3 flex flex-wrap gap-2">
+                <span className="border border-[#00FF94]/40 px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.14em] text-[#00FF94] sm:text-[8px]">PUBLIC READ</span>
+                <span className="border border-border px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground sm:text-[8px]">WRITE: EARNED</span>
               </div>
             </div>
 
             {/* Sigma stamp */}
             <div className="alpha-card-hover flex items-center justify-center border border-border/40 p-4" style={{ "--sigma-hover-accent": "#FF4500" } as React.CSSProperties}>
-              <span className="sigma-spin-slow mr-3 font-sans text-4xl font-black text-[#FF4500]">Σ</span>
+              <span className="sigma-spin-slow mr-3 font-sans text-3xl font-black text-[#FF4500] sm:text-4xl">Σ</span>
               <div className="text-center">
-                <div className="font-sans text-lg font-black uppercase">TAUNGOO SIGMA LAB</div>
-                <div className="font-mono text-[8px] uppercase tracking-[0.2em] text-muted-foreground">© MMXVI · ALL SYSTEMS NOMINAL</div>
+                <div className="font-sans text-base font-black uppercase sm:text-lg">TAUNGOO SIGMA LAB</div>
+                <div className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground sm:text-[8px]">© MMXVI · ALL SYSTEMS NOMINAL</div>
               </div>
             </div>
           </div>
