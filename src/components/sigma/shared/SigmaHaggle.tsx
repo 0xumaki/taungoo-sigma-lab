@@ -31,6 +31,44 @@ import { sigmaSound } from "@/lib/sigma/sound";
 const HAGGLE_TRIGGER_KEY = "ArrowUp";
 const HAGGLE_TRIGGER_COUNT = 4; // press ↑ 4 times
 
+// === FACE → CUBE ROTATION MAP (module-level, shared by DiceRoller + Cube3D) ===
+// Each face of the 3D cube is positioned at a specific offset. To bring a
+// given face to face the camera (i.e., pointing toward +Z), we need to
+// rotate the cube by the INVERSE of that face's positioning rotation.
+//
+// Face positions (from Cube3D):
+//   1 → front  (translateZ +half)           → needs rotateX(0)    rotateY(0)
+//   2 → right  (rotateY(90) translateZ)     → needs rotateX(0)    rotateY(-90)
+//   3 → top    (rotateX(90) translateZ)     → needs rotateX(-90)  rotateY(0)
+//   4 → bottom (rotateX(-90) translateZ)    → needs rotateX(90)   rotateY(0)
+//   5 → left   (rotateY(-90) translateZ)    → needs rotateX(0)    rotateY(90)
+//   6 → back   (rotateY(180) translateZ)    → needs rotateX(0)    rotateY(180)
+const TARGET_ROTATIONS: Record<number, { x: number; y: number }> = {
+  1: { x: 0,   y: 0   },
+  2: { x: 0,   y: -90 },
+  3: { x: -90, y: 0   },
+  4: { x: 90,  y: 0   },
+  5: { x: 0,   y: 90  },
+  6: { x: 0,   y: 180 },
+};
+// Small 3/4 view tilt applied on top of the target rotation so the user sees
+// the face AND a hint of 3D depth (instead of a flat front view).
+const TILT_X = -12;
+const TILT_Y = 12;
+
+/**
+ * Find the equivalent rotation to `targetVal` that's closest to `currentVal`.
+ * This ensures GSAP takes the SHORT path when animating from the tumble end
+ * state to the target face orientation, instead of spinning backwards through 0.
+ *
+ * Example: currentVal=1080, targetVal=-102 → returns 978 (only 102° away)
+ */
+function nearestEquivalent(currentVal: number, targetVal: number): number {
+  const diff = targetVal - currentVal;
+  const wrapped = ((diff % 360) + 540) % 360 - 180; // normalize to -180..180
+  return currentVal + wrapped;
+}
+
 type HagglePhase = "idle" | "activation" | "rolling" | "result";
 
 export function SigmaHaggle() {
@@ -616,6 +654,9 @@ function DiceRoller({ onComplete }: { onComplete: (face: number) => void }) {
   // Pre-pick the final face so the animation can "land" on it
   const targetFace = React.useMemo(() => Math.floor(Math.random() * 6) + 1, []);
 
+  // TARGET_ROTATIONS, TILT_X, TILT_Y, and nearestEquivalent() are defined at
+  // module level (above) so both DiceRoller and Cube3D can share them.
+
   React.useEffect(() => {
     sigmaSound.play("transition");
 
@@ -682,14 +723,60 @@ function DiceRoller({ onComplete }: { onComplete: (face: number) => void }) {
           onUpdate: () => setPowerLevel(Math.round(powerObj.val)),
         });
 
-        // === 3D TUMBLE ===
+        // === 3D TUMBLE + LAND ON TARGET FACE ===
+        // Pre-compute the ENTIRE animation path (start → tumble end → settle
+        // end) BEFORE the timeline starts. This avoids runtime evaluation
+        // issues with GSAP function-based values.
+        //
+        // Phase 1 (0-2.4s): tumble from initial to a random multi-rotation
+        // Phase 2 (2.4-2.9s): settle from tumble-end to the nearest equivalent
+        //   of the target face's rotation (shortest path, no backwards spin)
         if (cubeRef.current) {
-          gsap.to(cubeRef.current, {
-            rotateX: "+=1080", // 3 full X rotations
-            rotateY: "+=1440", // 4 full Y rotations
-            rotateZ: "+=360",  // 1 full Z rotation
+          const target = TARGET_ROTATIONS[targetFace];
+          const finalX = target.x + TILT_X; // target face rotation + 3/4 view tilt
+          const finalY = target.y + TILT_Y;
+
+          // Starting rotation (the 3/4 view)
+          const startX = TILT_X;
+          const startY = TILT_Y;
+          const startZ = 0;
+
+          // Tumble end: start + large multi-axis rotations + jitter
+          const tumbleEndX = startX + 1080 + (Math.random() - 0.5) * 180;
+          const tumbleEndY = startY + 1440 + (Math.random() - 0.5) * 180;
+          const tumbleEndZ = startZ + 360 + (Math.random() - 0.5) * 180;
+
+          // Settle end: nearest equivalent to the target face rotation.
+          // This ensures the cube takes the SHORTEST path from the tumble end
+          // to the target orientation (e.g., from 1068° to 1068° instead of
+          // spinning backwards to -12°).
+          const settleEndX = nearestEquivalent(tumbleEndX, finalX);
+          const settleEndY = nearestEquivalent(tumbleEndY, finalY);
+          const settleEndZ = nearestEquivalent(tumbleEndZ, 0);
+
+          // Set the initial 3/4 view BEFORE the tumble starts
+          gsap.set(cubeRef.current, {
+            rotateX: startX,
+            rotateY: startY,
+            rotateZ: startZ,
+          });
+
+          const tumbleTl = gsap.timeline();
+          // Phase 1: tumble to random multi-axis rotation
+          tumbleTl.to(cubeRef.current, {
+            rotateX: tumbleEndX,
+            rotateY: tumbleEndY,
+            rotateZ: tumbleEndZ,
             duration: 2.4,
             ease: "power1.inOut",
+          });
+          // Phase 2: settle onto the target face (shortest path)
+          tumbleTl.to(cubeRef.current, {
+            rotateX: settleEndX,
+            rotateY: settleEndY,
+            rotateZ: settleEndZ,
+            duration: 0.55,
+            ease: "back.out(1.4)",
           });
         }
 
@@ -1156,7 +1243,10 @@ const Cube3D = React.forwardRef<
         }}
       />
 
-      {/* 3D scene */}
+      {/* 3D scene — rotation is controlled by GSAP via the cubeRef. The initial
+          inline transform is empty; GSAP's gsap.set() in the DiceRoller effect
+          sets the initial 3/4 view (rotateX(TILT_X) rotateY(TILT_Y)) before the
+          tumble animation begins. */}
       <div
         ref={cubeRef}
         style={{
@@ -1164,7 +1254,7 @@ const Cube3D = React.forwardRef<
           height: "100%",
           position: "relative",
           transformStyle: "preserve-3d",
-          transform: "rotateX(-20deg) rotateY(20deg)",
+          transform: `rotateX(${TILT_X}deg) rotateY(${TILT_Y}deg)`,
         }}
       >
         {faces.map(([faceNum, transform]) => (
