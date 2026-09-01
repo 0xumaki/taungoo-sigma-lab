@@ -33,7 +33,12 @@ export function S11Status() {
 
   React.useEffect(() => {
     const start = Date.now();
-    const i = setInterval(() => setUptime(Date.now() - start), 1000);
+    const i = setInterval(() => {
+      // Skip uptime churn when the tab is hidden — uptime math (Date.now() - start)
+      // is correct on resume, so the displayed value snaps to current.
+      if (document.hidden) return;
+      setUptime(Date.now() - start);
+    }, 1000);
     return () => clearInterval(i);
   }, []);
 
@@ -299,7 +304,7 @@ export function S11Status() {
                 Σ
               </div>
               <div className="text-center font-mono text-[9px] uppercase leading-relaxed tracking-[0.22em] text-muted-foreground">
-                TAUNGOO SIGMA LAB
+                TAUNGOO Σ Lab
                 <br />
                 © MMXVI · ALL SYSTEMS NOMINAL
                 <br />

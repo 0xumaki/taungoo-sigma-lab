@@ -1,0 +1,56 @@
+[
+  {
+    "url": "https://developer.apple.com/documentation/swiftui/applying-liquid-glass-to-custom-views",
+    "name": "Applying Liquid Glass to custom views",
+    "snippet": "Use the glassEffect(_:in:) modifier to add Liquid Glass effects to a view. By default, the modifier uses the regular variant of Glass and applies the given ...",
+    "host_name": "developer.apple.com",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://context7.com/websites/kokonutui",
+    "name": "Kokonut UI (websites/kokonutui)",
+    "snippet": "Kokonut UI is a comprehensive component library with 100+ customizable UI components, templates, and blocks built with React, TypeScript, and Tailwind CSS ...",
+    "host_name": "context7.com",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.donnywals.com/designing-custom-ui-with-liquid-glass-on-ios-26",
+    "name": "Designing custom UI with Liquid Glass on iOS 26",
+    "snippet": "Jul 1, 2025 — Building custom UI with Liquid Glass is easier than you think! Learn how you can leverage animations, the glassEffect view modifier…",
+    "host_name": "www.donnywals.com",
+    "rank": 2,
+    "date": "Jul 1, 2025",
+    "favicon": ""
+  },
+  {
+    "url": "https://github.com/kokonut-labs/kokonutui/blob/main/registry.json",
+    "name": "kokonutui/registry.json at main",
+    "snippet": "Open-source collection of stunning Components built with Tailwind CSS, shadcn/ ui … liquid glass card and buttons using SVG displacement filters built with ...",
+    "host_name": "github.com",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://21st.dev/community/components/explore/liquid-glass-button",
+    "name": "Liquid Glass Button React Components",
+    "snippet": "Explore 60 liquid glass button React components with 13 exact matches. Find frosted glass effect buttons for your React projects on 21st.dev.",
+    "host_name": "21st.dev",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.reddit.com/r/webdev/comments/1lblqlu/i_made_10_apple_liquid_glass_code_snippets",
+    "name": "I made 10 Apple Liquid Glass Code Snippets : r/webdev",
+    "snippet": "I made 10 very simple snippets to showcase the distortion effects and the glass morphism. It is only made with vanilla HTML/CSS/JS. It includes: ...",
+    "host_name": "www.reddit.com",
+    "rank": 5,
+    "date": "",
+    "favicon": ""
+  }
+]

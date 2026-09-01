@@ -14,9 +14,9 @@ gsap.registerPlugin(useGSAP);
 
 const CHANNELS = ["RESEARCH", "PARTNERSHIP", "CAREER", "PRESS", "OTHER"];
 const TRANSMIT_LOG = [
-  "> establish secure channel...",
+  "> establish secure channel…",
   "> handshake: OK",
-  "> awaiting credentials...",
+  "> awaiting credentials…",
 ];
 
 export function S10Access() {
@@ -157,7 +157,8 @@ export function S10Access() {
                 accent="#FFEB3B"
                 onClick={transmit}
                 arrow={false}
-                className="disabled:opacity-50"
+                className="sigma-hazard-sweep disabled:opacity-50"
+                style={{ "--sigma-hazard-accent": "#FFEB3B" } as React.CSSProperties}
                 disabled={transmitting}
               >
                 <Send className="mr-1.5 h-3.5 w-3.5" />

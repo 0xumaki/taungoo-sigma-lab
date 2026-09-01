@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import Image from "next/image";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { SECTIONS, MAP_META, getSection, type SectionMeta } from "@/lib/sigma/sections";
@@ -39,18 +40,23 @@ function MapNode({
       onMouseLeave={() => onHover(null)}
       onClick={() => { onEnter(); sigmaSound.play("transition"); }}
       className={cn(
-        "group relative block w-full overflow-hidden border border-border bg-card text-left transition-[border-color] duration-300 hover:border-foreground/60",
-        isActive && "border-foreground"
+        "group sigma-map-node-ring relative block w-full overflow-hidden border border-border bg-card text-left transition-[border-color] duration-300 hover:border-foreground/60",
+        isActive && "sigma-map-node-active border-foreground"
       )}
-      style={{ aspectRatio: "4 / 3", transformStyle: "preserve-3d" } as React.CSSProperties}
+      style={{ aspectRatio: "4 / 3", transformStyle: "preserve-3d", "--sigma-node-accent": section.accent } as React.CSSProperties}
     >
       {/* accent top bar */}
       <div className="absolute inset-x-0 top-0 z-20 h-[3px]" style={{ background: section.accent }} />
       {/* screenshot thumbnail */}
-      <img
+      <Image
         src={thumb}
         alt={`${section.name} preview`}
-        className="absolute inset-0 h-full w-full object-cover object-top opacity-95 transition-all duration-500 group-hover:scale-105 group-hover:opacity-100"
+        // PERF (LOOP-1-LH): next/image — 11 section thumbnails (~20KB each raw
+        // PNG) → ~3-5KB AVIF/WebP variants at the rendered ~120x90px size.
+        // sizes: 2 cols mobile, 3 cols tablet, 4 cols desktop (max ~25vw).
+        fill
+        sizes="(max-width: 639px) 50vw, (max-width: 1023px) 33vw, 25vw"
+        className="sigma-map-node-thumb object-cover object-top opacity-95"
         onError={(e) => {
           (e.currentTarget as HTMLImageElement).style.display = "none";
         }}
@@ -66,31 +72,31 @@ function MapNode({
       <div className="sigma-grid-fine absolute inset-0 opacity-30" />
 
       {/* top row: index + status */}
-      <div className="absolute inset-x-0 top-0 flex items-start justify-between p-2.5">
-        <span className="font-mono text-3xl font-black leading-none text-foreground drop-shadow-[0_2px_6px_rgba(0,0,0,0.9)]">
+      <div className="absolute inset-x-0 top-0 flex items-start justify-between p-2 sm:p-2.5">
+        <span className="font-mono text-xl font-black leading-none text-foreground drop-shadow-[0_2px_6px_rgba(0,0,0,0.9)] sm:text-2xl lg:text-3xl">
           {section.shortCode}
         </span>
-        <Tag accent={section.accent} className="bg-background/70 backdrop-blur-sm">
+        <Tag accent={section.accent} className="bg-background/70 backdrop-blur-sm text-[8px] sm:text-[9px]">
           {section.status}
         </Tag>
       </div>
 
       {/* bottom block */}
-      <div className="absolute inset-x-0 bottom-0 p-2.5">
-        <div className="flex items-end justify-between gap-2">
-          <div>
+      <div className="absolute inset-x-0 bottom-0 p-2 sm:p-2.5">
+        <div className="flex items-end justify-between gap-1.5 sm:gap-2">
+          <div className="min-w-0 flex-1">
             <div
-              className="font-mono text-[10px] tracking-[0.24em]"
+              className="sigma-map-node-role font-mono text-[8px] tracking-[0.12em] truncate sm:text-[10px] sm:tracking-[0.16em]"
               style={{ color: section.accent }}
             >
               {section.code} · {section.role}
             </div>
-            <div className="font-sans text-[15px] font-bold uppercase leading-tight tracking-tight text-foreground drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)] sm:text-lg">
+            <div className="font-sans text-[13px] font-bold uppercase leading-tight tracking-tight text-foreground drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)] sm:text-[15px] sm:leading-tight lg:text-lg">
               {section.name}
             </div>
           </div>
           <span
-            className="flex h-8 w-8 shrink-0 items-center justify-center border font-mono text-base"
+            className="flex h-6 w-6 shrink-0 items-center justify-center border font-mono text-xs sm:h-8 sm:w-8 sm:text-base"
             style={{ borderColor: `${section.accent}99`, color: section.accent }}
           >
             {section.glyph}
@@ -142,7 +148,9 @@ export function SigmaMap() {
 
   const readout = hovered ?? MAP_META;
 
-  // Cursor-following parallax for the background grid
+  // Cursor-following parallax for the background grid.
+  // Subtle (max 8px), transform-based, lerp'd for smoothness.
+  // Disabled for touch devices and reduced-motion users.
   React.useEffect(() => {
     const root = rootRef.current;
     if (!root) return;
@@ -153,44 +161,81 @@ export function SigmaMap() {
 
     let raf = 0;
     let tx = 0, ty = 0, cx = 0, cy = 0;
-    const grid = root.querySelector(".sigma-grid");
+    const bg = root.querySelector("[data-map-parallax]");
+    // PERF (LOOP-1-LH): cache root's bounding rect on mouseenter (the user
+    // crosses into the map area before drifting), invalidate on scroll/resize.
+    // Previously, mousemove forced a getBoundingClientRect() layout reflow on
+    // every event — the map covers a large area and the listener fires often.
+    let rect: DOMRect | null = null;
+    const refreshRect = () => { rect = root.getBoundingClientRect(); };
+    const invalidateRect = () => { rect = null; };
     const onMove = (e: MouseEvent) => {
-      const rect = root.getBoundingClientRect();
-      tx = ((e.clientX - rect.left) / rect.width - 0.5) * 20;
-      ty = ((e.clientY - rect.top) / rect.height - 0.5) * 20;
+      // Lazy refresh if cache was invalidated.
+      if (!rect) refreshRect();
+      const r = rect as DOMRect;
+      // max ±8px drift — subtle, doesn't distract from the cards
+      tx = ((e.clientX - r.left) / r.width - 0.5) * 16;
+      ty = ((e.clientY - r.top) / r.height - 0.5) * 16;
     };
     const loop = () => {
-      cx += (tx - cx) * 0.05;
-      cy += (ty - cy) * 0.05;
-      if (grid) {
-        (grid as HTMLElement).style.transform = `translate(${cx.toFixed(1)}px, ${cy.toFixed(1)}px)`;
+      // Lerp factor 0.08 = smooth follow with slight lag
+      cx += (tx - cx) * 0.08;
+      cy += (ty - cy) * 0.08;
+      if (bg) {
+        (bg as HTMLElement).style.transform = `translate3d(${cx.toFixed(2)}px, ${cy.toFixed(2)}px, 0)`;
       }
       raf = requestAnimationFrame(loop);
     };
     raf = requestAnimationFrame(loop);
+    root.addEventListener("mouseenter", refreshRect);
     root.addEventListener("mousemove", onMove);
+    window.addEventListener("scroll", invalidateRect, { capture: true, passive: true });
+    window.addEventListener("resize", invalidateRect, { passive: true });
     return () => {
       cancelAnimationFrame(raf);
+      root.removeEventListener("mouseenter", refreshRect);
       root.removeEventListener("mousemove", onMove);
+      window.removeEventListener("scroll", invalidateRect, { capture: true });
+      window.removeEventListener("resize", invalidateRect);
     };
   }, []);
 
   return (
     <div
       ref={rootRef}
+      data-section="map"
       className="sigma-scanlines relative flex h-full flex-col overflow-hidden"
     >
+      {/* Parallax background layer — drifts max ±8px on mouse move (lerp'd,
+          reduced-motion safe — see useEffect above). Sits behind everything
+          else at z-0. Two layers: a fine grid + soft accent vignette. */}
+      <div
+        data-map-parallax
+        aria-hidden
+        className="pointer-events-none absolute inset-0 z-0 will-change-transform"
+        style={{ transform: "translate3d(0,0,0)" }}
+      >
+        <div className="sigma-grid-fine absolute inset-0 opacity-[0.18]" />
+        <div
+          className="absolute inset-0 opacity-30"
+          style={{
+            background:
+              "radial-gradient(60% 50% at 50% 50%, rgba(255,69,0,0.06), transparent 70%)",
+          }}
+        />
+      </div>
+
       {/* HEADER */}
       <header
         data-map-title
-        className="flex flex-wrap items-end justify-between gap-4 border-b border-border pb-4"
+        className="relative z-10 flex flex-wrap items-end justify-between gap-4 border-b border-border pb-4"
       >
         <div>
           <div className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.3em] text-muted-foreground">
             <span className="sigma-pulse h-1.5 w-1.5 bg-[#00FF94]" />
             NEXUS MAP / SECTOR SELECT
           </div>
-          <h1 className="mt-1 font-sans text-4xl font-black uppercase leading-[0.9] tracking-tight sm:text-6xl">
+          <h1 id="map-title" className="mt-1 font-sans text-4xl font-black uppercase leading-[0.9] tracking-tight sm:text-6xl">
             CHOOSE YOUR{" "}
             <span
               className="sigma-glitch"
@@ -223,10 +268,14 @@ export function SigmaMap() {
         </div>
       </header>
 
-      {/* MAIN: node grid + readout rail */}
-      <div className="mt-4 grid min-h-0 flex-1 grid-cols-1 gap-3 lg:grid-cols-[1fr_240px]">
-        {/* node constellation */}
-        <div className="min-h-0 overflow-y-auto sigma-scroll-hidden">
+      {/* MAIN: node grid (as <nav> — sector selection IS site navigation) +
+          readout rail (<aside>). LOOP-3-AGENTIC-SEO: the node grid is wrapped
+          in <nav aria-label="Sectors"> so AI crawlers + screen readers
+          recognize it as the primary site-navigation landmark. */}
+      <main className="relative z-10 mt-4 grid min-h-0 flex-1 grid-cols-1 gap-3 lg:grid-cols-[1fr_240px]">
+        {/* node constellation — wrapped in <nav> because each MapNode is a
+            button that navigates to a different sector (i.e. site section). */}
+        <nav aria-label="Sectors" className="min-h-0 overflow-y-auto sigma-scroll-hidden">
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 xl:grid-cols-4">
             {SECTIONS.map((s, i) => (
               <MapNode
@@ -238,10 +287,10 @@ export function SigmaMap() {
               />
             ))}
           </div>
-        </div>
+        </nav>
 
         {/* readout rail */}
-        <aside className="hidden flex-col gap-3 lg:flex">
+        <aside aria-label="Target readout" className="hidden flex-col gap-3 lg:flex">
           <Panel label="TARGET READOUT" id={readout.shortCode} accent={readout.accent}>
             <div className="p-3">
               <div
@@ -303,7 +352,7 @@ export function SigmaMap() {
             absolute environment — no scroll, no chrome, only signal.
           </div>
         </aside>
-      </div>
+      </main>
     </div>
   );
 }

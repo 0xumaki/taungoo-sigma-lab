@@ -4,6 +4,7 @@ import * as React from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { useSigmaStore } from "@/lib/sigma/store";
+import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import { SectionShell } from "../shared/SectionShell";
 import { BrutalButton, Crosshair, Panel } from "../shared/components";
 import { SigmaParticles } from "../shared/SigmaParticles";
@@ -67,6 +68,7 @@ export function S01Initializing() {
   const { navigate } = useSigmaStore();
   const root = React.useRef<HTMLDivElement>(null);
   const logRef = React.useRef<HTMLDivElement>(null);
+  const reduced = useReducedMotion();
 
   useGSAP(
     () => {
@@ -132,6 +134,35 @@ export function S01Initializing() {
     return () => {};
   }, []);
 
+  // Rare RGB-split glitch on the TAUNGOO headline — fires every 8-12s,
+  // 200ms duration. Reduced-motion safe: skipped entirely when
+  // prefers-reduced-motion is active. Toggles .is-glitching on the
+  // .sigma-hero-glitch wordmark container; CSS keyframes handle the
+  // actual RGB-split text-shadow.
+  React.useEffect(() => {
+    if (reduced) return;
+    const node = root.current;
+    if (!node) return;
+    const glitchEl = node.querySelector("[data-hero-wordmark]");
+    if (!glitchEl) return;
+    let timer: number;
+    const fire = () => {
+      glitchEl.classList.add("is-glitching");
+      window.setTimeout(() => {
+        glitchEl.classList.remove("is-glitching");
+      }, 200);
+      // Schedule next fire — 8-12s random interval
+      const nextDelay = 8000 + Math.random() * 4000;
+      timer = window.setTimeout(fire, nextDelay);
+    };
+    // Initial delay — start glitching 8s after mount (after entrance anims)
+    timer = window.setTimeout(fire, 8000);
+    return () => {
+      clearTimeout(timer);
+      glitchEl.classList.remove("is-glitching");
+    };
+  }, [reduced]);
+
   const letters = "TAUNGOO".split("");
 
   return (
@@ -195,7 +226,10 @@ export function S01Initializing() {
             >
               <span className="font-sans text-[42vh] font-black leading-none">Σ</span>
             </div>
-            <h1 className="relative text-center">
+            <h1
+              className="sigma-hero-glitch relative text-center"
+              data-hero-wordmark
+            >
               <div className="flex justify-center">
                 {letters.map((l, i) => (
                   <span
@@ -248,7 +282,7 @@ export function S01Initializing() {
             <div className="font-mono text-[10px] uppercase tracking-[0.28em] text-muted-foreground">
               ◄ REMODEL · RETRAIN · RE-DEPLOY ►
             </div>
-            <div className="flex gap-2">
+            <div className="flex flex-wrap gap-2">
               <BrutalButton variant="ghost" onClick={() => navigate("map")}>
                 ENTER THE MAP
               </BrutalButton>

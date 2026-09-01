@@ -1,0 +1,65 @@
+[
+  {
+    "url": "https://www.npmjs.com/package/@coconut-software/ui",
+    "name": "coconut-software/ui",
+    "snippet": "May 14, 2026 — UI Components ⎮ Coconut Software. React components for faster and easier web development. ... install VSCode and install the recommended plugins. Read more",
+    "host_name": "www.npmjs.com",
+    "rank": 0,
+    "date": "May 14, 2026",
+    "favicon": ""
+  },
+  {
+    "url": "https://shadcntemplates.com/theme/kokonut-labs-kokonutui",
+    "name": "Kokonut UI",
+    "snippet": "To install the Kokonut UI theme, follow these steps: Clone the repository: Install dependencies: npm install Start using the theme with React or Next.js.",
+    "host_name": "shadcntemplates.com",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://community.vercel.com/t/kokonut-ui-open-source-ui-components-for-next-js-and-react/29419",
+    "name": "Open Source UI Components for Next.js and React",
+    "snippet": "Dec 8, 2025 — UI Components for Next.js and React . The project was one of the first to enable easy installation. Open-source collection of stunning  ...",
+    "host_name": "community.vercel.com",
+    "rank": 2,
+    "date": "Dec 8, 2025",
+    "favicon": ""
+  },
+  {
+    "url": "https://kokonut-labs-kokonutui.mintlify.app/introduction",
+    "name": "Introduction - Kokonut UI",
+    "snippet": "Easy Installation via CLI Install components instantly using the shadcn CLI with the @kokonutui namespace . No need to manage component dependencies manually.",
+    "host_name": "kokonut-labs-kokonutui.mintlify.app",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://kokonutui.com",
+    "name": "KokonutUI - Free Open Source UI Components for React and",
+    "snippet": "Collection of 100+ stunning UI components free and open source built. Install One CLI command adds any component directly to your project.",
+    "host_name": "kokonutui.com",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://github.com/shadcn-ui/ui/discussions/6570",
+    "name": "Setting Up a React Component Library – Need Guidance",
+    "snippet": "Feb 4, 2025 — Use Turborepo + pnpm workspaces for a proper monorepo. ✅ Ensure ESM/CJS compatibility for proper tree-shaking. ✅ Separate Tailwind plugin into ...",
+    "host_name": "github.com",
+    "rank": 5,
+    "date": "Feb 4, 2025",
+    "favicon": ""
+  },
+  {
+    "url": "https://21st.dev/@kokonutd/library/kokonut-ui",
+    "name": "Kokonut UI — 57 React Components, Preview & Copy",
+    "snippet": "100+ modern UI components built with Tailwind CSS, shadcn/ ui , and Motion. Preview all 57 components live on 21st — copy the TSX, install via the shadcn CLI, ...",
+    "host_name": "21st.dev",
+    "rank": 6,
+    "date": "",
+    "favicon": ""
+  }
+]

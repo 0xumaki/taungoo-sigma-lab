@@ -59,7 +59,7 @@ const MARKETS: Market[] = [
     desc: "Web and mobile apps for startups & enterprise — Next.js, React Native, Prisma, edge runtimes. Production-grade, deployed, monitored.",
     services: 18,
     target: "STARTUPS · ENTERPRISE",
-    accent: "#FF2D7E",
+    accent: "#FFB300",
     load: 76,
     samples: ["Web Apps", "Mobile Apps", "APIs", "Admin Consoles"],
   },

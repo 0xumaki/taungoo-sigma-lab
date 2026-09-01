@@ -9,6 +9,7 @@ interface PageTransitionLinkProps {
   kind: TransitionKind;
   accent?: string;
   className?: string;
+  style?: React.CSSProperties;
   children: React.ReactNode;
   onBeforeNavigate?: () => void;
 }
@@ -26,6 +27,7 @@ export function PageTransitionLink({
   kind,
   accent,
   className,
+  style,
   children,
   onBeforeNavigate,
 }: PageTransitionLinkProps) {
@@ -64,7 +66,7 @@ export function PageTransitionLink({
   };
 
   return (
-    <a href={href} onClick={handleClick} className={className}>
+    <a href={href} onClick={handleClick} className={className} style={style}>
       {children}
     </a>
   );

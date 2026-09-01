@@ -16,11 +16,8 @@ export async function POST(req: Request) {
       );
     }
 
-    // Log to server console (the lab's inbox)
+    // Generate mission reference (the lab's inbox)
     const ref = `TSL-${Date.now().toString(36).toUpperCase()}`;
-    console.log(
-      `[SIGMA·TRANSMIT] ref=${ref} channel=${channel} from=${identity} bytes=${message.length}`
-    );
 
     return NextResponse.json({
       ok: true,

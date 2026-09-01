@@ -1,0 +1,74 @@
+[
+  {
+    "url": "https://reactbits.dev",
+    "name": "React Bits - Animated UI Components For React",
+    "snippet": "An open source collection of high quality, animated, interactive & fully customizable React components for building stunning, memorable user interfaces.",
+    "host_name": "reactbits.dev",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://reactbits.dev/get-started/installation",
+    "name": "Installation",
+    "snippet": "1. Pick a component Browse the library , open a component you like, and switch to its Code tab. 2. Set your stack. Install dependencies & use it",
+    "host_name": "reactbits.dev",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.reddit.com/r/react/comments/1af1gbh/which_is_the_best_react_component_library",
+    "name": "Which is the best React component library?",
+    "snippet": "Even though there is not only one that is the best, let’s create a list of libraries that you’ve used and for what was it useful. So that a newbie ...",
+    "host_name": "www.reddit.com",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.untitledui.com/blog/react-component-libraries",
+    "name": "14 Best React UI Component Libraries in 2026 (+",
+    "snippet": "Most React UI component libraries include free and open source components; install a handful of components and play around with using them in a project.",
+    "host_name": "www.untitledui.com",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://github.com/DavidHDev/react-bits",
+    "name": "DavidHDev/react-bits: An open source collection of",
+    "snippet": "The largest & most creative library of animated React components . Stand out with 165+ free, customizable animations for text, backgrounds, and UI. GitHub Repo ... Read more",
+    "host_name": "github.com",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://medium.com/@npguapo/how-to-use-react-components-from-different-ui-library-sites-d9890db31cce",
+    "name": "How to Use React Components from Different UI Library Sites",
+    "snippet": "This guide provides a practical approach to combining components from various libraries such as Magic UI, Eldora UI, React Bits , and others.",
+    "host_name": "medium.com",
+    "rank": 5,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://magicui.design/blog/component-libraries",
+    "name": "27 Easy To Use & Amazing React Component Libraries",
+    "snippet": "Jun 9, 2024 — These components can range from simple elements like buttons and checkboxes to more complex ones such as tables, charts, and maps.",
+    "host_name": "magicui.design",
+    "rank": 6,
+    "date": "Jun 9, 2024",
+    "favicon": ""
+  },
+  {
+    "url": "https://wrappixel.com/blog/animated-ui-component-libraries",
+    "name": "6 Must-Try Animated UI Component Libraries for React",
+    "snippet": "Apr 9, 2026 — Looking for React animation libraries? Explore 6 popular animated UI component libraries, including Shadcn Space, Magic UI, and React Bits .",
+    "host_name": "wrappixel.com",
+    "rank": 7,
+    "date": "Apr 9, 2026",
+    "favicon": ""
+  }
+]

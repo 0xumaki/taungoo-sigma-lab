@@ -12,6 +12,12 @@ import * as React from "react";
  *
  * The element will translate up to `strength * cursorDistance` toward the cursor,
  * with a spring-back on mouse leave.
+ *
+ * PERF (LOOP-1-LH): layout-thrash fix. The previous implementation called
+ * `el.getBoundingClientRect()` on every `mousemove` event — a forced layout
+ * reflow that can fire 60+ times/second. This version caches the rect on
+ * `mouseenter` and invalidates the cache on `scroll`/`resize`. mousemove now
+ * only reads the cached rect (no layout work).
  */
 export function useMagnetic<T extends HTMLElement = HTMLButtonElement>(
   strength = 0.25
@@ -35,11 +41,18 @@ export function useMagnetic<T extends HTMLElement = HTMLButtonElement>(
     let targetY = 0;
     let currentX = 0;
     let currentY = 0;
+    // PERF (LOOP-1-LH): cached bounding rect — set on mouseenter, invalidated
+    // on scroll/resize. mousemove reads this cache without forcing layout.
+    let rect: DOMRect | null = null;
+    const refreshRect = () => { rect = el.getBoundingClientRect(); };
+    const invalidateRect = () => { rect = null; };
 
     const onMove = (e: MouseEvent) => {
-      const rect = el.getBoundingClientRect();
-      const cx = rect.left + rect.width / 2;
-      const cy = rect.top + rect.height / 2;
+      // Lazy refresh if cache was invalidated (scroll/resize happened).
+      if (!rect) refreshRect();
+      const r = rect as DOMRect;
+      const cx = r.left + r.width / 2;
+      const cy = r.top + r.height / 2;
       const dx = e.clientX - cx;
       const dy = e.clientY - cy;
       targetX = dx * strength;
@@ -59,12 +72,21 @@ export function useMagnetic<T extends HTMLElement = HTMLButtonElement>(
     };
     raf = requestAnimationFrame(loop);
 
+    el.addEventListener("mouseenter", refreshRect);
     el.addEventListener("mousemove", onMove);
     el.addEventListener("mouseleave", onLeave);
+    // PERF (LOOP-1-LH): capture-phase scroll listener — catches scroll bubbling
+    // from nested children too. Marks rect stale; the next mousemove will
+    // refresh it lazily.
+    window.addEventListener("scroll", invalidateRect, { capture: true, passive: true });
+    window.addEventListener("resize", invalidateRect, { passive: true });
     return () => {
       cancelAnimationFrame(raf);
+      el.removeEventListener("mouseenter", refreshRect);
       el.removeEventListener("mousemove", onMove);
       el.removeEventListener("mouseleave", onLeave);
+      window.removeEventListener("scroll", invalidateRect, { capture: true });
+      window.removeEventListener("resize", invalidateRect);
       el.style.transform = "";
     };
   }, [strength]);

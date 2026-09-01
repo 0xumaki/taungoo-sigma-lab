@@ -16,4 +16,4 @@ User-agent: Google-Extended
 Disallow: /
 
 # Sitemap
-Sitemap: https://taungoosigma.lab/sitemap.xml
+Sitemap: https://taungoo-sigma-lab.vercel.app/sitemap.xml

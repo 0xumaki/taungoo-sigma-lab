@@ -3,7 +3,7 @@
 // Displayed in the S02 Manifesto void space
 
 export const MANIFESTO_TEXT = `
-TAUNGOO SIGMA LAB — SYSTEM MANIFESTO v2.7.Σ
+TAUNGOO Σ Lab — SYSTEM MANIFESTO v2.7.Σ
 ═══════════════════════════════════════════
 
 ▸ INITIALIZING MANIFESTO BUFFER...

@@ -44,7 +44,7 @@ const SECTORS = [
   { code: "ALL" }, { code: "ACS" }, { code: "STS" },
 ];
 
-const PIE_COLORS = ["#00FF94", "#00E5FF", "#C6FF00", "#FFB300", "#FF2D7E", "#B388FF"];
+const PIE_COLORS = ["#00FF94", "#00E5FF", "#C6FF00", "#FFB300", "#FFB300", "#B388FF"];
 
 export function S07DataStreams() {
   const { navigate } = useSigmaStore();
@@ -73,7 +73,7 @@ export function S07DataStreams() {
     { name: "AI/ML", v: 35, color: "#00FF94" },
     { name: "Web3", v: 22, color: "#C6FF00" },
     { name: "Full-Stack", v: 18, color: "#00E5FF" },
-    { name: "Design", v: 12, color: "#FF2D7E" },
+    { name: "Design", v: 12, color: "#FFB300" },
     { name: "Infra", v: 8, color: "#FFB300" },
     { name: "Other", v: 5, color: "#B388FF" },
   ]);
@@ -99,6 +99,10 @@ export function S07DataStreams() {
   const [source, setSource] = React.useState<"LIVE API" | "LOCAL SIM">("LOCAL SIM");
 
   const tick = React.useCallback(async () => {
+    // Skip API polling + state churn when the tab is hidden — saves ~50 fetches/min
+    // while backgrounded. The ticker interval keeps running (cheap), but the work
+    // inside is gated. When the user returns, the next tick fetches fresh data.
+    if (document.hidden) return;
     try {
       const res = await fetch("/api/sigma/telemetry?XTransformPort=3000", { cache: "no-store" });
       if (!res.ok) throw new Error("bad status");
@@ -162,7 +166,12 @@ export function S07DataStreams() {
     >
       <div ref={root} className="relative grid grid-cols-12 gap-3 overflow-y-auto sigma-scroll-hidden">
         {/* Ambient floating data motes */}
-        <SigmaParticles count={24} color="#00FF94" />
+        {/* PERF (LOOP-1-LH): 24 → 18 motes. SigmaParticles renders a Canvas rAF
+            loop drawing each mote every frame; cutting 6 motes cuts ~25% of
+            per-frame fillText calls. Visual density is unchanged (18 is still
+            a busy field), and the loop stays well under the 20-per-instance
+            ceiling. */}
+        <SigmaParticles count={18} color="#00FF94" />
 
         {/* big counter row */}
         <Panel data-ds label="LIVE METRICS" id={source} accent="#00FF94" className="col-span-12 md:col-span-8">
@@ -221,10 +230,10 @@ export function S07DataStreams() {
                     <stop offset="100%" stopColor="#C6FF00" stopOpacity={0} />
                   </linearGradient>
                 </defs>
-                <XAxis dataKey="t" tick={{ fill: "#888", fontSize: 9, fontFamily: "monospace" }} stroke="#333" />
-                <YAxis tick={{ fill: "#888", fontSize: 9, fontFamily: "monospace" }} stroke="#333" />
+                <XAxis dataKey="t" tick={{ fill: "#888", fontSize: 9, fontFamily: "var(--font-mono), monospace" }} stroke="#333" />
+                <YAxis tick={{ fill: "#888", fontSize: 9, fontFamily: "var(--font-mono), monospace" }} stroke="#333" />
                 <Tooltip
-                  contentStyle={{ background: "#0a0a0a", border: "1px solid #00FF9455", fontFamily: "monospace", fontSize: 11, color: "#00FF94" }}
+                  contentStyle={{ background: "#0a0a0a", border: "1px solid #00FF9455", fontFamily: "var(--font-mono), monospace", fontSize: 11, color: "#00FF94" }}
                   itemStyle={{ color: "#00FF94" }}
                   labelStyle={{ color: "#888" }}
                 />
@@ -242,7 +251,7 @@ export function S07DataStreams() {
             <ResponsiveContainer width="100%" height="100%">
               <RadarChart data={radar}>
                 <PolarGrid stroke="#333" />
-                <PolarAngleAxis dataKey="axis" tick={{ fill: "#888", fontSize: 9, fontFamily: "monospace" }} />
+                <PolarAngleAxis dataKey="axis" tick={{ fill: "#888", fontSize: 9, fontFamily: "var(--font-mono), monospace" }} />
                 <Radar dataKey="v" stroke="#00FF94" strokeWidth={1.5} fill="#00FF94" fillOpacity={0.25} />
               </RadarChart>
             </ResponsiveContainer>
@@ -254,11 +263,11 @@ export function S07DataStreams() {
           <div className="h-[180px] p-2">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={bars} margin={{ top: 4, right: 8, bottom: 0, left: -24 }}>
-                <XAxis dataKey="sector" tick={{ fill: "#888", fontSize: 9, fontFamily: "monospace" }} stroke="#333" />
-                <YAxis tick={{ fill: "#888", fontSize: 9, fontFamily: "monospace" }} stroke="#333" />
+                <XAxis dataKey="sector" tick={{ fill: "#888", fontSize: 9, fontFamily: "var(--font-mono), monospace" }} stroke="#333" />
+                <YAxis tick={{ fill: "#888", fontSize: 9, fontFamily: "var(--font-mono), monospace" }} stroke="#333" />
                 <Tooltip
                   cursor={{ fill: "#ffffff10" }}
-                  contentStyle={{ background: "#0a0a0a", border: "1px solid #00FF9455", fontFamily: "monospace", fontSize: 11, color: "#00FF94" }}
+                  contentStyle={{ background: "#0a0a0a", border: "1px solid #00FF9455", fontFamily: "var(--font-mono), monospace", fontSize: 11, color: "#00FF94" }}
                   itemStyle={{ color: "#00FF94" }}
                   labelStyle={{ color: "#888" }}
                 />
@@ -302,7 +311,7 @@ export function S07DataStreams() {
                   ))}
                 </Pie>
                 <Tooltip
-                  contentStyle={{ background: "#0a0a0a", border: "1px solid #C6FF0055", fontFamily: "monospace", fontSize: 11, color: "#C6FF00" }}
+                  contentStyle={{ background: "#0a0a0a", border: "1px solid #C6FF0055", fontFamily: "var(--font-mono), monospace", fontSize: 11, color: "#C6FF00" }}
                   itemStyle={{ color: "#C6FF00" }}
                   labelStyle={{ color: "#888" }}
                 />
@@ -327,7 +336,7 @@ export function S07DataStreams() {
               >
                 <RadialBar background dataKey="v" cornerRadius={4} />
                 <Tooltip
-                  contentStyle={{ background: "#0a0a0a", border: "1px solid #FFB30055", fontFamily: "monospace", fontSize: 11, color: "#FFB300" }}
+                  contentStyle={{ background: "#0a0a0a", border: "1px solid #FFB30055", fontFamily: "var(--font-mono), monospace", fontSize: 11, color: "#FFB300" }}
                   itemStyle={{ color: "#FFB300" }}
                   labelStyle={{ color: "#888" }}
                 />
@@ -337,7 +346,7 @@ export function S07DataStreams() {
         </Panel>
 
         {/* NEW: System Load Monitor */}
-        <Panel data-ds label="SYSTEM LOAD" id="MONITOR" accent="#FF2D7E" className="col-span-12 md:col-span-4">
+        <Panel data-ds label="SYSTEM LOAD" id="MONITOR" accent="#FFB300" className="col-span-12 md:col-span-4">
           <div className="flex flex-col justify-between p-3">
             <div className="space-y-2">
               {radial.map((r) => (
@@ -357,7 +366,7 @@ export function S07DataStreams() {
             </div>
             <div className="mt-2 grid grid-cols-2 gap-1 border-t border-border/40 pt-2 font-mono text-[8px] uppercase tracking-[0.14em] text-muted-foreground">
               <span>▸ 4 CORES</span>
-              <span className="text-right" style={{ color: "#FF2D7E" }}>▮ NOMINAL</span>
+              <span className="text-right" style={{ color: "#FFB300" }}>▮ NOMINAL</span>
             </div>
           </div>
         </Panel>

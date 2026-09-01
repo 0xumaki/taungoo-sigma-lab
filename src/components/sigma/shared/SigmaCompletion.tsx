@@ -80,7 +80,7 @@ export function SigmaCompletion() {
             strokeDasharray={circumference}
             strokeDashoffset={dashOffset}
             strokeLinecap="square"
-            style={{ transition: "stroke-dashoffset 0.5s ease" }}
+            style={{ transition: `stroke-dashoffset var(--dur-slow) var(--ease-in-out-quart)` }}
           />
         </svg>
         {/* center text */}

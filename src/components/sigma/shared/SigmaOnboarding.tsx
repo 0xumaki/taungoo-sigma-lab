@@ -157,7 +157,7 @@ export function SigmaOnboarding({ onDone }: { onDone: () => void }) {
         {/* footer */}
         <div className="flex items-center justify-between border-t border-border px-4 py-2.5">
           <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-muted-foreground">
-            ▮ TAUNGOO SIGMA LAB
+            ▮ TAUNGOO Σ Lab
           </span>
           <button
             onClick={next}

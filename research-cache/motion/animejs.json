@@ -1,0 +1,65 @@
+[
+  {
+    "url": "https://animejs.com/documentation/getting-started/using-with-react",
+    "name": "Using with React | Getting started | Documentation",
+    "snippet": "Anime.js can be used with React by combining React's useEffect() and Anime.js createScope() methods . v4 Anime.js | JavaScript Animation Engine",
+    "host_name": "animejs.com",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://animejs.com",
+    "name": "Anime.js | JavaScript Animation Engine",
+    "snippet": "A fast, multipurpose and lightweight JavaScript animation library . A fast and flexible JavaScript library to animate the web. Synchronise and trigger ...",
+    "host_name": "animejs.com",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.reddit.com/r/webdev/comments/1jqmqkn/the_website_for_newlyreleased_animejs_v4_is_just",
+    "name": "The website for (newly-released) Anime.js v4 is just",
+    "snippet": "A fast, multipurpose and lightweight JavaScript animation library. ' engine '. render the 3d model, which can also be linked and animated ...",
+    "host_name": "www.reddit.com",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://github.com/juliangarnier/anime/issues/1105",
+    "name": "[DOCS] LLM guiding file for animejs v4 · Issue #1105",
+    "snippet": "Oct 8, 2025 — ... Anime . js v4 Anime . js is a modular animation engine for modern browsers. Version 4 introduces a completely redesigned API: the global anime ... Read more",
+    "host_name": "github.com",
+    "rank": 3,
+    "date": "Oct 8, 2025",
+    "favicon": ""
+  },
+  {
+    "url": "https://stackoverflow.com/questions/56165904/why-this-animation-using-anime-js-is-smoother-than-regular-css-transition-with-s",
+    "name": "Why this animation using anime.js is smoother than regular",
+    "snippet": "I've followed two aprroaches to animate a Carousel component that I'm building. I'm using React with React hooks. OPTION #1: with anime . js . Read more",
+    "host_name": "stackoverflow.com",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://ics.media/en/entry/14973",
+    "name": "GSAP, Anime.js, Motion and Web Animations API",
+    "snippet": "Apr 30, 2026 — Anime.js also provides functionality that supports integration with React . Using with React | Anime.js | JavaScript Animation Engine. Tween ... Read more",
+    "host_name": "ics.media",
+    "rank": 5,
+    "date": "Apr 30, 2026",
+    "favicon": ""
+  },
+  {
+    "url": "https://medium.com/@nimritakoul01/anime-js-a-beginners-tutorial-4e1bf86a80b3",
+    "name": "Anime.js — A Beginners' Tutorial",
+    "snippet": "Anime.js can be used with React by combining React's useEffect() and Anime.js createScope () methods.",
+    "host_name": "medium.com",
+    "rank": 6,
+    "date": "",
+    "favicon": ""
+  }
+]

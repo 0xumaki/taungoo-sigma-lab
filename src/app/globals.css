@@ -55,6 +55,44 @@
   --popover: oklch(0.13 0 0);
   --popover-foreground: oklch(0.97 0 0);
   --primary: oklch(0.97 0 0);
+
+  /* === UNIFIED TYPE SCALE (all 3 modes) === */
+  --ts-caption: clamp(0.625rem, 0.6vw, 0.75rem);     /* 10-12px — data labels, timestamps */
+  --ts-body: clamp(0.875rem, 0.9vw, 1rem);            /* 14-16px — paragraphs */
+  --ts-subtitle: clamp(1rem, 1.2vw, 1.25rem);          /* 16-20px — section subtitles */
+  --ts-h3: clamp(1.25rem, 1.8vw, 1.5rem);              /* 20-24px — card titles */
+  --ts-h2: clamp(1.875rem, 4vw, 3.5rem);               /* 30-56px — section headlines */
+  --ts-h1: clamp(2rem, 8vw, 7rem);                      /* 32-112px — display headlines */
+  --ts-mono: clamp(0.625rem, 0.65vw, 0.75rem);        /* 10-12px — monospace labels */
+
+  /* === ALPHA MODE PALETTE === */
+  --alpha-bg: #0B1426;
+  --alpha-bg-alt: #0F1B30;
+  --alpha-surface: #162540;
+  --alpha-border: rgba(255,255,255,0.12);
+  --alpha-fg: #E8EDF5;
+  --alpha-fg-muted: #8A9BB8;
+  /* Bumped from #5A6B85 → #8294B0 for WCAG AA contrast against #0B1426
+     (was ~3.2:1, now ~5.4:1 — passes AA for small text). */
+  --alpha-fg-subtle: #8294B0;
+
+  /* === MOTION TOKENS (used by inline styles + CSS rules across modes) ===
+     Standardized easing + duration so every transition feels consistent.
+     --ease-out-expo:        decelerated exit — best for entrances/hover-in.
+     --ease-in-out-quart:    symmetric ease — best for state toggles.
+     --dur-fast/normal/slow: 150ms / 300ms / 600ms (CSS animation-iteration-count
+                              remains untouched; only duration changes). */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out-quart: cubic-bezier(0.76, 0, 0.24, 1);
+  --dur-fast: 150ms;
+  --dur-normal: 300ms;
+  --dur-slow: 600ms;
+  --alpha-accent: #E8A317;
+  --alpha-accent-2: #00B4D8;
+
+  /* === BETA MODE PALETTE (refined) === */
+  --beta-bg: oklch(0.07 0 0);
+  --beta-bg-alt: oklch(0.10 0 0);
   --primary-foreground: oklch(0.07 0 0);
   --secondary: oklch(0.18 0 0);
   --secondary-foreground: oklch(0.97 0 0);
@@ -116,7 +154,7 @@
    pure white). Cards are clearly distinct from page bg. Text and
    accent colors meet WCAG AA 4.5:1 contrast against white.
    ============================================================ */
-.light {
+.sigma-light {
   /* Off-white background (slight warm tint, NOT pure white) */
   --background: oklch(0.965 0.003 90);
   /* Foreground: near-black for maximum contrast (15.5:1 vs bg) */
@@ -153,26 +191,26 @@
 /* ============================================================
    SIGMA LIGHT — utility class overrides
    Darkens accent colors, increases contrast, ensures WCAG AA.
-   Dark mode is untouched — every selector is scoped to .light.
+   Dark mode is untouched — every selector is scoped to .sigma-light.
    ============================================================ */
 
 /* --- Sigma brutalist effects — visible but not overwhelming --- */
-.light .sigma-grid {
+.sigma-light .sigma-grid {
   opacity: 0.6 !important;
   background-image:
     linear-gradient(to right, rgba(0,0,0,0.06) 1px, transparent 1px),
     linear-gradient(to bottom, rgba(0,0,0,0.06) 1px, transparent 1px) !important;
 }
-.light .sigma-grid-fine {
+.sigma-light .sigma-grid-fine {
   opacity: 0.6 !important;
   background-image:
     linear-gradient(to right, rgba(0,0,0,0.07) 1px, transparent 1px),
     linear-gradient(to bottom, rgba(0,0,0,0.07) 1px, transparent 1px) !important;
 }
-.light .sigma-dotgrid {
+.sigma-light .sigma-dotgrid {
   background-image: radial-gradient(rgba(0,0,0,0.20) 1px, transparent 1px) !important;
 }
-.light .sigma-scanlines::after {
+.sigma-light .sigma-scanlines::after {
   opacity: 0.10;
   background: repeating-linear-gradient(
     to bottom,
@@ -183,9 +221,9 @@
   ) !important;
   mix-blend-mode: multiply;
 }
-.light .sigma-noise::before { opacity: 0.04; }
+.sigma-light .sigma-noise::before { opacity: 0.04; }
 /* Hazard stripes — black/dark on white */
-.light .sigma-hazard {
+.sigma-light .sigma-hazard {
   background-image: repeating-linear-gradient(
     45deg,
     rgba(0,0,0,0.14) 0,
@@ -194,7 +232,7 @@
     transparent 20px
   ) !important;
 }
-.light .sigma-hazard-orange {
+.sigma-light .sigma-hazard-orange {
   background-image: repeating-linear-gradient(
     45deg,
     #B23A00 0,
@@ -204,26 +242,26 @@
   ) !important;
 }
 /* Glitch RGB split — darker, more saturated */
-.light .sigma-glitch::before {
+.sigma-light .sigma-glitch::before {
   color: #A8144A !important;
   mix-blend-mode: multiply;
 }
-.light .sigma-glitch::after {
+.sigma-light .sigma-glitch::after {
   color: #007A99 !important;
   mix-blend-mode: multiply;
 }
 /* RGB-split hover shadow — darker */
-.light .sigma-rgb-split:hover {
+.sigma-light .sigma-rgb-split:hover {
   text-shadow:
     -2px 0 0 #A8144A,
     2px 0 0 #007A99;
 }
 /* Vignette — softer in light mode (heavy black vignette hurts eyes) */
-.light .sigma-vignette::after {
+.sigma-light .sigma-vignette::after {
   box-shadow: inset 0 0 200px 40px rgba(0,0,0,0.10);
 }
 /* Brand glyph — darker orange */
-.light .sigma-brand__glyph {
+.sigma-light .sigma-brand__glyph {
   color: #B23A00 !important;
 }
 @keyframes sigma-brand-pulse-light {
@@ -238,14 +276,14 @@
     filter: drop-shadow(0 0 6px rgba(178, 58, 0, 0.75));
   }
 }
-.light .sigma-brand__glyph {
+.sigma-light .sigma-brand__glyph {
   animation: sigma-brand-pulse-light 2.4s ease-in-out infinite;
 }
-.light .sigma-brand__sigma {
+.sigma-light .sigma-brand__sigma {
   color: #B23A00 !important;
   -webkit-text-fill-color: #B23A00 !important;
 }
-.light .sigma-brand__text {
+.sigma-light .sigma-brand__text {
   background: linear-gradient(
     100deg,
     var(--color-foreground, #000) 0%,
@@ -257,8 +295,8 @@
 }
 /* Card hover — darken the inline-set --sigma-hover-accent at runtime.
    color-mix() darkens whatever accent the card was given by 35%. */
-.light .alpha-card-hover:hover,
-.light .sigma-hover-card:hover {
+.sigma-light .alpha-card-hover:hover,
+.sigma-light .sigma-hover-card:hover {
   border-color: color-mix(in srgb, var(--sigma-hover-accent, #B23A00) 65%, #000) !important;
   box-shadow:
     0 0 0 1px color-mix(in srgb, var(--sigma-hover-accent, #B23A00) 65%, #000),
@@ -272,30 +310,30 @@
    In light mode it becomes dark at N% opacity — but for small N it's invisible.
    Below: force each opacity to a value that maintains AA contrast.
    ============================================================ */
-.light .text-muted-foreground { color: oklch(0.30 0 0) !important; }
-.light .text-muted-foreground\/80 { color: oklch(0.32 0 0) !important; }
-.light .text-muted-foreground\/60 { color: oklch(0.36 0 0) !important; }
-.light .text-muted-foreground\/50 { color: oklch(0.40 0 0) !important; }
-.light .text-muted-foreground\/40 { color: oklch(0.45 0 0) !important; }
-.light .text-muted-foreground\/30 { color: oklch(0.50 0 0) !important; }
+.sigma-light .text-muted-foreground { color: oklch(0.30 0 0) !important; }
+.sigma-light .text-muted-foreground\/80 { color: oklch(0.32 0 0) !important; }
+.sigma-light .text-muted-foreground\/60 { color: oklch(0.36 0 0) !important; }
+.sigma-light .text-muted-foreground\/50 { color: oklch(0.40 0 0) !important; }
+.sigma-light .text-muted-foreground\/40 { color: oklch(0.45 0 0) !important; }
+.sigma-light .text-muted-foreground\/30 { color: oklch(0.50 0 0) !important; }
 
-.light .text-foreground\/90 { color: oklch(0.14 0 0) !important; }
-.light .text-foreground\/85 { color: oklch(0.16 0 0) !important; }
-.light .text-foreground\/80 { color: oklch(0.17 0 0) !important; }
-.light .text-foreground\/75 { color: oklch(0.19 0 0) !important; }
-.light .text-foreground\/70 { color: oklch(0.21 0 0) !important; }
-.light .text-foreground\/60 { color: oklch(0.27 0 0) !important; }
-.light .text-foreground\/50 { color: oklch(0.34 0 0) !important; }
-.light .text-foreground\/40 { color: oklch(0.42 0 0) !important; }
-.light .text-foreground\/30 { color: oklch(0.48 0 0) !important; }
-.light .text-foreground\/15 { color: oklch(0.55 0 0) !important; }
-.light .text-foreground\/\[0\.025\] { color: oklch(0.65 0 0) !important; }
-.light .text-foreground\/\[0\.04\] { color: oklch(0.62 0 0) !important; }
+.sigma-light .text-foreground\/90 { color: oklch(0.14 0 0) !important; }
+.sigma-light .text-foreground\/85 { color: oklch(0.16 0 0) !important; }
+.sigma-light .text-foreground\/80 { color: oklch(0.17 0 0) !important; }
+.sigma-light .text-foreground\/75 { color: oklch(0.19 0 0) !important; }
+.sigma-light .text-foreground\/70 { color: oklch(0.21 0 0) !important; }
+.sigma-light .text-foreground\/60 { color: oklch(0.27 0 0) !important; }
+.sigma-light .text-foreground\/50 { color: oklch(0.34 0 0) !important; }
+.sigma-light .text-foreground\/40 { color: oklch(0.42 0 0) !important; }
+.sigma-light .text-foreground\/30 { color: oklch(0.48 0 0) !important; }
+.sigma-light .text-foreground\/15 { color: oklch(0.55 0 0) !important; }
+.sigma-light .text-foreground\/\[0\.025\] { color: oklch(0.65 0 0) !important; }
+.sigma-light .text-foreground\/\[0\.04\] { color: oklch(0.62 0 0) !important; }
 
 /* Black text/border overrides (keep dark for contrast on light bg) */
-.light .text-black\/15 { color: oklch(0.20 0 0 / 50%) !important; }
-.light .text-black\/80 { color: oklch(0.13 0 0 / 90%) !important; }
-.light .text-black\/85 { color: oklch(0.13 0 0 / 95%) !important; }
+.sigma-light .text-black\/15 { color: oklch(0.20 0 0 / 50%) !important; }
+.sigma-light .text-black\/80 { color: oklch(0.13 0 0 / 90%) !important; }
+.sigma-light .text-black\/85 { color: oklch(0.13 0 0 / 95%) !important; }
 
 /* ============================================================
    BACKGROUND OPACITY OVERRIDES
@@ -303,56 +341,56 @@
    In light mode bg-card/N at 40% = light panel on light bg — invisible.
    Below: each opacity now resolves to a clearly-visible darker panel.
    ============================================================ */
-.light .bg-card\/20 { background-color: oklch(0.86 0.003 90) !important; }
-.light .bg-card\/30 { background-color: oklch(0.85 0.003 90) !important; }
-.light .bg-card\/40 { background-color: oklch(0.83 0.003 90) !important; }
-.light .bg-card\/60 { background-color: oklch(0.85 0.003 90) !important; }
-.light .bg-card\/70 { background-color: oklch(0.87 0.003 90) !important; }
-.light .bg-card\/80 { background-color: oklch(0.89 0.003 90) !important; }
-.light .bg-card\/95 { background-color: oklch(0.92 0.003 90) !important; }
+.sigma-light .bg-card\/20 { background-color: oklch(0.86 0.003 90) !important; }
+.sigma-light .bg-card\/30 { background-color: oklch(0.85 0.003 90) !important; }
+.sigma-light .bg-card\/40 { background-color: oklch(0.83 0.003 90) !important; }
+.sigma-light .bg-card\/60 { background-color: oklch(0.85 0.003 90) !important; }
+.sigma-light .bg-card\/70 { background-color: oklch(0.87 0.003 90) !important; }
+.sigma-light .bg-card\/80 { background-color: oklch(0.89 0.003 90) !important; }
+.sigma-light .bg-card\/95 { background-color: oklch(0.92 0.003 90) !important; }
 
-.light .bg-background\/20 { background-color: oklch(0.90 0.003 90) !important; }
-.light .bg-background\/40 { background-color: oklch(0.88 0.003 90) !important; }
-.light .bg-background\/60 { background-color: oklch(0.90 0.003 90) !important; }
-.light .bg-background\/70 { background-color: oklch(0.91 0.003 90) !important; }
-.light .bg-background\/80 { background-color: oklch(0.93 0.003 90) !important; }
-.light .bg-background\/85 { background-color: oklch(0.94 0.003 90) !important; }
-.light .bg-background\/90 { background-color: oklch(0.95 0.003 90) !important; }
-.light .bg-background\/95 { background-color: oklch(0.96 0.003 90) !important; }
+.sigma-light .bg-background\/20 { background-color: oklch(0.90 0.003 90) !important; }
+.sigma-light .bg-background\/40 { background-color: oklch(0.88 0.003 90) !important; }
+.sigma-light .bg-background\/60 { background-color: oklch(0.90 0.003 90) !important; }
+.sigma-light .bg-background\/70 { background-color: oklch(0.91 0.003 90) !important; }
+.sigma-light .bg-background\/80 { background-color: oklch(0.93 0.003 90) !important; }
+.sigma-light .bg-background\/85 { background-color: oklch(0.94 0.003 90) !important; }
+.sigma-light .bg-background\/90 { background-color: oklch(0.95 0.003 90) !important; }
+.sigma-light .bg-background\/95 { background-color: oklch(0.96 0.003 90) !important; }
 
 /* Foreground bg (dark tints) — boost low opacities for visibility */
-.light .bg-foreground\/5 { background-color: oklch(0.13 0 0 / 8%) !important; }
-.light .bg-foreground\/10 { background-color: oklch(0.13 0 0 / 12%) !important; }
-.light .bg-foreground\/15 { background-color: oklch(0.13 0 0 / 18%) !important; }
-.light .bg-foreground\/20 { background-color: oklch(0.13 0 0 / 25%) !important; }
-.light .bg-foreground\/30 { background-color: oklch(0.13 0 0 / 35%) !important; }
-.light .bg-foreground\/40 { background-color: oklch(0.13 0 0 / 45%) !important; }
-.light .bg-foreground\/85 { background-color: oklch(0.13 0 0 / 88%) !important; }
+.sigma-light .bg-foreground\/5 { background-color: oklch(0.13 0 0 / 8%) !important; }
+.sigma-light .bg-foreground\/10 { background-color: oklch(0.13 0 0 / 12%) !important; }
+.sigma-light .bg-foreground\/15 { background-color: oklch(0.13 0 0 / 18%) !important; }
+.sigma-light .bg-foreground\/20 { background-color: oklch(0.13 0 0 / 25%) !important; }
+.sigma-light .bg-foreground\/30 { background-color: oklch(0.13 0 0 / 35%) !important; }
+.sigma-light .bg-foreground\/40 { background-color: oklch(0.13 0 0 / 45%) !important; }
+.sigma-light .bg-foreground\/85 { background-color: oklch(0.13 0 0 / 88%) !important; }
 
 /* Black bg — keep dark overlays visible (used for modals, panels) */
-.light .bg-black\/20 { background-color: oklch(0.13 0 0 / 22%) !important; }
-.light .bg-black\/40 { background-color: oklch(0.13 0 0 / 45%) !important; }
-.light .bg-black\/50 { background-color: oklch(0.13 0 0 / 55%) !important; }
-.light .bg-black\/60 { background-color: oklch(0.13 0 0 / 65%) !important; }
-.light .bg-black\/90 { background-color: oklch(0.13 0 0 / 92%) !important; }
-.light .bg-black\/98 { background-color: oklch(0.13 0 0 / 98%) !important; }
+.sigma-light .bg-black\/20 { background-color: oklch(0.13 0 0 / 22%) !important; }
+.sigma-light .bg-black\/40 { background-color: oklch(0.13 0 0 / 45%) !important; }
+.sigma-light .bg-black\/50 { background-color: oklch(0.13 0 0 / 55%) !important; }
+.sigma-light .bg-black\/60 { background-color: oklch(0.13 0 0 / 65%) !important; }
+.sigma-light .bg-black\/90 { background-color: oklch(0.13 0 0 / 92%) !important; }
+.sigma-light .bg-black\/98 { background-color: oklch(0.13 0 0 / 98%) !important; }
 
 /* Border color overrides — visible at every opacity */
-.light .border-border\/30 { border-color: oklch(0 0 0 / 32%) !important; }
-.light .border-border\/40 { border-color: oklch(0 0 0 / 42%) !important; }
-.light .border-border\/50 { border-color: oklch(0 0 0 / 52%) !important; }
-.light .border-border\/60 { border-color: oklch(0 0 0 / 62%) !important; }
-.light .border-border\/70 { border-color: oklch(0 0 0 / 72%) !important; }
-.light .border-border\/80 { border-color: oklch(0 0 0 / 82%) !important; }
-.light .divide-border\/40 { border-color: oklch(0 0 0 / 42%) !important; }
-.light .divide-border\/70 { border-color: oklch(0 0 0 / 72%) !important; }
-.light .border-foreground\/30 { border-color: oklch(0.13 0 0 / 40%) !important; }
-.light .border-foreground\/40 { border-color: oklch(0.13 0 0 / 50%) !important; }
-.light .border-foreground\/60 { border-color: oklch(0.13 0 0 / 65%) !important; }
-.light .border-muted\/40 { border-color: oklch(0 0 0 / 40%) !important; }
-.light .border-black\/30 { border-color: oklch(0.13 0 0 / 38%) !important; }
-.light .border-black\/40 { border-color: oklch(0.13 0 0 / 48%) !important; }
-.light .border-black\/80 { border-color: oklch(0.13 0 0 / 82%) !important; }
+.sigma-light .border-border\/30 { border-color: oklch(0 0 0 / 32%) !important; }
+.sigma-light .border-border\/40 { border-color: oklch(0 0 0 / 42%) !important; }
+.sigma-light .border-border\/50 { border-color: oklch(0 0 0 / 52%) !important; }
+.sigma-light .border-border\/60 { border-color: oklch(0 0 0 / 62%) !important; }
+.sigma-light .border-border\/70 { border-color: oklch(0 0 0 / 72%) !important; }
+.sigma-light .border-border\/80 { border-color: oklch(0 0 0 / 82%) !important; }
+.sigma-light .divide-border\/40 { border-color: oklch(0 0 0 / 42%) !important; }
+.sigma-light .divide-border\/70 { border-color: oklch(0 0 0 / 72%) !important; }
+.sigma-light .border-foreground\/30 { border-color: oklch(0.13 0 0 / 40%) !important; }
+.sigma-light .border-foreground\/40 { border-color: oklch(0.13 0 0 / 50%) !important; }
+.sigma-light .border-foreground\/60 { border-color: oklch(0.13 0 0 / 65%) !important; }
+.sigma-light .border-muted\/40 { border-color: oklch(0 0 0 / 40%) !important; }
+.sigma-light .border-black\/30 { border-color: oklch(0.13 0 0 / 38%) !important; }
+.sigma-light .border-black\/40 { border-color: oklch(0.13 0 0 / 48%) !important; }
+.sigma-light .border-black\/80 { border-color: oklch(0.13 0 0 / 82%) !important; }
 
 /* ============================================================
    ACCENT HEX COLOR OVERRIDES
@@ -361,85 +399,79 @@
    ============================================================ */
 
 /* #FF4500 (bright orange-red) → #B23A00 (darker, contrast 5.7:1) */
-.light .text-\[\#FF4500\] { color: #B23A00 !important; }
-.light .text-\[\#FF4500\]\/60 { color: #B23A00 !important; }
-.light .text-\[\#FF4500\]\/70 { color: #B23A00 !important; }
-.light .bg-\[\#FF4500\] { background-color: #B23A00 !important; color: #fff; }
-.light .bg-\[\#FF4500\]\/5 { background-color: rgba(178, 58, 0, 0.10) !important; }
-.light .bg-\[\#FF4500\]\/10 { background-color: rgba(178, 58, 0, 0.16) !important; }
-.light .bg-\[\#FF4500\]\/20 { background-color: rgba(178, 58, 0, 0.25) !important; }
-.light .bg-\[\#FF4500\]\/40 { background-color: rgba(178, 58, 0, 0.50) !important; }
-.light .border-\[\#FF4500\] { border-color: #B23A00 !important; }
-.light .border-\[\#FF4500\]\/20 { border-color: rgba(178, 58, 0, 0.40) !important; }
-.light .border-\[\#FF4500\]\/30 { border-color: rgba(178, 58, 0, 0.50) !important; }
-.light .border-\[\#FF4500\]\/40 { border-color: rgba(178, 58, 0, 0.60) !important; }
-.light .border-\[\#FF4500\]\/50 { border-color: rgba(178, 58, 0, 0.70) !important; }
-.light .border-\[\#FF4500\]\/60 { border-color: rgba(178, 58, 0, 0.80) !important; }
-.light .border-\[\#FF4500\]\/80 { border-color: rgba(178, 58, 0, 0.92) !important; }
+.sigma-light .text-\[\#FF4500\] { color: #B23A00 !important; }
+.sigma-light .text-\[\#FF4500\]\/60 { color: #B23A00 !important; }
+.sigma-light .text-\[\#FF4500\]\/70 { color: #B23A00 !important; }
+.sigma-light .bg-\[\#FF4500\] { background-color: #B23A00 !important; color: #fff; }
+.sigma-light .bg-\[\#FF4500\]\/5 { background-color: rgba(178, 58, 0, 0.10) !important; }
+.sigma-light .bg-\[\#FF4500\]\/10 { background-color: rgba(178, 58, 0, 0.16) !important; }
+.sigma-light .bg-\[\#FF4500\]\/20 { background-color: rgba(178, 58, 0, 0.25) !important; }
+.sigma-light .bg-\[\#FF4500\]\/40 { background-color: rgba(178, 58, 0, 0.50) !important; }
+.sigma-light .border-\[\#FF4500\] { border-color: #B23A00 !important; }
+.sigma-light .border-\[\#FF4500\]\/20 { border-color: rgba(178, 58, 0, 0.40) !important; }
+.sigma-light .border-\[\#FF4500\]\/30 { border-color: rgba(178, 58, 0, 0.50) !important; }
+.sigma-light .border-\[\#FF4500\]\/40 { border-color: rgba(178, 58, 0, 0.60) !important; }
+.sigma-light .border-\[\#FF4500\]\/50 { border-color: rgba(178, 58, 0, 0.70) !important; }
+.sigma-light .border-\[\#FF4500\]\/60 { border-color: rgba(178, 58, 0, 0.80) !important; }
+.sigma-light .border-\[\#FF4500\]\/80 { border-color: rgba(178, 58, 0, 0.92) !important; }
 
 /* #00FF94 (mint green) → #008A4A (darker, contrast 4.5:1) */
-.light .text-\[\#00FF94\] { color: #008A4A !important; }
-.light .text-\[\#00FF94\]\/15 { color: #008A4A !important; }
-.light .text-\[\#00FF94\]\/40 { color: #008A4A !important; }
-.light .text-\[\#00FF94\]\/50 { color: #008A4A !important; }
-.light .text-\[\#00FF94\]\/70 { color: #008A4A !important; }
-.light .bg-\[\#00FF94\] { background-color: #008A4A !important; color: #fff; }
-.light .bg-\[\#00FF94\]\/10 { background-color: rgba(0, 138, 74, 0.18) !important; }
-.light .bg-\[\#00FF94\]\/15 { background-color: rgba(0, 138, 74, 0.22) !important; }
-.light .bg-\[\#00FF94\]\/30 { background-color: rgba(0, 138, 74, 0.40) !important; }
-.light .border-\[\#00FF94\] { border-color: #008A4A !important; }
-.light .border-\[\#00FF94\]\/15 { border-color: rgba(0, 138, 74, 0.40) !important; }
-.light .border-\[\#00FF94\]\/25 { border-color: rgba(0, 138, 74, 0.50) !important; }
-.light .border-\[\#00FF94\]\/30 { border-color: rgba(0, 138, 74, 0.60) !important; }
-.light .border-\[\#00FF94\]\/40 { border-color: rgba(0, 138, 74, 0.70) !important; }
+.sigma-light .text-\[\#00FF94\] { color: #008A4A !important; }
+.sigma-light .text-\[\#00FF94\]\/15 { color: #008A4A !important; }
+.sigma-light .text-\[\#00FF94\]\/40 { color: #008A4A !important; }
+.sigma-light .text-\[\#00FF94\]\/50 { color: #008A4A !important; }
+.sigma-light .text-\[\#00FF94\]\/70 { color: #008A4A !important; }
+.sigma-light .bg-\[\#00FF94\] { background-color: #008A4A !important; color: #fff; }
+.sigma-light .bg-\[\#00FF94\]\/10 { background-color: rgba(0, 138, 74, 0.18) !important; }
+.sigma-light .bg-\[\#00FF94\]\/15 { background-color: rgba(0, 138, 74, 0.22) !important; }
+.sigma-light .bg-\[\#00FF94\]\/30 { background-color: rgba(0, 138, 74, 0.40) !important; }
+.sigma-light .border-\[\#00FF94\] { border-color: #008A4A !important; }
+.sigma-light .border-\[\#00FF94\]\/15 { border-color: rgba(0, 138, 74, 0.40) !important; }
+.sigma-light .border-\[\#00FF94\]\/25 { border-color: rgba(0, 138, 74, 0.50) !important; }
+.sigma-light .border-\[\#00FF94\]\/30 { border-color: rgba(0, 138, 74, 0.60) !important; }
+.sigma-light .border-\[\#00FF94\]\/40 { border-color: rgba(0, 138, 74, 0.70) !important; }
 
 /* #00E5FF (electric cyan) → #007A99 (darker, contrast 4.6:1) */
-.light .text-\[\#00E5FF\] { color: #007A99 !important; }
-.light .bg-\[\#00E5FF\] { background-color: #007A99 !important; color: #fff; }
+.sigma-light .text-\[\#00E5FF\] { color: #007A99 !important; }
+.sigma-light .bg-\[\#00E5FF\] { background-color: #007A99 !important; color: #fff; }
 
 /* #C6FF00 (electric yellow-green) → #6E8500 (darker, contrast 5.0:1) */
-.light .text-\[\#C6FF00\] { color: #6E8500 !important; }
-.light .bg-\[\#C6FF00\] { background-color: #6E8500 !important; color: #fff; }
-.light .border-\[\#C6FF00\] { border-color: #6E8500 !important; }
+.sigma-light .text-\[\#C6FF00\] { color: #6E8500 !important; }
+.sigma-light .bg-\[\#C6FF00\] { background-color: #6E8500 !important; color: #fff; }
+.sigma-light .border-\[\#C6FF00\] { border-color: #6E8500 !important; }
 
-/* #FF2D7E (hot pink) → #A8144A (darker, contrast 6.5:1) */
-.light .text-\[\#FF2D7E\] { color: #A8144A !important; }
-.light .bg-\[\#FF2D7E\] { background-color: #A8144A !important; color: #fff; }
-.light .border-\[\#FF2D7E\] { border-color: #A8144A !important; }
-.light .border-\[\#FF2D7E\]\/40 { border-color: rgba(168, 20, 74, 0.60) !important; }
+/* #FFB300 (amber, was hot-pink #FF2D7E) → #8A6000 (darker, contrast 5.0:1) */
+.sigma-light .text-\[\#FFB300\] { color: #8A6000 !important; }
+.sigma-light .bg-\[\#FFB300\] { background-color: #8A6000 !important; color: #fff; }
+.sigma-light .bg-\[\#FFB300\]\/5 { background-color: rgba(138, 96, 0, 0.12) !important; }
+.sigma-light .border-\[\#FFB300\] { border-color: #8A6000 !important; }
+.sigma-light .border-\[\#FFB300\]\/40 { border-color: rgba(138, 96, 0, 0.60) !important; }
 
-/* #FFB300 (amber) → #8A6000 (darker, contrast 5.0:1) */
-.light .text-\[\#FFB300\] { color: #8A6000 !important; }
-.light .bg-\[\#FFB300\] { background-color: #8A6000 !important; color: #fff; }
-.light .bg-\[\#FFB300\]\/5 { background-color: rgba(138, 96, 0, 0.12) !important; }
-.light .border-\[\#FFB300\] { border-color: #8A6000 !important; }
-.light .border-\[\#FFB300\]\/40 { border-color: rgba(138, 96, 0, 0.60) !important; }
-
-/* #FF3D3D (bright red) → #B02828 (darker, contrast 5.5:1) */
-.light .text-\[\#FF3D3D\] { color: #B02828 !important; }
-.light .bg-\[\#FF3D3D\] { background-color: #B02828 !important; color: #fff; }
-.light .bg-\[\#FF3D3D\]\/5 { background-color: rgba(176, 40, 40, 0.12) !important; }
-.light .bg-\[\#FF3D3D\]\/20 { background-color: rgba(176, 40, 40, 0.30) !important; }
-.light .border-\[\#FF3D3D\] { border-color: #B02828 !important; }
-.light .border-\[\#FF3D3D\]\/40 { border-color: rgba(176, 40, 40, 0.60) !important; }
-.light .border-\[\#FF3D3D\]\/50 { border-color: rgba(176, 40, 40, 0.70) !important; }
+/* #B85C2E (copper, was bright-red #FF3D3D) → #7A3618 (darker, contrast 5.5:1) */
+.sigma-light .text-\[\#B85C2E\] { color: #7A3618 !important; }
+.sigma-light .bg-\[\#B85C2E\] { background-color: #7A3618 !important; color: #fff; }
+.sigma-light .bg-\[\#B85C2E\]\/5 { background-color: rgba(122, 54, 24, 0.12) !important; }
+.sigma-light .bg-\[\#B85C2E\]\/20 { background-color: rgba(122, 54, 24, 0.30) !important; }
+.sigma-light .border-\[\#B85C2E\] { border-color: #7A3618 !important; }
+.sigma-light .border-\[\#B85C2E\]\/40 { border-color: rgba(122, 54, 24, 0.60) !important; }
+.sigma-light .border-\[\#B85C2E\]\/50 { border-color: rgba(122, 54, 24, 0.70) !important; }
 
 /* #B388FF (lavender) → #6540B8 (darker, contrast 6.0:1) */
-.light .text-\[\#B388FF\] { color: #6540B8 !important; }
-.light .bg-\[\#B388FF\] { background-color: #6540B8 !important; color: #fff; }
-.light .border-\[\#B388FF\] { border-color: #6540B8 !important; }
+.sigma-light .text-\[\#B388FF\] { color: #6540B8 !important; }
+.sigma-light .bg-\[\#B388FF\] { background-color: #6540B8 !important; color: #fff; }
+.sigma-light .border-\[\#B388FF\] { border-color: #6540B8 !important; }
 
 /* #FFEB3B (yellow) → #7A6B00 (darker, contrast 5.5:1) */
-.light .text-\[\#FFEB3B\] { color: #7A6B00 !important; }
-.light .bg-\[\#FFEB3B\] { background-color: #7A6B00 !important; color: #fff; }
-.light .border-\[\#FFEB3B\] { border-color: #7A6B00 !important; }
+.sigma-light .text-\[\#FFEB3B\] { color: #7A6B00 !important; }
+.sigma-light .bg-\[\#FFEB3B\] { background-color: #7A6B00 !important; color: #fff; }
+.sigma-light .border-\[\#FFEB3B\] { border-color: #7A6B00 !important; }
 
 /* #2979FF (blue) → #1450A8 (darker, contrast 6.2:1) */
-.light .text-\[\#2979FF\] { color: #1450A8 !important; }
-.light .bg-\[\#2979FF\] { background-color: #1450A8 !important; color: #fff; }
-.light .border-\[\#2979FF\] { border-color: #1450A8 !important; }
-.light .border-\[\#2979FF\]\/40 { border-color: rgba(20, 80, 168, 0.60) !important; }
-.light .border-\[\#2979FF\]\/70 { border-color: rgba(20, 80, 168, 0.85) !important; }
+.sigma-light .text-\[\#2979FF\] { color: #1450A8 !important; }
+.sigma-light .bg-\[\#2979FF\] { background-color: #1450A8 !important; color: #fff; }
+.sigma-light .border-\[\#2979FF\] { border-color: #1450A8 !important; }
+.sigma-light .border-\[\#2979FF\]\/40 { border-color: rgba(20, 80, 168, 0.60) !important; }
+.sigma-light .border-\[\#2979FF\]\/70 { border-color: rgba(20, 80, 168, 0.85) !important; }
 
 /* ============================================================
    INLINE STYLE OVERRIDES — elements using style={{ color: "#XXXXXX" }}
@@ -448,141 +480,128 @@
    darker equivalent (matches the utility-class overrides above).
    ============================================================ */
 /* #FF4500 → #B23A00 */
-.light [style*="#FF4500"] { color: #B23A00 !important; }
-.light [style*="background:#FF4500"],
-.light [style*="background: #FF4500"],
-.light [style*="background-color:#FF4500"],
-.light [style*="background-color: #FF4500"] {
+.sigma-light [style*="#FF4500"] { color: #B23A00 !important; }
+.sigma-light [style*="background:#FF4500"],
+.sigma-light [style*="background: #FF4500"],
+.sigma-light [style*="background-color:#FF4500"],
+.sigma-light [style*="background-color: #FF4500"] {
   background-color: #B23A00 !important;
 }
-.light [style*="border-color:#FF4500"],
-.light [style*="border-color: #FF4500"],
-.light [style*="borderColor:#FF4500"] {
+.sigma-light [style*="border-color:#FF4500"],
+.sigma-light [style*="border-color: #FF4500"],
+.sigma-light [style*="borderColor:#FF4500"] {
   border-color: #B23A00 !important;
 }
 
 /* #00FF94 → #008A4A */
-.light [style*="#00FF94"] { color: #008A4A !important; }
-.light [style*="background:#00FF94"],
-.light [style*="background: #00FF94"],
-.light [style*="background-color:#00FF94"],
-.light [style*="background-color: #00FF94"] {
+.sigma-light [style*="#00FF94"] { color: #008A4A !important; }
+.sigma-light [style*="background:#00FF94"],
+.sigma-light [style*="background: #00FF94"],
+.sigma-light [style*="background-color:#00FF94"],
+.sigma-light [style*="background-color: #00FF94"] {
   background-color: #008A4A !important;
 }
-.light [style*="border-color:#00FF94"],
-.light [style*="border-color: #00FF94"] {
+.sigma-light [style*="border-color:#00FF94"],
+.sigma-light [style*="border-color: #00FF94"] {
   border-color: #008A4A !important;
 }
 
 /* #00E5FF → #007A99 */
-.light [style*="#00E5FF"] { color: #007A99 !important; }
-.light [style*="background:#00E5FF"],
-.light [style*="background: #00E5FF"],
-.light [style*="background-color:#00E5FF"],
-.light [style*="background-color: #00E5FF"] {
+.sigma-light [style*="#00E5FF"] { color: #007A99 !important; }
+.sigma-light [style*="background:#00E5FF"],
+.sigma-light [style*="background: #00E5FF"],
+.sigma-light [style*="background-color:#00E5FF"],
+.sigma-light [style*="background-color: #00E5FF"] {
   background-color: #007A99 !important;
 }
-.light [style*="border-color:#00E5FF"],
-.light [style*="border-color: #00E5FF"] {
+.sigma-light [style*="border-color:#00E5FF"],
+.sigma-light [style*="border-color: #00E5FF"] {
   border-color: #007A99 !important;
 }
 
 /* #C6FF00 → #6E8500 */
-.light [style*="#C6FF00"] { color: #6E8500 !important; }
-.light [style*="background:#C6FF00"],
-.light [style*="background: #C6FF00"],
-.light [style*="background-color:#C6FF00"],
-.light [style*="background-color: #C6FF00"] {
+.sigma-light [style*="#C6FF00"] { color: #6E8500 !important; }
+.sigma-light [style*="background:#C6FF00"],
+.sigma-light [style*="background: #C6FF00"],
+.sigma-light [style*="background-color:#C6FF00"],
+.sigma-light [style*="background-color: #C6FF00"] {
   background-color: #6E8500 !important;
 }
-.light [style*="border-color:#C6FF00"],
-.light [style*="border-color: #C6FF00"] {
+.sigma-light [style*="border-color:#C6FF00"],
+.sigma-light [style*="border-color: #C6FF00"] {
   border-color: #6E8500 !important;
 }
 
-/* #FF2D7E → #A8144A */
-.light [style*="#FF2D7E"] { color: #A8144A !important; }
-.light [style*="background:#FF2D7E"],
-.light [style*="background: #FF2D7E"],
-.light [style*="background-color:#FF2D7E"],
-.light [style*="background-color: #FF2D7E"] {
-  background-color: #A8144A !important;
-}
-.light [style*="border-color:#FF2D7E"],
-.light [style*="border-color: #FF2D7E"],
-.light [style*="borderColor:#FF2D7E"],
-.light [style*="border-color:#FF2D7E55"],
-.light [style*="borderColor:#FF2D7E55"] {
-  border-color: #A8144A !important;
-}
-
-/* #FFB300 → #8A6000 */
-.light [style*="#FFB300"] { color: #8A6000 !important; }
-.light [style*="background:#FFB300"],
-.light [style*="background: #FFB300"],
-.light [style*="background-color:#FFB300"],
-.light [style*="background-color: #FFB300"] {
+/* #FFB300 → #8A6000 (amber, was hot-pink #FF2D7E) */
+.sigma-light [style*="#FFB300"] { color: #8A6000 !important; }
+.sigma-light [style*="background:#FFB300"],
+.sigma-light [style*="background: #FFB300"],
+.sigma-light [style*="background-color:#FFB300"],
+.sigma-light [style*="background-color: #FFB300"] {
   background-color: #8A6000 !important;
 }
-.light [style*="border-color:#FFB300"],
-.light [style*="border-color: #FFB300"] {
+.sigma-light [style*="border-color:#FFB300"],
+.sigma-light [style*="border-color: #FFB300"],
+.sigma-light [style*="borderColor:#FFB300"],
+.sigma-light [style*="border-color:#FFB30055"],
+.sigma-light [style*="borderColor:#FFB30055"] {
   border-color: #8A6000 !important;
 }
 
-/* #FF3D3D → #B02828 */
-.light [style*="#FF3D3D"] { color: #B02828 !important; }
-.light [style*="background:#FF3D3D"],
-.light [style*="background: #FF3D3D"],
-.light [style*="background-color:#FF3D3D"],
-.light [style*="background-color: #FF3D3D"] {
-  background-color: #B02828 !important;
+/* #B85C2E → #7A3618 (copper, was bright-red #FF3D3D) */
+.sigma-light [style*="#B85C2E"] { color: #7A3618 !important; }
+.sigma-light [style*="background:#B85C2E"],
+.sigma-light [style*="background: #B85C2E"],
+.sigma-light [style*="background-color:#B85C2E"],
+.sigma-light [style*="background-color: #B85C2E"] {
+  background-color: #7A3618 !important;
 }
-.light [style*="border-color:#FF3D3D"],
-.light [style*="border-color: #FF3D3D"] {
-  border-color: #B02828 !important;
+.sigma-light [style*="border-color:#B85C2E"],
+.sigma-light [style*="border-color: #B85C2E"] {
+  border-color: #7A3618 !important;
 }
 
 /* #B388FF → #6540B8 */
-.light [style*="#B388FF"] { color: #6540B8 !important; }
-.light [style*="background:#B388FF"],
-.light [style*="background: #B388FF"],
-.light [style*="background-color:#B388FF"],
-.light [style*="background-color: #B388FF"] {
+.sigma-light [style*="#B388FF"] { color: #6540B8 !important; }
+.sigma-light [style*="background:#B388FF"],
+.sigma-light [style*="background: #B388FF"],
+.sigma-light [style*="background-color:#B388FF"],
+.sigma-light [style*="background-color: #B388FF"] {
   background-color: #6540B8 !important;
 }
-.light [style*="border-color:#B388FF"],
-.light [style*="border-color: #B388FF"] {
+.sigma-light [style*="border-color:#B388FF"],
+.sigma-light [style*="border-color: #B388FF"] {
   border-color: #6540B8 !important;
 }
 
 /* #FFEB3B → #7A6B00 */
-.light [style*="#FFEB3B"] { color: #7A6B00 !important; }
-.light [style*="background:#FFEB3B"],
-.light [style*="background: #FFEB3B"],
-.light [style*="background-color:#FFEB3B"],
-.light [style*="background-color: #FFEB3B"] {
+.sigma-light [style*="#FFEB3B"] { color: #7A6B00 !important; }
+.sigma-light [style*="background:#FFEB3B"],
+.sigma-light [style*="background: #FFEB3B"],
+.sigma-light [style*="background-color:#FFEB3B"],
+.sigma-light [style*="background-color: #FFEB3B"] {
   background-color: #7A6B00 !important;
 }
-.light [style*="border-color:#FFEB3B"],
-.light [style*="border-color: #FFEB3B"] {
+.sigma-light [style*="border-color:#FFEB3B"],
+.sigma-light [style*="border-color: #FFEB3B"] {
   border-color: #7A6B00 !important;
 }
 
 /* #2979FF → #1450A8 */
-.light [style*="#2979FF"] { color: #1450A8 !important; }
-.light [style*="background:#2979FF"],
-.light [style*="background: #2979FF"],
-.light [style*="background-color:#2979FF"],
-.light [style*="background-color: #2979FF"] {
+.sigma-light [style*="#2979FF"] { color: #1450A8 !important; }
+.sigma-light [style*="background:#2979FF"],
+.sigma-light [style*="background: #2979FF"],
+.sigma-light [style*="background-color:#2979FF"],
+.sigma-light [style*="background-color: #2979FF"] {
   background-color: #1450A8 !important;
 }
-.light [style*="border-color:#2979FF"],
-.light [style*="border-color: #2979FF"],
-.light [style*="borderColor:#2979FF"],
-.light [style*="border-color:#2979FF33"],
-.light [style*="borderColor:#2979FF33"],
-.light [style*="border-color:#2979FF66"],
-.light [style*="borderColor:#2979FF66"] {
+.sigma-light [style*="border-color:#2979FF"],
+.sigma-light [style*="border-color: #2979FF"],
+.sigma-light [style*="borderColor:#2979FF"],
+.sigma-light [style*="border-color:#2979FF33"],
+.sigma-light [style*="borderColor:#2979FF33"],
+.sigma-light [style*="border-color:#2979FF66"],
+.sigma-light [style*="borderColor:#2979FF66"] {
   border-color: #1450A8 !important;
 }
 
@@ -590,6 +609,24 @@
   * {
     @apply border-border outline-ring/50;
   }
+
+  /* sr-only — screen-reader only (visually hidden, available to a11y tree +
+     AI crawlers + scrapers). Tailwind 4 does not include this by default
+     (Tailwind 3 had it as a built-in utility). Defined here so components
+     using className="sr-only" (e.g. AgenticCatalog, hero sr-only h1) render
+     VISUALLY HIDDEN instead of covering the entire screen. */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
   html, body {
     @apply bg-background text-foreground;
     height: 100%;
@@ -599,8 +636,551 @@
     -webkit-font-smoothing: antialiased;
     overscroll-behavior: none;
   }
-  /* brutalist sharp corners everywhere */
+
+  /* === TYPOGRAPHY OPTIMIZATIONS (research-typography.md — RESEARCH-3) ===
+     Geist Mono: enable stylistic alternates for better small-size readability
+     - cv03: single-story g (less ambiguity at 8-9px)
+     - ss01: alternate 0 with slash (distinguishes from O)
+     - zero: slashed zero in numeric contexts
+     Fraunces: subtitle-size optical sizing via the variable opsz axis
+     - Renders with appropriate stroke contrast for 12-16px subtitle use
+     Space Grotesk: tabular numbers for clean numeric alignment
+  */
+  .font-mono, [class*="font-mono"] {
+    font-feature-settings: "ss01" on, "cv03" on, "zero" on;
+    font-variant-ligatures: contextual none;
+  }
+  .font-serif, [class*="font-serif"] {
+    font-variation-settings: "opsz" 14, "SOFT" 25, "WONK" 0;
+  }
+  .font-sans, [class*="font-sans"] {
+    font-feature-settings: "ss01" on, "tnum" on;
+  }
+
+  /* === BETA MODE (dark only — no light mode) === */
+  .beta-mode {
+    --beta-bg: oklch(0.07 0 0);
+    --beta-bg-alt: oklch(0.10 0 0);
+    --beta-surface: oklch(0.13 0 0);
+    --beta-surface-2: oklch(0.16 0 0);
+    --beta-border: oklch(1 0 0 / 22%);
+    --beta-border-strong: oklch(1 0 0 / 40%);
+    --beta-fg: oklch(0.85 0 0);
+    --beta-fg-strong: oklch(0.97 0 0);
+    /* Bumped from 0.62 → 0.66 for WCAG AA contrast against beta-bg
+       (was ~7:1, now ~8.4:1 — extra headroom for muted text on surfaces). */
+    --beta-fg-muted: oklch(0.66 0 0);
+    /* Bumped from 0.50 → 0.60 for WCAG AA contrast against beta-bg.
+       Measured (oklch→linear-sRGB→relative-luminance) via DevTools probe:
+       oklch(0.50 0 0) vs oklch(0.07 0 0) = 3.48:1 (FAIL AA 4.5:1 small text),
+       oklch(0.58 0 0) vs oklch(0.07 0 0) = 4.87:1 (PASS),
+       oklch(0.60 0 0) vs oklch(0.07 0 0) = 5.28:1 (PASS, safer headroom).
+       Choosing 0.60 to comfortably exceed AA across all surface variants. */
+    --beta-fg-subtle: oklch(0.60 0 0);
+    /* Override the global shadcn muted-foreground for beta mode so muted text
+       rendered via Tailwind's `text-muted-foreground` class also passes AA. */
+    --muted-foreground: oklch(0.66 0 0);
+    --beta-accent: #D4AF37;
+    --beta-accent-hover: #FFD060;
+    --beta-accent-2: #00E5FF;
+    --beta-accent-3: #00FF94;
+    --beta-accent-glow: rgba(212, 175, 55, 0.15);
+    background: var(--beta-bg);
+    color: var(--beta-fg);
+    /* Awwwards-tier typography + smoothing */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    /* Anchor nav offset — left rail is 64px wide, plus a comfortable gap */
+    scroll-padding-top: 80px;
+  }
+
+  /* === BETA MODE — Selection: gold background, black text === */
+  .beta-mode ::selection {
+    background: rgba(212, 175, 55, 0.95);
+    color: #050507;
+    text-shadow: none;
+  }
+  .beta-mode ::-moz-selection {
+    background: rgba(212, 175, 55, 0.95);
+    color: #050507;
+    text-shadow: none;
+  }
+
+  /* === BETA MODE — Custom scrollbar: thin (6px), gold thumb === */
+  .beta-mode::-webkit-scrollbar,
+  .beta-mode ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  .beta-mode::-webkit-scrollbar-track,
+  .beta-mode ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .beta-mode::-webkit-scrollbar-thumb,
+  .beta-mode ::-webkit-scrollbar-thumb {
+    background: rgba(212, 175, 55, 0.30);
+    border-radius: 0;
+  }
+  .beta-mode::-webkit-scrollbar-thumb:hover,
+  .beta-mode ::-webkit-scrollbar-thumb:hover {
+    background: rgba(212, 175, 55, 0.60);
+  }
+  .beta-mode {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(212, 175, 55, 0.30) transparent;
+  }
+
+  /* === BETA MODE — Focus-visible: 2px gold outline, offset 2px === */
+  .beta-mode :focus-visible {
+    outline: 2px solid var(--beta-accent);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+  .beta-mode :focus:not(:focus-visible) {
+    outline: none;
+  }
+
+  /* === BETA MODE — Skip-to-content link ===
+     First focusable element on the page (rendered in ExperienceShell ABOVE
+     the mode switcher so it leads the DOM tab order). Visually hidden until
+     focused (keyboard users see it; mouse users don't). Targets #top in
+     Hero. Standard a11y pattern: WCAG 2.1 SC 2.4.1 (Bypass Blocks).
+     Not scoped to `.beta-mode` because it renders as a sibling of the
+     beta scroll container — uses a hard-coded gold fallback (#D4AF37) so
+     the link is always visible-on-focus even outside the .beta-mode scope. */
+  .bs-skip-link {
+    position: fixed;
+    top: 8px;
+    left: 8px;
+    z-index: 200;
+    padding: 10px 14px;
+    font-family: var(--font-mono), monospace;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    text-decoration: none;
+    color: #050507;
+    background: var(--beta-accent, #D4AF37);
+    border: 1px solid var(--beta-accent, #D4AF37);
+    border-radius: 2px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+    transform: translateY(-200%);
+    transition: transform var(--dur-fast) var(--ease-out-expo);
+    pointer-events: none;
+  }
+  .bs-skip-link:focus,
+  .bs-skip-link:focus-visible {
+    transform: translateY(0);
+    pointer-events: auto;
+    outline: 2px solid #fff;
+    outline-offset: 2px;
+  }
+
+  /* === BETA MODE — Smooth image rendering === */
+  .beta-mode img {
+    image-rendering: auto;
+    -ms-interpolation-mode: bicubic;
+  }
+
+  /* === BETA TICKER MARQUEE — keywords scroll, pause on hover === */
+  @keyframes beta-ticker-slide {
+    0% { transform: translate3d(0, 0, 0); }
+    100% { transform: translate3d(-50%, 0, 0); }
+  }
+  .beta-ticker {
+    display: flex;
+    overflow: hidden;
+    /* Parent wrapper has pointer-events:none so the bottom ticker band doesn't
+       block clicks on overlapping hero elements. But we DO want hover-to-pause,
+       so re-enable pointer events on the ticker itself (it contains no
+       interactive children — it's aria-hidden decorative text). */
+    pointer-events: auto;
+    -webkit-mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+    mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+  }
+  .beta-ticker-track {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    gap: 1.5rem;
+    padding-right: 1.5rem;
+    animation: beta-ticker-slide 30s linear infinite;
+    white-space: nowrap;
+    will-change: transform;
+  }
+  .beta-ticker:hover .beta-ticker-track,
+  .beta-ticker:focus-within .beta-ticker-track {
+    animation-play-state: paused;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .beta-ticker-track { animation: none; }
+  }
+
+  /* === SECTION DIVIDER — pulse dot traveling L→R (4s loop) === */
+  @keyframes bs-divider-pulse-travel {
+    0%   { left: 0;   opacity: 0; }
+    8%   { opacity: 1; }
+    92%  { opacity: 1; }
+    100% { left: 100%; opacity: 0; }
+  }
+  .bs-divider-dot {
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 6px;
+    height: 6px;
+    background: var(--beta-accent);
+    border-radius: 9999px;
+    box-shadow: 0 0 8px var(--beta-accent), 0 0 16px rgba(212, 175, 55, 0.4);
+    animation: bs-divider-pulse-travel 4s ease-in-out infinite;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .bs-divider-dot { animation: none; left: 50%; opacity: 0.6; }
+  }
+
+  /* === PORTFOLIO — gold corner brackets on hover + ghosted index === */
+  .bs-portfolio-row { position: relative; }
+  .bs-portfolio-corner {
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-color: var(--beta-accent);
+    opacity: 0;
+    transition: width 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+                height 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+                opacity 0.3s ease;
+    pointer-events: none;
+    z-index: 2;
+  }
+  .bs-portfolio-corner.tl { top: 8px; left: 8px; border-top: 2px solid; border-left: 2px solid; }
+  .bs-portfolio-corner.br { bottom: 8px; right: 8px; border-bottom: 2px solid; border-right: 2px solid; }
+  .bs-portfolio-row:hover .bs-portfolio-corner,
+  .bs-portfolio-row[aria-expanded="true"] .bs-portfolio-corner {
+    width: 18px;
+    height: 18px;
+    opacity: 0.9;
+  }
+  .bs-portfolio-ghost {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: 56px;
+    pointer-events: none;
+    font-family: var(--font-mono), monospace;
+    font-weight: 800;
+    font-size: clamp(5rem, 12vw, 9rem);
+    line-height: 1;
+    color: rgba(212, 175, 55, 0.04);
+    opacity: 0;
+    transition: opacity 0.4s ease, color 0.4s ease;
+    user-select: none;
+    letter-spacing: -0.04em;
+    z-index: 0;
+  }
+  .bs-portfolio-row:hover .bs-portfolio-ghost,
+  .bs-portfolio-row[aria-expanded="true"] .bs-portfolio-ghost {
+    opacity: 1;
+    color: rgba(212, 175, 55, 0.07);
+  }
+  .bs-portfolio-img {
+    transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: transform;
+  }
+  .bs-portfolio-row:hover .bs-portfolio-img {
+    transform: scale(1.06);
+  }
+
+  /* === METHOD — pulsing gold glow ring on active/hovered node === */
+  @keyframes bs-method-node-pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.4), 0 0 14px rgba(212, 175, 55, 0.25); }
+    50%      { box-shadow: 0 0 0 8px rgba(212, 175, 55, 0),   0 0 22px rgba(212, 175, 55, 0.45); }
+  }
+  .bs-method-node {
+    position: relative;
+    transition: box-shadow 0.4s ease, transform 0.4s ease;
+  }
+  .bs-method-row:hover .bs-method-node,
+  .bs-method-row:focus-within .bs-method-node,
+  .bs-method-node:hover,
+  .bs-method-node:focus-visible {
+    animation: bs-method-node-pulse 2s ease-in-out infinite;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .bs-method-node:hover,
+    .bs-method-row:hover .bs-method-node { animation: none; }
+  }
+
+  /* === METHOD — oversized ghosted step numeral, anchored behind content === */
+  .bs-method-ghost {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    user-select: none;
+    font-family: var(--font-mono), monospace;
+    font-weight: 800;
+    line-height: 1;
+    font-size: clamp(5rem, 14vw, 9rem);
+    color: var(--beta-accent);
+    opacity: 0.06;
+    letter-spacing: -0.04em;
+    z-index: 0;
+  }
+  @media (max-width: 640px) {
+    .bs-method-ghost { font-size: clamp(4rem, 22vw, 6rem); opacity: 0.04; }
+  }
+
+  /* === TEAM — divider line under name draws on hover === */
+  .bs-team-name-underline {
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .bs-team-card:hover .bs-team-name-underline,
+  .bs-team-card:focus-within .bs-team-name-underline {
+    transform: scaleX(1);
+  }
+
+  /* === CONTACT — input focus border + L→R underline draw === */
+  .bs-input-wrap { position: relative; }
+  .bs-input-underline {
+    position: absolute;
+    left: 0;
+    bottom: -1px;
+    height: 1px;
+    width: 100%;
+    background: var(--beta-accent);
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+    pointer-events: none;
+    box-shadow: 0 0 6px rgba(212, 175, 55, 0.4);
+  }
+  .bs-input-wrap:focus-within .bs-input-underline { transform: scaleX(1); }
+  .bs-input-wrap input:focus,
+  .bs-input-wrap textarea:focus {
+    border-color: rgba(212, 175, 55, 0.5) !important;
+    transition: border-color 0.3s ease;
+  }
+
+  /* === TACTICAL UTILITY CLASSES === */
+  .beta-mode h1, .beta-mode h2, .beta-mode h3 {
+    font-family: var(--font-scifi), var(--font-sans), sans-serif;
+    letter-spacing: 0.02em;
+  }
+  /* Override font-sans utility in Beta → use Rajdhani (tactical body font) */
+  .beta-mode .font-sans, .beta-mode p:not([class*="font-mono"]):not([class*="font-serif"]) {
+    font-family: var(--font-tactical), var(--font-sans), sans-serif !important;
+  }
+  .beta-mode .font-mono, .beta-mode [class*="font-mono"] {
+    font-family: var(--font-mono), monospace;
+  }
+  .beta-mode .font-serif, .beta-mode [class*="font-serif"] {
+    font-variation-settings: "opsz" 14, "SOFT" 25, "WONK" 0;
+  }
+  .bs-glass-panel {
+    background: var(--bs-glass);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid var(--beta-border-strong);
+  }
+  .bs-scanline {
+    background: repeating-linear-gradient(
+      0deg,
+      transparent 0px,
+      transparent 2px,
+      rgba(0,229,255,0.015) 3px,
+      transparent 4px
+    );
+    pointer-events: none;
+  }
+  /* Apply subtle scanlines to ALL beta-mode sections */
+  .beta-mode section::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent 0px,
+      transparent 3px,
+      rgba(0,229,255,0.01) 4px,
+      transparent 5px
+    );
+    pointer-events: none;
+    z-index: 1;
+  }
+  .bs-corner-reticle {
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    border-color: var(--beta-accent-2);
+    opacity: 0.4;
+  }
+  .bs-corner-reticle.tl { top: 0; left: 0; border-top: 1px solid; border-left: 1px solid; }
+  .bs-corner-reticle.tr { top: 0; right: 0; border-top: 1px solid; border-right: 1px solid; }
+  .bs-corner-reticle.bl { bottom: 0; left: 0; border-bottom: 1px solid; border-left: 1px solid; }
+  .bs-corner-reticle.br { bottom: 0; right: 0; border-bottom: 1px solid; border-right: 1px solid; }
+
+  .bs-label-mono {
+    font-family: var(--font-mono), monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--beta-fg-muted);
+  }
+  .bs-signal-amber { color: var(--beta-accent); }
+  .bs-signal-cyan { color: var(--beta-accent-2); }
+  .bs-signal-green { color: var(--beta-accent-3); }
+
+  /* Blinking cursor for terminal text */
+  .bs-blink::after {
+    content: "▋";
+    animation: bs-blink-anim 1s step-end infinite;
+    color: var(--beta-accent);
+  }
+  @keyframes bs-blink-anim {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0; }
+  }
+
+  /* Scan reveal sweep — cyan sweep on hover */
+  @keyframes bs-scan-sweep {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+  }
+  .bs-scan-reveal {
+    position: relative;
+    overflow: hidden;
+  }
+  .bs-scan-reveal::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent, rgba(0,229,255,0.06), transparent);
+    transform: translateX(-100%);
+    transition: transform 0.6s ease;
+  }
+  .bs-scan-reveal:hover::after {
+    animation: bs-scan-sweep 0.6s ease;
+  }
+
+  /* Marquee ticker (kept from previous) */
+  @keyframes ticker-scroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+  .beta-marquee {
+    display: flex;
+    overflow: hidden;
+    -webkit-mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
+    mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
+  }
+  .beta-marquee-track {
+    display: flex;
+    gap: 2rem;
+    animation: ticker-scroll 30s linear infinite;
+    white-space: nowrap;
+  }
+  .beta-marquee:hover .beta-marquee-track {
+    animation-play-state: paused;
+  }
+
+  /* Count up animation */
+  @keyframes count-up {
+    0% { opacity: 0; transform: translateY(8px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Scroll reveal — sections fade in + slide up when entering viewport */
+  [data-reveal] {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  [data-reveal].revealed {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Hero letter stagger animation */
+  @keyframes hero-letter-in {
+    0% { opacity: 0; transform: translateY(30px) scale(0.95); filter: blur(8px); }
+    100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+  }
+
+  /* Magnetic button hover effect */
+  .magnetic-btn {
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  }
+  .magnetic-btn:hover {
+    transform: scale(1.04);
+    box-shadow: 0 0 24px var(--beta-accent-glow);
+  }
+  .magnetic-btn:active {
+    transform: scale(0.98);
+  }
+
+  /* Service card hover — border brightens + slight lift */
+  .bs-scan-reveal:hover {
+    border-color: var(--beta-border-strong) !important;
+    transform: translateY(-2px);
+  }
+  .bs-scan-reveal {
+    transition: border-color 0.2s ease, transform 0.2s ease;
+  }
+
+  /* Link hover — smooth underline draw */
+  .beta-mode a:not(.magnetic-btn):not([class*="inline-flex"]):hover {
+    color: var(--beta-accent-2);
+    transition: color 0.15s ease;
+  }
+  /* Stagger children if data-reveal-stagger is set */
+  [data-reveal-stagger] > * {
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+  }
+  [data-reveal-stagger].revealed > * {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  [data-reveal-stagger].revealed > *:nth-child(1) { transition-delay: 0s; }
+  [data-reveal-stagger].revealed > *:nth-child(2) { transition-delay: 0.08s; }
+  [data-reveal-stagger].revealed > *:nth-child(3) { transition-delay: 0.16s; }
+  [data-reveal-stagger].revealed > *:nth-child(4) { transition-delay: 0.24s; }
+  [data-reveal-stagger].revealed > *:nth-child(5) { transition-delay: 0.32s; }
+  [data-reveal-stagger].revealed > *:nth-child(6) { transition-delay: 0.40s; }
+  [data-reveal-stagger].revealed > *:nth-child(n+7) { transition-delay: 0.48s; }
+
+  /* Respect reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    [data-reveal], [data-reveal-stagger] > * {
+      opacity: 1 !important;
+      transform: none !important;
+      transition: none !important;
+    }
+  }
+
+  /* brutalist sharp corners everywhere — EXCEPT .beta-mode (tactical 12px corners) */
   * {
+    border-radius: 0 !important;
+  }
+  .beta-mode * {
+    border-radius: 12px !important;
+  }
+  /* Sharp corners for: mono badges, chips, tactical UI, data viz bars, cursor scope */
+  .beta-mode .font-mono,
+  .beta-mode [class*="font-mono"],
+  .beta-mode code,
+  .beta-mode .bs-label-mono,
+  .beta-mode .beta-scope-dot,
+  .beta-mode .beta-scope-ring,
+  .beta-mode .bs-spectrum-bar {
     border-radius: 0 !important;
   }
   /* ensure fixed inset-0 elements fill the viewport */
@@ -617,7 +1197,7 @@
 }
 
 /* Light theme overrides — soften brutalist effects for white background */
-.light {
+.sigma-light {
   /* scanlines: darker lines, visible on off-white */
   --scanline-color: rgba(0, 0, 0, 0.12);
   /* noise: slightly stronger for visibility */
@@ -625,19 +1205,28 @@
   /* grid: darker lines for visibility */
   --grid-color: rgba(0, 0, 0, 0.10);
 }
-.light ::-webkit-scrollbar-track { background: oklch(0.92 0.002 90); }
-.light ::-webkit-scrollbar-thumb { background: oklch(0.45 0 0); }
-.light ::-webkit-scrollbar-thumb:hover { background: oklch(0.28 0 0); }
+.sigma-light ::-webkit-scrollbar-track { background: oklch(0.92 0.002 90); }
+.sigma-light ::-webkit-scrollbar-thumb { background: oklch(0.45 0 0); }
+.sigma-light ::-webkit-scrollbar-thumb:hover { background: oklch(0.28 0 0); }
 /* Selection: use darker orange so text stays readable */
-.light ::selection { background: #B23A00; color: #fff; }
-.light ::-moz-selection { background: #B23A00; color: #fff; }
+.sigma-light ::selection { background: #B23A00; color: #fff; }
+.sigma-light ::-moz-selection { background: #B23A00; color: #fff; }
 
-/* Reduced motion: disable all animations */
+/* Reduced motion: disable all animations
+   ------------------------------------------------------------
+   GLOBAL FALLBACK — in addition to per-mode blocks below + the
+   useReducedMotion() JS gate used by motion/react components.
+   Forces near-instant transitions/animations and disables smooth
+   scroll so the page never moves on its own. */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  html, body {
+    scroll-behavior: auto !important;
   }
   .sigma-spin-slow, .sigma-pulse, .sigma-blink, .sigma-sweep, .sigma-ticker, .sigma-glow-ring, .sigma-shimmer {
     animation: none !important;
@@ -761,7 +1350,7 @@
   pointer-events: none;
 }
 .sigma-glitch::before {
-  color: #FF2D7E;
+  color: #FFB300;
   transform: translate(-2px, 0);
   clip-path: polygon(0 0, 100% 0, 100% 45%, 0 45%);
   mix-blend-mode: screen;
@@ -852,7 +1441,7 @@
 }
 .sigma-rgb-split:hover {
   text-shadow:
-    -2px 0 0 #FF2D7E,
+    -2px 0 0 #FFB300,
     2px 0 0 #00E5FF;
 }
 
@@ -935,7 +1524,10 @@
    div (clip-path would clip a box-shadow).
    ============================================================ */
 .sigma-card {
-  transition: transform 0.35s cubic-bezier(0.2, 0.7, 0.2, 1);
+  /* Consistent hover elevation transition (LOOP-2 spec) — matches
+     .alpha-card-hover timing so portfolio + service cards share the
+     same lift cadence. */
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
   will-change: transform;
   isolation: isolate;
 }
@@ -955,13 +1547,15 @@
 .sigma-card:hover .sigma-card-glow {
   opacity: 1;
 }
-/* Image zoom inside card */
+/* Image zoom inside card — 1.06 over 0.6s ease-out-back (LOOP-2 spec).
+   Matches .alpha-img-scale timing exactly so every card grid in alpha
+   shares the same image-hover cadence. */
 .sigma-card .sigma-card-img {
-  transition: transform 0.8s cubic-bezier(0.2, 0.7, 0.2, 1);
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
   will-change: transform;
 }
 .sigma-card:hover .sigma-card-img {
-  transform: scale(1.08);
+  transform: scale(1.06);
 }
 /* Cinematic hover overlay (fade + scan-line) */
 .sigma-card .sigma-card-overlay {
@@ -1298,5 +1892,1699 @@
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+  }
+}
+
+/* ============================================================
+   BETA MODE — UNIQUE HERO HUD CARDS (Stage: POLISH-V2)
+   Research-backed techniques:
+   - Rotating conic-gradient border (@property --conic-angle)
+   - 4-zone corner grammar (TL=ID, TR=timestamp, BL=sparkline, BR=signal)
+   - mix-blend-mode: screen additive glow over void-black
+   - Periodic scan-flicker micro-event
+   ============================================================ */
+
+@property --conic-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+.beta-mode .bs-conic-card {
+  position: relative;
+  background:
+    linear-gradient(var(--beta-bg), var(--beta-bg)) padding-box,
+    conic-gradient(from var(--conic-angle), transparent 0%, rgba(212, 175, 55, 0.85) 8%, transparent 18%, transparent 50%, rgba(212, 175, 55, 0.55) 58%, transparent 68%, transparent 100%) border-box;
+  border: 1px solid transparent;
+  animation: bs-conic-rotate 6s linear infinite;
+}
+@keyframes bs-conic-rotate {
+  to { --conic-angle: 360deg; }
+}
+
+/* Additive gold glow halo — REMOVED per user request (gold radial at 50% 50%).
+   The .bs-conic-card class is not used by any component (verified via rg),
+   but this ::before was a 10% gold radial wash that could match if the class
+   were ever applied. Deleted to prevent any gold overlay. */
+
+/* 4-zone corner ticks — TL / TR / BL / BR */
+.beta-mode .bs-zone-corner {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  pointer-events: none;
+}
+.beta-mode .bs-zone-corner.tl { top: 4px; left: 4px; border-top: 1px solid var(--beta-accent); border-left: 1px solid var(--beta-accent); }
+.beta-mode .bs-zone-corner.tr { top: 4px; right: 4px; border-top: 1px solid var(--beta-accent); border-right: 1px solid var(--beta-accent); }
+.beta-mode .bs-zone-corner.bl { bottom: 4px; left: 4px; border-bottom: 1px solid var(--beta-accent); border-left: 1px solid var(--beta-accent); }
+.beta-mode .bs-zone-corner.br { bottom: 4px; right: 4px; border-bottom: 1px solid var(--beta-accent); border-right: 1px solid var(--beta-accent); }
+
+/* Animated RF-style sparkline — re-shapes every 2.4s */
+@keyframes bs-sparkline-shift {
+  0%, 100% { stroke-dashoffset: 0; opacity: 0.7; }
+  50% { stroke-dashoffset: -40; opacity: 1; }
+}
+.beta-mode .bs-sparkline-path {
+  stroke: var(--beta-accent);
+  stroke-width: 1.25;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  filter: drop-shadow(0 0 4px rgba(212, 175, 55, 0.6));
+  stroke-dasharray: 4 2;
+  animation: bs-sparkline-shift 2.4s ease-in-out infinite;
+}
+
+/* Scan-flicker micro-event — sells "real terminal" feel */
+@keyframes bs-scan-flicker {
+  0%, 92%, 100% { opacity: 1; transform: translateX(0); }
+  94% { opacity: 0.7; transform: translateX(1px); }
+  96% { opacity: 1; transform: translateX(-1px); }
+  98% { opacity: 0.85; transform: translateX(0); }
+}
+.beta-mode .bs-flicker {
+  animation: bs-scan-flicker 7s linear infinite;
+}
+
+/* Pulsing status dot — radar-lock style */
+@keyframes bs-pulse-dot {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.7), 0 0 8px rgba(212, 175, 55, 0.5); }
+  50% { box-shadow: 0 0 0 6px rgba(212, 175, 55, 0), 0 0 12px rgba(212, 175, 55, 0.8); }
+}
+.beta-mode .bs-pulse-dot {
+  animation: bs-pulse-dot 1.8s ease-in-out infinite;
+}
+
+/* Circular progress ring (SVG stroke-dashoffset animation) */
+@keyframes bs-ring-progress {
+  0% { stroke-dashoffset: 113; }
+  50% { stroke-dashoffset: 22; }
+  100% { stroke-dashoffset: 113; }
+}
+.beta-mode .bs-ring-progress {
+  animation: bs-ring-progress 4s ease-in-out infinite;
+}
+
+/* ============================================================
+   BETA MODE — CLEAN SERVICE CARDS (Stage: POLISH-V2)
+   Research-backed "Linear/Stripe" principle:
+   - No border at rest
+   - 2px accent bottom-strip slides in L→R on hover
+   - Single-row expandable list (~56px default, expanded ~180px)
+   - One anchor element, 8px spacing grid, 1 accent only
+   ============================================================ */
+
+.beta-mode .bs-svc-row {
+  position: relative;
+  border: 1px solid transparent;
+  background: transparent;
+  transition: border-color 0.25s ease, background 0.25s ease;
+  overflow: hidden;
+}
+.beta-mode .bs-svc-row:hover {
+  border-color: rgba(212, 175, 55, 0.18);
+  background: rgba(212, 175, 55, 0.02);
+}
+.beta-mode .bs-svc-row[data-open="true"] {
+  border-color: rgba(212, 175, 55, 0.35);
+  background: rgba(212, 175, 55, 0.03);
+}
+
+/* Bottom accent strip — slides in L→R on hover */
+.beta-mode .bs-svc-strip {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 2px;
+  width: 0%;
+  background: linear-gradient(90deg, var(--beta-accent), rgba(212, 175, 55, 0.3));
+  transition: width 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  box-shadow: 0 0 8px rgba(212, 175, 55, 0.6);
+}
+.beta-mode .bs-svc-row:hover .bs-svc-strip,
+.beta-mode .bs-svc-row[data-open="true"] .bs-svc-strip {
+  width: 100%;
+}
+
+/* Dotted leader between title and price (terminal-style) */
+.beta-mode .bs-svc-leader {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+  height: 1em;
+  margin: 0 12px;
+}
+.beta-mode .bs-svc-leader::after {
+  content: "...............................................................................................................................";
+  letter-spacing: 2px;
+  color: var(--beta-border);
+  white-space: nowrap;
+  font-family: var(--font-mono), monospace;
+  font-size: 10px;
+  line-height: 1;
+  position: absolute;
+  bottom: 2px;
+  left: 0;
+}
+
+/* ============================================================
+   BETA MODE — FOOTER TAUNGOO RADIANT SHIMMER (Stage: POLISH-V2)
+   3-layer stack:
+   - Main text: 5-stop molten-gold gradient with bg-clip:text + sweep
+   - ::before: solid gold base color (fallback visible layer)
+   - ::after: radial "light bulb" glaze with mix-blend-mode: screen
+   - Pulsing drop-shadow halo synced to sweep
+   ============================================================ */
+
+@property --sweep-x {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: -30%;
+}
+
+@keyframes bs-tau-sweep {
+  0% { --sweep-x: -30%; }
+  60%, 100% { --sweep-x: 130%; }
+}
+
+@keyframes bs-tau-shimmer {
+  0% { background-position: 200% 50%; }
+  100% { background-position: -200% 50%; }
+}
+
+@keyframes bs-tau-halo {
+  0%, 100% { filter: drop-shadow(0 0 4px rgba(212, 175, 55, 0.25)); }
+  35%, 65% { filter: drop-shadow(0 0 14px rgba(212, 175, 55, 0.55)); }
+  50% { filter: drop-shadow(0 0 20px rgba(255, 235, 153, 0.65)); }
+}
+
+.beta-mode .bs-tau-wordmark {
+  position: relative;
+  display: inline-block;
+  background:
+    linear-gradient(
+      100deg,
+      #8B6914 0%,
+      #D4AF37 30%,
+      #FFEB99 50%,
+      #D4AF37 70%,
+      #8B6914 100%
+    );
+  background-size: 250% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  animation:
+    bs-tau-shimmer 5s linear infinite,
+    bs-tau-halo 5s ease-in-out infinite;
+  letter-spacing: 0.1em;
+  line-height: 1;
+}
+
+/* Solid gold base fallback layer — visible if gradient fails */
+.beta-mode .bs-tau-wordmark::before {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  color: rgba(212, 175, 55, 0.18);
+  background: none;
+  -webkit-text-fill-color: rgba(212, 175, 55, 0.18);
+  z-index: -1;
+}
+
+/* Radial "light bulb" glaze — passes over the letters with screen blend */
+.beta-mode .bs-tau-wordmark::after {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle 25% at var(--sweep-x) 50%,
+    rgba(255, 235, 153, 0.85) 0%,
+    rgba(255, 235, 153, 0.3) 50%,
+    transparent 80%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  mix-blend-mode: screen;
+  animation: bs-tau-sweep 5s ease-in-out infinite;
+  pointer-events: none;
+}
+
+/* ============================================================
+   BETA MODE — GHOST CTA WITH LIQUID FILL (Stage: POLISH-V3)
+   Awwwards-tier CTA: bordered ghost button that fills with gold
+   on hover, with a subtle glow trail. Replaces flat yellow rect.
+   ============================================================ */
+
+.beta-mode .bs-cta-ghost::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--beta-accent);
+  transform: translateX(-101%);
+  transition: transform 0.4s cubic-bezier(0.65, 0, 0.35, 1);
+  z-index: 1;
+}
+.beta-mode .bs-cta-ghost:hover::before {
+  transform: translateX(0);
+}
+.beta-mode .bs-cta-ghost:hover {
+  color: var(--beta-bg);
+  box-shadow: 0 0 24px rgba(212, 175, 55, 0.4), 0 0 8px rgba(212, 175, 55, 0.6) inset;
+}
+/* Edge-glow trail at top of button on hover */
+.beta-mode .bs-cta-ghost::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgba(212, 175, 55, 0.8), transparent);
+  transform: translateX(-100%);
+  transition: transform 0.5s cubic-bezier(0.65, 0, 0.35, 1);
+  z-index: 2;
+}
+.beta-mode .bs-cta-ghost:hover::after {
+  transform: translateX(100%);
+}
+
+/* Tabular numerals utility — prevents number width jitter */
+.beta-mode .tabular-nums,
+.beta-mode [class*="tabular-nums"] {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" on;
+}
+
+/* ============================================================
+   BETA MODE — INPUT FOCUS GLOW (Stage: POLISH-V3)
+   Inputs gain a subtle gold border + outer glow on focus
+   ============================================================ */
+
+.beta-mode .bs-input {
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+.beta-mode .bs-input:focus {
+  border-color: rgba(212, 175, 55, 0.6) !important;
+  box-shadow: 0 0 0 1px rgba(212, 175, 55, 0.3), 0 0 16px rgba(212, 175, 55, 0.15);
+  background: rgba(212, 175, 55, 0.02) !important;
+}
+.beta-mode .bs-input::placeholder {
+  color: var(--beta-fg-subtle);
+  opacity: 0.5;
+}
+
+/* Section index labels on hover — NavBar refinements */
+.beta-mode .bs-nav-active-glow {
+  box-shadow: 0 0 12px rgba(212, 175, 55, 0.3);
+}
+
+/* ============================================================
+   BETA MODE — RETICLE CURSOR (Stage: POLISH-V3)
+   Hide native cursor on desktop, replaced by JS-driven reticle
+   ============================================================ */
+@media (pointer: fine) and (min-width: 768px) {
+  .beta-mode,
+  .beta-mode * {
+    cursor: none !important;
+  }
+}
+
+/* Respect reduced-motion — disable infinite animations */
+@media (prefers-reduced-motion: reduce) {
+  .beta-mode .bs-conic-card,
+  .beta-mode .bs-sparkline-path,
+  .beta-mode .bs-flicker,
+  .beta-mode .bs-pulse-dot,
+  .beta-mode .bs-ring-progress,
+  .beta-mode .bs-tau-wordmark,
+  .beta-mode .bs-tau-wordmark::after,
+  .beta-mode .bs-svc-strip {
+    animation: none !important;
+  }
+}
+
+/* ============================================================
+   BETA MODE — MAGNETIC CTA + STAGGERED REVEAL (Stage: POLISH-V5)
+   Awwwards-tier micro-interactions:
+   - Magnetic button (subtle pull toward cursor)
+   - Card stagger reveal (data-reveal + data-reveal-stagger)
+   - Glowing focus ring on inputs
+   ============================================================ */
+
+/* Magnetic CTA — translate toward cursor within ±6px */
+.beta-mode .bs-magnetic {
+  transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+}
+
+/* Stagger reveal — fade up children with delay ladder */
+.beta-mode [data-reveal-stagger] > * {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.beta-mode [data-reveal-stagger].is-visible > *:nth-child(1) { transition-delay: 0ms; }
+.beta-mode [data-reveal-stagger].is-visible > *:nth-child(2) { transition-delay: 80ms; }
+.beta-mode [data-reveal-stagger].is-visible > *:nth-child(3) { transition-delay: 160ms; }
+.beta-mode [data-reveal-stagger].is-visible > *:nth-child(4) { transition-delay: 240ms; }
+.beta-mode [data-reveal-stagger].is-visible > *:nth-child(5) { transition-delay: 320ms; }
+.beta-mode [data-reveal-stagger].is-visible > *:nth-child(6) { transition-delay: 400ms; }
+.beta-mode [data-reveal-stagger].is-visible > *:nth-child(7) { transition-delay: 480ms; }
+.beta-mode [data-reveal-stagger].is-visible > *:nth-child(8) { transition-delay: 560ms; }
+.beta-mode [data-reveal-stagger].is-visible > * {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Single element reveal — fade up */
+.beta-mode [data-reveal] {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.beta-mode [data-reveal].is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Service row hover — subtle bg tint + left accent */
+.beta-mode .bs-svc-row:hover .bs-svc-num {
+  color: var(--beta-accent);
+}
+.beta-mode .bs-svc-row .bs-svc-num {
+  transition: color 0.2s ease;
+}
+
+/* Reduced motion — disable reveal animations */
+@media (prefers-reduced-motion: reduce) {
+  .beta-mode [data-reveal],
+  .beta-mode [data-reveal-stagger] > * {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+/* ============================================================
+   BETA MODE — RADAR SWEEP + THROUGHPUT BARS (Stage: POLISH-V6)
+   Hero screen data visualization:
+   - Rotating radar sweep (4s linear infinite)
+   - Oscilloscope-style throughput bars (JS-driven)
+   ============================================================ */
+
+@keyframes bs-radar-rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Subtle pulse for throughput bars (in addition to JS height updates) */
+@keyframes bs-bar-glow {
+  0%, 100% { opacity: 0.9; }
+  50% { opacity: 1; }
+}
+.beta-mode .bs-live-bar {
+  animation: bs-bar-glow 1.2s ease-in-out infinite;
+}
+
+/* ============================================================
+   BETA MODE — 3D CARD TILT + DATA STREAM (Stage: POLISH-V6)
+   Awwwards-tier card interactions:
+   - 3D tilt on hover (perspective transform)
+   - Top progress bar per section (scroll-driven)
+   ============================================================ */
+
+/* 3D tilt setup — applied via JS by setting --tilt-x and --tilt-y CSS vars */
+.beta-mode .bs-tilt-card {
+  transform-style: preserve-3d;
+  perspective: 1000px;
+  transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Data stream — thin gold line that sweeps across section on enter */
+@keyframes bs-data-stream {
+  0% { transform: translateX(-100%); opacity: 0; }
+  10%, 90% { opacity: 1; }
+  100% { transform: translateX(100%); opacity: 0; }
+}
+.beta-mode .bs-data-stream {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--beta-accent), transparent);
+  pointer-events: none;
+  z-index: 5;
+  animation: bs-data-stream 2s ease-out;
+}
+
+/* Card hover glow — soft outer glow */
+.beta-mode .bs-glow-hover {
+  transition: box-shadow 0.3s ease, border-color 0.3s ease;
+}
+.beta-mode .bs-glow-hover:hover {
+  box-shadow: 0 0 24px rgba(212, 175, 55, 0.15), 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+/* Bento card hover — scan line sweep + accent overlay */
+.beta-mode .bs-bento-card {
+  position: relative;
+  overflow: hidden;
+}
+/* Scan line — horizontal sweep on hover */
+.beta-mode .bs-bento-card::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--beta-accent), transparent);
+  transform: translateY(0) scaleX(0);
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  z-index: 5;
+  pointer-events: none;
+}
+.beta-mode .bs-bento-card:hover::after {
+  transform: translateY(100%) scaleX(1);
+}
+
+/* ============================================================
+   BETA MODE — SCI-FI RED DOT SCOPE CURSOR (Stage: POLISH-V13)
+   Red center dot + outer scope ring + 4 crosshair ticks.
+   STABLE — zero React state updates during mousemove.
+   ============================================================ */
+
+/* Red center dot — 4px solid red with glow */
+.beta-scope-dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 9999px;
+  background: #ff3333;
+  box-shadow: 0 0 6px rgba(255, 51, 51, 0.8), 0 0 12px rgba(255, 51, 51, 0.4);
+  margin-left: -2px;
+  margin-top: -2px;
+}
+
+/* Outer scope ring — 24px with 4 crosshair ticks via pseudo-elements */
+.beta-scope-ring {
+  width: 24px;
+  height: 24px;
+  border: 1px solid rgba(255, 51, 51, 0.5);
+  border-radius: 9999px;
+  box-shadow: 0 0 8px rgba(255, 51, 51, 0.2);
+  /* Crosshair tick marks — top, right, bottom, left */
+  background-image:
+    linear-gradient(to right, transparent 45%, rgba(255,51,51,0.6) 45%, rgba(255,51,51,0.6) 55%, transparent 55%),
+    linear-gradient(to bottom, transparent 45%, rgba(255,51,51,0.6) 45%, rgba(255,51,51,0.6) 55%, transparent 55%);
+  background-size: 100% 6px, 6px 100%;
+  background-position: center top, center center;
+  background-repeat: no-repeat;
+}
+
+/* Hover state — ring expands to 40px, ticks extend */
+body.cursor-hovering .beta-scope-ring {
+  width: 40px;
+  height: 40px;
+  margin-left: -20px;
+  margin-top: -20px;
+  border-color: rgba(255, 51, 51, 0.7);
+  box-shadow: 0 0 12px rgba(255, 51, 51, 0.3);
+  background-size: 100% 8px, 8px 100%;
+}
+body.cursor-hovering .beta-scope-dot {
+  box-shadow: 0 0 8px rgba(255, 51, 51, 1), 0 0 16px rgba(255, 51, 51, 0.5);
+}
+
+/* Press state — ring contracts to 16px (scope focus) */
+body.cursor-pressed .beta-scope-ring {
+  width: 16px;
+  height: 16px;
+  margin-left: -8px;
+  margin-top: -8px;
+}
+body.cursor-pressed .beta-scope-dot {
+  width: 6px;
+  height: 6px;
+  margin-left: -3px;
+  margin-top: -3px;
+}
+
+/* Combined hover+press */
+body.cursor-hovering.cursor-pressed .beta-scope-ring {
+  width: 28px;
+  height: 28px;
+  margin-left: -14px;
+  margin-top: -14px;
+}
+
+/* ============================================================
+   BETA MODE — SYSTEM HEARTBEAT (Signature Element)
+   A 1px gold line that pulses across the top of the viewport
+   every 4 seconds, synced to the SYS PULSE BPM in the HUD.
+   This is the ambient signature that makes Beta feel alive.
+   ============================================================ */
+@keyframes bs-heartbeat-pulse {
+  0% { transform: scaleX(0); transform-origin: left; opacity: 0; }
+  10% { opacity: 1; }
+  50% { transform: scaleX(1); transform-origin: left; opacity: 0.8; }
+  51% { transform: scaleX(1); transform-origin: right; }
+  100% { transform: scaleX(0); transform-origin: right; opacity: 0; }
+}
+.beta-mode .bs-heartbeat {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--beta-accent), transparent);
+  z-index: 90;
+  pointer-events: none;
+  animation: bs-heartbeat-pulse 4s ease-in-out infinite;
+}
+
+/* ============================================================
+   BETA MODE — EMBER GLOW BACKGROUND (all sections)
+   REMOVED per user request: "remove completely the Gold or Orange
+   overlay color, which stays in the middle of the screen in all modes
+   even like a global color overlay." The ember glow was a gold radial
+   gradient washing over every section, disturbing visibility over the
+   film grain. Only the position:relative + z-index stacking rules are
+   kept so children still layer correctly above the grain.
+   ============================================================ */
+.beta-mode section {
+  position: relative;
+}
+.beta-mode section > * {
+  position: relative;
+  z-index: 1;
+}
+/* Allow Tailwind's `absolute` / `fixed` utility classes to override the
+   relative default above (needed for full-bleed overlays like the hero
+   figure, vignettes, corner brackets, HUDs, etc.). */
+.beta-mode section > *[class*="absolute"] {
+  position: absolute;
+}
+.beta-mode section > *[class*="fixed"] {
+  position: fixed;
+}
+/* section::after ember glow DELETED — no more gold wash overlay */
+
+/* ============================================================
+   ALPHA MODE — DATA RIVER (Signature Element)
+   A horizontal flowing stream of project names + tech tags
+   that runs along the bottom as a persistent ambient element.
+   ============================================================ */
+@keyframes alpha-data-river-scroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.alpha-data-river {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 28px;
+  overflow: hidden;
+  z-index: 50;
+  pointer-events: none;
+  background: rgba(11, 20, 38, 0.9);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-top: 1px solid var(--alpha-border);
+  mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
+}
+.alpha-data-river-track {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  gap: 24px;
+  white-space: nowrap;
+  animation: alpha-data-river-scroll 40s linear infinite;
+  width: max-content;
+}
+.alpha-data-river-item {
+  font-family: var(--font-mono), monospace;
+  font-size: 10px;
+  color: var(--alpha-fg-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.alpha-data-river-item .dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--alpha-accent);
+}
+
+/* ============================================================
+   BETA MODE — WORK SECTION: HOVER-REVEAL CARDS (Stage: POLISH-V11)
+   Full-bleed image cards with slide-up content panel on hover.
+   At rest: just image + project name centered.
+   On hover: content slides up from bottom, gradient fades in.
+   ============================================================ */
+
+/* Slide-up content panel — hidden at rest, slides up on hover */
+.beta-mode .bs-reveal-panel {
+  transform: translateY(100%);
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.beta-mode .bs-reveal-card:hover .bs-reveal-panel {
+  transform: translateY(0);
+}
+
+/* Centered name — fades out on hover */
+.beta-mode .bs-reveal-name {
+  transition: opacity 0.3s ease;
+}
+.beta-mode .bs-reveal-card:hover .bs-reveal-name {
+  opacity: 0;
+}
+
+/* Gradient overlay — hidden at rest, fades in on hover */
+.beta-mode .bs-reveal-gradient {
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+.beta-mode .bs-reveal-card:hover .bs-reveal-gradient {
+  opacity: 1;
+}
+
+/* Top accent strip — draws L→R on hover */
+.beta-mode .bs-reveal-strip {
+  width: 0%;
+  transition: width 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.beta-mode .bs-reveal-card:hover .bs-reveal-strip {
+  width: 100%;
+}
+
+/* Hover border glow */
+.beta-mode .bs-reveal-glow {
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+.beta-mode .bs-reveal-card:hover .bs-reveal-glow {
+  opacity: 1;
+}
+
+/* ============================================================
+   BETA MODE — FILM GRAIN OVERLAY (Stage: POLISH-V7)
+   Subtle animated noise overlay across the whole page
+   Sells the "analog cinematic" feel
+   ============================================================ */
+
+.beta-mode::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.025;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E");
+  mix-blend-mode: overlay;
+  animation: bs-grain-shift 8s steps(10) infinite;
+}
+
+@keyframes bs-grain-shift {
+  0%, 100% { transform: translate(0, 0); }
+  10% { transform: translate(-5%, -5%); }
+  20% { transform: translate(-10%, 5%); }
+  30% { transform: translate(5%, -10%); }
+  40% { transform: translate(-5%, 15%); }
+  50% { transform: translate(-10%, 5%); }
+  60% { transform: translate(15%, 0); }
+  70% { transform: translate(0, 10%); }
+  80% { transform: translate(-15%, 0); }
+  90% { transform: translate(10%, 5%); }
+}
+
+/* Reduced motion — disable grain animation */
+@media (prefers-reduced-motion: reduce) {
+  .beta-mode::before {
+    animation: none !important;
+  }
+}
+
+/* ============================================================
+   BETA MODE — PORTFOLIO CARD SHEEN + HOVER LIFT (Stage: POLISH-V5)
+   Awwwards-tier card hover:
+   - Top-edge gold accent line that draws L→R on hover
+   - Subtle gradient sheen that sweeps across on hover
+   - Image zoom + border brighten
+   ============================================================ */
+
+.beta-mode .bs-card-sheen {
+  position: relative;
+  transition: border-color 0.3s ease, transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.beta-mode .bs-card-sheen:hover {
+  border-color: rgba(212, 175, 55, 0.4) !important;
+}
+
+/* Top accent line — draws L→R on hover */
+.beta-mode .bs-card-sheen::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 1px;
+  width: 0%;
+  background: linear-gradient(to right, transparent, var(--beta-accent), transparent);
+  transition: width 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  z-index: 5;
+}
+.beta-mode .bs-card-sheen:hover::before {
+  width: 100%;
+}
+
+/* Sheen sweep — diagonal light sweep across card on hover */
+.beta-mode .bs-card-sheen::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(105deg, transparent 30%, rgba(212, 175, 55, 0.08) 50%, transparent 70%);
+  transform: translateX(-100%);
+  transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+  pointer-events: none;
+  z-index: 3;
+}
+.beta-mode .bs-card-sheen:hover::after {
+  transform: translateX(100%);
+}
+/* trigger recompile */
+
+/* ============================================================
+   ALPHA MODE — GLOBAL POLISH (Stage: LOOP-2-ALPHA-POLISH)
+   Scopes selection / scrollbar / focus-visible / scroll-padding
+   to .alpha-mode (set on the AlphaInterface scroll container).
+   Matches the beta-mode polish bar — orange brand accent (#FF4500).
+   ============================================================ */
+.alpha-mode {
+  scroll-behavior: smooth;
+  /* Anchor nav offset — sticky AlphaMiniNav is ~50px tall at top.
+     Gives anchor jumps breathing room below the bar. */
+  scroll-padding-top: 80px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* Selection — bright orange bg, near-black text (brand-correct in alpha) */
+.alpha-mode ::selection {
+  background: rgba(255, 69, 0, 0.95);
+  color: #0a0a0a;
+  text-shadow: none;
+}
+.alpha-mode ::-moz-selection {
+  background: rgba(255, 69, 0, 0.95);
+  color: #0a0a0a;
+  text-shadow: none;
+}
+
+/* Custom scrollbar — 6px, orange 30% / 60% on hover */
+.alpha-mode::-webkit-scrollbar,
+.alpha-mode ::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.alpha-mode::-webkit-scrollbar-track,
+.alpha-mode ::-webkit-scrollbar-track {
+  background: transparent;
+}
+.alpha-mode::-webkit-scrollbar-thumb,
+.alpha-mode ::-webkit-scrollbar-thumb {
+  background: rgba(255, 69, 0, 0.30);
+  border-radius: 0;
+}
+.alpha-mode::-webkit-scrollbar-thumb:hover,
+.alpha-mode ::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 69, 0, 0.60);
+}
+.alpha-mode {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 69, 0, 0.30) transparent;
+}
+
+/* Focus-visible — 2px orange outline, offset 2px */
+.alpha-mode :focus-visible {
+  outline: 2px solid #FF4500;
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+.alpha-mode :focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Smooth image rendering */
+.alpha-mode img {
+  image-rendering: auto;
+  -ms-interpolation-mode: bicubic;
+}
+
+/* ============================================================
+   ALPHA MODE — HERO POLISH
+   - Magnetic CTA (JS sets transform via useMagnetic; CSS provides
+     the smooth spring-back transition)
+   - Animated scroll hint (chevron pulse + line draw, 2s loop)
+   - Staggered headline entrance is handled via motion/react in
+     AlphaHero.tsx (whileInView, y+blur+opacity, stagger 0.05)
+   ============================================================ */
+.alpha-magnetic {
+  transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+}
+
+@keyframes alpha-scroll-hint-pulse {
+  0%, 100% { transform: translateY(0);   opacity: 0.6; }
+  50%      { transform: translateY(6px); opacity: 1; }
+}
+.alpha-scroll-hint {
+  animation: alpha-scroll-hint-pulse 2s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+
+@keyframes alpha-scroll-hint-line {
+  0%   { transform: scaleY(0);   transform-origin: top; }
+  50%  { transform: scaleY(1);   transform-origin: top; }
+  51%  { transform-origin: bottom; }
+  100% { transform: scaleY(0);   transform-origin: bottom; }
+}
+.alpha-scroll-hint-line {
+  animation: alpha-scroll-hint-line 2s ease-in-out infinite;
+  will-change: transform;
+}
+
+/* ============================================================
+   ALPHA MODE — CARD CORNER BRACKETS + GHOST NUMERAL + IMG SCALE
+   Shared by SciFiCard / AlphaPortfolio / AlphaServices / AlphaTeam.
+   Pattern mirrors beta .bs-portfolio-corner / .bs-portfolio-ghost /
+   .bs-portfolio-img — animated corner brackets draw in, oversized
+   ghost index numerals (6% → 12% on hover), image scale 1.06.
+   ============================================================ */
+
+/* Corner brackets — 4 L-shaped marks. 0×0 at rest; expand on hover. */
+.alpha-corner {
+  position: absolute;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+  opacity: 0;
+  z-index: 4;
+  transition:
+    width 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+    height 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.3s ease;
+  will-change: width, height, opacity;
+}
+.alpha-corner.tl { top: 6px;    left: 6px;    border-top: 1.5px solid;    border-left: 1.5px solid; }
+.alpha-corner.tr { top: 6px;    right: 6px;   border-top: 1.5px solid;    border-right: 1.5px solid; }
+.alpha-corner.bl { bottom: 6px; left: 6px;    border-bottom: 1.5px solid; border-left: 1.5px solid; }
+.alpha-corner.br { bottom: 6px; right: 6px;   border-bottom: 1.5px solid; border-right: 1.5px solid; }
+.alpha-card-hover:hover .alpha-corner,
+.alpha-card-hover:focus-within .alpha-corner {
+  width: 14px;
+  height: 14px;
+  opacity: 0.85;
+}
+
+/* Ghost index numeral — oversized 6% opacity watermark behind content.
+   Color resolves to the card's --sigma-hover-accent (per-card color). */
+.alpha-ghost-numeral {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  font-family: var(--font-sans), sans-serif;
+  font-weight: 900;
+  font-size: clamp(3rem, 9vw, 6.5rem);
+  line-height: 0.85;
+  color: var(--sigma-hover-accent, #FF4500);
+  opacity: 0.06;
+  z-index: 0;
+  user-select: none;
+  letter-spacing: -0.04em;
+  transition: opacity 0.4s ease;
+  will-change: opacity;
+}
+.alpha-card-hover:hover .alpha-ghost-numeral,
+.alpha-card-hover:focus-within .alpha-ghost-numeral {
+  opacity: 0.12;
+}
+
+/* Image scale — 1.0 → 1.06 over 0.6s ease-out-back (matches beta) */
+.alpha-img-scale {
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+}
+.alpha-card-hover:hover .alpha-img-scale,
+.alpha-card-hover:focus-within .alpha-img-scale {
+  transform: scale(1.06);
+}
+
+/* ============================================================
+   ALPHA MODE — PROCESS: NODE PULSE + GHOST STEP NUMERAL
+   Mirrors beta .bs-method-node-pulse / .bs-method-ghost.
+   ============================================================ */
+@keyframes alpha-node-pulse {
+  0%, 100% {
+    box-shadow:
+      0 0 0 0 color-mix(in srgb, var(--sigma-hover-accent, #FF4500) 45%, transparent),
+      0 0 14px color-mix(in srgb, var(--sigma-hover-accent, #FF4500) 25%, transparent);
+  }
+  50% {
+    box-shadow:
+      0 0 0 8px transparent,
+      0 0 22px color-mix(in srgb, var(--sigma-hover-accent, #FF4500) 50%, transparent);
+  }
+}
+.alpha-node-pulse {
+  position: relative;
+  transition: box-shadow 0.4s ease, transform 0.4s ease;
+}
+.alpha-card-hover:hover .alpha-node-pulse,
+.alpha-card-hover:focus-within .alpha-node-pulse,
+.alpha-node-pulse:hover,
+.alpha-node-pulse:focus-visible {
+  animation: alpha-node-pulse 2s ease-in-out infinite;
+}
+
+/* Oversized ghost numeral behind each step (6%-opacity watermark) */
+.alpha-step-ghost {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  font-family: var(--font-sans), sans-serif;
+  font-weight: 900;
+  font-size: clamp(3.5rem, 14vw, 5.5rem);
+  line-height: 0.85;
+  color: var(--sigma-hover-accent, #FF4500);
+  opacity: 0.05;
+  z-index: 0;
+  user-select: none;
+  letter-spacing: -0.04em;
+}
+
+/* ============================================================
+   ALPHA MODE — TEAM: 3D TILT + NAME UNDERLINE DRAW
+   Mirrors beta .bs-team-card / .bs-team-name-underline.
+   useTilt3D hook (max 4deg, perspective 800px) sets transform inline.
+   ============================================================ */
+.alpha-tilt-card {
+  transform-style: preserve-3d;
+  perspective: 800px;
+  transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+}
+.alpha-name-underline {
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.alpha-card-hover:hover .alpha-name-underline,
+.alpha-card-hover:focus-within .alpha-name-underline {
+  transform: scaleX(1);
+}
+
+/* ============================================================
+   ALPHA MODE — TESTIMONIALS: OVERSIZED DECORATIVE QUOTE GLYPHS
+   8% opacity, accent-colored. Mirrors beta testimonials pattern.
+   ============================================================ */
+.alpha-testimonial-quote {
+  position: absolute;
+  font-family: var(--font-serif), serif;
+  font-weight: 900;
+  line-height: 0.7;
+  color: #FF4500;
+  opacity: 0.08;
+  font-size: clamp(7rem, 14vw, 14rem);
+  pointer-events: none;
+  user-select: none;
+  text-shadow: 0 0 40px rgba(255, 69, 0, 0.25);
+  z-index: 0;
+}
+
+/* ============================================================
+   ALPHA MODE — CONTACT: INPUT FOCUS UNDERLINE DRAW L→R
+   Mirrors beta .bs-input-wrap / .bs-input-underline.
+   ============================================================ */
+.alpha-input-wrap { position: relative; }
+.alpha-input-underline {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 2px;
+  width: 100%;
+  background: #FF4500;
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  pointer-events: none;
+  z-index: 2;
+}
+.alpha-input-wrap:focus-within .alpha-input-underline {
+  transform: scaleX(1);
+}
+
+/* ============================================================
+   ALPHA MODE — DATA RIVER: pause-on-hover
+   Base .alpha-data-river has pointer-events:none so hover never fires.
+   Re-enable pointer-events:auto on the river itself (it contains no
+   interactive children — purely decorative scrolling text), then add
+   a :hover pause rule on the track. Same pattern as beta ticker fix.
+   Mask-image (orange fade both edges) is already present in the base rule.
+   ============================================================ */
+.alpha-data-river {
+  pointer-events: auto;
+}
+.alpha-data-river:hover .alpha-data-river-track,
+.alpha-data-river:focus-within .alpha-data-river-track {
+  animation-play-state: paused;
+}
+
+/* ============================================================
+   ALPHA MODE — FOOTER BACK-TO-TOP
+   ============================================================ */
+.alpha-back-to-top {
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.3s ease, background 0.3s ease;
+  will-change: transform;
+}
+.alpha-back-to-top:hover {
+  transform: translateY(-2px);
+}
+
+/* ============================================================
+   ALPHA MODE — REDUCED MOTION OVERRIDES
+   Kill infinite animations, snap transitions, drop transforms.
+   Entrance animations still play (handled by motion/react's
+   useReducedMotion gate in component code).
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  .alpha-mode {
+    scroll-behavior: auto;
+  }
+  .alpha-magnetic,
+  .alpha-back-to-top,
+  .alpha-tilt-card {
+    transition: none !important;
+    transform: none !important;
+  }
+  .alpha-scroll-hint,
+  .alpha-scroll-hint-line,
+  .alpha-node-pulse {
+    animation: none !important;
+  }
+  .alpha-card-hover:hover .alpha-corner,
+  .alpha-card-hover:focus-within .alpha-corner {
+    width: 14px;
+    height: 14px;
+    opacity: 0.85;
+    transition: none !important;
+  }
+  .alpha-card-hover:hover .alpha-img-scale,
+  .alpha-card-hover:focus-within .alpha-img-scale {
+    transform: none !important;
+  }
+  .alpha-card-hover:hover .alpha-name-underline,
+  .alpha-card-hover:focus-within .alpha-name-underline,
+  .alpha-input-wrap:focus-within .alpha-input-underline {
+    transform: none !important;
+  }
+  .alpha-data-river:hover .alpha-data-river-track,
+  .alpha-data-river:focus-within .alpha-data-river-track {
+    animation-play-state: running !important;
+  }
+}
+
+/* ============================================================
+   SIGMA MODE — GLOBAL POLISH (Stage: LOOP-3-SIGMA-POLISH)
+   Mirrors the alpha/beta polish bar. Hooks onto .sigma-mode
+   (set on the ExperienceShell root when mode === 'sigma').
+   All effects are scoped to sigma mode only — never bleed
+   into alpha or beta. Matches #FF4500 brand accent.
+   ============================================================ */
+.sigma-mode {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* Selection — orange (same as alpha) */
+.sigma-mode ::selection {
+  background: rgba(255, 69, 0, 0.95);
+  color: #0a0a0a;
+  text-shadow: none;
+}
+.sigma-mode ::-moz-selection {
+  background: rgba(255, 69, 0, 0.95);
+  color: #0a0a0a;
+  text-shadow: none;
+}
+
+/* Custom scrollbar — 6px, orange 30% / 60% on hover (sigma-scoped) */
+.sigma-mode .sigma-scroll-hidden {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 69, 0, 0.30) transparent;
+}
+.sigma-mode .sigma-scroll-hidden::-webkit-scrollbar { width: 6px; height: 6px; }
+.sigma-mode .sigma-scroll-hidden::-webkit-scrollbar-track { background: transparent; }
+.sigma-mode .sigma-scroll-hidden::-webkit-scrollbar-thumb {
+  background: rgba(255, 69, 0, 0.30);
+  border-radius: 0;
+}
+.sigma-mode .sigma-scroll-hidden::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 69, 0, 0.60);
+}
+
+/* Focus-visible — 2px orange outline, offset 2px */
+.sigma-mode :focus-visible {
+  outline: 2px solid #FF4500;
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+.sigma-mode :focus:not(:focus-visible) { outline: none; }
+
+/* ============================================================
+   SIGMA MODE — TRANSITION GLITCH FLICKER
+   3-frame clip-path slice glitch played at the midpoint of
+   the GSAP panel slam cover/reveal transition. Driven by GSAP
+   (a class toggle that triggers the keyframes). Total: ~180ms.
+   Opacity fades 0→1→0 across the same window so the layer is
+   only visible while the glitch is active.
+   ============================================================ */
+@keyframes sigma-transition-glitch {
+  0%   { opacity: 0; clip-path: inset(0 0 0 0);     transform: translateX(0); }
+  10%  { opacity: 1; clip-path: inset(0 0 0 0);     transform: translateX(0); }
+  30%  { opacity: 1; clip-path: inset(20% 0 40% 0); transform: translateX(-3px); }
+  55%  { opacity: 1; clip-path: inset(60% 0 5% 0);  transform: translateX(2px); }
+  80%  { opacity: 1; clip-path: inset(10% 0 70% 0); transform: translateX(-2px); }
+  100% { opacity: 0; clip-path: inset(0 0 0 0);     transform: translateX(0); }
+}
+.sigma-transition-glitch {
+  animation: sigma-transition-glitch 180ms steps(4, end) both;
+}
+
+/* ============================================================
+   SIGMA MODE — MAP HUB NODE POLISH
+   - Gold ring pulse on hover
+   - Breathing glow on active node
+   - Path line preview on hover (path drawn from node to readout rail)
+   ============================================================ */
+
+/* Hover ring — a gold (accent) 1px ring that scales + fades outward.
+   Sits on a pseudo element so it doesn't disturb the layout. */
+.sigma-map-node-ring {
+  position: relative;
+}
+.sigma-map-node-ring::before {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border: 1px solid var(--sigma-node-accent, #FFD700);
+  pointer-events: none;
+  opacity: 0;
+  transform: scale(1.04);
+  transition: opacity 0.25s ease, transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  z-index: 5;
+}
+.sigma-map-node-ring:hover::before,
+.sigma-map-node-ring:focus-visible::before {
+  opacity: 0.9;
+  transform: scale(1);
+}
+/* Second outer ring for a layered "gold pulse" effect */
+.sigma-map-node-ring::after {
+  content: "";
+  position: absolute;
+  inset: -6px;
+  border: 1px solid var(--sigma-node-accent, #FFD700);
+  pointer-events: none;
+  opacity: 0;
+  transform: scale(0.96);
+  transition: opacity 0.4s ease, transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  z-index: 4;
+}
+.sigma-map-node-ring:hover::after,
+.sigma-map-node-ring:focus-visible::after {
+  opacity: 0.5;
+  transform: scale(1.04);
+}
+
+/* Breathing glow on active node — 2s loop, accent-colored */
+@keyframes sigma-map-node-breath {
+  0%, 100% {
+    box-shadow:
+      0 0 0 1px var(--sigma-node-accent, #FF4500),
+      0 0 0 0 color-mix(in srgb, var(--sigma-node-accent, #FF4500) 0%, transparent),
+      0 0 18px -6px var(--sigma-node-accent, #FF4500);
+  }
+  50% {
+    box-shadow:
+      0 0 0 1px var(--sigma-node-accent, #FF4500),
+      0 0 0 6px color-mix(in srgb, var(--sigma-node-accent, #FF4500) 18%, transparent),
+      0 0 32px -4px var(--sigma-node-accent, #FF4500);
+  }
+}
+.sigma-map-node-active {
+  animation: sigma-map-node-breath 2s ease-in-out infinite;
+}
+
+/* Crossfade preview — the screenshot thumbnail scales + brightens on hover.
+   Used to give the map node preview a slight parallax depth feel. */
+.sigma-map-node-thumb {
+  transition:
+    transform 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.4s ease,
+    filter 0.4s ease;
+  will-change: transform, opacity, filter;
+}
+.sigma-map-node-ring:hover .sigma-map-node-thumb {
+  transform: scale(1.06);
+  opacity: 1;
+  filter: saturate(1.15) contrast(1.05);
+}
+
+/* ============================================================
+   SIGMA MODE — SECTION SHELL POLISH
+   - Scramble-in title effect (driven by JS in SectionShell)
+   - Corner brackets on the section header
+   ============================================================ */
+
+/* Scramble characters — fixed-width monospace look so the title
+   doesn't reflow as it scrambles. The hook just sets opacity 0→1
+   so reduced-motion users see a clean fade. */
+.sigma-scramble {
+  display: inline-block;
+  will-change: opacity;
+}
+@keyframes sigma-scramble-in {
+  from { opacity: 0; filter: blur(6px); }
+  to   { opacity: 1; filter: blur(0); }
+}
+.sigma-scramble.is-revealing {
+  animation: sigma-scramble-in 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Section corner brackets — 4 L-shaped marks at the header.
+   Animated via the .sigma-shell-corners:hover effect. */
+.sigma-shell-corner {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  pointer-events: none;
+  opacity: 0.35;
+  transition: width 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+              height 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+              opacity 0.3s ease;
+  z-index: 5;
+}
+.sigma-shell-corner.tl { top: -1px; left: -1px;  border-top: 1.5px solid; border-left: 1.5px solid; }
+.sigma-shell-corner.tr { top: -1px; right: -1px; border-top: 1.5px solid; border-right: 1.5px solid; }
+.sigma-shell-corner.bl { bottom: -1px; left: -1px; border-bottom: 1.5px solid; border-left: 1.5px solid; }
+.sigma-shell-corner.br { bottom: -1px; right: -1px; border-bottom: 1.5px solid; border-right: 1.5px solid; }
+.sigma-shell-header:hover .sigma-shell-corner {
+  width: 20px;
+  height: 20px;
+  opacity: 0.9;
+}
+
+/* ============================================================
+   SIGMA MODE — PANEL HOVER SCANLINE SWEEP + TAG SHIMMER
+   ============================================================ */
+
+/* Panel border brighten on hover + inner scanline sweep (one pass, 1.5s).
+   The sweep uses mix-blend-mode: screen so it adds light without
+   obscuring text content. Sits behind content via negative z-index. */
+.sigma-panel {
+  position: relative;
+  transition: border-color 0.3s ease;
+  overflow: hidden;
+  isolation: isolate;
+}
+.sigma-panel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    color-mix(in srgb, var(--sigma-panel-accent, #FF4500) 32%, transparent) 50%,
+    transparent 100%
+  );
+  transform: translateY(-110%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  mix-blend-mode: screen;
+  z-index: -1;
+}
+.sigma-panel:hover {
+  border-color: color-mix(in srgb, var(--sigma-panel-accent, #FF4500) 55%, var(--border));
+}
+.sigma-panel:hover::before {
+  opacity: 0.85;
+  animation: sigma-panel-sweep 1.5s cubic-bezier(0.22, 1, 0.36, 1) 1;
+}
+@keyframes sigma-panel-sweep {
+  0%   { transform: translateY(-110%); }
+  100% { transform: translateY(110%); }
+}
+
+/* Tag shimmer — diagonal light sweep on hover, accent-colored */
+.sigma-tag {
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.25s ease, color 0.25s ease;
+}
+.sigma-tag::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    115deg,
+    transparent 0%,
+    transparent 35%,
+    color-mix(in srgb, var(--sigma-tag-accent, #FF4500) 38%, transparent) 50%,
+    transparent 65%,
+    transparent 100%
+  );
+  transform: translateX(-110%);
+  pointer-events: none;
+}
+.sigma-tag:hover::after {
+  animation: sigma-tag-shimmer 0.85s cubic-bezier(0.22, 1, 0.36, 1) 1;
+}
+@keyframes sigma-tag-shimmer {
+  0%   { transform: translateX(-110%); }
+  100% { transform: translateX(110%); }
+}
+.sigma-tag:hover {
+  border-color: color-mix(in srgb, var(--sigma-tag-accent, #FF4500) 70%, transparent);
+}
+
+/* ============================================================
+   SIGMA MODE — HUD LIVE CLOCK + CPU SPARKLINE
+   ============================================================ */
+
+/* Blinking colon on the HUD clock — wraps the ":" separators.
+   Toggled by the JS clock formatter; class wraps the colons. */
+@keyframes sigma-clock-blink {
+  0%, 49%   { opacity: 1; }
+  50%, 100% { opacity: 0.25; }
+}
+.sigma-clock-colon {
+  display: inline-block;
+  animation: sigma-clock-blink 1s steps(2, end) infinite;
+  margin: 0 0.05em;
+}
+
+/* CPU sparkline — 5 vertical bars animating heights, 1.2s loop */
+.sigma-spark {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 1.5px;
+  height: 12px;
+  width: 28px;
+  vertical-align: middle;
+}
+.sigma-spark > span {
+  display: block;
+  width: 3px;
+  background: var(--sigma-spark-color, #00FF94);
+  transform-origin: bottom center;
+  animation: sigma-spark-bar 1.2s ease-in-out infinite;
+  will-change: transform;
+}
+.sigma-spark > span:nth-child(1) { animation-delay: 0.00s; height: 60%; }
+.sigma-spark > span:nth-child(2) { animation-delay: 0.12s; height: 90%; }
+.sigma-spark > span:nth-child(3) { animation-delay: 0.24s; height: 45%; }
+.sigma-spark > span:nth-child(4) { animation-delay: 0.36s; height: 75%; }
+.sigma-spark > span:nth-child(5) { animation-delay: 0.48s; height: 100%; }
+@keyframes sigma-spark-bar {
+  0%, 100% { transform: scaleY(0.55); }
+  50%      { transform: scaleY(1.0); }
+}
+
+/* ============================================================
+   SIGMA MODE — HERO (S01) GLITCH + RETICLE
+   - Rare glitch effect on "TAUNGOO" headline (every 8-12s, 200ms, RGB-split via text-shadow)
+   - Reticle slow rotate (sigma-spin-slow already exists at 24s, used as-is)
+   ============================================================ */
+@keyframes sigma-hero-glitch-fire {
+  0%   { text-shadow: 0 0 0 transparent; }
+  20%  { text-shadow: -2px 0 0 #FFB300, 2px 0 0 #00E5FF, 0 0 8px rgba(255, 179, 0, 0.5); }
+  40%  { text-shadow: 2px 0 0 #FFB300, -2px 0 0 #00E5FF, 0 0 8px rgba(0, 229, 255, 0.5); }
+  60%  { text-shadow: -1px 0 0 #FFB300, 1px 0 0 #00E5FF; }
+  80%  { text-shadow: 1px 0 0 #FFB300, -1px 0 0 #00E5FF; }
+  100% { text-shadow: 0 0 0 transparent; }
+}
+.sigma-hero-glitch {
+  /* The actual glitch fires only when .is-glitching is added (via JS timer). */
+}
+.sigma-hero-glitch.is-glitching {
+  animation: sigma-hero-glitch-fire 200ms steps(5, end) 1;
+}
+
+/* ============================================================
+   SIGMA MODE — CARDS (S04 PROJECTS + S08 CAPABILITIES)
+   Hover lift + accent underline draw + ghost index numeral +
+   accent border. Mirrors the alpha-card-hover pattern.
+   ============================================================ */
+.sigma-card-hover {
+  position: relative;
+  transition:
+    transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.3s ease,
+    box-shadow 0.4s ease;
+  will-change: transform, border-color, box-shadow;
+}
+.sigma-card-hover:hover {
+  transform: translateY(-4px);
+  border-color: var(--sigma-hover-accent, #FF4500);
+  box-shadow:
+    0 0 0 1px var(--sigma-hover-accent, #FF4500),
+    0 0 24px -6px var(--sigma-hover-accent, #FF4500),
+    0 16px 36px -12px rgba(0, 0, 0, 0.75);
+}
+
+/* Accent underline draw — 1px L→R on hover, sits at the top of the card frame */
+.sigma-underline-draw {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 1px;
+  width: 0%;
+  background: linear-gradient(
+    to right,
+    transparent 0%,
+    var(--sigma-hover-accent, #FF4500) 30%,
+    var(--sigma-hover-accent, #FF4500) 70%,
+    transparent 100%
+  );
+  transition: width 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  pointer-events: none;
+  z-index: 6;
+}
+.sigma-card-hover:hover .sigma-underline-draw {
+  width: 100%;
+}
+
+/* Ghost index numeral — oversized 6% opacity watermark behind content.
+   Color resolves to --sigma-hover-accent so each card drives its own accent. */
+.sigma-ghost-numeral {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  font-family: var(--font-sans), sans-serif;
+  font-weight: 900;
+  font-size: clamp(3rem, 9vw, 6rem);
+  line-height: 0.85;
+  color: var(--sigma-hover-accent, #FF4500);
+  opacity: 0.06;
+  z-index: 0;
+  user-select: none;
+  letter-spacing: -0.04em;
+  transition: opacity 0.4s ease;
+  will-change: opacity;
+}
+.sigma-card-hover:hover .sigma-ghost-numeral,
+.sigma-card-hover:focus-within .sigma-ghost-numeral {
+  opacity: 0.14;
+}
+
+/* ============================================================
+   SIGMA MODE — S10 ACCESS PRIMARY BUTTON HAZARD SWEEP
+   Repeating-linear-gradient position animation on hover.
+   The sweep only fires on hover (and not for reduced motion).
+   ============================================================ */
+.sigma-hazard-sweep {
+  position: relative;
+  overflow: hidden;
+  background-image:
+    repeating-linear-gradient(
+      45deg,
+      rgba(0, 0, 0, 0.0) 0,
+      rgba(0, 0, 0, 0.0) 8px,
+      rgba(0, 0, 0, 0.18) 8px,
+      rgba(0, 0, 0, 0.18) 16px
+    ),
+    var(--sigma-hazard-accent, #FFEB3B);
+  background-size: 22.63px 22.63px, 100% 100%; /* sqrt(2) * 16 ≈ 22.63 — keeps stripe tiling seamless */
+  background-position: 0 0, 0 0;
+  background-repeat: repeat, no-repeat;
+  transition: filter 0.2s ease;
+}
+.sigma-hazard-sweep:hover:not(:disabled) {
+  animation: sigma-hazard-sweep-anim 0.9s linear infinite;
+}
+@keyframes sigma-hazard-sweep-anim {
+  0%   { background-position: 0 0, 0 0; }
+  100% { background-position: 22.63px 22.63px, 0 0; }
+}
+.sigma-hazard-sweep:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* ============================================================
+   SIGMA MODE — REDUCED MOTION OVERRIDES
+   Kill all infinite animations, snap transitions, drop transforms.
+   Entrance animations are gated by useReducedMotion() in JS.
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  .sigma-mode :focus-visible {
+    outline-offset: 1px;
+  }
+  .sigma-map-node-active,
+  .sigma-spark > span,
+  .sigma-hazard-sweep:hover:not(:disabled),
+  .sigma-hero-glitch.is-glitching,
+  .sigma-clock-colon {
+    animation: none !important;
+  }
+  .sigma-card-hover,
+  .sigma-card-hover:hover,
+  .sigma-panel,
+  .sigma-panel:hover,
+  .sigma-tag,
+  .sigma-tag:hover {
+    transition: border-color 0.2s ease, color 0.2s ease !important;
+    transform: none !important;
+    box-shadow: none !important;
+  }
+  .sigma-map-node-ring::before,
+  .sigma-map-node-ring::after,
+  .sigma-map-node-ring:hover::before,
+  .sigma-map-node-ring:hover::after {
+    opacity: 0 !important;
+    transform: none !important;
+  }
+  .sigma-map-node-ring:hover::before {
+    opacity: 0.6 !important;
+    transform: scale(1) !important;
+  }
+  .sigma-shell-corner {
+    transition: none !important;
+    opacity: 0.6 !important;
+  }
+  .sigma-panel:hover::before,
+  .sigma-tag::after,
+  .sigma-tag:hover::after {
+    animation: none !important;
+    opacity: 0 !important;
+  }
+  .sigma-card-hover:hover .sigma-ghost-numeral,
+  .sigma-card-hover:focus-within .sigma-ghost-numeral,
+  .sigma-card-hover:hover .sigma-underline-draw {
+    opacity: 0.1 !important;
+    width: 100% !important;
+    transition: none !important;
+  }
+  .sigma-scramble.is-revealing {
+    animation: none !important;
+    opacity: 1 !important;
+    filter: none !important;
+  }
+  .sigma-transition-glitch {
+    animation: none !important;
+    clip-path: none !important;
+    transform: none !important;
+  }
+}
+/* trigger recompile */
+
+/* ============================================================
+   PERF (LOOP-1-LH) — CSS CONTAINMENT ON HEAVY REPEATING CARDS
+   ============================================================
+   `contain: content` (= layout + style + paint, excludes size) tells the
+   browser the card's layout/paint is fully isolated — it can skip recalc
+   work for off-screen cards during scroll and skip compositing of
+   overflowing children. Critical for the high-card-count grids:
+
+   - .sigma-card-frame — AlphaPortfolio (9 cards) + the alpha portfolio
+     CTA card. Each card already uses `overflow-hidden` (so paint containment
+     is mostly redundant but enables the browser to skip the stacking-context
+     recompute on hover transitions inside).
+   - .bs-portfolio-row — beta Portfolio (10 list rows). The button row has
+     hover state transitions (corners grow, ghost numeral opacity, bg tint).
+     The expanded content is a SIBLING (AnimatePresence motion.div outside
+     the button), so paint containment on the button doesn't clip the
+     expanded image below.
+   - .sigma-card-hover — Sigma S04Projects grid (up to 9 cards in a 3-col
+     grid). Already `overflow-hidden`; contain formalizes the isolation.
+
+   Containment is skipped on the WRAPPER elements (.sigma-card, .alpha-card-hover)
+   because they have the .sigma-card-glow sibling (absolute -inset-2 -z-10
+   blur-2xl) which intentionally paints BEYOND the card's bounds —
+   `contain: paint` would clip that glow and break the visual effect.
+   ============================================================ */
+.sigma-card-frame,
+.bs-portfolio-row,
+.sigma-card-hover {
+  contain: content;
+}
+
+
+/* ============================================================
+   HAGGLE — HOLOGRAM MARK SHIMMER (authenticity tag animation)
+   ============================================================ */
+@keyframes haggle-holo-shimmer {
+  0%, 100% { opacity: 1; transform: scale(1); box-shadow: 0 0 4px currentColor; }
+  50% { opacity: 0.6; transform: scale(1.2); box-shadow: 0 0 8px currentColor; }
+}
+
+/* Sigma transition panels — default hidden state via CSS class.
+   GSAP manages transform + backgroundColor via inline styles during transitions.
+   React re-renders do NOT touch these properties (not in JSX style) → no
+   GSAP/React style conflict → no black screen flash. */
+.sigma-transition-panel {
+  transform: scaleY(0);
+  transform-origin: top;
+}
+.sigma-panel-border {
+  border-bottom: 1px solid rgba(0,0,0,0.25);
+}
+
+/* Beta Services domain square — responsive minHeight.
+   Mobile: 220px (compact for vertical stack)
+   Desktop (sm+): 360px (original larger size for 2×2 grid) */
+.bs-domain-square {
+  min-height: 220px;
+}
+@media (min-width: 640px) {
+  .bs-domain-square {
+    min-height: 360px;
   }
 }

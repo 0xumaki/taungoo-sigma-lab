@@ -2,33 +2,81 @@
 
 import * as React from "react";
 import gsap from "gsap";
+import { syncSigmaTheme } from "./SigmaThemeToggle";
+import { sigmaSound } from "@/lib/sigma/sound";
 
 /**
- * SigmaModeSwitcher — a floating switcher between Σ (Sigma) and Α (Alpha) modes.
- * When switching, plays a dramatic "electrical shock" tear-down effect:
- * 1. Chidori soundtrack plays
- * 2. Screen tears with lightning bolts + glitch
- * 3. Content swaps underneath the overlay
- * 4. Tear-down fades with lingering ending
+ * SigmaModeSwitcher — floating switcher between Σ (Sigma), Α (Alpha), and
+ * Β (Beta) modes.
+ *
+ * TRANSITION (revised per user spec — Stage 68):
+ *   - Slam cover transition: two horizontal panels slide in from top/bottom,
+ *     meeting at the center with a flash + mode label, then slide back out
+ *   - This is a DIFFERENT effect variable from the section-to-section Sigma
+ *     transition (which uses horizontal slam panels). Mode switching uses
+ *     VERTICAL slam panels to visually distinguish "mode change" from
+ *     "section change".
+ *   - Chidori soundtrack: KEPT (per user spec — "Yes, keep the Chidori effect")
+ *   - Lightning effect: REMOVED (per user spec — "remove the lightning effect
+ *     from both the Alpha & Sigma and Beta section-to-section transitions")
+ *
+ * The user's spec was specifically about section-to-section transitions, but
+ * we apply the same principle to mode transitions for consistency: Chidori
+ * sound stays, lightning is gone. The mode transition is a clean vertical slam.
  */
 
-type Mode = "sigma" | "alpha";
+export type Mode = "sigma" | "alpha" | "beta";
 
 const STORAGE_KEY = "sigma-mode";
+
+// PERF (LOOP-5): prefetch the non-default mode chunks on first hover of the
+// mode-switcher buttons. Webpack resolves these dynamic imports to the same
+// chunks that ExperienceShell's next/dynamic calls reference, so by the time
+// the user actually clicks the button, the chunk is likely already in cache.
+// Fire-and-forget — promise rejections are swallowed (chunk will re-fetch on click).
+let alphaPrefetched = false;
+let sigmaPrefetched = false;
+function prefetchAlpha() {
+  if (alphaPrefetched) return;
+  alphaPrefetched = true;
+  import("../alpha/AlphaInterface").catch(() => {});
+}
+function prefetchSigma() {
+  if (sigmaPrefetched) return;
+  sigmaPrefetched = true;
+  // SigmaMap is the entry point for sigma mode — it transitively pulls in
+  // S01..S11 sections (each lazy-loaded by ExperienceShell, but SigmaMap itself
+  // is the heaviest single chunk in the sigma tree). Prefetching it on hover
+  // warms the cache for an instant mode switch.
+  import("../SigmaMap").catch(() => {});
+}
+
+const MODE_META: Record<Mode, { label: string; symbol: string; accent: string; tagline: string }> = {
+  sigma: { label: "SIGMA",  symbol: "Σ", accent: "#FF4500", tagline: "MAP-BASED · BRUTALIST" },
+  alpha: { label: "ALPHA",  symbol: "α", accent: "#FF4500", tagline: "SCROLLING · BRUTALIST" },
+  beta:  { label: "BETA",   symbol: "β", accent: "#6366F1", tagline: "ENTERPRISE · CLEAN" },
+};
 
 export function SigmaModeSwitcher({
   mode,
   onModeChange,
+  floating = false,
 }: {
   mode: Mode;
   onModeChange: (mode: Mode) => void;
+  floating?: boolean;
 }) {
   const [transitioning, setTransitioning] = React.useState(false);
+  const [pendingMode, setPendingMode] = React.useState<Mode | null>(null);
   const audioRef = React.useRef<HTMLAudioElement | null>(null);
-  const overlayRef = React.useRef<HTMLDivElement>(null);
-  const lightningRef = React.useRef<HTMLCanvasElement>(null);
+  // Two panels: top + bottom (vertical slam — different from section's horizontal)
+  const topPanelRef = React.useRef<HTMLDivElement>(null);
+  const bottomPanelRef = React.useRef<HTMLDivElement>(null);
+  // Center flash + label
+  const flashRef = React.useRef<HTMLDivElement>(null);
+  const labelRef = React.useRef<HTMLDivElement>(null);
 
-  // Initialize audio reference (Audio element is created on-demand in switchMode to avoid autoplay blocking)
+  // Initialize audio reference (Audio element is created on-demand in switchMode)
   React.useEffect(() => {
     return () => {
       if (audioRef.current) {
@@ -38,179 +86,304 @@ export function SigmaModeSwitcher({
     };
   }, []);
 
-  // Load saved mode
+  // Load saved mode — but ONLY if it's a valid Mode. First-time visitors
+  // (no saved mode) get "beta" by default (per user spec Q3: "Make Beta the
+  // new DEFAULT mode for first-time visitors").
   React.useEffect(() => {
     try {
       const saved = localStorage.getItem(STORAGE_KEY) as Mode | null;
-      if (saved && saved !== mode) {
+      if (saved && (saved === "sigma" || saved === "alpha" || saved === "beta") && saved !== mode) {
         onModeChange(saved);
       }
+      // If no saved mode, leave the default ("beta") — don't write to localStorage
+      // so the user can still change modes without persistence until they pick one.
     } catch {
       // ignore
     }
-  }, []);
+  }, [mode, onModeChange]);
 
-  const switchMode = React.useCallback(() => {
-    if (transitioning) return;
-    setTransitioning(true);
+  const switchMode = React.useCallback(
+    (target: Mode) => {
+      if (transitioning) return;
+      if (target === mode) return;
+      setTransitioning(true);
+      setPendingMode(target);
 
-    const nextMode: Mode = mode === "sigma" ? "alpha" : "sigma";
+      // === STAR TREK DOOR SOUNDTRACK ===
+      // Plays the first 3 seconds of the star trek door sound (song is 9s, we clip at 3s)
+      // Audio created on-demand inside the click handler to satisfy browser autoplay policies.
+      // Also unlocks the sigmaSound AudioContext on the same gesture so subsequent SFX work.
+      try {
+        // Unlock the Web Audio API context on this user gesture (some browsers
+        // require an explicit init() even within a click handler)
+        if (!sigmaSound.enabled) sigmaSound.init();
 
-    // Play chidori soundtrack — create Audio ON-DEMAND inside the click handler
-    // This fixes autoplay blocking: browsers require Audio to be created in response
-    // to a user interaction, not in useEffect on page load.
-    const audio = new Audio("/chidori.mp3");
-    audio.volume = 0.15;
-    audioRef.current = audio;
-    audio.play().catch(() => {
-      // autoplay still blocked — try again on next interaction
-    });
+        const audio = new Audio("/sounds/star-trek-door.mp3");
+        audio.volume = 0.6;
+        audio.preload = "auto";
+        audioRef.current = audio;
 
-    // Start lightning + glitch overlay
-    const overlay = overlayRef.current;
-    const canvas = lightningRef.current;
-    if (!overlay || !canvas) {
-      // fallback — just swap
-      try { localStorage.setItem(STORAGE_KEY, nextMode); } catch {}
-      onModeChange(nextMode);
-      setTransitioning(false);
-      return;
-    }
+        // Use the 'playing' event to know when audio actually starts
+        // This fires after buffering is complete, so the 3s timer
+        // counts from actual playback start, not from click time
+        const onPlaying = () => {
+          setTimeout(() => {
+            if (audioRef.current) {
+              audioRef.current.pause();
+              audioRef.current.currentTime = 0;
+              audioRef.current = null;
+            }
+          }, 3000);
+          audio.removeEventListener("playing", onPlaying);
+        };
+        audio.addEventListener("playing", onPlaying);
 
-    // Draw lightning bolts on canvas
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-    let w = (canvas.width = window.innerWidth);
-    let h = (canvas.height = window.innerHeight);
-
-    const drawLightning = (intensity: number) => {
-      ctx.clearRect(0, 0, w, h);
-      const numBolts = Math.floor(3 + Math.random() * 5 * intensity);
-      for (let i = 0; i < numBolts; i++) {
-        const startX = Math.random() * w;
-        const startY = 0;
-        ctx.strokeStyle = `rgba(${180 + Math.random() * 75}, ${200 + Math.random() * 55}, 255, ${0.6 + Math.random() * 0.4})`;
-        ctx.lineWidth = 1 + Math.random() * 3;
-        ctx.shadowColor = "rgba(100, 200, 255, 0.8)";
-        ctx.shadowBlur = 20;
-        ctx.beginPath();
-        ctx.moveTo(startX, startY);
-        let x = startX;
-        let y = startY;
-        while (y < h) {
-          x += (Math.random() - 0.5) * 60 * intensity;
-          y += 10 + Math.random() * 40;
-          ctx.lineTo(x, y);
-          // branches
-          if (Math.random() > 0.7) {
-            ctx.lineTo(x + (Math.random() - 0.5) * 40, y + Math.random() * 20);
-            ctx.moveTo(x, y);
-          }
-        }
-        ctx.stroke();
+        audio.play().catch(() => {
+          // Autoplay blocked — silently continue without sound
+          audio.removeEventListener("playing", onPlaying);
+        });
+      } catch {
+        // ignore audio init errors
       }
-      ctx.shadowBlur = 0;
-    };
 
-    // GSAP timeline for the dramatic transition
-    const tl = gsap.timeline({
-      onComplete: () => {
-        setTransitioning(false);
-        ctx.clearRect(0, 0, w, h);
-      },
-    });
+      const targetMeta = MODE_META[target];
 
-    // Phase 1: Flash white + crack (0-0.3s)
-    tl.set(overlay, { opacity: 1, background: "rgba(255,255,255,0.9)" });
-    tl.to(overlay, { opacity: 1, duration: 0.05 });
+      // === SLAM COVER TRANSITION (vertical — different variable from section transition) ===
+      // Phase 1: Two vertical panels slam in from top + bottom, meeting at center
+      // Phase 2: Brief flash + mode label appears at center
+      // Phase 3: SWAP the mode here (content changes underneath)
+      // Phase 4: Panels slide back out (top → up, bottom → down)
+      // Phase 5: Final fade of flash + label
+      const tl = gsap.timeline({
+        onComplete: () => {
+          setTransitioning(false);
+          setPendingMode(null);
+        },
+      });
 
-    // Phase 2: Lightning storm (0.3-2s) — rapid bolts + screen distortion
-    tl.to(overlay, {
-      duration: 0.05,
-      repeat: 30,
-      repeatRefresh: true,
-      background: () => `rgba(${100 + Math.random() * 155}, ${150 + Math.random() * 105}, 255, ${0.1 + Math.random() * 0.4})`,
-      ease: "none",
-      onStart: () => {
-        // rapid lightning drawing
-        let frame = 0;
-        const lightningInterval = setInterval(() => {
-          drawLightning(0.5 + Math.random());
-          frame++;
-          if (frame > 30) clearInterval(lightningInterval);
-        }, 60);
-      },
-    });
+      // Set initial states
+      tl.set(topPanelRef.current, { y: "-100%", opacity: 1 });
+      tl.set(bottomPanelRef.current, { y: "100%", opacity: 1 });
+      tl.set(flashRef.current, { opacity: 0, background: targetMeta.accent });
+      tl.set(labelRef.current, { opacity: 0, scale: 0.7 });
 
-    // Phase 3: Tear-down — the screen splits horizontally (2-2.5s)
-    tl.to(overlay, {
-      duration: 0.1,
-      background: "rgba(0,0,0,0.95)",
-      onStart: () => {
-        // SWAP the mode here — content changes underneath
-        try { localStorage.setItem(STORAGE_KEY, nextMode); } catch {}
-        onModeChange(nextMode);
-      },
-    });
+      // Phase 1: Slam panels in (0 → 0.35s) — fast, forceful
+      tl.to(topPanelRef.current, {
+        y: "0%",
+        duration: 0.35,
+        ease: "power4.out",
+      });
+      tl.to(
+        bottomPanelRef.current,
+        {
+          y: "0%",
+          duration: 0.35,
+          ease: "power4.out",
+        },
+        "<" // same time as top panel
+      );
 
-    // Phase 4: Lingering ending — gradual fade (2.5-4s)
-    tl.to(overlay, {
-      duration: 1.5,
-      opacity: 0,
-      background: "rgba(0,0,0,0)",
-      ease: "power2.out",
-    });
+      // Phase 2: Flash + label appear (0.35 → 0.55s)
+      tl.to(flashRef.current, {
+        opacity: 0.4,
+        duration: 0.1,
+        ease: "power2.out",
+      });
+      tl.to(
+        labelRef.current,
+        {
+          opacity: 1,
+          scale: 1,
+          duration: 0.2,
+          ease: "back.out(1.6)",
+        },
+        "-=0.05"
+      );
 
-    // Final: clear canvas
-    tl.call(() => {
-      ctx.clearRect(0, 0, w, h);
-    });
-  }, [mode, transitioning, onModeChange]);
+      // Phase 3: SWAP mode (content changes underneath the panels)
+      tl.call(() => {
+        try { localStorage.setItem(STORAGE_KEY, target); } catch { /* ignore */ }
+        // Sync sigma-light theme — remove when leaving sigma, restore when returning
+        syncSigmaTheme(target);
+        onModeChange(target);
+      });
+
+      // Hold the label briefly so the user sees it (0.55 → 1.0s)
+      tl.to({}, { duration: 0.45 });
+
+      // Phase 4: Panels slide back out (1.0 → 1.45s)
+      tl.to(topPanelRef.current, {
+        y: "-100%",
+        duration: 0.45,
+        ease: "power3.inOut",
+      });
+      tl.to(
+        bottomPanelRef.current,
+        {
+          y: "100%",
+          duration: 0.45,
+          ease: "power3.inOut",
+        },
+        "<"
+      );
+
+      // Phase 5: Fade flash + label (parallel with panels sliding out)
+      tl.to(
+        flashRef.current,
+        {
+          opacity: 0,
+          duration: 0.4,
+          ease: "power2.in",
+        },
+        "<"
+      );
+      tl.to(
+        labelRef.current,
+        {
+          opacity: 0,
+          scale: 1.3,
+          duration: 0.4,
+          ease: "power2.in",
+        },
+        "<"
+      );
+    },
+    [mode, transitioning, onModeChange]
+  );
+
+  // Click outside the switcher (or any UI element) doesn't trigger anything
+  // — switcher is button-driven only.
 
   return (
     <>
-      {/* Mode switcher button — top center */}
-      <div className="fixed left-1/2 top-9 z-[95] flex -translate-x-1/2 items-center gap-0 border border-border bg-background/90 backdrop-blur-sm">
-        <button
-          onClick={() => mode !== "sigma" && switchMode()}
-          className={`flex items-center gap-1.5 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.2em] transition-colors ${
-            mode === "sigma"
-              ? "bg-foreground text-background"
-              : "text-muted-foreground hover:text-foreground"
-          }`}
-          data-cursor="hover"
-          title="Sigma Mode — level-select navigation"
-        >
-          <span className="font-sans text-sm font-black">Σ</span>
-          <span>SIGMA</span>
-        </button>
-        <div className="h-6 w-px bg-border/60" />
-        <button
-          onClick={() => mode !== "alpha" && switchMode()}
-          className={`flex items-center gap-1.5 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.2em] transition-colors ${
-            mode === "alpha"
-              ? "bg-foreground text-background"
-              : "text-muted-foreground hover:text-foreground"
-          }`}
-          data-cursor="hover"
-          title="Alpha Mode — traditional scrolling website"
-        >
-          <span className="font-sans text-sm font-black">Α</span>
-          <span>ALPHA</span>
-        </button>
-      </div>
+      {/* Mode switcher — floating variant for Beta mode (compact, no fixed positioning — parent controls position) */}
+      {floating ? (
+        <div className="flex flex-col items-center gap-0 border border-border bg-background/90 backdrop-blur-sm">
+          {(Object.keys(MODE_META) as Mode[]).map((m, i) => {
+            const meta = MODE_META[m];
+            const active = mode === m;
+            return (
+              <React.Fragment key={m}>
+                {i > 0 && <div className="h-px w-6 bg-border/60" />}
+                <button
+                  onClick={() => switchMode(m)}
+                  onMouseEnter={() => {
+                    if (m === "alpha") prefetchAlpha();
+                    else if (m === "sigma") prefetchSigma();
+                  }}
+                  disabled={transitioning}
+                  className={`flex items-center justify-center gap-1 px-2.5 py-1.5 font-mono text-[10px] uppercase tracking-[0.2em] transition-colors disabled:opacity-50 ${
+                    active
+                      ? "bg-foreground text-background"
+                      : "text-muted-foreground hover:text-foreground"
+                  }`}
+                  data-cursor="hover"
+                  title={`${meta.label} Mode — ${meta.tagline}`}
+                  aria-label={`${meta.label} mode — ${meta.tagline}${active ? " (active)" : ""}`}
+                  aria-pressed={active}
+                >
+                  <span className="font-sans text-sm font-black" aria-hidden="true">{meta.symbol}</span>
+                </button>
+              </React.Fragment>
+            );
+          })}
+        </div>
+      ) : (
+        /* Mode switcher — top center, 3 modes (Sigma/Alpha modes) */
+        <div className="fixed left-1/2 top-9 z-[95] flex -translate-x-1/2 items-center gap-0 border border-border bg-background/90 backdrop-blur-sm">
+          {(Object.keys(MODE_META) as Mode[]).map((m, i) => {
+            const meta = MODE_META[m];
+            const active = mode === m;
+            return (
+              <React.Fragment key={m}>
+                {i > 0 && <div className="h-6 w-px bg-border/60" />}
+                <button
+                  onClick={() => switchMode(m)}
+                  onMouseEnter={() => {
+                    if (m === "alpha") prefetchAlpha();
+                    else if (m === "sigma") prefetchSigma();
+                  }}
+                  disabled={transitioning}
+                  className={`flex items-center gap-1.5 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.2em] transition-colors disabled:opacity-50 ${
+                    active
+                      ? "bg-foreground text-background"
+                      : "text-muted-foreground hover:text-foreground"
+                  }`}
+                  data-cursor="hover"
+                  title={`${meta.label} Mode — ${meta.tagline}`}
+                  aria-label={`${meta.label} mode — ${meta.tagline}${active ? " (active)" : ""}`}
+                  aria-pressed={active}
+                >
+                  <span className="font-sans text-sm font-black" aria-hidden="true">{meta.symbol}</span>
+                  <span className="hidden sm:inline">{meta.label}</span>
+                </button>
+              </React.Fragment>
+            );
+          })}
+        </div>
+      )}
 
-      {/* Transition overlay — always rendered, opacity controlled by GSAP */}
+      {/* === SLAM COVER TRANSITION OVERLAY ===
+          Two vertical panels (top + bottom) that slam together at center.
+          Different from the Sigma section transition (which uses horizontal panels). */}
       <div
-        ref={overlayRef}
         className="pointer-events-none fixed inset-0 z-[200]"
-        style={{ opacity: 0, display: transitioning ? "block" : "none" }}
-      />
-      <canvas
-        ref={lightningRef}
-        className="pointer-events-none fixed inset-0 z-[201]"
         style={{ display: transitioning ? "block" : "none" }}
-      />
+      >
+        {/* Top panel — slides from -100% to 0% to -100% */}
+        <div
+          ref={topPanelRef}
+          className="absolute inset-x-0 top-0 h-1/2"
+          style={{
+            y: "-100%",
+            backgroundColor: pendingMode ? MODE_META[pendingMode].accent : "#0A0A0A",
+            borderBottom: "2px solid rgba(255,255,255,0.15)",
+          }}
+        />
+        {/* Bottom panel — slides from 100% to 0% to 100% */}
+        <div
+          ref={bottomPanelRef}
+          className="absolute inset-x-0 bottom-0 h-1/2"
+          style={{
+            y: "100%",
+            backgroundColor: pendingMode ? MODE_META[pendingMode].accent : "#0A0A0A",
+            borderTop: "2px solid rgba(255,255,255,0.15)",
+          }}
+        />
+
+        {/* Center flash — accent-colored overlay that strobes briefly when panels meet */}
+        <div
+          ref={flashRef}
+          className="absolute inset-0 mix-blend-screen"
+          style={{ opacity: 0 }}
+        />
+
+        {/* Center label — shows the mode being switched to */}
+        <div
+          ref={labelRef}
+          className="absolute inset-0 flex items-center justify-center"
+          style={{ opacity: 0 }}
+        >
+          <div className="flex flex-col items-center gap-2 text-center">
+            <div
+              className="font-sans text-7xl font-black leading-none sm:text-8xl"
+              style={{
+                color: "#FFFFFF",
+                textShadow: "0 0 30px rgba(0,0,0,0.4)",
+                WebkitTextStroke: "1px rgba(0,0,0,0.15)",
+              }}
+            >
+              {pendingMode ? MODE_META[pendingMode].symbol : ""}
+            </div>
+            <div
+              className="font-mono text-[10px] uppercase tracking-[0.4em]"
+              style={{ color: "rgba(255,255,255,0.85)" }}
+            >
+              {pendingMode ? MODE_META[pendingMode].label : ""} · {pendingMode ? MODE_META[pendingMode].tagline : ""}
+            </div>
+          </div>
+        </div>
+      </div>
     </>
   );
 }

@@ -25,7 +25,7 @@ function ScrollProgress() {
       const scrollHeight = container.scrollHeight - container.clientHeight;
       setProgress(scrollHeight > 0 ? (scrollTop / scrollHeight) * 100 : 0);
     };
-    container.addEventListener("scroll", onScroll);
+    container.addEventListener("scroll", onScroll, { passive: true });
     return () => container.removeEventListener("scroll", onScroll);
   }, []);
   return (
@@ -133,23 +133,31 @@ export function AlphaInterface() {
     <div
       ref={scrollRef}
       data-alpha-scroll
-      className="absolute inset-0 overflow-y-auto overflow-x-hidden bg-background"
+      data-mode="alpha"
+      className="alpha-mode absolute inset-0 overflow-y-auto overflow-x-hidden bg-background"
       style={{ scrollBehavior: "auto" }}
     >
       <ScrollProgress />
       {/* Slim mini-nav that appears after the hero card scrolls out of view.
           Full nav is integrated INTO the hero card itself (see AlphaHero). */}
       <AlphaMiniNav />
-      <AlphaHero />
-      <AlphaAbout />
-      <AlphaServices />
-      <AlphaPortfolio />
-      <AlphaProcess />
-      <AlphaTeam />
-      <AlphaTech />
-      <AlphaTestimonials />
-      <AlphaInsights />
-      <AlphaContact />
+      {/* LOOP-3-AGENTIC-SEO: <main> wraps the page's primary content (AlphaHero
+          through AlphaContact) — provides the single per-page main landmark
+          that Lighthouse SEO + AI crawlers + screen readers expect. AlphaMiniNav
+          (sticky chrome) + AlphaFooter (page-level contentinfo footer) stay
+          OUTSIDE <main> as site chrome. */}
+      <main id="main-content" data-section="main" className="contents">
+        <AlphaHero />
+        <AlphaAbout />
+        <AlphaServices />
+        <AlphaPortfolio />
+        <AlphaProcess />
+        <AlphaTeam />
+        <AlphaTech />
+        <AlphaTestimonials />
+        <AlphaInsights />
+        <AlphaContact />
+      </main>
       <AlphaFooter />
     </div>
   );

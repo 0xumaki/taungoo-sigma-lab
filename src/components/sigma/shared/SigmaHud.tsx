@@ -9,18 +9,24 @@ import { Marquee } from "./components";
 export function SigmaHud() {
   const { view, phase } = useSigmaStore();
   const meta = getSection(view);
-  const [clock, setClock] = React.useState("");
+  const [clock, setClock] = React.useState<{ h: string; m: string; s: string }>(
+    { h: "00", m: "00", s: "00" }
+  );
   const [coords, setCoords] = React.useState({ x: 0, y: 0 });
 
   React.useEffect(() => {
     const tick = () => {
+      // Skip work when the tab is hidden — saves ~60 setState calls/min while
+      // backgrounded. When the tab regains focus, the next tick reads new Date()
+      // so the displayed time snaps to current instantly (no drift visible).
+      if (document.hidden) return;
       const d = new Date();
       const pad = (n: number) => String(n).padStart(2, "0");
-      setClock(
-        `${pad(d.getUTCHours())}:${pad(d.getUTCMinutes())}:${pad(
-          d.getUTCSeconds()
-        )} UTC`
-      );
+      setClock({
+        h: pad(d.getUTCHours()),
+        m: pad(d.getUTCMinutes()),
+        s: pad(d.getUTCSeconds()),
+      });
     };
     tick();
     const i = setInterval(tick, 1000);
@@ -74,8 +80,29 @@ export function SigmaHud() {
           <span className="hidden border-l border-border/80 px-3 text-muted-foreground sm:block">
             {phaseLabel}
           </span>
-          <span className="border-l border-border/80 px-3 text-muted-foreground tabular-nums">
-            {clock}
+          {/* CPU activity sparkline — 5 vertical bars animating heights, 1.2s loop.
+              aria-hidden — purely decorative. */}
+          <span
+            className="sigma-spark hidden border-l border-border/80 px-2.5 sm:inline-flex"
+            aria-hidden
+            style={{ "--sigma-spark-color": "#00FF94" } as React.CSSProperties}
+          >
+            <span />
+            <span />
+            <span />
+            <span />
+            <span />
+          </span>
+          <span
+            className="border-l border-border/80 px-3 text-muted-foreground tabular-nums"
+            aria-label={`${clock.h}:${clock.m}:${clock.s} UTC`}
+          >
+            <span className="text-foreground">{clock.h}</span>
+            <span className="sigma-clock-colon" aria-hidden>:</span>
+            <span className="text-foreground">{clock.m}</span>
+            <span className="sigma-clock-colon" aria-hidden>:</span>
+            <span className="text-foreground">{clock.s}</span>
+            <span className="ml-1 text-muted-foreground">UTC</span>
           </span>
         </div>
       </header>
@@ -120,7 +147,7 @@ export function SigmaHud() {
         </div>
         <div className="ml-auto flex items-center overflow-hidden">
           <span className="border-l border-border/80 px-3 text-muted-foreground">
-            <span className="sigma-blink">▮</span> <span className="hidden xl:inline">[M] MAP · [←/→] NAV · [⌘K] JUMP · [T] TOUR · [R] RAND · [C] MC · [H] HELP · [L] THEME</span><span className="hidden lg:inline xl:hidden">[M] MAP · [←/→] NAV · [⌘K] JUMP · [T] TOUR</span><span className="lg:hidden">[M] MAP · [⌘K] · [H] HELP</span>
+            <span className="sigma-blink">▮</span> <span className="hidden xl:inline">[M] MAP · [←/→] NAV · [⌘K] JUMP · [T] TOUR · [R] RAND · [C] MC · [H] HELP · [L] THEME</span><span className="hidden lg:inline xl:hidden">[M] MAP · [←/→] NAV · [⌘K] JUMP · [T] TOUR</span>
           </span>
         </div>
       </footer>

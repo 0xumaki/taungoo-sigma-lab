@@ -199,7 +199,7 @@ export function SigmaMCMode() {
         // gradient color: green base with occasional accent flashes
         const r = Math.random();
         if (r > 0.97) {
-          ctx.fillStyle = `rgba(255, 45, 126, ${0.8 + Math.random() * 0.2})`; // pink
+          ctx.fillStyle = `rgba(255, 179, 0, ${0.8 + Math.random() * 0.2})`; // amber (was pink)
         } else if (r > 0.94) {
           ctx.fillStyle = `rgba(0, 229, 255, ${0.7 + Math.random() * 0.3})`; // cyan
         } else if (r > 0.91) {
@@ -235,12 +235,12 @@ export function SigmaMCMode() {
         className="fixed bottom-9 right-[180px] z-[80] hidden items-center gap-1.5 border px-3 py-1 font-mono text-[9px] uppercase tracking-[0.18em] backdrop-blur-sm transition-all md:flex"
         data-cursor="hover"
         style={active
-          ? { borderColor: "#FF2D7E", background: "#FF2D7E", color: "#000" }
-          : { borderColor: "var(--border)", background: "rgba(0,0,0,0.8)", color: "#FF2D7E" }
+          ? { borderColor: "#FFB300", background: "#FFB300", color: "#000" }
+          : { borderColor: "var(--border)", background: "rgba(0,0,0,0.8)", color: "#FFB300" }
         }
         title="MC MODE [C] — Matrix + Glitch + Music"
       >
-        <Zap className="h-3 w-3" style={{ color: active ? "#000" : "#FF2D7E" }} />
+        <Zap className="h-3 w-3" style={{ color: active ? "#000" : "#FFB300" }} />
         {active ? "MC ON" : "MC MODE"}
       </button>
 
@@ -249,18 +249,18 @@ export function SigmaMCMode() {
         <canvas
           ref={canvasRef}
           className="pointer-events-none fixed inset-0 z-[100]"
-          style={{ opacity: glitching ? 0.8 : 0.45, transition: "opacity 0.5s" }}
+          style={{ opacity: glitching ? 0.8 : 0.45, transition: `opacity var(--dur-slow) var(--ease-out-expo)` }}
         />
       )}
 
       {/* MC MODE status badge (when active) */}
       {active && (
-        <div className="fixed left-1/2 top-9 z-[102] -translate-x-1/2 flex items-center gap-2 border border-[#FF2D7E] bg-background/90 px-3 py-1 font-mono text-[9px] uppercase tracking-[0.3em] backdrop-blur-sm">
-          <span className="sigma-pulse h-1.5 w-1.5 bg-[#FF2D7E]" />
-          <span className="text-[#FF2D7E]">MC MODE</span>
+        <div className="fixed left-1/2 top-9 z-[102] -translate-x-1/2 flex items-center gap-2 border border-[#FFB300] bg-background/90 px-3 py-1 font-mono text-[9px] uppercase tracking-[0.3em] backdrop-blur-sm">
+          <span className="sigma-pulse h-1.5 w-1.5 bg-[#FFB300]" />
+          <span className="text-[#FFB300]">MC MODE</span>
           <span className="text-muted-foreground">·</span>
           <span className="text-foreground">燃える鋼 · BURNING STEEL</span>
-          {glitching && <span className="text-[#FF2D7E] sigma-blink">▮ GLITCH</span>}
+          {glitching && <span className="text-[#FFB300] sigma-blink">▮ GLITCH</span>}
           <span className="text-muted-foreground">·</span>
           <span className="text-muted-foreground">[C] STOP</span>
         </div>

@@ -106,9 +106,16 @@ export function SciFiCard({
         )}
       </div>
 
-      {/* Outer corner brackets — sci-fi */}
+      {/* Outer corner brackets — sci-fi (static chamfer marks) */}
       <span className="pointer-events-none absolute -left-px -top-px h-2 w-2 border-l border-t" style={{ borderColor: `${accent}88` }} />
       <span className="pointer-events-none absolute -bottom-px -right-px h-2 w-2 border-b border-r" style={{ borderColor: `${accent}88` }} />
+
+      {/* Animated hover corner brackets — draw in on hover (alpha-corner).
+          Color: accent, opacity 0→0.85, 0×0→14×14 over 0.4s ease-out-back. */}
+      <span className="alpha-corner tl" style={{ borderColor: accent }} aria-hidden />
+      <span className="alpha-corner tr" style={{ borderColor: accent }} aria-hidden />
+      <span className="alpha-corner bl" style={{ borderColor: accent }} aria-hidden />
+      <span className="alpha-corner br" style={{ borderColor: accent }} aria-hidden />
     </div>
   );
 }

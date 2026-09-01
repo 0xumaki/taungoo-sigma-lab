@@ -1,0 +1,643 @@
+     1→     1→"use client";
+     2→     2→
+     3→     3→import * as React from "react";
+     4→     4→import gsap from "gsap";
+     5→     5→import dynamic from "next/dynamic";
+     6→     6→import { useSigmaStore } from "@/lib/sigma/store";
+     7→     7→import { getSection, nextSection, prevSection, SECTIONS, type SectionId } from "@/lib/sigma/sections";
+     8→     8→import { SigmaHud } from "./shared/SigmaHud";
+     9→     9→import { SigmaCursor } from "./shared/SigmaCursor";
+    10→    10→import { SigmaSpotlight } from "./shared/SigmaSpotlight";
+    11→    11→import { SigmaOnboarding } from "./shared/SigmaOnboarding";
+    12→    12→import { SigmaBoot } from "./shared/SigmaBoot";
+    13→    13→import { SigmaCommand } from "./shared/SigmaCommand";
+    14→    14→import { SigmaProgress } from "./shared/SigmaProgress";
+    15→    15→import { SigmaKonami } from "./shared/SigmaKonami";
+    16→    16→import { SigmaHaggle } from "./shared/SigmaHaggle";
+    17→    17→import { SigmaSoundToggle } from "./shared/SigmaSoundToggle";
+    18→    18→import { SigmaHelp } from "./shared/SigmaHelp";
+    19→    19→import { SigmaBreadcrumb } from "./shared/SigmaBreadcrumb";
+    20→    20→import { SigmaThemeToggle } from "./shared/SigmaThemeToggle";
+    21→    21→import { SigmaCompletion } from "./shared/SigmaCompletion";
+    22→    22→import { SigmaMCController } from "./shared/SigmaMCController";
+    23→    23→import { SigmaToolbar } from "./shared/SigmaToolbar";
+    24→    24→import { SigmaModeSwitcher } from "./shared/SigmaModeSwitcher";
+    25→    25→import { BetaInterface } from "./beta/BetaInterface";
+    26→    26→import { sigmaSound, useSigmaSound } from "@/lib/sigma/sound";
+    27→    27→
+    28→    28→// LAZY-LOAD the 11 heavy Sigma sections + SigmaMap + AlphaInterface.
+    29→    29→// These are the memory-heavy components (recharts, GSAP contexts, particles,
+    30→    30→// AlphaInterface pulls in 12 child components + AlphaDataRiver).
+    31→    31→// With dynamic imports, they only compile when their mode is actually used.
+    32→    32→// When in Beta mode (default), NONE of these are compiled — saving bundle cost.
+    33→    33→// The slam-cover mode-switch transition (~1.45s, content swap at 0.55s) gives
+    34→    34→// the chunk ~450ms of headroom to load before panels reveal, so first Alpha
+    35→    35→// switch feels instant on broadband.
+    36→    36→const SigmaMap = dynamic(() => import("./SigmaMap").then(m => m.SigmaMap));
+    37→    37→const S01Initializing = dynamic(() => import("./sections/S01Initializing").then(m => m.S01Initializing));
+    38→    38→const S02Manifesto = dynamic(() => import("./sections/S02Manifesto").then(m => m.S02Manifesto));
+    39→    39→const S03CoreSystems = dynamic(() => import("./sections/S03CoreSystems").then(m => m.S03CoreSystems));
+    40→    40→const S04Projects = dynamic(() => import("./sections/S04Projects").then(m => m.S04Projects));
+    41→    41→const S05Collective = dynamic(() => import("./sections/S05Collective").then(m => m.S05Collective));
+    42→    42→const S06Research = dynamic(() => import("./sections/S06Research").then(m => m.S06Research));
+    43→    43→const S07DataStreams = dynamic(() => import("./sections/S07DataStreams").then(m => m.S07DataStreams));
+    44→    44→const S08Capabilities = dynamic(() => import("./sections/S08Capabilities").then(m => m.S08Capabilities));
+    45→    45→const S09Alliances = dynamic(() => import("./sections/S09Alliances").then(m => m.S09Alliances));
+    46→    46→const S10Access = dynamic(() => import("./sections/S10Access").then(m => m.S10Access));
+    47→    47→const S11Status = dynamic(() => import("./sections/S11Status").then(m => m.S11Status));
+    48→    48→// AlphaInterface lazy-loaded — defers ~3500 lines of alpha-mode component tree
+    49→    49→// (AlphaHero/AlphaServices/AlphaPortfolio/AlphaProcess/AlphaTeam/AlphaTestimonials/
+    50→    50→// AlphaContact/AlphaFooter/AlphaTech/AlphaInsights/AlphaNav + ServiceBasket +
+    51→    51→// GlitchImage + SciFiCard) to a separate chunk that only loads on first alpha
+    52→    52→// mode switch. ssr:false because it's a client-only interactive shell.
+    53→    53→const AlphaInterface = dynamic(() => import("./alpha/AlphaInterface").then(m => m.AlphaInterface), {
+    54→    54→  ssr: false,
+    55→    55→  loading: () => null,
+    56→    56→});
+    57→    57→
+    58→    58→const PANEL_COUNT = 8;
+    59→    59→
+    60→    60→function renderView(view: SectionId) {
+    61→    61→  switch (view) {
+    62→    62→    case "map":
+    63→    63→      return <SigmaMap />;
+    64→    64→    case "s01":
+    65→    65→      return <S01Initializing />;
+    66→    66→    case "s02":
+    67→    67→      return <S02Manifesto />;
+    68→    68→    case "s03":
+    69→    69→      return <S03CoreSystems />;
+    70→    70→    case "s04":
+    71→    71→      return <S04Projects />;
+    72→    72→    case "s05":
+    73→    73→      return <S05Collective />;
+    74→    74→    case "s06":
+    75→    75→      return <S06Research />;
+    76→    76→    case "s07":
+    77→    77→      return <S07DataStreams />;
+    78→    78→    case "s08":
+    79→    79→      return <S08Capabilities />;
+    80→    80→    case "s09":
+    81→    81→      return <S09Alliances />;
+    82→    82→    case "s10":
+    83→    83→      return <S10Access />;
+    84→    84→    case "s11":
+    85→    85→      return <S11Status />;
+    86→    86→    default:
+    87→    87→      return <SigmaMap />;
+    88→    88→  }
+    89→    89→}
+    90→    90→
+    91→    91→export function ExperienceShell() {
+    92→    92→  const { view, phase, navigate, setPhase, visitToken } = useSigmaStore();
+    93→    93→  // Auto-enable SFX on first user interaction (both Sigma and Alpha modes)
+    94→    94→  useSigmaSound();
+    95→    95→  const [renderedView, setRenderedView] = React.useState<SectionId>(view);
+    96→    96→  const [flashAccent, setFlashAccent] = React.useState<string>("#FFFFFF");
+    97→    97→  const [booting, setBooting] = React.useState(false);
+    98→    98→  const [onboarding, setOnboarding] = React.useState(false);
+    99→    99→  const [cmdOpen, setCmdOpen] = React.useState(false);
+   100→   100→  const [mcActive, setMcActive] = React.useState(false);
+   101→   101→  const [tourActive, setTourActive] = React.useState(false);
+   102→   102→  const [tourPaused, setTourPaused] = React.useState(false);
+   103→   103→  const [tourIndex, setTourIndex] = React.useState(0);
+   104→   104→  const [mode, setMode] = React.useState<"sigma" | "alpha" | "beta">("beta");
+   105→   105→
+   106→   106→  // Deep-link + boot screen + onboarding logic — single effect, runs once after mount
+   107→   107→  React.useEffect(() => {
+   108→   108→    if (typeof window === "undefined") return;
+   109→   109→    const params = new URLSearchParams(window.location.search);
+   110→   110→    const s = params.get("s");
+   111→   111→    if (s) {
+   112→   112→      const id = `s${s.padStart(2, "0")}` as SectionId;
+   113→   113→      // Defer to next tick to avoid hydration race condition
+   114→   114→      const t = setTimeout(() => {
+   115→   115→        useSigmaStore.getState().boot(id);
+   116→   116→        setRenderedView(id);
+   117→   117→      }, 0);
+   118→   118→      return () => clearTimeout(t); // deep-links skip the boot screen + onboarding
+   119→   119→    }
+   120→   120→    // Only show boot screen on first load or full page reload — NOT when
+   121→   121→    // returning from detail pages. We detect this by checking if the page
+   122→   122→    // was loaded via browser navigation (back/forward) vs a full reload.
+   123→   123→    // performance.navigation.type === 0 = normal navigation (could be back from detail)
+   124→   124→    // performance.navigation.type === 1 = reload (show boot)
+   125→   125→    // If there's a saved scroll position, it means we're returning from a detail page
+   126→   126→    // CRITICAL: Check BOTH alpha_scroll_position AND beta_scroll_position — Beta mode
+   127→   127→    // saves to beta_scroll_position, so without this check, Beta users see the boot
+   128→   128→    // screen when returning from detail pages (bug reported in Stage 70).
+   129→   129→    const isReturning =
+   130→   130→      sessionStorage.getItem("alpha_scroll_position") !== null ||
+   131→   131→      sessionStorage.getItem("beta_scroll_position") !== null;
+   132→   132→    const navEntry = performance.getEntriesByType("navigation")[0] as PerformanceNavigationTiming | undefined;
+   133→   133→    const isReload = navEntry?.type === "reload";
+   134→   134→
+   135→   135→    // Determine the mode early — Beta mode is a clean enterprise mode that should
+   136→   136→    // NEVER show the brutalist SigmaBoot screen. Only Sigma mode gets the boot screen.
+   137→   137→    // We read the saved mode from localStorage (same logic as SigmaModeSwitcher).
+   138→   138→    let savedMode: "sigma" | "alpha" | "beta" | null = null;
+   139→   139→    try {
+   140→   140→      const sm = localStorage.getItem("sigma-mode");
+   141→   141→      if (sm === "sigma" || sm === "alpha" || sm === "beta") savedMode = sm;
+   142→   142→    } catch { /* ignore */ }
+   143→   143→    // If no saved mode, default is "beta" (per Stage 68 user spec)
+   144→   144→    const effectiveMode = savedMode || "beta";
+   145→   145→
+   146→   146→    if (effectiveMode === "beta") {
+   147→   147→      // Beta mode NEVER shows the boot screen — it's a clean enterprise mode
+   148→   148→      setBooting(false);
+   149→   149→    } else if (!isReturning && !isReload) {
+   150→   150→      // First visit to the site (not returning from detail, not a reload)
+   151→   151→      // → show boot screen
+   152→   152→      setBooting(true);
+   153→   153→    } else if (isReload) {
+   154→   154→      // Full page reload → show boot screen
+   155→   155→      setBooting(true);
+   156→   156→    }
+   157→   157→    // If isReturning → skip boot screen (coming back from detail page)
+   158→   158→
+   159→   159→    try {
+   160→   160→      // show onboarding only once per browser (localStorage)
+   161→   161→      // Beta mode skips onboarding entirely (clean enterprise mode — no Sigma/Alpha tutorials)
+   162→   162→      const onboarded = localStorage.getItem("sigma_onboarded");
+   163→   163→      if (!onboarded && !isReturning && effectiveMode !== "beta") {
+   164→   164→        // delay onboarding until after boot screen
+   165→   165→        const ob = setTimeout(() => setOnboarding(true), 4000);
+   166→   166→        return () => clearTimeout(ob);
+   167→   167→      }
+   168→   168→    } catch {
+   169→   169→      // sessionStorage/localStorage may be unavailable (private mode) — skip
+   170→   170→    }
+   171→   171→  }, []);
+   172→   172→
+   173→   173→  const handleBootDone = React.useCallback(() => {
+   174→   174→    try {
+   175→   175→      sessionStorage.setItem("sigma_booted", "1");
+   176→   176→    } catch {
+   177→   177→      // ignore
+   178→   178→    }
+   179→   179→    setBooting(false);
+   180→   180→  }, []);
+   181→   181→
+   182→   182→  // Safety: if boot screen stays for >6s, force-clear it (prevents stuck blank page)
+   183→   183→  React.useEffect(() => {
+   184→   184→    if (!booting) return;
+   185→   185→    const t = setTimeout(() => {
+   186→   186→      setBooting(false);
+   187→   187→      try {
+   188→   188→        sessionStorage.setItem("sigma_booted", "1");
+   189→   189→      } catch {
+   190→   190→        // ignore
+   191→   191→      }
+   192→   192→    }, 6000);
+   193→   193→    return () => clearTimeout(t);
+   194→   194→  }, [booting]);
+   195→   195→
+   196→   196→  // Command palette: Cmd/Ctrl+K to open, also '/' as a secondary trigger
+   197→   197→  React.useEffect(() => {
+   198→   198→    const onKey = (e: KeyboardEvent) => {
+   199→   199→      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
+   200→   200→        e.preventDefault();
+   201→   201→        setCmdOpen((o) => !o);
+   202→   202→      } else if (e.key === "/" && !cmdOpen) {
+   203→   203→        // only trigger '/' when not already typing in an input
+   204→   204→        const t = e.target as HTMLElement;
+   205→   205→        if (t && (t.tagName === "INPUT" || t.tagName === "TEXTAREA" || t.isContentEditable)) return;
+   206→   206→        e.preventDefault();
+   207→   207→        setCmdOpen(true);
+   208→   208→      }
+   209→   209→    };
+   210→   210→    window.addEventListener("keydown", onKey);
+   211→   211→    return () => window.removeEventListener("keydown", onKey);
+   212→   212→  }, [cmdOpen]);
+   213→   213→
+   214→   214→  const panelsRef = React.useRef<(HTMLDivElement | null)[]>([]);
+   215→   215→  const overlayRef = React.useRef<HTMLDivElement>(null);
+   216→   216→  const flashRef = React.useRef<HTMLDivElement>(null);
+   217→   217→  const labelRef = React.useRef<HTMLDivElement>(null);
+   218→   218→  const rootRef = React.useRef<HTMLDivElement>(null);
+   219→   219→
+   220→   220→  // Keyboard navigation — DISABLED when typing in form inputs (S10 Access, S08 search, etc.)
+   221→   221→  // ALSO DISABLED in Beta mode (user request: Alpha and Sigma key bindings should not work in Beta)
+   222→   222→  React.useEffect(() => {
+   223→   223→    const onKey = (e: KeyboardEvent) => {
+   224→   224→      // Skip ALL key bindings when in Beta mode
+   225→   225→      if (mode === "beta") return;
+   226→   226→      // Skip ALL key bindings when user is typing in an input/textarea/contenteditable
+   227→   227→      const target = e.target as HTMLElement;
+   228→   228→      if (target && (target.tagName === "INPUT" || target.tagName === "TEXTAREA" || target.isContentEditable)) {
+   229→   229→        return; // Let the user type without triggering navigation
+   230→   230→      }
+   231→   231→      if (useSigmaStore.getState().phase !== "idle") return;
+   232→   232→      const cur = useSigmaStore.getState().view;
+   233→   233→      if (e.key === "Escape") {
+   234→   234→        if (cur !== "map") { navigate("map"); sigmaSound.play("close"); }
+   235→   235→      } else if (e.key === "m" || e.key === "M") {
+   236→   236→        if (cur !== "map") { navigate("map"); sigmaSound.play("close"); }
+   237→   237→      } else if (e.key === "ArrowRight") {
+   238→   238→        navigate(nextSection(cur)); sigmaSound.play("click");
+   239→   239→      } else if (e.key === "ArrowLeft") {
+   240→   240→        navigate(prevSection(cur)); sigmaSound.play("click");
+   241→   241→      } else if (e.key >= "0" && e.key <= "9") {
+   242→   242→        const n = parseInt(e.key, 10);
+   243→   243→        const target =
+   244→   244→          n === 0 ? "map" : (`s${String(n).padStart(2, "0")}` as SectionId);
+   245→   245→        if (target !== cur) { navigate(target); sigmaSound.play("click"); }
+   246→   246→      } else if (e.key === "-" || e.key === "_") {
+   247→   247→        // s10 (the "-" key is next to 0 on the keyboard)
+   248→   248→        if (cur !== "s10") { navigate("s10"); sigmaSound.play("click"); }
+   249→   249→      } else if (e.key === "=" || e.key === "+") {
+   250→   250→        // s11 (the "=" key is next to "-" on the keyboard)
+   251→   251→        if (cur !== "s11") { navigate("s11"); sigmaSound.play("click"); }
+   252→   252→      } else if (e.key === "c" || e.key === "C") {
+   253→   253→        // MC mode toggle
+   254→   254→        const t = e.target as HTMLElement;
+   255→   255→        if (t && (t.tagName === "INPUT" || t.tagName === "TEXTAREA" || t.isContentEditable)) return;
+   256→   256→        e.preventDefault();
+   257→   257→        setMcActive((a) => !a);
+   258→   258→      } else if (e.key === "t" || e.key === "T") {
+   259→   259→        // Tour toggle
+   260→   260→        const t = e.target as HTMLElement;
+   261→   261→        if (t && (t.tagName === "INPUT" || t.tagName === "TEXTAREA" || t.isContentEditable)) return;
+   262→   262→        e.preventDefault();
+   263→   263→        if (tourActive) {
+   264→   264→          setTourPaused((p) => !p);
+   265→   265→        } else {
+   266→   266→          // start tour from current sector
+   267→   267→          const curIdx = SECTIONS.findIndex((s) => s.id === cur);
+   268→   268→          setTourIndex(curIdx >= 0 ? curIdx : 0);
+   269→   269→          setTourActive(true);
+   270→   270→          setTourPaused(false);
+   271→   271→        }
+   272→   272→      }
+   273→   273→    };
+   274→   274→    window.addEventListener("keydown", onKey);
+   275→   275→    return () => window.removeEventListener("keydown", onKey);
+   276→   276→  }, [navigate, tourActive, mode]);
+   277→   277→
+   278→   278→  // Safety: if phase stays "covering" for >4s (e.g. GSAP interrupted), force-reset to idle
+   279→   279→  React.useEffect(() => {
+   280→   280→    if (phase !== "covering") return;
+   281→   281→    const t = setTimeout(() => {
+   282→   282→      if (useSigmaStore.getState().phase === "covering") {
+   283→   283→        setPhase("idle");
+   284→   284→      }
+   285→   285→    }, 4000);
+   286→   286→    return () => clearTimeout(t);
+   287→   287→  }, [phase, setPhase]);
+   288→   288→
+   289→   289→  // Tour mode: auto-advance through sectors every 6s
+   290→   290→  React.useEffect(() => {
+   291→   291→    if (!tourActive || tourPaused) return;
+   292→   292→    if (phase !== "idle") return;
+   293→   293→    const SECTOR_DURATION = 6000;
+   294→   294→    const startTs = Date.now();
+   295→   295→    const interval = setInterval(() => {
+   296→   296→      if (Date.now() - startTs >= SECTOR_DURATION) {
+   297→   297→        setTourIndex((idx) => {
+   298→   298→          const next = (idx + 1) % SECTIONS.length;
+   299→   299→          navigate(SECTIONS[next].id);
+   300→   300→          sigmaSound.play("transition");
+   301→   301→          return next;
+   302→   302→        });
+   303→   303→      }
+   304→   304→    }, 1000);
+   305→   305→    return () => clearInterval(interval);
+   306→   306→  }, [tourActive, tourPaused, phase, navigate]);
+   307→   307→
+   308→   308→  // Run transition timeline on phase change — uses useEffect for reliability
+   309→   309→  React.useEffect(() => {
+   310→   310→    if (phase !== "covering") return;
+   311→   311→    const dest = useSigmaStore.getState().view;
+   312→   312→    const destMeta = getSection(dest);
+   313→   313→    setFlashAccent(destMeta.accent);
+   314→   314→    sigmaSound.play("transition");
+   315→   315→    // play ambient tone tuned to the destination sector's accent color
+   316→   316→    if (dest !== "map") {
+   317→   317→      sigmaSound.playAmbient(destMeta.accent);
+   318→   318→    }
+   319→   319→
+   320→   320→    // Check for reduced motion preference — if active, skip the animation and just swap
+   321→   321→    const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+   322→   322→    if (prefersReduced) {
+   323→   323→      setRenderedView(dest);
+   324→   324→      setPhase("idle");
+   325→   325→      return;
+   326→   326→    }
+   327→   327→
+   328→   328→    const panels = panelsRef.current.filter(Boolean) as HTMLDivElement[];
+   329→   329→    const overlay = overlayRef.current;
+   330→   330→    const flash = flashRef.current;
+   331→   331→    const label = labelRef.current;
+   332→   332→
+   333→   333→    if (panels.length === 0 || !overlay) {
+   334→   334→      // no panels yet — just swap immediately
+   335→   335→      setRenderedView(dest);
+   336→   336→      setPhase("idle");
+   337→   337→      return;
+   338→   338→    }
+   339→   339→
+   340→   340→    let done = false;
+   341→   341→    const finish = () => {
+   342→   342→      if (done) return;
+   343→   343→      done = true;
+   344→   344→      setPhase("idle");
+   345→   345→    };
+   346→   346→
+   347→   347→    const tl = gsap.timeline({
+   348→   348→      onComplete: finish,
+   349→   349→      onReverseComplete: finish,
+   350→   350→    });
+   351→   351→
+   352→   352→    // 1. COVER — panels slam down, staggered from top
+   353→   353→    tl.set(panels, {
+   354→   354→      scaleY: 0,
+   355→   355→      transformOrigin: "top",
+   356→   356→      backgroundColor: destMeta.accent,
+   357→   357→    });
+   358→   358→    tl.set(overlay, { pointerEvents: "auto", zIndex: 90 });
+   359→   359→    tl.to(panels, {
+   360→   360→      scaleY: 1,
+   361→   361→      duration: 0.42,
+   362→   362→      ease: "power3.in",
+   363→   363→      stagger: { each: 0.04, from: "start" },
+   364→   364→    });
+   365→   365→
+   366→   366→    // 2. MIDPOINT — swap the rendered view + flash + label fly-through
+   367→   367→    tl.call(
+   368→   368→      () => {
+   369→   369→        setRenderedView(dest);
+   370→   370→        if (flash) {
+   371→   371→          gsap.fromTo(
+   372→   372→            flash,
+   373→   373→            { opacity: 1 },
+   374→   374→            { opacity: 0, duration: 0.5, ease: "power2.out" }
+   375→   375→          );
+   376→   376→        }
+   377→   377→        // Glitch flicker — fire a 180ms clip-path slice glitch on the overlay
+   378→   378→        // (sigma mode signature transition polish, reduced-motion safe via CSS)
+   379→   379→        const glitchEl = overlay?.querySelector("[data-glitch-layer]");
+   380→   380→        if (glitchEl) {
+   381→   381→          glitchEl.classList.remove("sigma-transition-glitch");
+   382→   382→          // Force reflow so the animation re-triggers on every transition
+   383→   383→          void (glitchEl as HTMLElement).offsetWidth;
+   384→   384→          glitchEl.classList.add("sigma-transition-glitch");
+   385→   385→        }
+   386→   386→      },
+   387→   387→      [],
+   388→   388→      ">-0.05"
+   389→   389→    );
+   390→   390→
+   391→   391→    // sector label flies through during slam cover transition.
+   392→   392→    // Set the label TEXT dynamically so it shows the DESTINATION sector code
+   393→   393→    // (including "00" for map — which wasn't showing before because the label
+   394→   394→    // was bound to the rendered view's meta, not the destination's).
+   395→   395→    if (label) {
+   396→   396→      // Step 1: Set the text content to the destination sector code
+   397→   397→      tl.call(() => {
+   398→   398→        label.textContent = destMeta.shortCode;
+   399→   399→      }, [], "<");
+   400→   400→      // Step 2: Set visibility:visible + initial position (BEFORE animating opacity,
+   401→   401→      // so the element is visible when opacity starts increasing)
+   402→   402→      tl.set(label, { visibility: "visible", opacity: 0, x: -120 }, "<");
+   403→   403→      // Step 3: Animate opacity 0→1 + x: -120→0 (fly in from left)
+   404→   404→      tl.to(
+   405→   405→        label,
+   406→   406→        { opacity: 1, x: 0, duration: 0.28, ease: "power3.out" },
+   407→   407→        "<"
+   408→   408→      );
+   409→   409→      // Step 4: Animate opacity 1→0 + x: 0→120 (fly out to right)
+   410→   410→      tl.to(
+   411→   411→        label,
+   412→   412→        { opacity: 0, x: 120, duration: 0.28, ease: "power3.in" },
+   413→   413→        ">+0.04"
+   414→   414→      );
+   415→   415→    }
+   416→   416→
+   417→   417→    // 3. REVEAL — panels retract from bottom, staggered
+   418→   418→    tl.set(panels, { transformOrigin: "bottom" });
+   419→   419→    tl.to(panels, {
+   420→   420→      scaleY: 0,
+   421→   421→      duration: 0.46,
+   422→   422→      ease: "power3.out",
+   423→   423→      stagger: { each: 0.035, from: "start" },
+   424→   424→      clearProps: "transform,backgroundColor",
+   425→   425→    });
+   426→   426→
+   427→   427→    tl.set(overlay, { pointerEvents: "none" });
+   428→   428→    // CRITICAL: explicitly set opacity to 0 AND visibility to hidden (do NOT use clearProps — clearProps
+   429→   429→    // reverts to CSS default opacity:1, which makes the number persist on screen).
+   430→   430→    // visibility:hidden is the FINAL safety net — even if opacity fails for any reason,
+   431→   431→    // the element will still be completely invisible and non-interactive.
+   432→   432→    // This was the root cause of the "center number keeps displaying" bug.
+   433→   433→    if (label) {
+   434→   434→      tl.set(label, { opacity: 0, x: 0, visibility: "hidden" });
+   435→   435→    }
+   436→   436→
+   437→   437→    // Safety: if timeline doesn't complete in 3s, force-finish
+   438→   438→    const safety = setTimeout(() => {
+   439→   439→      if (!done) {
+   440→   440→        tl.kill();
+   441→   441→        setRenderedView(dest);
+   442→   442→        finish();
+   443→   443→      }
+   444→   444→    }, 3000);
+   445→   445→
+   446→   446→    return () => {
+   447→   447→      clearTimeout(safety);
+   448→   448→    };
+   449→   449→  }, [phase, setPhase]);
+   450→   450→
+   451→   451→  const meta = getSection(renderedView);
+   452→   452→
+   453→   453→  return (
+   454→   454→    <div
+   455→   455→      ref={rootRef}
+   456→   456→      suppressHydrationWarning
+   457→   457→      data-mode={mode}
+   458→   458→      data-site="taungoo-sigma-lab"
+   459→   459→      className={`relative fixed inset-0 overflow-hidden bg-background ${
+   460→   460→        mode === "beta" ? "" : mode === "sigma" ? "sigma-mode sigma-noise sigma-vignette" : "sigma-noise sigma-vignette"
+   461→   461→      }`}
+   462→   462→    >
+   463→   463→      {/* Skip-to-content link — RENDERED FIRST (DOM order) so it's the first
+   464→   464→          focusable element on the page. Visually hidden until focused
+   465→   465→          (keyboard-only). Targets #top in the Hero. Beta-only. The
+   466→   466→          visually-identical duplicate inside BetaInterface was removed to
+   467→   467→          avoid double-rendering + double-announce. WCAG 2.1 SC 2.4.1. */}
+   468→   468→      {mode === "beta" && (
+   469→   469→        <a href="#top" className="bs-skip-link">
+   470→   470→          Skip to content
+   471→   471→        </a>
+   472→   472→      )}
+   473→   473→
+   474→   474→      {/* Persistent layered background — HIDDEN in Beta mode (clean enterprise) */}
+   475→   475→      {mode !== "beta" && <div className="sigma-grid pointer-events-none absolute inset-0 opacity-60" />}
+   476→   476→
+   477→   477→      {/* Cursor spotlight (desktop only) — HIDDEN in Beta mode */}
+   478→   478→      {mode !== "beta" && <SigmaSpotlight />}
+   479→   479→
+   480→   480→      {/* Mode switcher (Σ / α / β) — floating, repositioned to top-right to avoid nav collision */}
+   481→   481→      {mode === "beta" && (
+   482→   482→        <div className="fixed right-4 top-20 z-[95]">
+   483→   483→          <SigmaModeSwitcher mode={mode} onModeChange={setMode} floating />
+   484→   484→        </div>
+   485→   485→      )}
+   486→   486→      {mode !== "beta" && <SigmaModeSwitcher mode={mode} onModeChange={setMode} />}
+   487→   487→
+   488→   488→      {/* Rendered view — Sigma mode (map-based), Alpha mode (brutalist scroll), or Beta mode (enterprise) */}
+   489→   489→      {mode === "sigma" ? (
+   490→   490→        <div
+   491→   491→          key={`${renderedView}-${visitToken}`}
+   492→   492→          className="absolute inset-0"
+   493→   493→          style={{ paddingTop: 32, paddingLeft: 32, paddingRight: 32, paddingBottom: 28 }}
+   494→   494→        >
+   495→   495→          <div className="relative h-full w-full">{renderView(renderedView)}</div>
+   496→   496→        </div>
+   497→   497→      ) : mode === "alpha" ? (
+   498→   498→        <AlphaInterface />
+   499→   499→      ) : (
+   500→   500→        <BetaInterface />
+   501→   501→      )}
+   502→   502→
+   503→   503→      {/* Accent ambient glow keyed to the current sector — HIDDEN in Beta mode */}
+   504→   504→      {mode !== "beta" && (
+   505→   505→        <div
+   506→   506→          className="pointer-events-none absolute inset-0 transition-opacity duration-700"
+   507→   507→          style={{
+   508→   508→            background: `radial-gradient(60% 50% at 50% 50%, ${meta.accent}14, transparent 70%)`,
+   509→   509→          }}
+   510→   510→        />
+   511→   511→      )}
+   512→   512→
+   513→   513→      {/* TRANSITION OVERLAY */}
+   514→   514→      <div
+   515→   515→        ref={overlayRef}
+   516→   516→        className="pointer-events-none absolute inset-0 z-[90]"
+   517→   517→      >
+   518→   518→        {/* horizontal slam panels */}
+   519→   519→        <div className="absolute inset-0 flex flex-col">
+   520→   520→          {Array.from({ length: PANEL_COUNT }).map((_, i) => (
+   521→   521→            <div
+   522→   522→              key={i}
+   523→   523→              ref={(el) => {
+   524→   524→                panelsRef.current[i] = el;
+   525→   525→              }}
+   526→   526→              className="flex-1"
+   527→   527→              style={{
+   528→   528→                transform: "scaleY(0)",
+   529→   529→                backgroundColor: flashAccent,
+   530→   530→                borderBottom: i < PANEL_COUNT - 1 ? "1px solid rgba(0,0,0,0.25)" : "none",
+   531→   531→              }}
+   532→   532→            />
+   533→   533→          ))}
+   534→   534→        </div>
+   535→   535→
+   536→   536→        {/* glitch flash */}
+   537→   537→        <div
+   538→   538→          ref={flashRef}
+   539→   539→          className="absolute inset-0 mix-blend-screen"
+   540→   540→          style={{ background: flashAccent, opacity: 0 }}
+   541→   541→        />
+   542→   542→
+   543→   543→        {/* glitch flicker layer — clip-path slices fire at transition midpoint
+   544→   544→            (180ms total, scoped to .sigma-mode, reduced-motion safe via CSS).
+   545→   545→            Opacity is driven entirely by the keyframes (0 → 1 → 0). */}
+   546→   546→        <div
+   547→   547→          data-glitch-layer
+   548→   548→          aria-hidden
+   549→   549→          className="pointer-events-none absolute inset-0"
+   550→   550→          style={{
+   551→   551→            // Soft amber transition tint (neutral, not pink) — keeps glitch effect
+   552→   552→            background: "linear-gradient(180deg, transparent 0%, rgba(255,179,0,0.18) 50%, transparent 100%)",
+   553→   553→            mixBlendMode: "screen",
+   554→   554→          }}
+   555→   555→        />
+   556→   556→
+   557→   557→        {/* sector label fly-through — shows "01"/"02" ONLY during slam cover transition.
+   558→   558→            CRITICAL FIX:
+   559→   559→            1. No mixBlendMode (was causing rendering at opacity 0)
+   560→   560→            2. visibility:hidden by default (extra safety — even if opacity fails, element is invisible)
+   561→   561→            3. z-index: 1 (behind content but above panels — so it shows during transition but not after)
+   562→   562→            4. GSAP sets visibility:visible during animation, then back to hidden after
+   563→   563→            After transition: opacity=0 + visibility=hidden = truly invisible (no persistence bug). */}
+   564→   564→        <div className="absolute inset-0 flex items-center justify-center" style={{ zIndex: 1 }}>
+   565→   565→          <div
+   566→   566→            ref={labelRef}
+   567→   567→            className="font-mono text-[11vw] font-black leading-none text-black/85"
+   568→   568→            style={{ opacity: 0, visibility: "hidden", pointerEvents: "none" }}
+   569→   569→          >
+   570→   570→            {meta.shortCode}
+   571→   571→          </div>
+   572→   572→        </div>
+   573→   573→
+   574→   574→        {/* hazard edge during transition */}
+   575→   575→        <div className="sigma-hazard-orange absolute inset-x-0 top-0 h-2 opacity-0" />
+   576→   576→      </div>
+   577→   577→
+   578→   578→      {/* Persistent HUD — Sigma mode only */}
+   579→   579→      {mode === "sigma" && <SigmaHud />}
+   580→   580→
+   581→   581→      {/* Custom cursor reticle (desktop only, Sigma + Alpha modes only — Beta has its own BetaReticleCursor) */}
+   582→   582→      {mode !== "beta" && <SigmaCursor />}
+   583→   583→
+   584→   584→      {/* Sector progress indicator (right edge, Sigma mode only) */}
+   585→   585→      {mode === "sigma" && <SigmaProgress />}
+   586→   586→
+   587→   587→      {/* Sound toggle (top-right, Sigma mode only) */}
+   588→   588→      {mode === "sigma" && <SigmaSoundToggle />}
+   589→   589→
+   590→   590→      {/* Theme toggle (below sound toggle, Sigma mode only) */}
+   591→   591→      {mode === "sigma" && <SigmaThemeToggle />}
+   592→   592→
+   593→   593→      {/* Sector completion tracker (Sigma mode only) */}
+   594→   594→      {mode === "sigma" && <SigmaCompletion />}
+   595→   595→
+   596→   596→      {/* MC mode controller (matrix + glitch + music, both modes) */}
+   597→   597→      <SigmaMCController active={mcActive} onToggle={() => setMcActive((a) => !a)} />
+   598→   598→
+   599→   599→      {/* Unified bottom-right toolbar (Sigma mode only) */}
+   600→   600→      {mode === "sigma" && !booting && (
+   601→   601→        <SigmaToolbar
+   602→   602→          onCmdOpen={() => setCmdOpen(true)}
+   603→   603→          mcActive={mcActive}
+   604→   604→          onMCToggle={() => setMcActive((a) => !a)}
+   605→   605→          tourActive={tourActive}
+   606→   606→          tourPaused={tourPaused}
+   607→   607→          onTourStart={() => {
+   608→   608→            const curIdx = SECTIONS.findIndex((s) => s.id === view);
+   609→   609→            setTourIndex(curIdx >= 0 ? curIdx : 0);
+   610→   610→            setTourActive(true);
+   611→   611→            setTourPaused(false);
+   612→   612→          }}
+   613→   613→          onTourPause={() => setTourPaused((p) => !p)}
+   614→   614→          onTourStop={() => { setTourActive(false); setTourPaused(false); }}
+   615→   615→        />
+   616→   616→      )}
+   617→   617→
+   618→   618→      {/* Visited sectors breadcrumb (top-center, Sigma mode only) */}
+   619→   619→      {mode === "sigma" && <SigmaBreadcrumb />}
+   620→   620→
+   621→   621→      {/* Help overlay ([H] key, both modes) */}
+   622→   622→      <SigmaHelp />
+   623→   623→
+   624→   624→      {/* Konami code easter egg (both modes) */}
+   625→   625→      <SigmaKonami />
+   626→   626→
+   627→   627→      {/* Secret haggle system (type H-A-G-G-L-E to activate) */}
+   628→   628→      <SigmaHaggle />
+   629→   629→
+   630→   630→      {/* Command palette (Cmd/Ctrl+K or /, both modes) */}
+   631→   631→      <SigmaCommand open={cmdOpen} onClose={() => setCmdOpen(false)} />
+   632→   632→
+   633→   633→      {/* Boot screen (first visit only) */}
+   634→   634→      {booting && <SigmaBoot onDone={handleBootDone} />}
+   635→   635→
+   636→   636→      {/* Onboarding overlay (first visit only, after boot) */}
+   637→   637→      {onboarding && !booting && (
+   638→   638→        <SigmaOnboarding onDone={() => setOnboarding(false)} />
+   639→   639→      )}
+   640→   640→    </div>
+   641→   641→  );
+   642→   642→}
+   643→   643→

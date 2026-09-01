@@ -25,7 +25,7 @@ const TECH_DATA: { category: string; items: string[]; color: string; icon: strin
   },
   {
     category: "BACKEND",
-    color: "#FF2D7E",
+    color: "#FFB300",
     icon: "⚙",
     items: ["Prisma", "PostgreSQL", "MySQL", "Redis", "SQLite", "GraphQL", "tRPC", "Express", "Socket.io", "Zod"],
   },
@@ -52,7 +52,7 @@ const INFRA_STATS: { v: string; k: string; c: string }[] = [
 
 export function AlphaTech() {
   return (
-    <section id="tech" className="relative border-t border-border px-3 py-12 sm:px-6 sm:py-20">
+    <section id="tech" aria-labelledby="tech-title" data-section="tech" className="relative border-t border-border px-3 py-12 sm:px-6 sm:py-20">
       <div className="sigma-grid pointer-events-none absolute inset-0 opacity-10" />
       <div className="sigma-scanlines pointer-events-none absolute inset-0 opacity-15" />
 
@@ -61,7 +61,7 @@ export function AlphaTech() {
         <div className="flex flex-col gap-3 border-b border-border pb-4 sm:flex-row sm:items-end sm:justify-between sm:gap-4">
           <div>
             <div className="font-mono text-[10px] uppercase tracking-[0.3em] text-[#FF4500]">▸ 07 / TECH STACK</div>
-            <h2 className="mt-2 font-sans text-3xl font-black uppercase leading-tight tracking-tight sm:text-5xl md:text-6xl">
+            <h2 id="tech-title" className="mt-2 font-sans text-3xl font-black uppercase leading-tight tracking-tight sm:text-5xl md:text-6xl">
               TOOLS WE <span style={{ color: "#FF4500" }}>WIELD.</span>
             </h2>
             <p className="mt-2 font-serif text-sm italic text-muted-foreground sm:text-base">

@@ -167,7 +167,7 @@ export function SigmaHelp() {
 
         {/* footer */}
         <div className="flex items-center justify-between border-t border-border px-4 py-2 font-mono text-[9px] uppercase tracking-[0.2em] text-muted-foreground">
-          <span>TAUNGOO SIGMA LAB · BUILD 2.4.SIGMA</span>
+          <span>TAUNGOO Σ Lab · BUILD 2.4.SIGMA</span>
           <span>当前 SECTOR: <span style={{ color: view === "map" ? "#FFFFFF" : undefined }}>{view === "map" ? "NEXUS" : view.toUpperCase()}</span></span>
         </div>
       </div>

@@ -84,15 +84,24 @@ function AlphaMobileMenu() {
  * for the wordmark in the upper-left.
  *
  * Layout (desktop):
- *   [ Σ  TAUNGOO SIGMA LAB ]  [ ABOUT · SERVICES · WORK · … ]  [ START A PROJECT → ]
+ *   [ Σ  TAUNGOO Σ Lab ]  [ ABOUT · SERVICES · WORK · … ]  [ START A PROJECT → ]
  *
  * Layout (mobile, below lg):
- *   [ Σ  TAUNGOO SIGMA LAB ]                              [ ☰ ]
+ *   [ Σ  TAUNGOO Σ Lab ]                              [ ☰ ]
  *   — tapping ☰ opens a brutalist dropdown with all nav items
  */
 export function AlphaNav() {
   return (
     <header
+      // LOOP-3-AGENTIC-SEO: aria-label="Site header" + data-section="header"
+      // explicitly marks this as the page-banner landmark for AI crawlers
+      // + screen readers (Lighthouse SEO + Agentic Browsing). The implicit
+      // <header> banner role is auto-derived when header is a descendant of
+      // <body>; the aria-label disambiguates from any nested <header>
+      // landmarks (e.g. AlphaPortfolio's section-level header).
+      aria-label="Site header"
+      data-section="header"
+      data-mode="alpha"
       className="relative z-30 flex items-center justify-between gap-3 border-b border-border/40 bg-card/40 px-3 py-2 backdrop-blur-sm sm:px-5 sm:py-3"
     >
       {/* Left: SigmaBrand wordmark with hybrid C+D treatment */}
@@ -154,7 +163,7 @@ export function AlphaMiniNav() {
       const heroH = window.innerHeight * 0.7;
       setVisible(container.scrollTop > heroH);
     };
-    container.addEventListener("scroll", onScroll);
+    container.addEventListener("scroll", onScroll, { passive: true });
     return () => container.removeEventListener("scroll", onScroll);
   }, []);
 

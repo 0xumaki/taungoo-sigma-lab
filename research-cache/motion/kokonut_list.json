@@ -1,0 +1,92 @@
+[
+  {
+    "url": "https://www.youtube.com/watch?v=E2nQsw0El8M",
+    "name": "Mastering Liquid Glass in SwiftUI – Buttons, Containers & Transitions",
+    "snippet": "Aug 31, 2025 · SwiftUI's Liquid Glass effect in OS 26 is more than just eye candy—it's a whole new design system. In this tutorial, I'll guide you through ...",
+    "host_name": "www.youtube.com",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://github.com/kokonut-labs/kokonutui/blob/main/registry.json",
+    "name": "kokonutui/registry.json at main - GitHub",
+    "snippet": "Open-source collection of stunning Components built with Tailwind CSS, liquid glass card and buttons using SVG displacement filters for a refractive effect, ...",
+    "host_name": "github.com",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://21st.dev/community/components/explore/liquid-glass-ui-components",
+    "name": "Liquid Glass UI Components - 21st.dev",
+    "snippet": "Explore 60 liquid glass UI components for modern web design. Find frosted glass effects, blur overlays, and transparent component designs.",
+    "host_name": "21st.dev",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.apple.com/documentation/technologyoverviews/adopting-liquid-glass",
+    "name": "Adopting Liquid Glass | Apple Developer Documentation",
+    "snippet": "Interfaces across Apple platforms feature a new dynamic material called Liquid Glass, which combines the optical properties of glass with a sense of fluidity.",
+    "host_name": "developer.apple.com",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://kokonut-labs-kokonutui.mintlify.app/introduction",
+    "name": "Introduction - Kokonut UI",
+    "snippet": "Kokonut UI - an open-source React component library. Button Cards Liquid Glass Card. Shimmer Text Glitch. A growing collection of meticulously crafted  ...",
+    "host_name": "kokonut-labs-kokonutui.mintlify.app",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.donnywals.com/designing-custom-ui-with-liquid-glass-on-ios-26",
+    "name": "Designing custom UI with Liquid Glass on iOS 26 - Donny Wals",
+    "snippet": "Jul 1, 2025 · In this post, I'd like to explore how we can build custom Liquid Glass components. Examples include toolbars, tab bars, floating action buttons ...",
+    "host_name": "www.donnywals.com",
+    "rank": 5,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=WusUGcK0h2Q",
+    "name": "Building custom Liquid Glass UI for iOS 26 - YouTube",
+    "snippet": "Jul 10, 2025 · Learn how you can leverage Liquid Glass to build compelling interactive UI elements that fit right in with Apple's new design language.",
+    "host_name": "www.youtube.com",
+    "rank": 6,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://kokonutui.com",
+    "name": "KokonutUI - Free Open Source UI Components for React and",
+    "snippet": "Collection of 100+ stunning UI components free and open source built with Next.js, React, Tailwind CSS, and Motion. particle-button liquid-glass-card ...",
+    "host_name": "kokonutui.com",
+    "rank": 7,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.instagram.com/reel/DLsMIFMt_4w",
+    "name": "Kokonut UI is a modern component library designed for developers",
+    "snippet": "Jul 4, 2025 · Key features: ▪︎ Hand-drawn UI components ▪︎ Pen and pencil styles ▪︎ Buttons with different states ▪︎ Inputs and checkboxes ▪︎ Radio ...",
+    "host_name": "www.instagram.com",
+    "rank": 8,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://aestheta.ai/kokonut-ui",
+    "name": "Kokonut UI — Component Library · Design Factory - Aestheta",
+    "snippet": "Nine richly animated buttons in the Kokonut UI idiom — particle bursts, AI-flavored gradients, magnetic hover physics, hold-to-confirm rings, and sliding text.",
+    "host_name": "aestheta.ai",
+    "rank": 9,
+    "date": "",
+    "favicon": ""
+  }
+]

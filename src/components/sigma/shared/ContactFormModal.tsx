@@ -48,10 +48,10 @@ export function ContactFormModal({ open, onClose }: { open: boolean; onClose: ()
     setSubmitting(true);
     setLogLines([]);
     const steps = [
-      "> establishing secure channel...",
+      "> establishing secure channel…",
       "> handshake: OK",
-      "> encrypting payload...",
-      "> transmitting...",
+      "> encrypting payload…",
+      "> transmitting…",
       "> sigma acknowledged.",
     ];
     for (let i = 0; i < steps.length; i++) {
@@ -119,10 +119,11 @@ export function ContactFormModal({ open, onClose }: { open: boolean; onClose: ()
           <div className="mt-6 space-y-4">
             {/* Identity */}
             <div>
-              <label className="mb-1 block font-mono text-[9px] uppercase tracking-[0.22em] text-muted-foreground">
+              <label htmlFor="cfm-identity" className="mb-1 block font-mono text-[9px] uppercase tracking-[0.22em] text-muted-foreground">
                 ▸ IDENTITY HANDLE / EMAIL
               </label>
               <input
+                id="cfm-identity"
                 value={identity}
                 onChange={(e) => setIdentity(e.target.value)}
                 placeholder="e.g. @your-handle or you@company.com"
@@ -176,13 +177,14 @@ export function ContactFormModal({ open, onClose }: { open: boolean; onClose: ()
 
             {/* Message */}
             <div>
-              <label className="mb-1 block font-mono text-[9px] uppercase tracking-[0.22em] text-muted-foreground">
+              <label htmlFor="cfm-message" className="mb-1 block font-mono text-[9px] uppercase tracking-[0.22em] text-muted-foreground">
                 ▸ ENCRYPTED MESSAGE
               </label>
               <textarea
+                id="cfm-message"
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
-                placeholder="> describe your project, timeline, and budget..."
+                placeholder="> describe your project, timeline, and budget…"
                 rows={4}
                 className="w-full resize-none border border-border bg-background px-3 py-2.5 font-mono text-sm leading-relaxed text-foreground outline-none transition focus:border-[#FF4500] focus:bg-[#FF45000a]"
               />
@@ -203,7 +205,7 @@ export function ContactFormModal({ open, onClose }: { open: boolean; onClose: ()
               className="w-full border border-[#FF4500] bg-[#FF4500] py-3 font-mono text-[11px] uppercase tracking-[0.2em] text-black transition-opacity hover:opacity-80 disabled:opacity-50"
             >
               <Send className="mr-2 inline h-3.5 w-3.5" />
-              {submitting ? "▮ TRANSMITTING..." : "◂ TRANSMIT MESSAGE ▸"}
+              {submitting ? "▮ TRANSMITTING…" : "◂ TRANSMIT MESSAGE ▸"}
             </button>
           </div>
 

@@ -1,7 +1,11 @@
 "use client";
 
+import * as React from "react";
+import { motion } from "motion/react";
 import { GlitchImage } from "./GlitchImage";
 import { AlphaNav } from "./AlphaNav";
+import { useMagnetic } from "@/components/sigma/beta/Hero";
+import { useReducedMotion } from "@/hooks/use-reduced-motion";
 
 /**
  * AlphaHero — the FIRST thing a visitor sees in Alpha Mode.
@@ -40,17 +44,40 @@ const FEATURE_TAGS = [
 ];
 
 export function AlphaHero() {
+  // Magnetic pull on the primary CTA (max 6px). Hook self-disables for
+  // touch devices + prefers-reduced-motion, so no extra guards needed here.
+  const ctaRef = useMagnetic<HTMLAnchorElement>(6);
+  // Respect prefers-reduced-motion — gate the infinite + entrance animations.
+  const reducedMotion = useReducedMotion();
+
+  // Headline words — staggered entrance (y + blur + opacity, stagger 0.05s).
+  // Each word animates independently so the reveal reads as a typewriter cadence.
+  const HEADLINE_WORDS: { text: string; glitch?: boolean; dot?: boolean }[] = [
+    { text: "WE SHIP" },
+    { text: "INTELLIGENT", glitch: true },
+    { text: "SYSTEMS", dot: true },
+  ];
+
   return (
     <section
       id="hero"
-      className="relative h-screen min-h-screen w-full overflow-hidden px-[2vw] pb-[2vh] pt-[80px] sm:px-[3vw] sm:pb-[2.5vh] sm:pt-[10vh]"
+      aria-labelledby="hero-title"
+      data-section="hero"
+      className="relative h-screen min-h-screen w-full overflow-hidden px-[2vw] pb-[6vh] pt-[80px] sm:px-[3vw] sm:pb-[4vh] sm:pt-[10vh]"
     >
       {/* ============================================================
           BACKGROUND LAYER (full-bleed, behind hero card)
           Reduced gradients so the hero image is more visible
          ============================================================ */}
       <div className="pointer-events-none absolute inset-0">
-        <GlitchImage src="/alpha-hero-bg.png" alt="" className="h-full w-full" intensity={0.35} />
+        {/* PERF (LOOP-1-LH): src switched from .png (1.5MB raw) to .webp (179KB).
+            GlitchImage internally renders the same path as a raw <img> for the
+            glitch bg-image slice — switching the source here means BOTH the
+            visible Image layers AND the bg-image slice fetch the small WebP
+            (the prior .png path was fetching 1.5MB raw for the bg-image slice
+            because backgroundImage:url() bypasses next/image). The .png
+            source stays on disk as a defensive fallback. */}
+        <GlitchImage src="/alpha-hero-bg.webp" alt="" className="h-full w-full" intensity={0.35} />
         {/* Lighter gradient — only darkens left side for text legibility */}
         <div className="absolute inset-0 bg-gradient-to-r from-background/95 via-background/55 to-transparent" />
         <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-background/30" />
@@ -178,29 +205,36 @@ export function AlphaHero() {
                 </div>
               </div>
 
-              {/* HUGE heading — the focal statement */}
-              <h1
+              {/* HUGE heading — the focal statement.
+                  Staggered word entrance: y 24→0 + blur 8px→0 + opacity 0→1,
+                  0.05s stagger between words, 0.6s ease-out-back per word.
+                  Reduced-motion: instant (motion handles undefined props). */}
+              <motion.h1
+                id="hero-title"
                 className="mt-4 font-sans font-black uppercase leading-[0.88] tracking-tight"
                 style={{ fontSize: "clamp(2.75rem, 7vw, 5.5rem)" }}
               >
-                <span className="block">WE SHIP</span>
-                <span
-                  className="sigma-glitch block"
-                  data-text="INTELLIGENT"
-                  style={{ color: "#FF4500" }}
-                >
-                  INTELLIGENT
-                </span>
-                <span className="block">
-                  SYSTEMS
-                  <span className="text-[#FF4500]">.</span>
-                </span>
-              </h1>
+                {HEADLINE_WORDS.map((w, i) => (
+                  <motion.span
+                    key={w.text}
+                    className={w.glitch ? "sigma-glitch block" : "block"}
+                    data-text={w.glitch ? w.text : undefined}
+                    style={w.glitch ? { color: "#FF4500" } : undefined}
+                    initial={reducedMotion ? false : { opacity: 0, y: 24, filter: "blur(8px)" }}
+                    whileInView={reducedMotion ? undefined : { opacity: 1, y: 0, filter: "blur(0px)" }}
+                    viewport={{ once: true, margin: "-10% 0px" }}
+                    transition={{ delay: 0.2 + i * 0.05, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+                  >
+                    {w.text}
+                    {w.dot && <span className="text-[#FF4500]">.</span>}
+                  </motion.span>
+                ))}
+              </motion.h1>
 
               {/* Subtitle */}
               <p className="mt-5 max-w-xl font-serif text-sm italic text-muted-foreground sm:text-base lg:text-lg">
-                AI agents. Web3 protocols. Full-stack platforms. All shipped to
-                production — battle-tested across 50+ live systems. Zero vaporware.
+                A tactical research lab at the intersection of AI, Web3, and engineering.
+                27 services deployed. 9 live systems. Zero vaporware.
               </p>
 
               {/* Feature pills */}
@@ -215,11 +249,13 @@ export function AlphaHero() {
                 ))}
               </div>
 
-              {/* CTA buttons — maximalist with data overlays */}
-              <div className="mt-7 flex flex-wrap gap-3">
+              {/* CTA buttons — maximalist with data overlays.
+                  Primary CTA gets the magnetic ref (max 6px pull). */}
+              <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
                 <a
+                  ref={ctaRef}
                   href="#services"
-                  className="group relative flex items-center gap-2 border border-[#FF4500] bg-[#FF4500] px-5 py-3 font-mono text-[11px] font-bold uppercase tracking-[0.18em] text-black transition-all hover:shadow-[5px_5px_0_0_#FF4500]"
+                  className="alpha-magnetic group relative flex items-center gap-2 border border-[#FF4500] bg-[#FF4500] px-5 py-3 font-mono text-[11px] font-bold uppercase tracking-[0.18em] text-black transition-all hover:shadow-[5px_5px_0_0_#FF4500]"
                 >
                   <span className="flex h-4 w-4 items-center justify-center border border-black/30 text-[8px]">
                     ▸
@@ -251,7 +287,7 @@ export function AlphaHero() {
 
               {/* Inline scroll indicator (mobile-only — desktop has footer strip) */}
               <div className="mt-6 flex items-center gap-2 font-mono text-[9px] uppercase tracking-[0.3em] text-muted-foreground lg:hidden">
-                <span className="sigma-blink">▼</span> SCROLL TO EXPLORE
+                <span className="alpha-scroll-hint text-[#FF4500]">▼</span> SCROLL TO EXPLORE
               </div>
             </div>
 
@@ -325,7 +361,7 @@ export function AlphaHero() {
                 <span className="absolute left-1/2 top-0 h-2 w-2 -translate-x-1/2 rounded-full bg-[#00FF94]" />
                 <span className="absolute bottom-0 left-1/2 h-2 w-2 -translate-x-1/2 rounded-full bg-[#00E5FF]" />
                 <span className="absolute left-0 top-1/2 h-2 w-2 -translate-y-1/2 rounded-full bg-[#C6FF00]" />
-                <span className="absolute right-0 top-1/2 h-2 w-2 -translate-y-1/2 rounded-full bg-[#FF2D7E]" />
+                <span className="absolute right-0 top-1/2 h-2 w-2 -translate-y-1/2 rounded-full bg-[#FFB300]" />
 
                 {/* Floating data labels around the glyph */}
                 <div className="absolute -left-24 top-1/4 font-mono text-[8px] uppercase tracking-[0.16em] text-muted-foreground">
@@ -384,7 +420,7 @@ export function AlphaHero() {
              ============================================================ */}
           <div className="relative z-10 flex items-center justify-between gap-2 border-t border-border/40 bg-background/40 px-2 py-1.5 font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground sm:px-5 sm:text-[9px] sm:tracking-[0.3em]">
             <div className="flex shrink-0 items-center gap-1.5">
-              <span className="sigma-blink text-[#FF4500]">▼</span>
+              <span className="alpha-scroll-hint text-[#FF4500]" aria-hidden>▼</span>
               <span>SCROLL</span>
             </div>
             <div className="hidden items-center gap-2 text-[10px] tracking-[0.16em] sm:flex sm:text-[8px] sm:tracking-[0.2em]">
@@ -395,6 +431,15 @@ export function AlphaHero() {
               <span>SINCE 2016</span>
               <span className="text-border">·</span>
               <span className="text-[#00FF94]">▮ NOMINAL</span>
+            </div>
+            {/* Dedicated animated scroll-hint glyph — desktop-only.
+                Vertical line draws top→bottom (alpha-scroll-hint-line, 2s loop),
+                paired with a chevron pulse below for a gentle nudge. */}
+            <div className="pointer-events-none absolute left-1/2 top-1/2 hidden -translate-x-1/2 -translate-y-1/2 flex-col items-center gap-1 lg:flex" aria-hidden>
+              <span
+                className="alpha-scroll-hint-line block w-px"
+                style={{ height: 14, background: "linear-gradient(to bottom, transparent, #FF4500, transparent)" }}
+              />
             </div>
           </div>
 

@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import Image from "next/image";
 import { PageTransitionLink } from "@/components/sigma/PageTransitionLink";
 import { ClassifiedCover } from "@/components/sigma/shared/ClassifiedCover";
 
@@ -19,10 +20,10 @@ const PROJECTS: Project[] = [
   { name: "Omnibridge", desc: "Cross-chain bridge protocol with MCP & A2A server", tech: ["Solidity", "TypeScript", "Express", "GraphQL"], solution: "Multi-chain interoperability", image: "/portfolio/ominibridge.png", accent: "#00FF94", slug: "omnibridge", cat: "WEB3" },
   { name: "Dukon Pro", desc: "Private capital real estate investment platform", tech: ["Next.js", "TypeScript", "Prisma", "NextAuth"], solution: "Real estate tokenization", image: "/portfolio/dukon-pro.png", accent: "#FF4500", slug: "dukon-pro", cat: "FULL-STACK" },
   { name: "Vortex Sales OS", desc: "Autonomous AI sales operating system with voice agents", tech: ["Next.js", "Socket.io", "Prisma", "Recharts"], solution: "AI-driven sales automation", image: "/portfolio/vortex-sales-os.png", accent: "#00E5FF", slug: "vortex-sales-os", cat: "AI" },
-  { name: "GymMaster", desc: "Gym management software with QR code integration", tech: ["Next.js", "Prisma", "QRCode React", "Recharts"], solution: "Facility management", image: "/portfolio/gymmaster.png", accent: "#FF2D7E", slug: "gymmaster", cat: "FULL-STACK" },
+  { name: "GymMaster", desc: "Gym management software with QR code integration", tech: ["Next.js", "Prisma", "QRCode React", "Recharts"], solution: "Facility management", image: "/portfolio/gymmaster.png", accent: "#FFB300", slug: "gymmaster", cat: "FULL-STACK" },
   { name: "Lumina Tarot", desc: "Mystical daily companion with sound frequencies", tech: ["Tone.js", "Socket.io", "Framer Motion", "Next.js"], solution: "Lifestyle app", image: "/portfolio/lumina-tarot.png", accent: "#FFB300", slug: "lumina-tarot", cat: "DESIGN" },
   { name: "Sai Pay", desc: "Digital wallet and payment application", tech: ["Next.js", "Recharts", "Radix UI", "Zod"], solution: "Fintech wallet", image: "/portfolio/sai-pay.png", accent: "#B388FF", slug: "sai-pay", cat: "FULL-STACK" },
-  { name: "Brorus", desc: "DeFi protocol with smart contracts and Web3", tech: ["Solidity", "Hardhat", "Ethers.js", "Vite"], solution: "DeFi infrastructure", image: "/portfolio/brorus.png", accent: "#FF3D3D", slug: "brorus", cat: "WEB3" },
+  { name: "Brorus", desc: "DeFi protocol with smart contracts and Web3", tech: ["Solidity", "Hardhat", "Ethers.js", "Vite"], solution: "DeFi infrastructure", image: "/portfolio/brorus.png", accent: "#B85C2E", slug: "brorus", cat: "WEB3" },
   { name: "Asean Swap", desc: "Multi-chain token swap exchange", tech: ["React", "Vite", "TanStack Query", "Recharts"], solution: "DEX trading", image: "", accent: "#FFEB3B", slug: "asean-swap", cat: "WEB3" },
   { name: "ManyMarket", desc: "3D globe marketplace with Three.js", tech: ["Three.js", "R3F", "tsParticles", "Next.js"], solution: "Marketplace aggregation", image: "", accent: "#2979FF", slug: "manymarket", cat: "FULL-STACK" },
 ];
@@ -32,7 +33,7 @@ const FEATURED_COUNT = 2;
 
 export function AlphaPortfolio() {
   return (
-    <section id="portfolio" className="relative border-t border-border px-4 py-20 sm:px-6 lg:px-8">
+    <section id="portfolio" aria-labelledby="portfolio-title" data-section="portfolio" className="relative border-t border-border px-4 py-20 sm:px-6 lg:px-8">
       <div className="sigma-grid pointer-events-none absolute inset-0 opacity-10" />
       <div className="sigma-scanlines pointer-events-none absolute inset-0 opacity-15" />
 
@@ -55,7 +56,7 @@ export function AlphaPortfolio() {
           {/* Heading + stats */}
           <div className="flex flex-col gap-6 py-6 md:flex-row md:items-end md:justify-between md:gap-8 lg:py-8">
             <div>
-              <h2 className="font-sans text-4xl font-black uppercase leading-[0.88] tracking-tight sm:text-6xl xl:text-7xl">
+              <h2 id="portfolio-title" className="font-sans text-4xl font-black uppercase leading-[0.88] tracking-tight sm:text-6xl xl:text-7xl">
                 SELECTED <span style={{ color: "#FF4500" }}>WORK.</span>
               </h2>
               <p className="mt-3 max-w-xl font-serif text-base italic text-muted-foreground sm:text-lg">
@@ -107,7 +108,8 @@ export function AlphaPortfolio() {
                 label={p.name}
                 kind="project"
                 accent={p.accent}
-                className={`group sigma-card relative flex ${span}`}
+                className={`group sigma-card alpha-card-hover relative flex ${span}`}
+                style={{ "--sigma-hover-accent": p.accent } as React.CSSProperties}
               >
                 {/* === ACCENT GLOW (sibling, NOT inside clip-path) === */}
                 <div
@@ -123,6 +125,12 @@ export function AlphaPortfolio() {
                   className="sigma-card-frame relative flex w-full flex-col overflow-hidden border border-border/60 bg-card/40"
                   style={cardStyle}
                 >
+                  {/* === GHOST INDEX NUMERAL — oversized 6% opacity watermark behind content.
+                       Resolves to card accent color via --sigma-hover-accent. Lifts to
+                       12% on hover (alpha-card-hover:hover .alpha-ghost-numeral). === */}
+                  <span className="alpha-ghost-numeral" aria-hidden>
+                    {idx}
+                  </span>
                   {/* === TOP ACCENT STRIPE === */}
                   <div
                     className="sigma-card-strip absolute left-0 top-0 z-20 h-[3px] w-full opacity-70 group-hover:opacity-100"
@@ -156,12 +164,17 @@ export function AlphaPortfolio() {
                   {/* === HERO IMAGE ZONE === */}
                   <div className="relative aspect-[16/10] overflow-hidden bg-card">
                     {p.image ? (
-                      <img
+                      <Image
                         src={p.image}
                         alt={`${p.name} — ${p.solution} screenshot`}
+                        // PERF (LOOP-1-LH): next/image auto-serves AVIF/WebP at the
+                        // right intrinsic size for the viewport. Card grid is 1 col on
+                        // mobile, 2 on sm, 3 on lg/xl — sizes hint keeps the served
+                        // payload down to ~33vw on desktop (and only ~100vw on mobile).
+                        fill
+                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                         loading="lazy"
-                        decoding="async"
-                        className="sigma-card-img h-full w-full object-cover object-top"
+                        className="sigma-card-img object-cover object-top"
                         onError={(e) => {
                           (e.currentTarget as HTMLImageElement).style.opacity = "0.25";
                         }}

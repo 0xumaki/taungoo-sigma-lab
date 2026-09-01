@@ -122,6 +122,7 @@ export function SigmaCommand({
           <Search className="h-4 w-4 text-muted-foreground" />
           <input
             ref={inputRef}
+            aria-label="Search sectors and commands"
             value={query}
             onChange={(e) => {
               setQuery(e.target.value);
@@ -138,8 +139,9 @@ export function SigmaCommand({
         {/* results */}
         <div className="sigma-scroll-hidden max-h-[50vh] overflow-y-auto py-1">
           {results.length === 0 && (
-            <div className="px-4 py-6 text-center font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">
-              ▮ no sectors match
+            <div className="flex flex-col items-center gap-1.5 px-4 py-8 text-center font-mono uppercase tracking-[0.2em] text-muted-foreground">
+              <div className="text-xs">▮ NO MATCHES FOUND</div>
+              <div className="text-[9px] tracking-[0.18em]">try a different keyword or sector code</div>
             </div>
           )}
           {results.map((s, i) => (

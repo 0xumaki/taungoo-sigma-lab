@@ -168,16 +168,56 @@ function SciFiAvatarInline({ color, name, role }: { color: string; name?: string
 export { SciFiAvatarInline as SciFiAvatar };
 
 export function AlphaTestimonials() {
+  // Auto-advance "spotlight" — cycles the active card every 7s, pauses on
+  // hover/focus. The grid stays visible (preserves alpha's 3-card layout);
+  // the active card just gets an emphasized border + glow ring.
+  const [active, setActive] = React.useState(0);
+  const [paused, setPaused] = React.useState(false);
+
+  React.useEffect(() => {
+    if (paused) return;
+    const id = setInterval(() => {
+      setActive((prev) => (prev + 1) % TESTIMONIALS.length);
+    }, 7000);
+    return () => clearInterval(id);
+  }, [paused]);
+
   return (
-    <section id="testimonials" className="relative border-t border-border px-3 py-12 sm:px-6 sm:py-20">
+    <section
+      id="testimonials"
+      aria-labelledby="testimonials-title"
+      data-section="testimonials"
+      className="relative border-t border-border px-3 py-12 sm:px-6 sm:py-20"
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+      onFocus={() => setPaused(true)}
+      onBlur={() => setPaused(false)}
+    >
       <div className="sigma-grid pointer-events-none absolute inset-0 opacity-10" />
       <div className="sigma-scanlines pointer-events-none absolute inset-0 opacity-15" />
+
+      {/* Oversized decorative quote glyphs — 8% opacity orange, layered
+          behind the grid as a typographic backdrop (mirrors beta pattern). */}
+      <span
+        className="alpha-testimonial-quote"
+        style={{ left: 8, top: 80 }}
+        aria-hidden
+      >
+        &ldquo;
+      </span>
+      <span
+        className="alpha-testimonial-quote"
+        style={{ right: 8, bottom: 80 }}
+        aria-hidden
+      >
+        &rdquo;
+      </span>
 
       <div className="relative z-10 mx-auto w-full max-w-[1600px]">
         <div className="flex flex-col gap-3 border-b border-border pb-4 sm:flex-row sm:items-end sm:justify-between sm:gap-4">
           <div>
             <div className="font-mono text-[10px] uppercase tracking-[0.3em] text-[#FF4500] sm:text-[10px]">▸ 08 / TESTIMONIALS</div>
-            <h2 className="mt-2 font-sans text-3xl font-black uppercase leading-tight tracking-tight sm:text-5xl md:text-6xl">
+            <h2 id="testimonials-title" className="mt-2 font-sans text-3xl font-black uppercase leading-tight tracking-tight sm:text-5xl md:text-6xl">
               FIELD <span style={{ color: "#FF4500" }}>REPORTS.</span>
             </h2>
             <p className="mt-2 font-serif text-sm italic text-muted-foreground sm:text-base">Verified client feedback. Real outcomes, real deployments. Zero paid placements.</p>
@@ -188,45 +228,78 @@ export function AlphaTestimonials() {
         </div>
 
         <div className="mt-6 grid grid-cols-1 gap-4 sm:mt-8 md:grid-cols-3">
-          {TESTIMONIALS.map((t, i) => (
-            <div
-              key={i}
-              className="alpha-card-hover group relative border border-border bg-card/30 transition-all hover:border-foreground/40"
-              style={{ "--sigma-hover-accent": t.accent, clipPath: "polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px)" } as React.CSSProperties}
-            >
-              <div className="h-1 w-full" style={{ background: t.accent }} />
-              {/* Avatar zone — replaced glitch SciFiAvatar with clean ProfileAvatar */}
-              <div className="relative overflow-hidden border-b border-border/40">
-                <div className="aspect-[4/3] sm:aspect-square">
-                  <ProfileAvatar color={t.accent} name={t.author} role={t.role} />
-                </div>
-                <div className="absolute right-2 top-2 border bg-background/85 px-2 py-1 text-right backdrop-blur-sm" style={{ borderColor: `${t.accent}66` }}>
-                  <div className="font-sans text-xs font-black sm:text-sm" style={{ color: t.accent }}>{t.metric}</div>
-                  <div className="font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground sm:text-[9px]">RESULT</div>
-                </div>
-              </div>
-              <div className="p-4 sm:p-5">
-                <div className="font-sans text-4xl font-black leading-none sm:text-5xl" style={{ color: `${t.accent}33` }}>“</div>
-                <p className="-mt-3 font-serif text-sm italic leading-relaxed sm:text-base">{t.quote}</p>
-                <div className="mt-3 flex items-center gap-2">
-                  <span className="h-px w-8" style={{ background: t.accent }} />
-                  <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground">VERIFIED</span>
-                </div>
-                <div className="mt-2 flex items-center gap-2">
-                  <div>
-                    <div className="font-sans text-sm font-bold uppercase sm:text-base">{t.author}</div>
-                    <div className="mt-0.5 font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground sm:text-[11px]">{t.role} · {t.company}</div>
+          {TESTIMONIALS.map((t, i) => {
+            const isActive = i === active;
+            return (
+              <div
+                key={i}
+                className="alpha-card-hover group relative border bg-card/30 transition-all duration-500 hover:border-foreground/40"
+                style={{
+                  "--sigma-hover-accent": t.accent,
+                  clipPath: "polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px)",
+                  borderColor: isActive ? `${t.accent}80` : undefined,
+                  boxShadow: isActive
+                    ? `0 0 0 1px ${t.accent}40, 0 0 28px -8px ${t.accent}60`
+                    : undefined,
+                } as React.CSSProperties}
+              >
+                <div className="h-1 w-full" style={{ background: t.accent }} />
+                {/* Avatar zone — replaced glitch SciFiAvatar with clean ProfileAvatar */}
+                <div className="relative overflow-hidden border-b border-border/40">
+                  <div className="aspect-[4/3] sm:aspect-square">
+                    <ProfileAvatar color={t.accent} name={t.author} role={t.role} />
+                  </div>
+                  <div className="absolute right-2 top-2 border bg-background/85 px-2 py-1 text-right backdrop-blur-sm" style={{ borderColor: `${t.accent}66` }}>
+                    <div className="font-sans text-xs font-black sm:text-sm" style={{ color: t.accent }}>{t.metric}</div>
+                    <div className="font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground sm:text-[9px]">RESULT</div>
                   </div>
                 </div>
-                <div className="mt-2 flex gap-0.5">
-                  {[1, 2, 3, 4, 5].map((n) => (
-                    <span key={n} className="text-sm" style={{ color: t.accent }}>★</span>
-                  ))}
+                <div className="p-4 sm:p-5">
+                  <div className="font-sans text-4xl font-black leading-none sm:text-5xl" style={{ color: `${t.accent}33` }}>“</div>
+                  <p className="-mt-3 font-serif text-sm italic leading-relaxed sm:text-base">{t.quote}</p>
+                  <div className="mt-3 flex items-center gap-2">
+                    <span className="h-px w-8" style={{ background: t.accent }} />
+                    <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground">VERIFIED</span>
+                  </div>
+                  <div className="mt-2 flex items-center gap-2">
+                    <div>
+                      <div className="font-sans text-sm font-bold uppercase sm:text-base">{t.author}</div>
+                      <div className="mt-0.5 font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground sm:text-[11px]">{t.role} · {t.company}</div>
+                    </div>
+                  </div>
+                  <div className="mt-2 flex gap-0.5">
+                    {[1, 2, 3, 4, 5].map((n) => (
+                      <span key={n} className="text-sm" style={{ color: t.accent }}>★</span>
+                    ))}
+                  </div>
                 </div>
+                <div className="pointer-events-none absolute inset-0 z-0 opacity-0 transition-opacity group-hover:opacity-100" style={{ background: `radial-gradient(60% 50% at 50% 50%, ${t.accent}08, transparent 70%)` }} />
               </div>
-              <div className="pointer-events-none absolute inset-0 z-0 opacity-0 transition-opacity group-hover:opacity-100" style={{ background: `radial-gradient(60% 50% at 50% 50%, ${t.accent}08, transparent 70%)` }} />
-            </div>
+            );
+          })}
+        </div>
+
+        {/* Spotlight dots — manual select + visual indicator of active card */}
+        <div className="mt-6 flex items-center justify-center gap-2">
+          {TESTIMONIALS.map((t, i) => (
+            <button
+              key={i}
+              type="button"
+              onClick={() => setActive(i)}
+              aria-label={`Spotlight testimonial ${i + 1}`}
+              aria-pressed={i === active}
+              className="transition-all duration-300"
+              style={{
+                width: i === active ? 32 : 8,
+                height: 4,
+                background: i === active ? t.accent : "var(--border)",
+                boxShadow: i === active ? `0 0 8px ${t.accent}80` : "none",
+              }}
+            />
           ))}
+        </div>
+        <div className="mt-2 text-center font-mono text-[9px] uppercase tracking-[0.3em] text-muted-foreground">
+          {String(active + 1).padStart(2, "0")} / {String(TESTIMONIALS.length).padStart(2, "0")}
         </div>
       </div>
     </section>
@@ -277,7 +350,7 @@ export function AlphaInsights() {
   const tagColors: Record<string, string> = { AI: "#00FF94", Web3: "#C6FF00", NLP: "#00E5FF" };
 
   return (
-    <section id="insights" className="relative border-t border-border px-3 py-12 sm:px-6 sm:py-20">
+    <section id="insights" aria-labelledby="insights-title" data-section="insights" className="relative border-t border-border px-3 py-12 sm:px-6 sm:py-20">
       <div className="sigma-grid pointer-events-none absolute inset-0 opacity-10" />
       <div className="sigma-scanlines pointer-events-none absolute inset-0 opacity-15" />
 
@@ -285,7 +358,7 @@ export function AlphaInsights() {
         <div className="flex flex-col gap-3 border-b border-border pb-4 sm:flex-row sm:items-end sm:justify-between sm:gap-4">
           <div>
             <div className="font-mono text-[10px] uppercase tracking-[0.3em] text-[#FF4500]">▸ 09 / INSIGHTS</div>
-            <h2 className="mt-2 font-sans text-3xl font-black uppercase leading-tight tracking-tight sm:text-5xl md:text-6xl">
+            <h2 id="insights-title" className="mt-2 font-sans text-3xl font-black uppercase leading-tight tracking-tight sm:text-5xl md:text-6xl">
               RESEARCH <span style={{ color: "#FF4500" }}>LOGS.</span>
             </h2>
             <p className="mt-2 font-serif text-sm italic text-muted-foreground sm:text-base">Peer-reviewed papers, datasets, and architecture blueprints. Open access, no paywalls.</p>
@@ -337,11 +410,17 @@ export function AlphaInsights() {
         </div>
       </div>
 
-      {/* Research Log Popup Modal */}
+      {/* Research Log Popup Modal — LOOP-3-AGENTIC-SEO: role="dialog" + aria-modal
+          so the modal is recognized as a separate dialog region; inner heading
+          hierarchy demoted by one level (h1→h2, h2→h3) so the page keeps exactly
+          one <h1> (the AlphaHero "WE SHIP INTELLIGENT SYSTEMS." headline). */}
       {selected !== null && INSIGHTS_DATA[selected] && (
         <div className="fixed inset-0 z-[150] flex items-center justify-center p-3 sm:p-4" onClick={() => setSelected(null)}>
           <div className="absolute inset-0 bg-background/90 backdrop-blur-md" />
           <div
+            role="dialog"
+            aria-modal="true"
+            aria-label={INSIGHTS_DATA[selected].title}
             className="relative z-10 max-h-[88vh] w-full max-w-3xl overflow-y-auto border border-border bg-card"
             style={{ clipPath: "polygon(16px 0, 100% 0, 100% calc(100% - 16px), calc(100% - 16px) 100%, 0 100%, 0 16px)" }}
             onClick={(e) => e.stopPropagation()}
@@ -365,7 +444,7 @@ export function AlphaInsights() {
 
                   {/* Title + abstract */}
                   <div className="p-4 sm:p-6">
-                    <h1 className="font-sans text-xl font-black uppercase leading-tight tracking-tight sm:text-2xl md:text-3xl">{ins.title}</h1>
+                    <h2 className="font-sans text-xl font-black uppercase leading-tight tracking-tight sm:text-2xl md:text-3xl">{ins.title}</h2>
                     <p className="mt-3 font-serif text-sm italic text-muted-foreground sm:text-base">{ins.desc}</p>
                     <div className="mt-3 font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground sm:text-[10px]">▸ AUTHORS: {ins.authors}</div>
                   </div>
@@ -374,7 +453,7 @@ export function AlphaInsights() {
                   <div className="space-y-4 px-4 pb-6 sm:px-6">
                     {ins.sections.map((s, i) => (
                       <div key={i} className="border-l-2 pl-3 sm:pl-4" style={{ borderColor: color }}>
-                        <h2 className="font-mono text-[10px] uppercase tracking-[0.3em] sm:text-[10px]" style={{ color }}>▸ {s.heading}</h2>
+                        <h3 className="font-mono text-[10px] uppercase tracking-[0.3em] sm:text-[10px]" style={{ color }}>▸ {s.heading}</h3>
                         <p className="mt-2 font-serif text-sm leading-relaxed text-foreground/85 sm:text-base">{s.body}</p>
                       </div>
                     ))}

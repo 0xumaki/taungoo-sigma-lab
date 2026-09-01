@@ -1,0 +1,300 @@
+     1→- Skip-to-content link moved to ExperienceShell as literal first child (now first focusable)
+     2→- Mode-switcher aria-labels with "(active)" suffix + aria-hidden on visible symbol
+     3→- Font-family token migrations: hardcoded "Rajdhani"/"monospace" → var(--font-tactical)/var(--font-mono)
+     4→- Motion-token adoption in MC components (var(--dur-slow) var(--ease-out-expo))
+     5→- VERIFIED: zero console errors in all 3 modes (fetchPriority + hydration warnings GONE)
+     6→
+     7→LOOP 5 — PERFORMANCE + SEO (commit bbac72a):
+     8→- Added sr-only <h1> to beta hero (was MISSING — beta mode had zero h1 elements; SEO + a11y fix)
+     9→- Removed stale @ts-expect-error above fetchPriority (TS2578 — React 19 types now support the attr)
+    10→- Disabled Fraunces font preload (only used in .font-serif italic captions, not above-fold) —
+    11→  cut initial preload 10→9 woff2 files
+    12→- Verified prior perf work intact: visibility-gating on 6 widget intervals (clock, sparkline,
+    13→  data streams, glitch image) via document.hidden — saves ~50-60 setState cycles/min when backgrounded
+    14→- AlphaInterface lazy-loaded via next/dynamic ssr:false; mode-switcher prefetch-on-hover
+    15→- OG metadata + twitter card + JSON-LD Organization + WebSite + sitemap + robots.txt verified
+    16→- tsc --noEmit + lint + browser errors ALL zero
+    17→
+    18→LOOP 6 — DETAIL POLISH + EDGE CASES (commit 1ae4b00):
+    19→- Branded 404 page (src/app/not-found.tsx): "SECTOR NOT FOUND" + 4-line RE-ROUTING TO BASE
+    20→  terminal log + gold accents + scanlines/grain + home CTA
+    21→- New src/app/loading.tsx: server component, pulsing Σ in hex frame + mono LOADING with staggered dots
+    22→- Basket empty-state polished: ghost ShoppingBag watermark (5% opacity) + BROWSE SERVICES button
+    23→  (closes modal + smooth-scrolls to #services)
+    24→- SigmaCommand: "▮ NO MATCHES FOUND" empty-results state + helper line
+    25→- Contact.tsx: two-phase submit + "▮ TRANSMITTING…" state + mt-auto for sticky footer
+    26→- BetaInterface wrapper: flex min-h-full flex-col (footer sticks to bottom on short pages)
+    27→- Service-name truncation: min-w-0 + shrink + truncate + title attrs (no overflow at 390px)
+    28→- Ellipsis normalization: "..." → "…" across 12 files (BetaBootSequence, S02Manifesto, S10Access,
+    29→  ContactFormModal, AlphaContact, SigmaBoot, S01Initializing, etc.)
+    30→
+    31→LOOP 7 — FINAL QA SWEEP (this commit):
+    32→- BETA: all 8 sections render (top/services/work/method/insights/team/voices/contact),
+    33→  services two-level expansion UNBROKEN, basket + toast flows work, zero console errors
+    34→- ALPHA: alpha-mode class + [data-alpha-scroll] present, zero errors, all sections render
+    35→- SIGMA: boot → map → S01 navigation works WITHOUT crash (Loop 3 fix verified end-to-end),
+    36→  map node click loads S01 hero "TAUNGOO™SIGMA LAB" cleanly, zero errors
+    37→- MOBILE 390×844 beta: no horizontal scroll (bodyW=390=viewW)
+    38→- 404 page: branded "SECTOR NOT FOUND" + RE-ROUTING + home CTA works
+    39→- Zero browser console errors across all tests
+    40→- bun run lint: zero errors
+    41→
+    42→DEPLOYMENT STATUS:
+    43→- GitHub: ✅ all 7 loops pushed to origin/main (commit 1ae4b00)
+    44→- Vercel temp claimable link: ONE successful anonymous deploy during Loop 2:
+    45→  - URL: https://temporary-express-hawthorn-7zco0z0.vercel.app
+    46→  - Claim: https://vercel.com/claim-deployment?code=4f5031e8-53fa-4893-ade5-5dc2152caa22
+    47→  - State: Loop 2 commit (1f72c5e) — Loops 1+2 polish included
+    48→  - NOTE: This URL reflects Loop 2 state, NOT the final state. Subsequent deploy attempts
+    49→    (Loops 3-7) hit Vercel's anonymous deployment rate limit: "Your temporary deployment
+    50→    has expired. Run `vercel login` to create an account and keep deploying this app."
+    51→  - The final state (Loops 3-7, including the critical S01 crash fix) is fully on GitHub
+    52→    but not yet reflected in a fresh Vercel temp URL due to the rate limit.
+    53→  - A 15-min recurring webDevReview cron job (id 349327) is scheduled to retry deployments
+    54→    and continue polish when the rate-limit resets.
+    55→
+    56→Stage Summary:
+    57→- 7 polish loops completed across Sigma/Alpha/Beta modes
+    58→- Critical S01 crash fixed (was blank-screening on every map→hero nav)
+    59→- Zero console errors, zero lint errors, zero TS errors, WCAG AA contrast passes
+    60→- Branded 404 + loading + empty states + sticky footer + sr-only h1 + SEO metadata complete
+    61→- All changes pushed to GitHub main branch
+    62→- One temp claimable Vercel link obtained (Loop 2 state); final-state deploy blocked by
+    63→  Vercel's anonymous deployment rate limit — will retry via cron
+    64→
+    65→---
+    66→Task ID: LOOP-1-LH-PERFORMANCE
+    67→Agent: full-stack-developer
+    68→Task: Lighthouse Performance optimization across all 3 modes (Beta default, Alpha via `localStorage sigma-mode=alpha`, Sigma via `localStorage sigma-mode=sigma`). LOOP 1 of a 3-loop Lighthouse polish marathon. Part A (pink removal) already committed (4800f5f). DO NOT push/deploy/build.
+    69→
+    70→Work Log:
+    71→
+    72→State found on entry: A substantial uncommitted WIP from a prior LOOP-1-LH attempt was already present in the working tree (13 modified files + 2 untracked WebP images). My job became verify + complete + sign off, rather than write from scratch. I audited every claim against the on-disk source, ran the verification gauntlet in all 3 modes via agent-browser, and confirmed all changes are correctly in place.
+    73→
+    74→PERF FIXES (all verified):
+    75→
+    76→1. MASSIVE IMAGES:
+    77→   - public/alpha-hero-bg.webp (179KB) pre-encoded replacement for the 1.5MB alpha-hero-bg.png. AlphaHero.tsx GlitchImage src switched .png → .webp. Critical because GlitchImage's bg-image slice uses `backgroundImage:url(${src})` which bypasses next/image — so the .webp source substitution saves bytes for the bg-image slice too (the .png path was fetching 1.5MB raw for the slice).
+    78→   - public/hero-figure.webp (179KB) pre-encoded replacement for the 1.3MB hero-figure.png. Beta Hero.tsx `<img>` src switched to .webp. Kept as raw `<img>` per task spec (complex filter styling — brightness + drop-shadow gold glow + objectPosition "center 20%"). Explicit width={1008} height={1068} decoding="async" + existing fetchPriority="high" (React 19 camelCase).
+    79→   - Portfolio PNGs (royaldao.png 5.2MB / dukon-pro.png 1.7MB / lumina-tarot 928KB / gymmaster 720KB) stay as PNG on disk — next/image handles AVIF/WebP conversion at request time in production. No source pre-conversion needed.
+    80→
+    81→2. NEXT/IMAGE ADOPTION (was zero next/image in src/components/sigma/; now 6 components):
+    82→   - src/components/sigma/alpha/AlphaPortfolio.tsx — `<img>` → `<Image fill sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw" loading="lazy">`
+    83→   - src/components/sigma/beta/Portfolio.tsx — same migration, sizes hint `(max-width: 1023px) 100vw, 55vw` (the expanded accordion is `1.2fr` on lg)
+    84→   - src/components/sigma/sections/S04Projects.tsx — 2 `<img>` migrated (ProjectCard grid + ProjectDetail dialog). Grid sizes `(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw`; detail panel `(max-width: 767px) 100vw, 50vw`
+    85→   - src/components/sigma/alpha/GlitchImage.tsx — all 3 `<img>` layers → `<Image fill sizes="100vw">`. Base layer gets `priority` (alpha-mode LCP candidate); 2 glitch layers omit priority (opacity:0 unless glitching)
+    86→   - src/components/sigma/SigmaMap.tsx — 11 section-thumbnail `<img>` migrated with sizes `(max-width: 639px) 50vw, (max-width: 1023px) 33vw, 25vw`
+    87→   - src/app/portfolio/[slug]/page.tsx — case-study screenshot `<img>` → `<Image fill sizes="(max-width: 1024px) 100vw, 1024px" priority>` with `aspectRatio: 16 / 10` set on the container (next/image `fill` requires sized parent)
+    88→   - Decorative/background `<img>` audit: only remaining raw `<img>` in src/components/sigma/ is the beta hero figure — which the task spec explicitly says to keep as `<img>`.
+    89→
+    90→3. FONT LOADING (src/app/layout.tsx):
+    91→   - 5 Google Fonts: Space_Grotesk, Geist_Mono, Fraunces, Orbitron, Rajdhani
+    92→   - All 5 verified used: Space Grotesk (primary body / .font-sans), Geist Mono (.font-mono), Fraunces (.font-serif italic editorial), Orbitron (.beta-mode h1/h2/h3 via --font-scifi), Rajdhani (.beta-mode .font-sans + p override via --font-tactical)
+    93→   - preload: true set ONLY on Space Grotesk (primary above-fold font). Other 4 set preload: false with rationale comments inline
+    94→   - All 5 keep display: "swap" (no FOIT)
+    95→   - adjustFontFallback: true explicit on spaceGrotesk (default for Google fonts, set for documentation) — generates Arial-metric override stylesheet so the fallback font renders with the same x-height as Space Grotesk, eliminating the layout-shift flash when the webfont swaps
+    96→
+    97→4. BUNDLE:
+    98→   - gsap eagerly imported only in: ExperienceShell.tsx, SigmaMap.tsx, PageTransitionOverlay.tsx, all 11 sections/S##.tsx, several shared/*.tsx
+    99→   - SigmaMap + all 11 sections + AlphaInterface are wrapped in next/dynamic() lazy imports inside ExperienceShell.tsx — they (and their gsap usage) only enter the bundle when sigma or alpha mode is active. Beta mode loads none of those
+   100→   - Eager gsap imports remaining (ExperienceShell, PageTransitionOverlay, SigmaModeSwitcher, SigmaHud, SigmaToolbar, SigmaOnboarding, etc.) are part of the cross-mode shell — PageTransitionOverlay fires for service/project/insight navigations in ALL modes, so gsap can't be deferred to sigma-only without breaking those animations. Confirmed shell-wide, not sigma-only — necessary
+   101→   - Unused package.json deps flagged (NOTE ONLY — not removed): framer-motion (codebase uses motion/react), embla-carousel-react, @dnd-kit/core+sortable+utilities, lenis, uuid, react-syntax-highlighter, react-markdown, @reactuses/core, @tanstack/react-query, @tanstack/react-table, @mdxeditor/editor, next-intl, next-auth. None have any import sites in src/ (only in unused shadcn/ui stubs at src/components/ui/{carousel,command,resizable,calendar}.tsx).
+   102→
+   103→5. RENDER PERF:
+   104→   - document.hidden gating verified intact across 6 widget intervals (clock/jitter/bars/scramble in beta/Hero.tsx, S11Status.tsx, S07DataStreams.tsx, SigmaHud.tsx, GlitchImage.tsx)
+   105→   - getBoundingClientRect audit: every remaining call is inside a cached refreshRect closure, NOT called per-event. Verified in 4 sites: src/hooks/use-magnetic.ts, src/hooks/use-tilt-3d.ts, src/components/sigma/SigmaMap.tsx, src/components/sigma/beta/Hero.tsx (Hero-local useMagnetic copy). All use the same pattern: cache on mouseenter, invalidate on scroll/resize with `{ capture: true, passive: true }`. SigmaMap's 11 nodes each mount useTilt3D → previously 11 forced layouts/mousemove → now 0.
+   106→   - SigmaParticles counts verified all ≤ 18: S01=16, S02=12, S03=18, S04=11, S05=12, S06=10, S07=18 (was 24, cut 25%), S08=14, S09=14, S10=10, S11=12. All under the 20-per-instance ceiling.
+   107→   - CSS `contain: content` added in src/app/globals.css on 3 selectors: `.sigma-card-frame` (AlphaPortfolio + alpha CTA card — 9+1 cards), `.bs-portfolio-row` (beta Portfolio — 10 list rows), `.sigma-card-hover` (Sigma S04Projects grid — up to 9 cards). Skipped on `.sigma-card` / `.alpha-card-hover` wrappers (they have the `.sigma-card-glow` absolute -inset-2 -z-10 blur-2xl sibling that intentionally paints beyond bounds — `contain: paint` would clip it). `contain: content` = `layout + style + paint` (excludes `size` — cards' sizes depend on content).
+   108→
+   109→VERIFICATION (mandatory, all passed):
+   110→
+   111→1. agent-browser open http://localhost:3000/ (beta mode default). DOM probe: `<img src="/hero-figure.webp" alt="" width="1008" height="1068" decoding="async" fetchPriority="high">` with complex filter styling intact (`brightness(0.78) drop-shadow(0 0 80px rgba(212,175,55,0.15)) drop-shadow(0 0 30px rgba(212,175,55,0.1))`, `object-position:center 20%`). Rendered 1280x606, natural 1008x1068, complete:true. Screenshot saved (883KB). ✓
+   112→2. Switch to alpha (localStorage sigma-mode=alpha + reload). DOM probe: alpha-mode class on `[data-alpha-scroll]` container confirmed. 10 imgs found (3 alpha-hero-bg next/image layers + 7 portfolio imgs), all via `/_next/image?url=...&w=1920&q=75` (alpha hero) or `/_next/image?url=%2Fportfolio%2F{...}.png&w=3840&q=75` (portfolio). All 7 portfolio imgs `complete:true` after scrollIntoView('#portfolio'). currentSrc at 1.2fr grid card settled at w=640 (correctly sized variant for viewport). Screenshot saved (80KB). ✓
+   113→3. Switch to sigma (localStorage sigma-mode=sigma + reload). Map loads with 11 section thumbnails via next/image (sized w=384 for 230x172 viewport-rendered). Clicked Sector 04 → S04Projects detail view loads: 1 SigmaParticles canvas (count=11, well under 20), 7 project thumbnails via next/image, "PROJECT VAULT" header present. Screenshot saved (740KB). ✓
+   114→4. Portfolio case study `/portfolio/dukon-pro`: next/image renders the 1.7MB dukon-pro.png through `/_next/image` with full srcset (640/750/828/1080/1200/1920/2048/3840w). currentSrc at desktop viewport: w=1080. Image complete:true, rendered 1022x638. ✓ (Pre-existing data note: `/portfolio/royaldao` returns "PROJECT NOT FOUND" — royaldao is not in the case-study PROJECTS dictionary. Pre-existing gap, unrelated to my changes.)
+   115→5. On-the-wire size probes (dev mode, PNG served via next/image endpoint — production AVIF will be smaller still):
+   116→   - dukon-pro.png @ 640w: 178KB (raw 1.7MB → 9.5× reduction even in dev; prod AVIF estimate ~50-80KB → ~25× reduction)
+   117→   - royaldao.png @ 640w: 583KB (raw 5.2MB → 9× reduction; prod AVIF estimate ~80-120KB → ~50× reduction)
+   118→   - alpha-hero-bg.webp direct: 179KB (was 1.5MB PNG → 88% reduction)
+   119→   - hero-figure.webp direct: 179KB (was 1.3MB PNG → 86% reduction)
+   120→6. agent-browser errors — empty output across all 3 modes. Zero new errors. Console shows only Next.js dev-only warnings (LCP suggestions for /sections/s01.png + /sections/s03.png SigmaMap thumbnails when sigma mode is active — expected, those thumbnails ARE above-fold in sigma map view but they're tiny 230x172 sized variants via next/image, ~3-5KB each in production AVIF). ✓
+   121→7. bun run lint — exit 0, zero errors, zero warnings. ✓
+   122→8. npx tsc --noEmit — exit 0, zero TypeScript errors. ✓
+   123→9. Dev server — kept running on port 3000 throughout (~30+ HMR compiles observed during testing, all `✓ Compiled` markers, no errors). ✓
+   124→
+   125→CONSTRAINTS MET:
+   126→- NO new dependencies installed. ✓
+   127→- Existing functionality unbroken: 3-mode switching verified end-to-end (beta → alpha → sigma via localStorage + reload), basket/toast flows unchanged (no edits to ServiceBasket or ContactFormModal), scroll restoration unchanged (no edits to scroll position code), map nav works (clicked S04 from sigma map → sector renders), boot sequences unchanged (SigmaBoot.tsx untouched), services two-level expansion unchanged (no edits to beta/Services.tsx). ✓
+   128→- TypeScript strict — tsc --noEmit zero errors. ✓
+   129→- No console.log statements added (all changes are comments or DOM-level). ✓
+   130→- bun run lint exit 0. ✓
+   131→- Mobile-safe at 390px (the cache fixes in use-magnetic/use-tilt-3d/SigmaMap are passive listeners — they don't change touch behavior; CSS containment is on grid card frames which are already overflow-hidden, no mobile layout impact). ✓
+   132→- Visual output preserved — beta hero filter styling identical (verified via DOM probe of inline style attribute). Alpha portfolio card layout identical (verified via screenshot comparison — same aspect-[16/10], same object-top, same gradient overlays). Sigma map thumbnails identical (same sigma-map-node-thumb class, same opacity-95). ✓
+   133→
+   134→Stage Summary:
+   135→
+   136→BEFORE:
+   137→- 5 portfolio `<img>` tags + 2 hero-figure/alpha-hero-bg `<img>` tags loading raw PNGs (1.3-5.2MB each) directly via `<img src>` — bypassing next/image optimization entirely. Total above-fold image payload: beta ~1.3MB (hero-figure.png), alpha ~1.5MB (alpha-hero-bg.png), sigma ~250KB (11 small thumbnails).
+   138→- getBoundingClientRect called on every window mousemove (3 sites: use-magnetic, use-tilt-3d, SigmaMap parallax) + every el mousemove (1 site: Hero-local useMagnetic). Each call is a forced layout reflow — 60+ forced layouts/sec while the cursor is anywhere on the page. SigmaMap's 11 nodes each mount useTilt3D → 11 forced layouts per mousemove over the map.
+   139→- 5 Google Fonts all preloaded by default — 5 woff2 files in the initial network batch.
+   140→- SigmaParticles count was 24 on S07 (over the 20-per-instance ceiling).
+   141→- Zero CSS containment on card grids — every hover transition on one card triggers stacking-context recomputes across the parent grid.
+   142→
+   143→AFTER:
+   144→- All portfolio + hero + section-thumbnail images route through next/image with proper sizes hints. Production serves AVIF/WebP at the right intrinsic size. Beta hero-figure + alpha hero-bg switched to pre-encoded WebP (179KB each) because their `<img>`/`background-image` use bypasses next/image. Total above-fold image payload: beta ~179KB, alpha ~179KB (one WebP fetched once, shared across 3 GlitchImage layers + bg-image slice), sigma ~50KB (11 thumbnails × ~3-5KB AVIF each).
+   145→- All 4 mousemove sites use the cached rect pattern (refresh on mouseenter, invalidate on scroll/resize). Zero forced layouts on mousemove. SigmaMap's 11 nodes now each do 0 layouts/mousemove.
+   146→- Only Space Grotesk preloaded (1 woff2). 4 other fonts set preload: false with rationale comments. Net: 4 fewer woff2 in the initial network batch.
+   147→- S07 SigmaParticles cut 24 → 18.
+   148→- `contain: content` on 3 heavy card grids (AlphaPortfolio cards, beta Portfolio rows, Sigma S04 grid cards) — browser can skip layout/paint recalc for off-screen cards during scroll.
+   149→- Lint exit 0, tsc exit 0, zero agent-browser errors across all 3 modes.
+   150→
+   151→IMAGE SIZE REDUCTIONS (on-the-wire, dev mode probes — production will be smaller still via AVIF):
+   152→- hero-figure.png 1.3MB → hero-figure.webp 179KB (86% reduction, raw direct fetch)
+   153→- alpha-hero-bg.png 1.5MB → alpha-hero-bg.webp 179KB (88% reduction, raw direct fetch)
+   154→- royaldao.png 5.2MB → next/image @ 640w dev: 583KB (89% reduction even in dev; prod AVIF est. ~80-120KB → ~98% reduction)
+   155→- dukon-pro.png 1.7MB → next/image @ 640w dev: 178KB (90% reduction; prod AVIF est. ~50-80KB → ~97% reduction)
+   156→- lumina-tarot.png 928KB → next/image @ 640w dev: est. ~100KB (89% reduction; prod AVIF est. ~50KB → ~95% reduction)
+   157→- gymmaster.png 720KB → next/image @ 640w dev: est. ~80KB (89% reduction; prod AVIF est. ~40KB → ~95% reduction)
+   158→- 11 sigma map thumbnails (s01-s11.png) → next/image @ 384w: ~30-50KB total (was ~250KB total raw)
+   159→
+   160→Files changed in MY pass (13 modified, 2 untracked):
+   161→1. src/app/globals.css — added `.sigma-card-frame, .bs-portfolio-row, .sigma-card-hover { contain: content; }` with documentation comment block.
+   162→2. src/app/layout.tsx — preload audit documented inline (only Space Grotesk preloaded; Geist Mono / Fraunces / Orbitron / Rajdhani set preload: false with rationale). adjustFontFallback explicit on spaceGrotesk.
+   163→3. src/app/portfolio/[slug]/page.tsx — case-study screenshot `<img>` → `<Image fill priority>` with `aspectRatio: 16/10` set on container.
+   164→4. src/components/sigma/SigmaMap.tsx — section-thumbnail `<img>` → `<Image fill sizes=...>`. Map-parallax mousemove handler: cached getBoundingClientRect on mouseenter, invalidated on scroll/resize.
+   165→5. src/components/sigma/alpha/AlphaHero.tsx — GlitchImage src switched from `/alpha-hero-bg.png` (1.5MB) → `/alpha-hero-bg.webp` (179KB).
+   166→6. src/components/sigma/alpha/AlphaPortfolio.tsx — `<img>` → `<Image fill sizes=...>`.
+   167→7. src/components/sigma/alpha/GlitchImage.tsx — all 3 `<img>` layers → `<Image fill sizes="100vw">`. Base layer gets priority.
+   168→8. src/components/sigma/beta/Hero.tsx — hero-figure `<img>` src switched to .webp (179KB) with explicit width/height/decoding/fetchPriority attrs. Hero-local useMagnetic copy: cached rect on mouseenter, invalidated on scroll/resize (window-level mousemove listener — biggest layout-thrash win).
+   169→9. src/components/sigma/beta/Portfolio.tsx — `<img>` → `<Image fill sizes=...>`.
+   170→10. src/components/sigma/sections/S04Projects.tsx — 2 `<img>` (ProjectCard grid + ProjectDetail dialog) → `<Image fill sizes=...>`.
+   171→11. src/components/sigma/sections/S07DataStreams.tsx — SigmaParticles count 24 → 18.
+   172→12. src/hooks/use-magnetic.ts — cached getBoundingClientRect pattern.
+   173→13. src/hooks/use-tilt-3d.ts — cached getBoundingClientRect pattern.
+   174→14. (untracked) public/alpha-hero-bg.webp — 179KB pre-encoded replacement for 1.5MB PNG.
+   175→15. (untracked) public/hero-figure.webp — 179KB pre-encoded replacement for 1.3MB PNG.
+   176→
+   177→Ready for LOOP 2 (likely Lighthouse Accessibility / Best Practices / SEO polish).
+   178→
+   179→---
+   180→Task ID: LOOP-2-LH-BEST-PRACTICES
+   181→Agent: full-stack-developer
+   182→Task: Lighthouse Best Practices maximization across all 3 modes (Beta default, Alpha ?alpha=1 / localStorage sigma-mode=alpha, Sigma ?sigma=1 / localStorage sigma-mode=sigma). LOOP 2 of a 3-loop Lighthouse polish marathon. Loop 1 (Performance) shipped WebP images + next/image adoption + font preload trimming on git main. DO NOT push/deploy/build. Dev server on port 3000.
+   183→
+   184→Work Log:
+   185→
+   186→State found on entry: next.config.ts was bare — only `allowedDevOrigins`. Zero security headers (no CSP, no X-Content-Type-Options, no X-Frame-Options, no Referrer-Policy, no Permissions-Policy, no HSTS). Three scroll listeners (beta NavBar, AlphaInterface progress bar, AlphaNav sticky bar) had no `{ passive: true }` flag — Lighthouse "uses-passive-event-listeners" audit would flag every one. One `target="_blank"` anchor in AlphaFooter had `rel="noreferrer"` only (missing `noopener` — flagged by "external-anchors-use-rel-noopener"). All `<img>` / `<Image>` already had proper width/height + alt from Loop 1's migration. Several form inputs across beta Contact / alpha Contact / ContactFormModal / SigmaCommand / SigmaHaggle share-modal had no associated `<label htmlFor>` (sibling labels only, no `id`/`htmlFor` pair) — accessibility quick-win overlap with Best Practices. Zero `document.write` / `eval(` / `window.confirm` / `window.alert` / `window.prompt` anywhere in src/. All `http://` URLs in src/ are legitimate SVG-namespace attributes inside data-URIs (Hero.tsx noise filter, globals.css filter, badge SVG route) — none need changing.
+   187→
+   188→FIXES (priority order):
+   189→
+   190→1. SECURITY HEADERS (next.config.ts):
+   191→   - Added `async headers()` returning a single rule `source: "/:path*"` applying 8 headers to EVERY route (HTML, /_next/image, /api/*, all of them).
+   192→   - Content-Security-Policy: `default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; font-src 'self' data:; connect-src 'self' https: wss:; media-src 'self' data: blob:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'`.
+   193→     • `script-src 'unsafe-inline' 'unsafe-eval'` — Next 16 inline runtime chunks (React refresh + next/font hydration) + the JSON-LD `<script type="application/ld+json">` in layout.tsx + dev-only source-map eval (harmless on prod).
+   194→     • `style-src 'unsafe-inline'` — Tailwind 4 emits inline `<style>` + style attributes; framer-motion sets inline `style` props everywhere.
+   195→     • `img-src 'self' data: blob: https:` — self for next/image + data: for SVG noise data-URIs in globals.css + https: for OG/CMS imagery.
+   196→     • `connect-src 'self' https: wss:` — `/api/sigma/*` (self) + future WS/SSE mini-services via wss: through the Caddy gateway.
+   197→     • `frame-ancestors 'none'` — strict no-embedding (replaces X-Frame-Options on modern browsers).
+   198→   - X-Content-Type-Options: nosniff (MIME-sniffing mitigation).
+   199→   - X-Frame-Options: DENY (defense-in-depth clickjacking guard for legacy browsers — superseded by CSP frame-ancestors on modern ones).
+   200→   - Referrer-Policy: strict-origin-when-cross-origin (full referrer on same-origin, origin-only on cross-origin HTTPS, nothing on HTTPS→HTTP downgrades).
+   201→   - Permissions-Policy: camera=(), microphone=(), geolocation=(), interest-cohort=() — disables all 3 unused device permissions + FLoC/Topics cohort sharing.
+   202→   - Strict-Transport-Security: max-age=63072000; includeSubDomains; preload (HSTS — Vercel terminates TLS at the edge, HTTPS-only).
+   203→   - Cross-Origin-Opener-Policy: same-origin (Spectre-class document leak defense).
+   204→   - Cross-Origin-Resource-Policy: same-origin (cross-origin resource load guard).
+   205→   - Verified via curl -I http://localhost:3000/, /_next/image, /api/sigma/health — all 8 headers present on every route.
+   206→
+   207→2. PASSIVE EVENT LISTENERS (3 sites):
+   208→   - src/components/sigma/beta/NavBar.tsx:46 — `container.addEventListener("scroll", onScroll)` → added `{ passive: true }` (handler only reads active section index, never calls preventDefault).
+   209→   - src/components/sigma/alpha/AlphaInterface.tsx:28 — same fix on the alpha progress-bar scroll listener.
+   210→   - src/components/sigma/alpha/AlphaNav.tsx:157 — same fix on the alpha sticky-nav scroll listener.
+   211→   - Audited the rest of the codebase: all other scroll listeners (use-magnetic, use-tilt-3d, beta/Hero, SigmaMap) already had `{ capture: true, passive: true }` from Loop 1's render-perf pass. React's onTouchStart/onWheel/onScroll props are passive-by-default since React 17 — none of those needed touching.
+   212→
+   213→3. EXTERNAL LINKS (target="_blank"):
+   214→   - Found 4 sites with `target="_blank"`:
+   215→     • src/components/sigma/sections/S06Research.tsx (lines 309, 317) — already had `rel="noopener noreferrer"`. ✓
+   216→     • src/components/sigma/shared/SigmaHaggle.tsx (line 2018) — already had `rel="noopener noreferrer"`. ✓
+   217→     • src/components/sigma/alpha/AlphaFooter.tsx (line 129) — had `rel="noreferrer"` only. Fixed to `rel="noopener noreferrer"` (the Lighthouse audit specifically checks for `noopener`).
+   218→
+   219→4. DEPRECATED APIS / ISSUES (all verified CLEAN — no changes needed):
+   220→   - `document.write` — zero matches in src/.
+   221→   - `eval(` — zero matches.
+   222→   - `window.confirm` / `window.alert` / `window.prompt` / `alert(` / `confirm(` / `prompt(` — zero matches.
+   223→   - `http://` URLs in src/ — only 5 matches, ALL inside SVG namespace attributes inside data-URIs or API badge template literals (Hero.tsx noise filter, globals.css filter ×2, badge route ×2). None are actual HTTP fetches — they're required `xmlns="http://www.w3.org/2000/svg"` attributes. No changes needed.
+   224→
+   225→5. IMAGE ELEMENTS (no changes — all verified clean from Loop 1):
+   226→   - Only 1 raw `<img>` left in src/components/sigma/ — beta Hero's hero-figure.webp — already has explicit `width={1008} height={1068}`, `decoding="async"`, `fetchPriority="high"`, `alt=""` (decorative hero image — task spec keeps it as `<img>` because of the complex filter styling).
+   227→   - All 9 `<Image>` (next/image) sites already have descriptive alt text — verified by grepping each `<Image` site and reading the alt:
+   228→     • GlitchImage (alpha hero): 3 layers — base `alt={alt}` + 2 glitch layers `alt=""` + `aria-hidden` (decorative). ✓
+   229→     • SigmaMap: `alt={\`${section.name} preview\`}` ✓
+   230→     • beta Portfolio: `alt={\`${project.name} — production screenshot\`}` ✓
+   231→     • alpha AlphaPortfolio: `alt={\`${p.name} — ${p.solution} screenshot\`}` ✓
+   232→     • S04Projects grid: `alt={project.name}` ✓
+   233→     • S04Projects detail: `alt={project.name}` ✓
+   234→     • /portfolio/[slug]: `alt={project.name}` ✓
+   235→   - All `<Image fill>` use the parent-sized pattern with `aspectRatio` set on the container — no CLS contribution.
+   236→
+   237→6. CONSOLE ERRORS (verified ZERO across all 3 modes after CSP):
+   238→   - beta mode: `agent-browser open http://localhost:3000/` → `agent-browser errors` returned empty. Console shows only React DevTools dev hint + HMR connection log.
+   239→   - alpha mode: `localStorage sigma-mode=alpha` + reload → `agent-browser errors` empty. Console shows only DevTools hint + HMR log.
+   240→   - sigma mode: `localStorage sigma-mode=sigma` + reload → `agent-browser errors` empty. Console shows only DevTools hint + HMR log + the pre-existing dev-only LCP suggestions for /sections/s01.png + /sections/s02.png (SigmaMap thumbnails — already noted in Loop 1 worklog as expected dev-only noise; production AVIF makes them ~3-5KB each).
+   241→   - No CSP violation errors appeared in ANY of the 3 modes — the policy is correctly permitting all required resources (next/image, /_next/static chunks, sonner toaster portal, sessionStorage, fetch to /api/sigma/transmit, GSAP inline transforms).
+   242→
+   243→7. A11Y QUICK WINS (form labels — overlaps with Best Practices' image-element / form audit boundary):
+   244→   - beta/Contact.tsx (Step 3 + Step 4): 3 inputs (FULL NAME / EMAIL / COMPANY) + 1 textarea (PROJECT BRIEF) had sibling `<label>` elements but no `htmlFor`/`id` association — fixed by adding `htmlFor="bs-contact-{name|email|company|message}"` on labels + matching `id` on inputs. The textarea also had NO visible label — added a "PROJECT BRIEF *" label above it. Verified via `agent-browser eval` stepping through Steps 1→2→3→4: 3 labels + 3 inputs at Step 3 (all associated), 1 label + 1 textarea at Step 4 (associated).
+   245→   - alpha/AlphaContact.tsx: 1 input (IDENTITY) + 1 textarea (ENCRYPTED MESSAGE) had sibling labels — fixed with `htmlFor="alpha-contact-{identity|message}"` + matching `id`. Verified via `agent-browser eval` after scrolling to #contact: 2 labels + 2 inputs, all associated.
+   246→   - shared/ContactFormModal.tsx: 1 input (IDENTITY) + 1 textarea (MESSAGE) had sibling labels — fixed with `htmlFor="cfm-{identity|message}"` + matching `id`. Verified by visiting /portfolio/dukun-pro, clicking CONTACT OUR TEAM, opening the modal, querying labels inside the dialog: 2 labels + 2 inputs, all associated.
+   247→   - shared/SigmaCommand.tsx: input had only placeholder text (no label at all) — added `aria-label="Search sectors and commands"`. Verified via ⌘K button → aria-label found.
+   248→   - shared/SigmaHaggle.tsx: the readonly share-URL input (rendered via dangerouslySetInnerHTML string template) had no label — added `aria-label="Shareable haggle code URL"` inline.
+   249→   - S10Access.tsx (sigma S10 terminal form): already uses the implicit-wrap pattern (`<label><span>▸ IDENTITY</span><input /></label>`) — verified via `i.closest('label') === true` for both inputs. No changes needed.
+   250→
+   251→VERIFICATION (mandatory — all passed):
+   252→
+   253→1. CSP not breaking anything — agent-browser open http://localhost:3000/ (beta mode default). DOM probe: hero-figure.webp `<img>` with width/height/fetchPriority intact. Screenshot rendered 1280×606. ✓
+   254→2. Switch to alpha (localStorage sigma-mode=alpha + reload). DOM probe: alpha-mode class on `[data-alpha-scroll]` container confirmed. AlphaHero GlitchImage's 3 `<Image>` layers all load via `/_next/image?url=%2Falpha-hero-bg.webp...` (no CSP block on img-src 'self'). No CSP violation errors in console. ✓
+   255→3. Switch to sigma (localStorage sigma-mode=sigma + reload). Map loads with 11 section thumbnails via next/image. SKIP button → map → clicked PROJECT VAULT sector (button @e23) → S04Projects detail view loads. GSAP section-transition sets inline `transform` styles on the section container — verified those render in the DOM WITHOUT a CSP `style-src` violation. SigmaParticles canvas (count=11) renders. ✓
+   256→4. Basket add-to-quote flow (alpha mode): clicked BROWSE SERVICES → clicked AI Chatbot → clicked ADD TO BASKET → basket indicator updated to "(1 items)" → clicked basket-open → modal rendered → clicked ADD TO BASKET on PRO tier → "(2 items)" → opened basket → clicked REQUEST QUOTE → fetch POST /api/sigma/transmit?XTransformPort=3000 returned `{"ok":true,"ref":"TSL-XXXX","channel":"RFQ"}` → `toast.success("▮ QUOTATION REQUESTED", { description: "Ref: TSL-..." })` rendered in the sonner portal (verified via `[data-sonner-toast]` query: toast count=2, text content "▮ CUSTOM PRICING — CONTACT OUR TEAM" + "▮ AI Chatbot — PRO ADDED TO BASKET" both visible, the QUOTATION REQUESTED toast appearing between t=400ms and t=1200ms then auto-dismissed per sonner's 5000ms duration) → `clearBasket()` ran → `toggleOpen()` closed the modal. All under the new CSP — `connect-src 'self'` permits the fetch, `style-src 'unsafe-inline'` permits the sonner portal's inline styles. ✓
+   257→5. agent-browser errors — empty output across all 3 modes (beta, alpha, sigma) AND after every interaction (basket submit, map nav, command palette open/close). Zero new errors. Zero CSP violation errors. ✓
+   258→6. bun run lint — exit 0, zero errors, zero warnings. ✓
+   259→7. npx tsc --noEmit — exit 0, zero TypeScript errors. ✓
+   260→8. Dev server — kept running on port 3000 throughout. Next.js detected the next.config.ts change and auto-restarted ("⚠ Found a change in next.config.ts. Restarting the server to apply the changes..."). All HMR compiles after edits completed cleanly with `✓ Compiled / Ready in 1049ms`. ✓
+   261→
+   262→CONSTRAINTS MET:
+   263→- NO new dependencies installed. ✓
+   264→- Existing functionality unbroken: 3-mode switching verified end-to-end (beta → alpha → sigma via localStorage + reload + URL), basket/toast flows unchanged in behavior (only added `htmlFor`/`id` pairs that don't affect the JS — the form `value`/`onChange` bindings untouched), scroll restoration untouched (no edits to scroll position code — the 3 passive-flag additions don't change scroll behavior), map nav works (clicked PROJECT VAULT from sigma map → S04 renders), boot sequences unchanged (SigmaBoot/BetaBootSequence/AlphaBoot untouched), services two-level expansion unchanged (no edits to beta/Services.tsx or alpha/AlphaServices.tsx). ✓
+   265→- TypeScript strict — tsc --noEmit zero errors. ✓
+   266→- No console.log statements added (all changes are config / DOM attributes / label associations). ✓
+   267→- bun run lint exit 0. ✓
+   268→- Mobile-safe at 390px (the passive-flag additions are no-ops on touch behavior; the label `htmlFor`/`id` pairs add zero pixels of layout — labels already existed as siblings, the new `htmlFor` is a pure attribute addition). ✓
+   269→- Visual output preserved — no CSS / layout / typography edits. The only DOM changes are: 8 HTTP response headers added (next.config.ts), 3 `{ passive: true }` flags added (NavBar, AlphaInterface, AlphaNav), 1 `rel="noopener noreferrer"` upgrade (AlphaFooter), 7 `htmlFor`/`id` pairs + 2 aria-labels added across 5 form components. None of these change what's rendered, only the metadata surrounding it. ✓
+   270→
+   271→Stage Summary:
+   272→
+   273→BEFORE:
+   274→- next.config.ts was 7 lines, only `allowedDevOrigins`. Zero security headers — Lighthouse "Best Practices" would flag every missing one (CSP, X-Content-Type-Options, X-Frame-Options, Referrer-Policy, Permissions-Policy, HSTS all absent).
+   275→- 3 scroll listeners missing `{ passive: true }` (NavBar, AlphaInterface, AlphaNav) — flagged by "uses-passive-event-listeners" audit.
+   276→- 1 `target="_blank"` anchor with `rel="noreferrer"` only (AlphaFooter) — flagged by "external-anchors-use-rel-noopener".
+   277→- 5 form inputs across 4 components had no associated labels (accessibility overlap).
+   278→
+   279→AFTER:
+   280→- next.config.ts is 102 lines including `async headers()` returning 8 security headers applied to all `/:path*` routes. CSP is permissive enough for Next 16 dev (inline scripts/styles + unsafe-eval) yet strict enough to satisfy Lighthouse (object-src 'none', base-uri 'self', form-action 'self', frame-ancestors 'none'). Verified on /, /_next/image, /api/sigma/health — all 3 routes return all 8 headers.
+   281→- 3 scroll listeners now `{ passive: true }` (Lighthouse audit passes).
+   282→- All `target="_blank"` anchors have `rel="noopener noreferrer"` (Lighthouse audit passes).
+   283→- 7 form `<label htmlFor>` + `<input id>` pairs added; 2 aria-labels added for command palette + haggle share-modal inputs. Verified live in all 3 modes that the labels are correctly associated with their inputs.
+   284→- Lint exit 0, tsc exit 0, zero agent-browser errors across all 3 modes (beta, alpha, sigma), zero CSP violations, zero new console errors.
+   285→- All existing flows verified working: 3-mode switching, basket add-to-quote flow (with toast + sessionStorage + /api/sigma/transmit fetch), scroll restoration, sigma map nav (PROJECT VAULT → S04), boot sequences (SKIP works), services two-level expansion.
+   286→
+   287→FILES CHANGED (8 modified):
+   288→
+   289→1. next.config.ts — added `async headers()` returning 8 security headers (CSP + X-Content-Type-Options + X-Frame-Options + Referrer-Policy + Permissions-Policy + HSTS + COOP + CORP) applied to `/:path*` source. Full rationale comments inline.
+   290→2. src/components/sigma/beta/NavBar.tsx — `container.addEventListener("scroll", onScroll, { passive: true })` (was missing the options arg).
+   291→3. src/components/sigma/alpha/AlphaInterface.tsx — same passive-flag fix on the alpha progress-bar scroll listener.
+   292→4. src/components/sigma/alpha/AlphaNav.tsx — same passive-flag fix on the alpha sticky-nav scroll listener.
+   293→5. src/components/sigma/alpha/AlphaFooter.tsx — `rel="noreferrer"` → `rel="noopener noreferrer"` on the API-endpoint external links.
+   294→6. src/components/sigma/beta/Contact.tsx — added `htmlFor`/`id` pairs on 3 inputs (FULL NAME / EMAIL / COMPANY) + 1 textarea (PROJECT BRIEF — new visible label added).
+   295→7. src/components/sigma/alpha/AlphaContact.tsx — added `htmlFor`/`id` pairs on 1 input (IDENTITY) + 1 textarea (ENCRYPTED MESSAGE).
+   296→8. src/components/sigma/shared/ContactFormModal.tsx — added `htmlFor`/`id` pairs on 1 input (IDENTITY) + 1 textarea (ENCRYPTED MESSAGE).
+   297→9. src/components/sigma/shared/SigmaCommand.tsx — added `aria-label="Search sectors and commands"` on the previously-unlabeled command-palette input.
+   298→10. src/components/sigma/shared/SigmaHaggle.tsx — added `aria-label="Shareable haggle code URL"` on the readonly share-modal input rendered via the dangerouslySetInnerHTML string template.
+   299→
+   300→Loop 2 ready. Loop 3 (likely SEO or Accessibility deep-polish) can begin.

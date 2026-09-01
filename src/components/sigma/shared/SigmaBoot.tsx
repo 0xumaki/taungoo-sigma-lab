@@ -68,7 +68,7 @@ export function SigmaBoot({ onDone }: { onDone: () => void }) {
         if (logRef.current) {
           const line = document.createElement("div");
           line.className = "text-[#00FF94]";
-          line.textContent = `> [${String(i + 1).padStart(2, "0")}] ${step} ... OK`;
+          line.textContent = `> [${String(i + 1).padStart(2, "0")}] ${step} … OK`;
           logRef.current.appendChild(line);
           logRef.current.scrollTop = logRef.current.scrollHeight;
         }
@@ -115,9 +115,12 @@ export function SigmaBoot({ onDone }: { onDone: () => void }) {
           Σ
         </div>
         <div className="overflow-hidden">
-          <h1 className="font-sans text-4xl font-black uppercase tracking-tight sm:text-6xl">
+          {/* h2 (not h1) — boot is a transient overlay; the real page <h1> is the
+              section hero (S01 "TAUNGOO™SIGMA LAB" or map "CHOOSE YOUR SECTOR").
+              Demoting avoids duplicate-h1 SEO flag when boot+section co-mount briefly. */}
+          <h2 className="font-sans text-4xl font-black uppercase tracking-tight sm:text-6xl">
             TAUNGOO SIGMA
-          </h1>
+          </h2>
         </div>
         <div className="mt-1 font-mono text-[10px] uppercase tracking-[0.4em] text-muted-foreground">
           INITIALIZING SECTORS · 11 / 11

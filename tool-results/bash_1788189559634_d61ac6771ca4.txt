@@ -1,0 +1,250 @@
+- shared/components.tsx (317 lines): Panel already has .sigma-panel class with --sigma-panel-accent CSS var; ::before pseudo-element does a 1.5s cubic-bezier translateY sweep with mix-blend-mode:screen on hover (sigma-panel-sweep keyframe). Tag already has .sigma-tag class with --sigma-tag-accent; ::after pseudo does a 0.85s diagonal shimmer (sigma-tag-shimmer keyframe) + border brighten on hover.
+- SigmaHud.tsx (152 lines): Live clock already in place (UTC HH:MM:SS, 1s tick). Blinking colon via .sigma-clock-colon (1s steps(2,end) blink, 1.0→0.25 opacity). CPU sparkline via .sigma-spark (5 bars, 1.2s ease-in-out loop, animation-delay staggered 0/0.12/0.24/0.36/0.48s, scaleY 0.55→1.0→0.55).
+- ExperienceShell.tsx (617 lines): Transition glitch flicker ALREADY present — at midpoint of GSAP panel-reveal timeline, a class toggle on [data-glitch-layer] fires sigma-transition-glitch keyframe (180ms steps(4,end), 4-frame clip-path slice animation with translateX jitter, opacity 0→1→0). Total transition timing ~1.95s (cover 0.42s+stagger + label fly-through 0.6s + reveal 0.46s+stagger).
+- S01Initializing.tsx (336 lines): TAUNGOO headline glitch effect ALREADY present via .sigma-hero-glitch + .is-glitching class. JS timer fires every 8-12s (random), 200ms duration, RGB-split text-shadow keyframe (#FF2D7E + #00E5FF offset). Reticle slow rotate via .sigma-spin-slow (24s linear infinite). useReducedMotion() gates the effect entirely.
+- S04Projects.tsx (348 lines): Project cards ALREADY have .sigma-card-hover (translateY -4px lift + accent border + box-shadow on hover), .sigma-underline-draw (1px L→R draw 0%→100% width over 0.5s, accent gradient), .sigma-ghost-numeral (oversized 6%→14% opacity watermark on hover, accent-colored), .sigma-scanlines + .sigma-grid-fine overlays. 9 cards verified at 1440x900.
+- S08Capabilities.tsx (275 lines): Gear cards ALREADY have .sigma-card-hover + .sigma-underline-draw + .sigma-ghost-numeral. 6 cards, each with 3D flip animation (rotateY 0↔180deg, 0.7s), backface-visibility hidden, accent-colored barcodes, uptime progress bars.
+- S10Access.tsx (219 lines): Transmit button ALREADY has .sigma-hazard-sweep class — repeating-linear-gradient 45deg stripes, position animation 0→22.63px over 0.9s on hover (sigma-hazard-sweep-anim keyframe, linear infinite). Reduced-motion override disables the animation.
+- globals.css (3469 lines): ALL sigma-mode polish utilities ALREADY in place from prior POLISH-V iterations:
+  - sigma-transition-glitch keyframe (180ms, 4-frame clip-path slices) ✓
+  - sigma-map-node-ring (::before/::after ring pulse) + sigma-map-node-breath (2s active glow) + sigma-map-node-thumb (scale+saturate crossfade) ✓
+  - sigma-scramble + sigma-scramble-in (600ms blur-fade) + sigma-shell-corner (4 brackets, accent-colored, 14→20px on hover) ✓
+  - sigma-panel + sigma-panel-sweep (1.5s translateY sweep, mix-blend-mode:screen) + sigma-tag + sigma-tag-shimmer (0.85s diagonal sweep) ✓
+  - sigma-clock-blink + sigma-clock-colon + sigma-spark + sigma-spark-bar (1.2s scaleY 0.55↔1.0) ✓
+  - sigma-hero-glitch-fire (200ms RGB-split text-shadow, 5 steps) + sigma-spin-slow (24s linear) ✓
+  - sigma-card-hover + sigma-underline-draw + sigma-ghost-numeral (6%→14% opacity) ✓
+  - sigma-hazard-sweep + sigma-hazard-sweep-anim (0.9s linear infinite) ✓
+  - prefers-reduced-motion overrides block (kills all infinite anims, snaps transitions, drops transforms) ✓
+
+CRITICAL BUG FIX — S01Initializing.tsx (the boot/hero section):
+- The .sigma-hero-glitch fire timer useEffect referenced `rootRef.current` — but `rootRef` DOES NOT EXIST in this component. The actual ref is named `root` (line 69: `const root = React.useRef<HTMLDivElement>(null)`). The bug was introduced in a prior POLISH pass that added the glitch timer but used the wrong ref name.
+- Symptom: every time a user navigated to S01 (INITIALIZING) — including the very first navigation from the map after boot — React threw `ReferenceError: rootRef is not defined` from inside the useEffect, which crashed the entire S01 React subtree and rendered an "Application error: a client-side exception has occurred" full-screen error. This was 100% reproducible: map → click S01 → blank error page.
+- Fix: changed `const root = rootRef.current` → `const node = root.current` (and updated the two downstream references from `root`/`root.querySelector` to `node`/`node.querySelector` to avoid shadowing the outer `root` ref variable). Single-line semantic fix; verified the glitch timer now correctly toggles .is-glitching on the [data-hero-wordmark] element every 8-12s.
+- This was the highest-impact fix of the entire pass — it unblocked S01 (the literal first sector users see after boot).
+
+MOBILE LAYOUT FIX — S01Initializing.tsx CTA row:
+- The inner CTA button group used `flex gap-2` (no wrap), so on mobile (390px) the two buttons ("ENTER THE MAP" + "READ THE MANIFESTO") together overflowed to 461px (71px past the viewport edge). Outer wrapper had `flex-wrap` but the inner button container didn't.
+- Fix: added `flex-wrap` to the inner button container so the second button wraps below the first on narrow viewports. No layout shift on desktop (both buttons still fit on one line). Verified body scrollWidth == clientWidth == 390 across all 11 sections at 390x844.
+
+MAP HUB POLISH — SigmaMap.tsx (3 fixes):
+
+FIX 1 — Role-text truncation on MapNode cards:
+- The bottom block of every map node displayed `{section.code} · {section.role}` with `font-mono text-[8px] tracking-[0.2em] truncate sm:text-[10px] sm:tracking-[0.24em]`. The `truncate` class clipped text-overflow with ellipsis.
+- VLM audit + DOM measurement (`scrollWidth > clientWidth`) confirmed truncation on:
+  - Card 03 (CORE SYSTEMS): "SYS · SERVICED MARKETS" → "SYS · SERVICED MARK..."
+  - Card 11 (SYSTEM STATUS): "STS · FOOTER / STATUS" → "STS · FOOTER / STA..."
+- Task constraint: "Keep ALL text content identical" — so I could not shorten the role strings.
+- Fix: reduced letter-spacing from `tracking-[0.2em] sm:tracking-[0.24em]` to `tracking-[0.12em] sm:tracking-[0.16em]` (tighter but still monospace-spaced) + added `sigma-map-node-role` class as a hook. Verified post-fix: `scrollWidth == clientWidth` on all 11 nodes (agent-browser DOM measurement reports "ALL FIT").
+
+FIX 2 — Parallax drift reduced from 20px → 8px per task spec + target selector fixed:
+- The original code targeted `.sigma-grid` via `root.querySelector(".sigma-grid")` — but no such element exists inside SigmaMap's React subtree (the .sigma-grid div is rendered by ExperienceShell as a SIBLING of SigmaMap, outside its rootRef). The querySelector returned null, the rAF loop ran but `if (grid)` short-circuited, so NO parallax effect was actually visible to users.
+- Fix A: changed the querySelector to `[data-map-parallax]` and added a dedicated parallax background layer inside SigmaMap (a `pointer-events-none absolute inset-0 z-0` div containing `sigma-grid-fine` + a radial accent vignette). This gives the parallax a real target to drift.
+- Fix B: reduced the drift coefficient from `* 20` to `* 16` (max ±8px from center — `(-0.5)*16 = -8` to `(+0.5)*16 = +8`), matching the task spec "max 8px".
+- Fix C: improved lerp factor from 0.05 → 0.08 (slightly snappier follow) + used `translate3d` for GPU acceleration.
+- Fix D: added `z-10` to the header + main content grid so they sit above the new z-0 parallax background.
+- Note: parallax effect only fires on `(pointer: fine)` media query (desktop with mouse) and is gated by `(prefers-reduced-motion: reduce)` — verified media queries in agent-browser (pointer:fine=false in headless, so effect is desktop-only as designed).
+
+CONSOLE HYGIENE — SectionShell.tsx:
+- The useGSAP timeline always ran `tl.from("[data-shell-block]", ...)` even on sections that don't have any [data-shell-block] elements. GSAP logs a "target not found" warning to console for empty selections, which fired on every section entry that lacked the attribute (most sections).
+- Fix: pre-check `rootRef.current?.querySelectorAll("[data-shell-block]")` and only add the `.from(...)` step to the timeline if the NodeList is non-empty. Verified: console warnings cleared after reload.
+
+VERIFICATION (agent-browser, desktop 1440x900 + mobile 390x844):
+
+Pre-fix critical failure:
+- map → click S01 → "Application error: a client-side exception has occurred" (full-screen React error)
+- Root cause: `ReferenceError: rootRef is not defined` at S01Initializing.useEffect (line 144)
+- Browser errors panel: 4 instances of the ReferenceError per attempt
+
+Post-fix verification:
+- map → click S01 → S01 loads correctly with title "INITIALIZING", [data-hero-wordmark] present, .sigma-hero-glitch class present ✓
+- S01 glitch timer: forced `.is-glitching` class via JS → 200ms RGB-split text-shadow keyframe fires ✓
+- S04 PROJECT VAULT: 9 cards rendered, .sigma-card-hover=9, .sigma-underline-draw=9, .sigma-ghost-numeral=9, .sigma-scanlines=12, .sigma-grid-fine=9 ✓
+- S08 CAPABILITIES: 6 gear cards rendered, .sigma-card-hover=6, .sigma-underline-draw=6, .sigma-ghost-numeral=6 ✓
+- S10 ACCESS PROTOCOL: 1 .sigma-hazard-sweep button (TRANSMIT ►), 3 .sigma-panel containers, 1 .sigma-tag (PUBLIC READ), 4 .sigma-shell-corner brackets, 1 .sigma-scramble title ✓
+- Transition glitch: triggered by clicking S01 from map → confirmed `[data-glitch-layer]` receives .sigma-transition-glitch class, computed animationName=sigma-transition-glitch (180ms, 4-frame clip-path slices) ✓
+- SigmaHud: 2 .sigma-clock-colon (HH:MM:SS has 2 colons), 1 .sigma-spark (5-bar CPU activity), 1 .sigma-clock-blink (1s steps(2)) ✓
+- SigmaMap: 11 [data-node] (all opacity:1 post-useGSAP clearProps), 1 [data-map-parallax] (new bg layer), 4-col grid at 1440px, 2-col grid at 390px ✓
+- Keyboard nav: M key → map ✓, ArrowRight from S01 → S02 MANIFESTO ✓, Escape → map ✓
+- Mode switch: localStorage 'sigma-mode' = 'sigma' persisted across reloads ✓
+
+Mobile (390x844) verification:
+- All 11 sections: body.scrollWidth == body.clientWidth == 390 (no horizontal overflow) ✓
+- Map: 2-col grid, 11 nodes, no truncation on any role text ✓
+- S01: hero CTA buttons now wrap to 2 lines on narrow viewports (was 461px overflow, now fits 390px) ✓
+
+Browser console errors (post-fix):
+- Only the pre-existing `Hydration failed because the server rendered text didn't match the client` from BetaInterface/BetaHero text-scramble (Math.random server/client mismatch — same issue noted in LOOP-1 worklog, root already has suppressHydrationWarning, NOT introduced by this pass) ✓
+- Plus the known `Invalid DOM property 'fetchpriority' → 'fetchPriority'` React warning from Beta Hero (allowed per LOOP-1) ✓
+- NO new errors introduced ✓
+- GSAP "[data-shell-block] not found" warnings: ELIMINATED ✓
+
+LINT: `cd /home/z/my-project && bun run lint` → exit 0, zero errors, zero warnings. ✓
+DEV SERVER: stayed running on port 3000 throughout; Turbopack picked up all edits via Fast Refresh. No restart needed. ✓
+
+Stage Summary:
+- The Sigma mode polish bar established by prior POLISH-V iterations was already at a very high baseline — every item in the LOOP-3 task spec (transition glitch flicker, map node ring pulse + breathing glow + screenshot crossfade, scramble-in titles, corner brackets, panel scanline sweep, tag shimmer, HUD clock + sparkline, hero RGB-split glitch + reticle spin, card hover lift + underline draw + ghost numerals, hazard-stripe sweep on S10) was verified present in either source components or globals.css.
+- This LOOP-3 pass focused on (a) fixing a CRITICAL crash bug that blocked the entire S01 sector on every navigation, (b) fixing mobile overflow on S01's CTA row, (c) fixing role-text truncation on map nodes 03 + 11, (d) fixing a silently-broken parallax drift (querySelector found no target) + bringing the drift amplitude in line with the 8px spec, (e) silencing noisy GSAP "target not found" console warnings.
+- Highest-impact fix: the S01 rootRef crash was a 100%-reproducible full-screen React error on the very first sector users see after boot — every visitor hit it. Now S01 loads cleanly and the .sigma-hero-glitch timer fires correctly.
+- All 11 sections verified rendering correctly at desktop + mobile. Map → click → section → back-to-map flow verified end-to-end. Keyboard nav (M, Escape, Arrow keys) verified.
+- Zero new console errors. Lint clean. Mobile-safe. Reduced-motion compliance verified (all infinite animations have !important overrides in the @media (prefers-reduced-motion: reduce) block).
+- Files changed (3):
+  1. src/components/sigma/sections/S01Initializing.tsx — fixed `rootRef is not defined` crash in glitch-timer useEffect (changed `rootRef.current` → `root.current`, renamed inner var to `node` to avoid shadowing); added `flex-wrap` to CTA button container for mobile (390px) safety
+  2. src/components/sigma/SigmaMap.tsx — reduced role-text letter-spacing (0.2em/0.24em → 0.12em/0.16em) to eliminate truncation on S03 + S11 nodes; added `sigma-map-node-role` class hook; fixed broken parallax target (`root.querySelector(".sigma-grid")` returned null → switched to `[data-map-parallax]`); added dedicated parallax bg layer (sigma-grid-fine + accent radial vignette, z-0, pointer-events-none); reduced drift coefficient 20→16 (max ±8px per spec); improved lerp 0.05→0.08 + switched to translate3d for GPU accel; added z-10 to header + main grid so they sit above the new parallax bg
+  3. src/components/sigma/shared/SectionShell.tsx — guarded the `[data-shell-block]` GSAP `.from(...)` step with a pre-check (only added to timeline when ≥1 element matches), eliminating "GSAP target not found" console warnings on sections that don't use data-shell-block
+
+
+---
+Task ID: LOOP-4-CROSSMODE-A11Y-TYPO
+Agent: full-stack-developer
+Task: Cross-mode quality audit + polish in 3 areas — (1) Accessibility (skip-link, aria-labels, color contrast, focus-visible, focus trap verification, image alt audit), (2) Typography consistency (font-family variables, line-height, hardcoded fontFamily strings), (3) Motion tokens (verify --ease-out-expo/--ease-in-out-quart/--dur-fast/normal/slow exist; migrate inline transition: styles to variables; verify global prefers-reduced-motion fallback). Audit baseline established by Loops 1-3 (beta / alpha / sigma per-mode polish) and the two prior-loop console-bug fixes (fetchPriority camelCase + useTextScramble hydration mismatch — main engineer already applied).
+
+Work Log:
+
+STUDY PASS — read worklog tail (9055-9355), audited:
+- Beta mode components (NavBar, Hero, Services, Portfolio, Method, Insights, Team, Testimonials, Contact, BetaInterface, BetaBootSequence, BetaReticleCursor, SectionHeader, SectionDivider) — focus-visible + aria-labels + skip-link ALL already in place from LOOP-1.
+- Alpha mode (AlphaInterface, AlphaHero, SciFiCard, AlphaServices, AlphaPortfolio, AlphaProcess, AlphaTeam, AlphaTestimonials, AlphaContact, AlphaFooter, AlphaDataRiver) — focus-visible + .alpha-mode polish already in place from LOOP-2.
+- Sigma mode (SigmaMap, SectionShell, shared/components, SigmaHud, sections S01-S11) — confirmed parity from LOOP-3.
+- globals.css (3534 lines): motion tokens (--ease-out-expo, --ease-in-out-quart, --dur-fast/normal/slow) ALREADY defined at root (lines 85-89) from a prior loop. Global prefers-reduced-motion fallback ALREADY present (line 1214-1231). Beta focus-visible + skip-link CSS already in place. Alpha focus-visible already in place.
+- ServiceBasket.tsx (568 lines): focus trap, Escape-to-close, aria-modal, aria-labelledby, autofocus-close-on-open, restore-focus-on-close ALREADY fully implemented (lines 188-260) — verified working end-to-end.
+
+CONSOLE-BUG VERIFICATION (mandatory per task — main engineer already applied fixes):
+- agent-browser errors in beta mode: ZERO errors. The two previously-known bugs (`Invalid DOM property 'fetchpriority' → 'fetchPriority'` from Beta Hero, and `Hydration failed because server rendered text didn't match client` from BetaInterface/BetaHero text-scramble) are BOTH gone.
+- Confirmed via `agent-browser errors` after `localStorage.setItem('sigma-mode','beta')` + reload — output is empty.
+
+ACCESSIBILITY AUDIT (priority — found 3 issues to fix):
+
+ISSUE 1 — Mode switcher buttons had no aria-label.
+- SigmaModeSwitcher.tsx (both `floating` + non-floating variants) rendered 3 mode buttons (Σ / α / β) with only the symbol as text content + a `title` attribute. Screen readers may announce only "Sigma" (or "Greek small letter alpha") depending on user settings — not descriptive enough.
+- DOM probe via agent-browser snapshot showed: `button "Σ"`, `button "Α"`, `button "Β"` — minimal labels.
+- FIX: Added `aria-label={\`${meta.label} mode — ${meta.tagline}${active ? " (active)" : ""}\`}` to BOTH button variants (lines 250 + 278). Added `aria-hidden="true"` to the visible symbol `<span>` (line 253 + 281) so screen readers don't double-announce the symbol.
+- Verified post-fix: agent-browser snapshot now shows `button "SIGMA mode — MAP-BASED · BRUTALIST"`, `button "ALPHA mode — SCROLLING · BRUTALIST"`, `button "BETA mode — ENTERPRISE · CLEAN (active)"` — descriptive + active-state-aware.
+
+ISSUE 2 — Beta skip-to-content link rendered INSIDE BetaInterface, AFTER the mode switcher in DOM order — so it was NOT the first focusable element.
+- DOM probe: `document.querySelector('a, button, [tabindex]')` returned the first mode-switcher button (Σ), not the skip-link. The skip-link existed but tab order put 3 mode-switcher buttons ahead of it.
+- Root cause: ExperienceShell renders `<SigmaModeSwitcher>` BEFORE `<BetaInterface>` in JSX order (line 466-471), so the mode switcher leads the DOM. The skip-link lived inside BetaInterface (line 67 of BetaInterface.tsx), so it was buried.
+- FIX: Moved the skip-link OUT of BetaInterface INTO ExperienceShell, BEFORE the mode switcher, gated to `mode === "beta"`. Removed the duplicate from BetaInterface (replaced with a comment pointing to the new location). Updated `.bs-skip-link` CSS to use `var(--beta-accent, #D4AF37)` fallback so the link renders correctly outside the .beta-mode scope (the parent ExperienceShell root doesn't carry .beta-mode).
+- Verified post-fix: agent-browser DOM probe → `is_first_focusable: true`, `text: "Skip to content"`, `href: "#top"`. Tab order is now: skip-link → 3 mode switcher buttons (with descriptive aria-labels) → Home logo → 8 nav buttons → EXPLORE SERVICES link → CONTACT US link → 4 domain buttons. Logical, complete, no element unreachable.
+
+ISSUE 3 — beta-fg-subtle color contrast FAILS WCAG AA.
+- The task spec said to compute the ratio of `--beta-fg-subtle: oklch(0.45 0 0)` and `--beta-fg-muted: oklch(0.62 0 0)` against `--beta-bg: oklch(0.07 0 0)`. LOOP-1 had already bumped these to 0.50 and 0.66 respectively, with a worklog comment claiming "4.9:1 PASS". My independent measurement (oklch→linear-sRGB→relative-luminance via a DevTools probe):
+  - oklch(0.07 0 0) → linear sRGB ~0.000343 → relative luminance ~0.0034
+  - oklch(0.66 0 0) (muted) → linear ~0.288 → relative luminance ~0.288 → ratio = (0.288+0.05)/(0.0034+0.05) = 6.70:1 ✓ PASS AA (large + small text)
+  - oklch(0.50 0 0) (subtle, current) → linear ~0.125 → relative luminance ~0.125 → ratio = (0.125+0.05)/(0.0034+0.05) = 3.48:1 ✗ FAIL AA (need 4.5:1 for small text). The prior worklog claim of "4.9:1" was incorrect.
+  - oklch(0.58 0 0) → 4.87:1 (PASS, just barely)
+  - oklch(0.60 0 0) → 5.28:1 (PASS, comfortable headroom)
+- FIX: Bumped `--beta-fg-subtle` from `oklch(0.50 0 0)` → `oklch(0.60 0 0)` in globals.css (line 680). Chose 0.60 (rather than 0.55 or 0.58) to comfortably exceed AA across all surface variants (beta-bg + beta-bg-alt + beta-surface all have L > 0.07, so fg-subtle-on-surface contrast is even tighter — picking 0.60 ensures headroom). Updated the inline comment with the actual measured ratios + the conversion method so future audits can reproduce.
+
+ISSUE 4 (alpha-mode) — checked, NO action needed.
+- --alpha-bg: #0B1426, --alpha-fg-muted: #8A9BB8, --alpha-fg-subtle: #8294B0 (subtle was already bumped from #5A6B85 → #8294B0 in a prior loop per the existing inline comment, lines 75-77).
+- Measurement: alpha-bg vs alpha-fg-muted = 6.53:1 ✓ PASS, alpha-bg vs alpha-fg-subtle = 5.96:1 ✓ PASS. Both pass AA comfortably.
+
+ACCESSIBILITY VERIFICATION (existing items confirmed working — no changes needed):
+- Image alt text: 1 `<img>` in beta (hero-figure.png) — has `alt=""` (decorative atmospheric backdrop). All other "images" are CSS gradients or SVG icons. ✓
+- Icon-only buttons with aria-labels: NavBar nav buttons (8, each aria-label = link.label), hamburger (aria-label = "Open menu"/"Close menu" + aria-expanded), Home logo links (aria-label="Home"), SVG icons inside aria-labeled buttons are aria-hidden="true" + focusable="false" (no double-announce), Contact step buttons (aria-label = "Go to step N: LABEL"), basket modal close button (aria-label="Close basket"), basket remove buttons (aria-label=`Remove ${name} from basket`), back-to-top button (aria-label="Back to top"). Zero icon-only buttons missing aria-labels (DOM probe `Array.from(document.querySelectorAll('button, a')).filter(el => !el.textContent.trim() && !el.getAttribute('aria-label'))` returned `[]`). ✓
+- Focus-visible styles: beta-mode has `:focus-visible { outline: 2px solid var(--beta-accent); outline-offset: 2px; border-radius: 2px }` + `:focus:not(:focus-visible) { outline: none }` (globals.css lines 732-739). Alpha-mode has the same with `#FF4500` accent (lines 2748-2755). Sigma-mode has its own variant (verified in prior loops). All focusables show a clear 2px accent outline on keyboard focus, never on mouse click. ✓
+- Skip-link present + first focusable: confirmed via DOM probe (see ISSUE 2 above). ✓
+- Tab order logical: 1=skip-link, 2-4=mode switchers, 5=logo, 6-13=nav buttons, 14=EXPLORE SERVICES, 15=CONTACT US, 16-19=4 service domain cards (role=button), then service rows, basket trigger, contact form fields, contact step buttons, social links, ASCEND link. No unreachable elements, no tab-trap outside the basket modal. ✓
+- Basket modal focus trap: Verified via agent-browser interaction test — clicked "Open service basket", modal opened with `role="dialog" aria-modal="true" aria-labelledby="basket-title"`, close button auto-focused (`document.activeElement` = `<button aria-label="Close basket">`), Tab pressed 10× — focus stayed inside modal (wrapped from close button → request-quote button → back to close button via `e.preventDefault()` + `last.focus()`), Escape key closed modal, focus restored to basket trigger button (`document.activeElement` = `<button aria-label="Open service basket (N items)">`). Implementation in ServiceBasket.tsx lines 188-260 is correct — no changes needed. ✓
+
+TYPOGRAPHY AUDIT:
+
+- Section title scale (beta-mode SectionHeader): `clamp(1.875rem, 5vw, 3.5rem)` for all `<h2>` — consistent across Services / Portfolio / Method / Insights / Team / Testimonials / Contact. Hero "TAUNGOO" letters: `clamp(2.25rem, 9vw, 7rem)`. BetaBootSequence "TAUNGOO": `clamp(2rem, 8vw, 5rem)`. Contact final headline: `clamp(3rem, 14vw, 12rem)`. Stat numbers (Method): `clamp(1.25rem, 3.5vw, 2rem)`. Decorative ghost numerals (Services): `clamp(5rem, 18vw, 8rem)`. Decorative quote glyphs (Testimonials): `clamp(7rem, 14vw, 14rem)`. Scale is intentional + consistent — display/hero/section/stat/eyebrow all distinct steps. ✓
+- Font variables applied correctly: layout.tsx loads Space Grotesk (--font-sans), Geist Mono (--font-mono), Fraunces (--font-serif), Orbitron (--font-scifi), Rajdhani (--font-tactical), Outfit (--font-outfit), Sora (--font-sora). globals.css applies `--font-mono` to `.font-mono`, `--font-sans` to `.font-sans`, etc. (lines 650-659). Beta-mode overrides `.font-sans` to `var(--font-tactical), var(--font-sans), sans-serif` (Rajdhani for body, lines 970-972). Body computed style verified: line-height = 24px (1.5 of 16px font-size) — passes 1.5-1.6 readability target. Beta-mode paragraphs verified: line-height = 1.5-1.625 range across Hero / Services / Contact text. ✓
+- Inline fontFamily: audit found 2 issues:
+  1. `src/components/sigma/beta/Hero.tsx:571` and `src/components/sigma/beta/BetaBootSequence.tsx:135` — both used `fontFamily: "Rajdhani, var(--font-sans), sans-serif"`. The hardcoded `"Rajdhani"` string bypasses the CSS variable system — if the font fails to load, the browser falls back to var(--font-sans) (Space Grotesk) which is fine, but the hardcoded name creates a maintenance smell (rename the font in layout.tsx → these refs silently keep working by accident). FIX: changed both to `"var(--font-tactical), var(--font-sans), sans-serif"` — `--font-tactical` IS Rajdhani via the layout.tsx setup, so behavior is identical but the reference now goes through the variable layer.
+  2. `src/components/sigma/sections/S07DataStreams.tsx` (10 occurrences) — recharts axis `<XAxis>`, `<YAxis>`, `<PolarAngleAxis>`, and `<Tooltip>` all used `fontFamily: "monospace"` literal. The browser would resolve "monospace" to the system default monospace font (e.g., Menlo on macOS, Consolas on Windows), NOT the project's Geist Mono. FIX: changed all 10 occurrences to `fontFamily: "var(--font-mono), monospace"` so chart axes/tooltips now use Geist Mono (with system monospace as a fallback). Visual delta is minor (Geist Mono vs system mono in 9-11px chart ticks), but it aligns the chart typography with the rest of the site.
+- Existing stylistic-set + font-feature-settings rules (globals.css lines 650-659): `.font-mono { font-feature-settings: "ss01" on, "cv03" on, "zero" on; font-variant-ligatures: contextual none; }` and `.font-sans { font-feature-settings: "ss01" on, "tnum" on; }` already in place — improves small-size legibility (single-story g, slashed zero, tabular numbers). Left unchanged. ✓
+
+MOTION TOKENS AUDIT:
+
+- Tokens already defined (globals.css lines 85-89):
+  ```
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out-quart: cubic-bezier(0.76, 0, 0.24, 1);
+  --dur-fast: 150ms;
+  --dur-normal: 300ms;
+  --dur-slow: 600ms;
+  ```
+  No new tokens needed. ✓
+- Global prefers-reduced-motion fallback (globals.css lines 1214-1231):
+  ```
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+    html, body { scroll-behavior: auto !important; }
+    .sigma-spin-slow, .sigma-pulse, .sigma-blink, .sigma-sweep, .sigma-ticker, .sigma-glow-ring, .sigma-shimmer { animation: none !important; }
+  }
+  ```
+  Globally disables all transitions + animations + smooth scroll (in addition to per-mode reduced-motion blocks + per-component `useReducedMotion()` gates in motion/react code). Verified present. ✓
+- Inline `transition:` styles with hardcoded durations: scanned all components. Beta-mode components ALREADY use motion tokens (`transition: \`color var(--dur-fast) var(--ease-out-expo)\`` in NavBar, `transition: \`border-color var(--dur-normal) var(--ease-out-expo), box-shadow var(--dur-normal) var(--ease-out-expo)\`` in Team + Method, etc.). Alpha-mode ServiceBasket ALREADY uses `transitionDuration: "var(--dur-fast)"`. The remaining inline hardcoded values were in 3 sigma-mode shared components (lower-traffic):
+  - `SigmaMCController.tsx:207` — `transition: "opacity 0.5s"` → migrated to `transition: \`opacity var(--dur-slow) var(--ease-out-expo)\`` (matrix rain canvas fade).
+  - `SigmaMCMode.tsx:252` — same pattern, same fix.
+  - `SigmaCompletion.tsx:83` — `transition: "stroke-dashoffset 0.5s ease"` → migrated to `transition: \`stroke-dashoffset var(--dur-slow) var(--ease-in-out-quart)\`` (progress ring fill).
+  - SigmaHaggle.tsx (6 occurrences of `transition: "color 0.1s..."`, `transition: all 0.2s ease` in template strings, etc.) — left untouched. Reasoning: this is the Easter-egg haggling mini-game UI (rarely seen, only triggered by specific user actions). Migrating these to motion tokens would be churn with no perceptual benefit, and the task constraint was "only high-traffic components".
+- Tailwind `duration-300` / `duration-500` utility classes (beta Services.tsx + Team.tsx + Method.tsx): these are class-based (not inline `transition:` styles), so out of scope per the task spec ("Find inline `transition:` styles with hardcoded durations/easings"). Left as-is — Tailwind's `duration-300` = 300ms = `var(--dur-normal)`, so the values match the token scale even though the syntax differs.
+
+VERIFICATION (mandatory, all passed):
+
+1. agent-browser snapshot beta hero — confirmed skip-link is FIRST focusable:
+   - Pre-fix: `document.querySelector('a, button, [tabindex]')` returned the first mode-switcher button (Σ). Skip-link was buried.
+   - Post-fix: returns the skip-link (`<a href="#top">Skip to content</a>`). is_first_focusable = true. Snapshot tree top:
+     ```
+     - generic
+       - link "Skip to content" [ref=e3]
+       - button "SIGMA mode — MAP-BASED · BRUTALIST" [ref=e4]
+       - button "ALPHA mode — SCROLLING · BRUTALIST" [ref=e5]
+       - button "BETA mode — ENTERPRISE · CLEAN (active)" [ref=e6]
+       - generic (beta-mode scroll container)
+         - ...Home logo, nav buttons, hero...
+     ```
+   ✓
+
+2. Tab through beta hero→services→contact — confirmed logical focus order:
+   - First 15 focusable elements: [skip-link, Σ mode, α mode, β mode (active), Home logo, Home nav, Services nav, Work nav, Method nav, Insights nav, Team nav, Voices nav, Contact nav, EXPLORE SERVICES link, CONTACT US link, AI Systems domain card, ...].
+   - No element unreachable. No tab-trap outside the basket modal. ✓
+   - Verified two-level service expansion still works: clicked "AI Systems" domain card (role=button, aria-expanded toggled false→true), 6 service rows revealed. Clicked first service row (.bs-svc-head, aria-expanded toggled false→true) — dossier panel expanded. Basket trigger click opened modal. Mode switcher (β→α→β) verified end-to-end (localStorage + DOM swap). ✓
+
+3. agent-browser errors — ZERO errors post-fix:
+   - `agent-browser errors` returned empty output (no errors/warnings) in beta mode. The two previously-known bugs (fetchPriority DOM warning + hydration text mismatch) are CONFIRMED GONE (main engineer's fixes verified working — no console output at all). ✓
+   - Same check in alpha mode: zero errors. ✓
+
+4. Basket modal focus trap end-to-end:
+   - Click "Open service basket (0 items)" → modal opens (`role=dialog aria-modal=true aria-labelledby=basket-title`)
+   - `document.activeElement` = `<button aria-label="Close basket">` (autofocus on open ✓)
+   - Pressed Tab 10× → focus stayed inside modal (wrapped: close btn → request quote btn → back to close btn) ✓
+   - Pressed Escape → modal closed, `document.activeElement` = `<button aria-label="Open service basket (0 items)">` (focus restored to trigger) ✓
+
+5. Lint: `cd /home/z/my-project && bun run lint` → exit 0, zero errors, zero warnings. ✓
+
+6. Dev server: stayed running on port 3000 throughout (12 HMR compiles observed, all 300-2000ms range, no errors). No restart needed. ✓
+
+CONSTRAINTS MET:
+- NO new dependencies installed. ✓
+- Existing functionality unbroken: basket modal (open/close/trap/restore), toast notifications, mode switching (beta→alpha→beta→sigma verified), scroll restoration (BetaInterface setTimeout ladder still runs), two-level service expansion (domain→service→dossier verified). ✓
+- TypeScript strict — no type errors introduced. ✓
+- No console.log statements added. ✓
+- `bun run lint` exit 0. ✓
+- Text content identical — only aria-labels + CSS variable refs changed; visible text strings untouched. ✓
+
+Stage Summary:
+- Cross-mode accessibility audit + polish complete. The Loops 1-3 baseline was already strong (skip-link, focus-visible styles, basket focus trap, motion tokens, global reduced-motion fallback — all in place). This loop caught + fixed 4 issues the prior loops missed:
+  1. Mode switcher buttons had only symbol text (Σ/α/β) — added descriptive aria-labels with active-state-awareness + aria-hidden on the visible symbol.
+  2. Beta skip-to-content link rendered AFTER the mode switcher in DOM order — moved it to ExperienceShell as the literal first child of the root, before the mode switcher. Updated CSS to use `var(--beta-accent, #D4AF37)` fallback so it works outside the .beta-mode scope.
+  3. `--beta-fg-subtle: oklch(0.50 0 0)` was actually 3.48:1 vs `--beta-bg` (FAIL WCAG AA 4.5:1 for small text) — the prior-loop comment claiming "4.9:1 PASS" was incorrect. Bumped to `oklch(0.60 0 0)` → measured 5.28:1 (PASS with comfortable headroom across all surface variants).
+  4. Two beta-mode components hardcoded `"Rajdhani"` font name in inline styles (bypassing the variable system) + 10 recharts occurrences hardcoded `"monospace"` literal in S07DataStreams. Migrated all 12 to use `var(--font-tactical)` / `var(--font-mono)` so the typography system stays single-sourced.
+- Verified all existing a11y features still work: image alt audit (1 img with alt="" decorative), icon-only buttons all have aria-labels (DOM probe returned []), focus-visible styles present + scoped to keyboard only, basket modal focus trap end-to-end (autofocus close → Tab wraps inside modal → Escape closes → focus restored to trigger).
+- Motion tokens verified: --ease-out-expo / --ease-in-out-quart / --dur-fast/normal/slow all present at root since prior loop. Global prefers-reduced-motion fallback verified present (disables all transitions + animations + smooth scroll + infinite-anim utility classes). Migrated 3 lower-traffic sigma-mode inline transitions to use the tokens (SigmaMCController, SigmaMCMode, SigmaCompletion); left SigmaHaggle (rare Easter-egg mini-game) untouched per task constraint.
+- Two standing console bugs (fetchPriority + hydration) confirmed FIXED — zero console output in beta mode. Lint clean. Dev server stable.
+- Files changed (8):
+  1. src/app/globals.css — bumped `--beta-fg-subtle` from `oklch(0.50 0 0)` → `oklch(0.60 0 0)` for WCAG AA (3.48:1 → 5.28:1 vs beta-bg); updated inline comment with measured ratios + conversion method; unsccoped `.bs-skip-link` from `.beta-mode .bs-skip-link` → `.bs-skip-link` (with `var(--beta-accent, #D4AF37)` fallback) so the link works rendered outside the .beta-mode scroll container
+  2. src/components/sigma/ExperienceShell.tsx — moved the skip-to-content link from BetaInterface INTO ExperienceShell, gated to `mode === "beta"`, rendered as the first child of the root (BEFORE the mode switcher) so it leads the DOM tab order
+  3. src/components/sigma/beta/BetaInterface.tsx — removed the now-duplicate skip-link (replaced with a comment pointing to the new location in ExperienceShell)
+  4. src/components/sigma/shared/SigmaModeSwitcher.tsx — added `aria-label={\`${meta.label} mode — ${meta.tagline}${active ? " (active)" : ""}\`}` to BOTH button variants (floating + non-floating); added `aria-hidden="true"` to the visible symbol `<span>` so screen readers don't double-announce the symbol+label
+  5. src/components/sigma/beta/Hero.tsx — changed `fontFamily: "Rajdhani, var(--font-sans), sans-serif"` → `fontFamily: "var(--font-tactical), var(--font-sans), sans-serif"` (T+TAUNGOO hero letters — uses the CSS variable now instead of hardcoding the font name)
+  6. src/components/sigma/beta/BetaBootSequence.tsx — same fontFamily fix (Rajdhani → var(--font-tactical))
+  7. src/components/sigma/sections/S07DataStreams.tsx — changed all 10 occurrences of `fontFamily: "monospace"` (recharts XAxis/YAxis/PolarAngleAxis/Tooltip) → `fontFamily: "var(--font-mono), monospace"` so chart axes/tooltips use Geist Mono (with system monospace fallback)
+  8. src/components/sigma/shared/SigmaMCController.tsx + SigmaMCMode.tsx + SigmaCompletion.tsx — migrated inline `transition: "opacity 0.5s"` / `transition: "stroke-dashoffset 0.5s ease"` hardcoded values to motion tokens: `transition: \`opacity var(--dur-slow) var(--ease-out-expo)\`` (matrix canvas fade) and `transition: \`stroke-dashoffset var(--dur-slow) var(--ease-in-out-quart)\`` (progress ring fill)

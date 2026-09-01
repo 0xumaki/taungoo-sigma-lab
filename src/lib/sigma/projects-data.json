@@ -127,7 +127,7 @@
     "image": "/portfolio/gymmaster.png",
     "code": "TSL-004",
     "category": "Full-Stack",
-    "accent": "#FF2D7E",
+    "accent": "#FFB300",
     "loc": "~4,200",
     "budget": "from 6,040,000 MMK",
     "intlBudget": "from $3,350"
@@ -230,7 +230,7 @@
     "image": "/portfolio/brorus.png",
     "code": "TSL-007",
     "category": "Web3",
-    "accent": "#FF3D3D",
+    "accent": "#B85C2E",
     "loc": "~2,500",
     "budget": "from 9,660,000 MMK",
     "intlBudget": "from $4,500"

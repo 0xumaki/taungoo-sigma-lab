@@ -1,0 +1,65 @@
+[
+  {
+    "url": "https://magicui.design",
+    "name": "Magic UI",
+    "snippet": "150+ free and open-source animated components and effects built with React, Typescript, Tailwind CSS, and Motion . Perfect companion for shadcn/ui.",
+    "host_name": "magicui.design",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://magicui.design/docs",
+    "name": "Introduction | React Components & Templates",
+    "snippet": "Magic UI is a collection of re-usable components that you can copy and paste into your web apps. It primarily features components, blocks, and templates",
+    "host_name": "magicui.design",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://magicui.design/docs/installation",
+    "name": "Installation | React Components & Templates",
+    "snippet": "Animated List · Dock · Globe · Tweet Card · Orbiting Circles · Avatar Circles · Icon ... Special Effects. Animated Beam · Border Beam · Shine Border · Magic Card.",
+    "host_name": "magicui.design",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.reddit.com/r/reactjs/comments/1fko4dv/ui_libraries_like_aceternity_magic_ui_design_for",
+    "name": "UI libraries like aceternity & magic UI design for animations",
+    "snippet": "UI libraries like aceternity & magic UI design for animations. Needs Help. yes, title it is. Upvote 3. Downvote 1 Go to comments",
+    "host_name": "www.reddit.com",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://21st.dev/@dillionverma/library/magic-ui",
+    "name": "Magic UI — 63 React Components, Preview & Copy",
+    "snippet": "150+ free, open-source animated React components and effects built with Tailwind CSS and Motion. Preview all 63 components live on 21st — copy the TSX, install ...",
+    "host_name": "21st.dev",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://magicui.design/blog/component-library-examples",
+    "name": "27 Component Library Examples Every Designer Must Know",
+    "snippet": "Jun 9, 2024 — MagicUI is a free and open-source UI library. It offers a collection of over 20 animated components built with React, TypeScript, Tailwind CSS , ...",
+    "host_name": "magicui.design",
+    "rank": 5,
+    "date": "Jun 9, 2024",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.producthunt.com/products/magic-ui/alternatives",
+    "name": "Magic UI Competitors & Alternatives (2026)",
+    "snippet": "May 13, 2025 — Explore Magic UI alternatives like Tailwind UI, Flowbite, HeroUI, Float UI, and Blockies Animate for Tailwind components and animations.",
+    "host_name": "www.producthunt.com",
+    "rank": 6,
+    "date": "May 13, 2025",
+    "favicon": ""
+  }
+]

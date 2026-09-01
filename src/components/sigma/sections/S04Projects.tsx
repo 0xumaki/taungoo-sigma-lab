@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import Image from "next/image";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { PROJECTS, type Project } from "@/lib/sigma/projects";
@@ -99,7 +100,7 @@ export function S04Projects() {
             </span>
             {/* GitHub link — stylized as "[REDACTED]" cover (repo not published) */}
             <span
-              className="inline-flex items-center gap-1.5 border border-dashed border-[#FF3D3D]/50 bg-[#FF3D3D]/5 px-2 py-0.5 text-[#FF3D3D] line-through decoration-[#FF3D3D]/60"
+              className="inline-flex items-center gap-1.5 border border-dashed border-[#B85C2E]/50 bg-[#B85C2E]/5 px-2 py-0.5 text-[#B85C2E] line-through decoration-[#B85C2E]/60"
               title="Repository access restricted — contact us to request access"
             >
               <Github className="h-3.5 w-3.5" /> [REDACTED]
@@ -110,8 +111,8 @@ export function S04Projects() {
         {/* grid — curated spacing, not claustrophobic. 2 cols mobile, 3 cols tablet, 3 cols desktop (wider cards). */}
         <div className="min-h-0 flex-1 overflow-y-auto sigma-scroll-hidden">
           <div className="grid grid-cols-1 gap-4 p-1 sm:grid-cols-2 lg:grid-cols-3">
-            {filtered.map((p) => (
-              <ProjectCard key={p.id} project={p} onOpen={() => setActiveProject(p.id)} />
+            {filtered.map((p, i) => (
+              <ProjectCard key={p.id} project={p} index={i + 1} onOpen={() => setActiveProject(p.id)} />
             ))}
           </div>
         </div>
@@ -143,19 +144,34 @@ export function S04Projects() {
   );
 }
 
-function ProjectCard({ project, onOpen }: { project: Project; onOpen: () => void }) {
+function ProjectCard({ project, index, onOpen }: { project: Project; index: number; onOpen: () => void }) {
   return (
     <button
       data-proj
       onClick={onOpen}
-      className="group relative block w-full overflow-hidden border border-border bg-card text-left transition-all duration-300 hover:-translate-y-1 hover:border-[#C6FF00] hover:shadow-[0_8px_30px_-8px_rgba(198,255,0,0.3)]"
-      style={{ aspectRatio: "16 / 10" } as React.CSSProperties}
+      className="group sigma-card-hover relative block w-full overflow-hidden border border-border bg-card text-left"
+      style={{
+        aspectRatio: "16 / 10",
+        "--sigma-hover-accent": project.accent,
+      } as React.CSSProperties}
     >
+      {/* Accent underline draw — fires on .sigma-card-hover:hover (L→R, 0.5s) */}
+      <span className="sigma-underline-draw" aria-hidden />
+      {/* Ghost index numeral — oversized 6% → 14% opacity on hover (project accent) */}
+      <span className="sigma-ghost-numeral" aria-hidden>
+        {String(index).padStart(2, "0")}
+      </span>
+
       {project.image ? (
-        <img
+        <Image
           src={project.image}
           alt={project.name}
-          className="absolute inset-0 h-full w-full object-cover object-top opacity-95 transition-all duration-500 group-hover:scale-105 group-hover:opacity-100"
+          // PERF (LOOP-1-LH): next/image auto-serves AVIF/WebP at the right
+          // intrinsic size — replaces the 5.2MB royaldao.png + 1.7MB dukon-pro.png
+          // on the wire with ~50-120KB variants. Grid is 1/2/3 cols.
+          fill
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+          className="object-cover object-top opacity-95 transition-all duration-500 group-hover:scale-105 group-hover:opacity-100"
         />
       ) : (
         /* Retro brutalist glitching green PC screen — replaces the old
@@ -213,10 +229,17 @@ function ProjectDetail({ project }: { project: Project }) {
     <div className="grid max-h-[calc(90vh-3rem)] grid-cols-1 gap-0 overflow-y-auto md:grid-cols-2 sigma-scroll-hidden">
       <div className="relative border-r border-border bg-black">
         {project.image ? (
-          <img
+          <Image
             src={project.image}
             alt={project.name}
-            className="h-full max-h-[calc(90vh-3rem)] w-full object-cover object-top"
+            // PERF (LOOP-1-LH): next/image — large detail panel image.
+            // Detail dialog is full-bleed on the left half (≈50vw on desktop).
+            fill
+            sizes="(max-width: 767px) 100vw, 50vw"
+            className="object-cover object-top"
+            // The container has max-h-[calc(90vh-3rem)]; the rendered Image
+            // inherits that cap from its parent (position:relative + height
+            // set by the grid + overflow-y-auto).
           />
         ) : (
           /* No image — fill the entire left panel with the ClassifiedCover
@@ -325,7 +348,7 @@ function ProjectDetail({ project }: { project: Project }) {
         <div className="mt-auto flex gap-2">
           {/* One-line repo-restricted cover — designed to fit in one line, no wrapping */}
           <span
-            className="inline-flex w-full items-center justify-center gap-2 whitespace-nowrap border border-dashed border-[#FF3D3D]/50 bg-[#FF3D3D]/5 px-4 py-2.5 font-mono text-[11px] uppercase tracking-[0.2em] text-[#FF3D3D] [text-shadow:0_0_8px_rgba(255,61,61,0.35)]"
+            className="inline-flex w-full items-center justify-center gap-2 whitespace-nowrap border border-dashed border-[#B85C2E]/50 bg-[#B85C2E]/5 px-4 py-2.5 font-mono text-[11px] uppercase tracking-[0.2em] text-[#B85C2E] [text-shadow:0_0_8px_rgba(184,92,46,0.35)]"
             title="Repository access restricted — contact us to request access"
           >
             <Github className="h-4 w-4 shrink-0" /> ▸ [ REPO ACCESS: RESTRICTED ] ◄

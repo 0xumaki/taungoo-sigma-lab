@@ -77,7 +77,7 @@ export function S02Manifesto() {
           />
           {/* Cursor blink overlay */}
           <div className="absolute bottom-3 left-3 font-mono text-[8px] text-[#00FF94]/40">
-            <span className="sigma-blink">▮</span> STREAMING...
+            <span className="sigma-blink">▮</span> STREAMING…
           </div>
         </div>
 

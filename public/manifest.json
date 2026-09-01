@@ -1,0 +1,27 @@
+{
+  "name": "Taungoo Sigma Lab",
+  "short_name": "TAUNGOO Σ",
+  "description": "A brutalist research lab at the intersection of AI, Web3, and community resilience. 11 sectors. One sigma variable.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0A0A0A",
+  "theme_color": "#0A0A0A",
+  "categories": ["technology", "business", "education"],
+  "lang": "en-US",
+  "icons": [
+    {
+      "src": "/icon.png",
+      "sizes": "32x32",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

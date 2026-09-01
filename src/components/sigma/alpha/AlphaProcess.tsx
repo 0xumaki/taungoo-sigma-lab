@@ -14,15 +14,15 @@ const PRINCIPLES: { icon: string; text: string; color: string }[] = [
   { icon: "⬡", text: "MULTI-MODEL AI", color: "#00E5FF" },
   { icon: "▤", text: "DOCUMENTED", color: "#C6FF00" },
   { icon: "⚙", text: "SUPPORTED", color: "#FFB300" },
-  { icon: "◴", text: "DAILY DEPLOYS", color: "#FF2D7E" },
-  { icon: "⚿", text: "SECURITY AUDITED", color: "#FF3D3D" },
+  { icon: "◴", text: "DAILY DEPLOYS", color: "#FFB300" },
+  { icon: "⚿", text: "SECURITY AUDITED", color: "#B85C2E" },
   { icon: "◍", text: "OPEN COMMUNICATION", color: "#B388FF" },
   { icon: "✦", text: "30-DAY WARRANTY", color: "#FFEB3B" },
 ];
 
 export function AlphaProcess() {
   return (
-    <section id="process" className="relative border-t border-border px-3 py-12 sm:px-6 sm:py-20">
+    <section id="process" aria-labelledby="process-title" data-section="process" className="relative border-t border-border px-3 py-12 sm:px-6 sm:py-20">
       <div className="sigma-grid pointer-events-none absolute inset-0 opacity-10" />
       <div className="sigma-scanlines pointer-events-none absolute inset-0 opacity-15" />
 
@@ -31,7 +31,7 @@ export function AlphaProcess() {
         <div className="flex flex-col gap-3 border-b border-border pb-4 sm:flex-row sm:items-end sm:justify-between sm:gap-4">
           <div>
             <div className="font-mono text-[10px] uppercase tracking-[0.3em] text-[#FF4500]">▸ 05 / PROCESS</div>
-            <h2 className="mt-2 font-sans text-3xl font-black uppercase leading-tight tracking-tight sm:text-5xl md:text-6xl">
+            <h2 id="process-title" className="mt-2 font-sans text-3xl font-black uppercase leading-tight tracking-tight sm:text-5xl md:text-6xl">
               HOW WE <span style={{ color: "#FF4500" }}>SHIP.</span>
             </h2>
             <p className="mt-2 font-serif text-sm italic text-muted-foreground sm:text-base">4 phases. Zero black boxes. 16 deliverables, all documented.</p>
@@ -61,15 +61,20 @@ export function AlphaProcess() {
                 className="alpha-card-hover group relative flex border border-border bg-card/30 transition-all hover:border-foreground/40"
                 style={{ "--sigma-hover-accent": s.color, clipPath: "polygon(20px 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%, 0 20px)" } as React.CSSProperties}
               >
-                {/* Left: number */}
-                <div className="relative flex w-16 shrink-0 flex-col items-center justify-center border-r border-border/40 sm:w-24" style={{ background: `linear-gradient(135deg, ${s.color}15, transparent)` }}>
+                {/* GHOST STEP NUMERAL — oversized 5% opacity watermark behind content.
+                    Color resolves to step accent via --sigma-hover-accent. */}
+                <span className="alpha-step-ghost" aria-hidden>{s.num}</span>
+
+                {/* Left: number — gets alpha-node-pulse so the radial pulse
+                    fires on hover (mirrors beta .bs-method-node). */}
+                <div className="alpha-node-pulse relative flex w-16 shrink-0 flex-col items-center justify-center border-r border-border/40 sm:w-24" style={{ background: `linear-gradient(135deg, ${s.color}15, transparent)` }}>
                   <span className="sigma-glitch font-sans text-2xl font-black leading-none sm:text-4xl" data-text={s.num} style={{ color: s.color }}>{s.num}</span>
                   <span className="mt-0.5 font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground sm:text-[6px]">{s.duration}</span>
                   <div className="absolute bottom-0 left-0 h-1 w-full" style={{ background: `repeating-linear-gradient(45deg, ${s.color} 0, ${s.color} 3px, transparent 3px, transparent 6px)` }} />
                 </div>
 
                 {/* Middle: title + desc + deliverables */}
-                <div className="flex-1 p-2 sm:p-3">
+                <div className="relative z-10 flex-1 p-2 sm:p-3">
                   <div className="flex flex-wrap items-center gap-2">
                     <h3 className="font-sans text-sm font-bold uppercase tracking-tight sm:text-sm">{s.title}</h3>
                     <span className="font-mono text-[10px] uppercase tracking-[0.14em] sm:text-[7px]" style={{ color: s.color }}>PHASE {s.num}</span>
@@ -104,7 +109,7 @@ export function AlphaProcess() {
                     ["27", "SERVICES OFFERED", "#00E5FF"],
                     ["100%", "TRANSPARENT", "#C6FF00"],
                     ["30D", "SUPPORT INCLUDED", "#00FF94"],
-                    ["0", "BLACK BOXES", "#FF2D7E"],
+                    ["0", "BLACK BOXES", "#FFB300"],
                     ["24/7", "MONITORING", "#FFB300"],
                   ].map(([v, k, c]) => (
                     <div key={k} className="flex items-center justify-between border-b border-border/30 pb-1.5">

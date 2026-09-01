@@ -1,0 +1,56 @@
+[
+  {
+    "url": "https://ui.shadcn.com",
+    "name": "The Foundation for your Design System - shadcn/ui",
+    "snippet": "The Foundation for your Design System. A set of beautifully designed components that you can customize, extend, and build on. Start here then make it your own. Read more",
+    "host_name": "ui.shadcn.com",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.reddit.com/r/reactjs/comments/1mtl3kj/shadecraft_1click_accessible_shadcn_ui_theme",
+    "name": "ShadeCraft: 1-Click Accessible Shadcn UI Theme Generator",
+    "snippet": "Collection of animated UI components built with React + Shadcn + Framer Motion ... I built a React UI system for game dev that stops you ... Read more",
+    "host_name": "www.reddit.com",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://ui.shadcn.com/docs/components",
+    "name": "Components - shadcn/ui",
+    "snippet": "Here you can find all the components available in the library . We are working on adding more components. New Components#. Questionnaire. All Components#. Read more",
+    "host_name": "ui.shadcn.com",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://stackoverflow.com/questions/76714567/cant-use-shadcn-components",
+    "name": "reactjs - Can't use Shadcn components",
+    "snippet": "The only way I could fix it was to delete the button component , push changes to production, re-add the component , and push changes again.",
+    "host_name": "stackoverflow.com",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://github.com/birobirobiro/awesome-shadcn-ui-site-next",
+    "name": "birobirobiro/awesome-shadcn-ui-site",
+    "snippet": "A UI component library and template suite based on shadcn / ui with stunning landing pages, templates, and rich animations.",
+    "host_name": "github.com",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://vercel.com/academy/shadcn-ui",
+    "name": "React UI with shadcn/ui + Radix + Tailwind",
+    "snippet": "Learn the fundamentals of modern UI development with shadcn / ui . Master component libraries, Radix primitives, and build production-ready interfaces.",
+    "host_name": "vercel.com",
+    "rank": 5,
+    "date": "",
+    "favicon": ""
+  }
+]

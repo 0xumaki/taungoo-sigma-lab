@@ -23,6 +23,7 @@ import { SigmaMCController } from "./shared/SigmaMCController";
 import { SigmaToolbar } from "./shared/SigmaToolbar";
 import { SigmaModeSwitcher } from "./shared/SigmaModeSwitcher";
 import { AlphaInterface } from "./alpha/AlphaInterface";
+import { BetaInterface } from "./beta/BetaInterface";
 import { sigmaSound, useSigmaSound } from "@/lib/sigma/sound";
 
 // LAZY-LOAD the 11 heavy Sigma sections + SigmaMap.
@@ -80,7 +81,7 @@ export function ExperienceShell() {
   // Auto-enable SFX on first user interaction (both Sigma and Alpha modes)
   useSigmaSound();
   const [renderedView, setRenderedView] = React.useState<SectionId>(view);
-  const [flashAccent, setFlashAccent] = React.useState<string>("#FFFFFF");
+  const flashAccentRef = React.useRef<string>("#FFFFFF");
   const [booting, setBooting] = React.useState(false);
   const [onboarding, setOnboarding] = React.useState(false);
   const [cmdOpen, setCmdOpen] = React.useState(false);
@@ -88,7 +89,7 @@ export function ExperienceShell() {
   const [tourActive, setTourActive] = React.useState(false);
   const [tourPaused, setTourPaused] = React.useState(false);
   const [tourIndex, setTourIndex] = React.useState(0);
-  const [mode, setMode] = React.useState<"sigma" | "alpha">("sigma");
+  const [mode, setMode] = React.useState<"sigma" | "alpha" | "beta">("beta");
 
   // Deep-link + boot screen + onboarding logic — single effect, runs once after mount
   React.useEffect(() => {
@@ -104,36 +105,52 @@ export function ExperienceShell() {
       }, 0);
       return () => clearTimeout(t); // deep-links skip the boot screen + onboarding
     }
-    // Only show boot screen on first load or full page reload — NOT when
-    // returning from detail pages. We detect this by checking if the page
-    // was loaded via browser navigation (back/forward) vs a full reload.
-    // performance.navigation.type === 0 = normal navigation (could be back from detail)
-    // performance.navigation.type === 1 = reload (show boot)
-    // If there's a saved scroll position, it means we're returning from a detail page
-    const isReturning = sessionStorage.getItem("alpha_scroll_position") !== null;
-    const navEntry = performance.getEntriesByType("navigation")[0] as PerformanceNavigationTiming | undefined;
-    const isReload = navEntry?.type === "reload";
+    // Only show boot screen on the VERY FIRST visit to the site (ever).
+    // NEVER on reload, back-navigation, or mode switches — boot repetition
+    // between transitions was the user complaint.
+    // Uses localStorage "sigma_ever_booted" as a per-browser guard.
+    let alreadyBooted = false;
+    try {
+      alreadyBooted =
+        sessionStorage.getItem("sigma_booted") === "1" ||
+        localStorage.getItem("sigma_ever_booted") === "1";
+    } catch { /* ignore */ }
 
-    if (!isReturning && !isReload) {
-      // First visit to the site (not returning from detail, not a reload)
-      // → show boot screen
+    // "isReturning" = coming back from a detail page (scroll position saved)
+    let isReturning = false;
+    try {
+      isReturning =
+        sessionStorage.getItem("alpha_scroll_position") !== null ||
+        sessionStorage.getItem("beta_scroll_position") !== null;
+    } catch { /* ignore */ }
+
+    // Determine the mode early — Beta mode is a clean enterprise mode that should
+    // NEVER show the brutalist SigmaBoot screen. Only Sigma mode gets the boot screen.
+    let savedMode: "sigma" | "alpha" | "beta" | null = null;
+    try {
+      const sm = localStorage.getItem("sigma-mode");
+      if (sm === "sigma" || sm === "alpha" || sm === "beta") savedMode = sm;
+    } catch { /* ignore */ }
+    const effectiveMode = savedMode || "beta";
+
+    if (effectiveMode === "beta") {
+      setBooting(false);
+    } else if (!alreadyBooted && !isReturning) {
+      // Genuine first-ever visit → show boot screen ONE time, then never again
       setBooting(true);
-    } else if (isReload) {
-      // Full page reload → show boot screen
-      setBooting(true);
+      try { localStorage.setItem("sigma_ever_booted", "1"); } catch { /* ignore */ }
+    } else {
+      // Reload / back-nav / already-booted → skip boot
+      setBooting(false);
     }
-    // If isReturning → skip boot screen (coming back from detail page)
 
     try {
       // show onboarding only once per browser (localStorage).
-      // Set the flag IMMEDIATELY (not on tour completion) so reloads / mid-tour
-      // navigation never re-trigger the onboarding panel — the "orange rectangle"
-      // / "preview not displaying" complaint.
+      // Set the flag IMMEDIATELY so reloads / mid-tour navigation never re-trigger
+      // the panel.
       const onboarded = localStorage.getItem("sigma_onboarded");
-      if (!onboarded && !isReturning) {
-        // Mark as onboarded NOW so any reload / route change skips it forever
+      if (!onboarded && !isReturning && effectiveMode !== "beta") {
         try { localStorage.setItem("sigma_onboarded", "1"); } catch { /* ignore */ }
-        // delay onboarding until after boot screen
         const ob = setTimeout(() => setOnboarding(true), 4000);
         return () => clearTimeout(ob);
       }
@@ -190,8 +207,14 @@ export function ExperienceShell() {
   const rootRef = React.useRef<HTMLDivElement>(null);
 
   // Keyboard navigation — DISABLED when typing in form inputs (S10 Access, S08 search, etc.)
+  // ALSO DISABLED in Beta mode (user request: Alpha and Sigma key bindings should not work in Beta)
   React.useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
+      // Skip ALL key bindings when in Beta mode
+      if (mode === "beta") return;
+      // CRITICAL: Skip when a dialog/modal/menu is open — prevents S06 crash
+      // (ArrowRight/Escape/m while a Dialog is open desyncs the sigma store)
+      if (document.querySelector('[role="dialog"], [data-state="open"].modal, [role="menu"], [data-radix-popper-content-wrapper]')) return;
       // Skip ALL key bindings when user is typing in an input/textarea/contenteditable
       const target = e.target as HTMLElement;
       if (target && (target.tagName === "INPUT" || target.tagName === "TEXTAREA" || target.isContentEditable)) {
@@ -242,7 +265,7 @@ export function ExperienceShell() {
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [navigate, tourActive]);
+  }, [navigate, tourActive, mode]);
 
   // Safety: if phase stays "covering" for >4s (e.g. GSAP interrupted), force-reset to idle
   React.useEffect(() => {
@@ -279,7 +302,7 @@ export function ExperienceShell() {
     if (phase !== "covering") return;
     const dest = useSigmaStore.getState().view;
     const destMeta = getSection(dest);
-    setFlashAccent(destMeta.accent);
+    flashAccentRef.current = destMeta.accent;
     sigmaSound.play("transition");
     // play ambient tone tuned to the destination sector's accent color
     if (dest !== "map") {
@@ -324,7 +347,15 @@ export function ExperienceShell() {
       transformOrigin: "top",
       backgroundColor: destMeta.accent,
     });
-    tl.set(overlay, { pointerEvents: "auto", zIndex: 90 });
+    // Set flash bg via GSAP (not JSX) to avoid React re-render interference
+    if (flash) {
+      tl.set(flash, { backgroundColor: destMeta.accent });
+    }
+    // CRITICAL: set overlay background to accent color so the content swap
+    // (setRenderedView → React reconciliation → 3-frame GSAP ticker pause)
+    // doesn't show a black flash. The overlay bg covers the content even if
+    // the panels briefly reset during React's reconciliation.
+    tl.set(overlay, { pointerEvents: "auto", zIndex: 90, backgroundColor: destMeta.accent });
     tl.to(panels, {
       scaleY: 1,
       duration: 0.42,
@@ -332,7 +363,15 @@ export function ExperienceShell() {
       stagger: { each: 0.04, from: "start" },
     });
 
-    // 2. MIDPOINT — swap the rendered view + flash + label fly-through
+    // Hold panels fully covering for 0.08s BEFORE swapping content.
+    // This prevents the black screen flash that occurs when the old section
+    // unmounts + new section mounts — without the hold, there's a frame
+    // where neither is rendered → page background (black) shows through.
+    tl.to({}, { duration: 0.08 });
+
+    // 2. MIDPOINT — swap the rendered view + flash + label fly-through.
+    // Fires AFTER panels are 100% covering (not at ">-0.05" which was 0.05s
+    // before the cover ended → gap → black flash).
     tl.call(
       () => {
         setRenderedView(dest);
@@ -345,7 +384,7 @@ export function ExperienceShell() {
         }
       },
       [],
-      ">-0.05"
+      ">"  // fire exactly when the hold ends (panels 100% covering)
     );
 
     // sector label flies through during slam cover transition.
@@ -381,10 +420,15 @@ export function ExperienceShell() {
       duration: 0.46,
       ease: "power3.out",
       stagger: { each: 0.035, from: "start" },
-      clearProps: "transform,backgroundColor",
+      // Only clear backgroundColor — NOT transform. The inline transform
+      // (scaleY 0) stays, which overrides the CSS class default. If we clear
+      // transform, the CSS class (.sigma-transition-panel { transform: scaleY(0) })
+      // still applies, so panels stay hidden — but the inline removal causes
+      // a brief reflow. Keeping the inline transform is cleaner.
+      clearProps: "backgroundColor",
     });
 
-    tl.set(overlay, { pointerEvents: "none" });
+    tl.set(overlay, { pointerEvents: "none", backgroundColor: "transparent" });
     // CRITICAL: explicitly set opacity to 0 AND visibility to hidden (do NOT use clearProps — clearProps
     // reverts to CSS default opacity:1, which makes the number persist on screen).
     // visibility:hidden is the FINAL safety net — even if opacity fails for any reason,
@@ -414,18 +458,23 @@ export function ExperienceShell() {
     <div
       ref={rootRef}
       suppressHydrationWarning
-      className="sigma-noise sigma-vignette relative fixed inset-0 overflow-hidden bg-background"
+      className={`relative fixed inset-0 overflow-hidden bg-background ${mode === "beta" ? "" : "sigma-noise sigma-vignette"}`}
     >
-      {/* Persistent layered background */}
-      <div className="sigma-grid pointer-events-none absolute inset-0 opacity-60" />
+      {/* Persistent layered background — HIDDEN in Beta mode (clean enterprise) */}
+      {mode !== "beta" && <div className="sigma-grid pointer-events-none absolute inset-0 opacity-60" />}
 
-      {/* Cursor spotlight (desktop only) */}
-      <SigmaSpotlight />
+      {/* Cursor spotlight (desktop only) — HIDDEN in Beta mode */}
+      {mode !== "beta" && <SigmaSpotlight />}
 
-      {/* Mode switcher (Σ / Α) */}
-      <SigmaModeSwitcher mode={mode} onModeChange={setMode} />
+      {/* Mode switcher (Σ / α / β) — floating, repositioned to top-right to avoid nav collision */}
+      {mode === "beta" && (
+        <div className="fixed right-4 top-20 z-[95]">
+          <SigmaModeSwitcher mode={mode} onModeChange={setMode} floating />
+        </div>
+      )}
+      {mode !== "beta" && <SigmaModeSwitcher mode={mode} onModeChange={setMode} />}
 
-      {/* Rendered view — Sigma mode (map-based) or Alpha mode (scrolling) */}
+      {/* Rendered view — Sigma mode (map-based), Alpha mode (brutalist scroll), or Beta mode (enterprise) */}
       {mode === "sigma" ? (
         <div
           key={`${renderedView}-${visitToken}`}
@@ -434,17 +483,21 @@ export function ExperienceShell() {
         >
           <div className="relative h-full w-full">{renderView(renderedView)}</div>
         </div>
-      ) : (
+      ) : mode === "alpha" ? (
         <AlphaInterface />
+      ) : (
+        <BetaInterface />
       )}
 
-      {/* Accent ambient glow keyed to the current sector */}
-      <div
-        className="pointer-events-none absolute inset-0 transition-opacity duration-700"
-        style={{
-          background: `radial-gradient(60% 50% at 50% 50%, ${meta.accent}14, transparent 70%)`,
-        }}
-      />
+      {/* Accent ambient glow keyed to the current sector — HIDDEN in Beta mode */}
+      {mode !== "beta" && (
+        <div
+          className="pointer-events-none absolute inset-0 transition-opacity duration-700"
+          style={{
+            background: `radial-gradient(60% 50% at 50% 50%, ${meta.accent}14, transparent 70%)`,
+          }}
+        />
+      )}
 
       {/* TRANSITION OVERLAY */}
       <div
@@ -459,21 +512,18 @@ export function ExperienceShell() {
               ref={(el) => {
                 panelsRef.current[i] = el;
               }}
-              className="flex-1"
-              style={{
-                transform: "scaleY(0)",
-                backgroundColor: flashAccent,
-                borderBottom: i < PANEL_COUNT - 1 ? "1px solid rgba(0,0,0,0.25)" : "none",
-              }}
+              className={`flex-1 sigma-transition-panel${i < PANEL_COUNT - 1 ? " sigma-panel-border" : ""}`}
             />
           ))}
         </div>
 
-        {/* glitch flash */}
+        {/* glitch flash — background set by GSAP (tl.set), NOT JSX.
+            This prevents setFlashAccent state update from triggering a
+            React re-render that could interfere with GSAP panel transforms. */}
         <div
           ref={flashRef}
           className="absolute inset-0 mix-blend-screen"
-          style={{ background: flashAccent, opacity: 0 }}
+          style={{ opacity: 0 }}
         />
 
         {/* sector label fly-through — shows "01"/"02" ONLY during slam cover transition.
@@ -500,8 +550,8 @@ export function ExperienceShell() {
       {/* Persistent HUD — Sigma mode only */}
       {mode === "sigma" && <SigmaHud />}
 
-      {/* Custom cursor reticle (desktop only, both modes — X/Y readout attaches to ring to avoid nav clash) */}
-      <SigmaCursor />
+      {/* Custom cursor reticle (desktop only, Sigma + Alpha modes only — Beta has its own BetaReticleCursor) */}
+      {mode !== "beta" && <SigmaCursor />}
 
       {/* Sector progress indicator (right edge, Sigma mode only) */}
       {mode === "sigma" && <SigmaProgress />}

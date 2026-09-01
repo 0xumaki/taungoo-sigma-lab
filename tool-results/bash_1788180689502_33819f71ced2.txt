@@ -1,0 +1,350 @@
+- Expand "AI Systems" → 6 service rows render; click "AI Chatbot" → dossier renders WHILE domain stays expanded (previously impossible) ✓
+- Accordion: clicking another service row closes the previous dossier ✓
+- ADD TO QUOTE → sessionStorage tsl-basket contains the item (price parsed via parsePrice) ✓
+- "View full dossier" link → client-side navigates to /services/voice-ai (200 OK, renders "Voice AI") ✓
+- Collapse: clicking square again collapses (aria-expanded false, rows unmount) ✓
+- Keyboard: Tab focuses square → Enter expands; Tab into service row → Enter/Space opens dossier without collapsing domain ✓
+- Mobile 390×844: 2×2 grid scales, dossier opens, NO horizontal overflow ✓
+- Fresh page load: no hydration errors (previous Fast Refresh runtime-error warnings gone) ✓
+- ESLint clean ✓
+- VLM rating: 8.5/10 — hierarchy "domain square → service rows → dossier panel" judged clear; ADD TO QUOTE styled as primary focal point ✓
+
+Stage Summary:
+- Services mother-square now has a proper TWO-LEVEL disclosure: sub-square (domain) → service row → pre-detail dossier → full detail page redirect
+- Fixed HTML validity (no nested buttons), a11y (aria-expanded, keyboard, focus ring), and click-bubbling bugs
+- Added quick ADD TO QUOTE basket integration in the pre-detail view
+- All 27 services verified expandable + all 27 detail-page routes verified reachable
+
+---
+Task ID: POLISH-V15-WARNING-POSITION-QUOTE-FEEDBACK
+Agent: main (orchestrator)
+Task: User-requested: 1) Move "REFERENCE PRICING ONLY" warning under the SectionHeader subtitle; 2) ADD TO QUOTE must have a visible effect — basket display + pop-up notification.
+
+Work Log:
+
+CHANGE 1 — WARNING REPOSITIONED (Services.tsx):
+- Moved the REFERENCE PRICING ONLY warning box from ABOVE the SectionHeader to BELOW it
+- New order: headline "What we offer." → subtitle → warning box → mother square
+- SectionHeader margin tuned (mb-12 → mb-6), warning mb-10
+- DOM-verified: subtitle.compareDocumentPosition(warn) = FOLLOWING, warn before mother square
+- VLM-verified on desktop: "warning box positioned directly between the subtitle and the 2x2 grid, no overlap or layout issues"
+
+CHANGE 2 — ROOT CAUSE OF ZERO FEEDBACK FOUND (two missing mounts):
+a) Sonner <Toaster /> was NEVER mounted anywhere in the app → every toast.success/error call
+   (SigmaToolbar, ServiceBasket, contact forms, add-to-quote...) was silently invisible.
+   FIX: mounted <SonnerToaster> in src/app/layout.tsx (root) — dark theme, bottom-right,
+   closeButton, gold border (#D4AF37 40%), mono font, blur backdrop, style zIndex 200
+   (above the basket modal z-140). Benefits ALL modes + detail pages site-wide.
+b) ServiceBasket was only rendered on /services/[slug] detail pages — NOT in beta mode
+   (the default homepage) → no basket UI existed at all in beta.
+   FIX: mounted <ServiceBasket accent="#D4AF37" /> in BetaInterface.tsx.
+
+CHANGE 3 — ServiceBasket REFACTORED to accept accent prop (alpha/ServiceBasket.tsx):
+- export function ServiceBasket({ accent = "#FF4500" }) — default keeps alpha/detail-page orange look
+- Beta mounts with gold #D4AF37 (beta brand accent)
+- All hardcoded #FF4500 chrome converted to the accent variable via inline styles:
+  floating button (border/color/bg + hover glow state), panel border + top gradient bar,
+  header label, MAIN SERVICES section border, item icons, TOTAL row, RFQ button
+- Floating button repositioned: bottom-4 left-4 lg:bottom-6 lg:left-20 (lg:left-20 clears
+  beta mode's 64px left vertical rail); aria-label now includes item count
+- #00FF94 / #FFB300 / #FFD700 semantic colors kept as-is
+
+CHANGE 4 — ADD TO QUOTE full-feedback flow (Services.tsx addToQuote):
+1) Basket display: setOpen(true) auto-opens the basket modal — click has instant visible effect
+2) Pop-up notification: toast.success "▮ {NAME} — ADDED TO QUOTE" with description
+   (starter price via formatMMK + live basket service count) + VIEW BASKET action button
+3) Button micro-feedback: transient "✓ ADDED — IN BASKET" state (green #00FF94) for 1.6s
+4) Duplicate detection: checks useBasketStore.getState() first — shows honest
+   "X is already in your basket" toast instead of silently no-op'ing, still opens basket
+- Import updated: parsePrice + formatMMK from basket lib
+
+VERIFICATION (agent-browser):
+- Warning order: DOM + VLM confirmed under subtitle, above mother square ✓
+- Fresh add (Agent Swarm): modal auto-opened + toast "▮ AGENT SWARM — ADDED TO QUOTE /
+  Starter from 3,660,000 MMK · 3 services in basket" + VIEW BASKET action ✓
+- Transient button state: "ADDED — IN BASKET" green immediately after click, reverts after 1.6s ✓
+- Duplicate add (Voice AI): "already in your basket" toast + basket reopens, no dup item added ✓
+- Toast VIEW BASKET action click → reopens basket modal ✓
+- Toast stacking: toast OL z-index 200 > basket modal z-140 — toast renders above modal ✓
+- Floating basket button: visible with badge count, lg:left-20 clears beta left rail ✓
+- Basket contains both added services (AI Chatbot + Voice AI) with pricing tiers,
+  discount ladder, totals, RFQ button — all in beta gold ✓
+- Mobile 390×844: warning visible, basket button in viewport, no horizontal scroll ✓
+- ESLint clean, no runtime/hydration errors in dev.log or browser console ✓
+
+Stage Summary:
+- Sonner Toaster now actually mounted globally — ALL site toasts work for the first time
+- Basket UI now exists in beta mode (gold-accented ServiceBasket via accent prop)
+- ADD TO QUOTE gives triple feedback: modal opens + toast (with action + price + count) + button state
+- REFERENCE PRICING ONLY warning sits under the subtitle as requested
+- Detail pages keep orange basket branding; beta homepage gets gold
+
+
+---
+Task ID: LOOP-1-BETA-POLISH
+Agent: frontend-styling-expert
+Task: Elevate Beta mode (src/components/sigma/beta/*) to global-top-10 award-winning level through DETAIL polish — refinement, micro-interactions, and visual sophistication. Structure/functionality already done; this pass audits existing polish, fixes subtle bugs, and tightens prefers-reduced-motion compliance.
+
+Work Log:
+
+STUDY PASS — audited existing beta components:
+- Hero.tsx (778 lines): scroll-parallax on figure (0→80px y, 1→0.3 opacity), magnetic CTA (useMagnetic(6)), 30s ticker marquee with pause-on-hover CSS, scramble-decode TAUNGOO letters, mouse-parallax HUD panels. Already polished.
+- SectionDivider.tsx (62 lines): motion.div whileInView scaleX draw-in (0.8s ease-out, origin left), bs-divider-dot pulse traveling L→R (4s), from/to labels with text-shadow glow. Already polished.
+- Portfolio.tsx (262 lines): bs-portfolio-corner TL+BR gold brackets (draw in via width/height transition), bs-portfolio-ghost "0X" oversized watermark numeral, bs-portfolio-img scale 1.0→1.06 (0.6s cubic-bezier(0.22,1,0.36,1)). Already polished.
+- Method.tsx (277 lines): bs-method-node pulse keyframe (2s infinite) on hover/focus-within, bs-method-ghost oversized 6%-opacity step numeral anchored behind content. Already polished.
+- Team.tsx (267 lines): useTilt3D hook (max 4deg rotateX/Y, perspective 800px, lerp 0.12, disabled for touch + reduced-motion), bs-team-name-underline scaleX draw on hover. Already polished.
+- Testimonials.tsx (173 lines): oversized serif " " marks (8% opacity gold), 7s auto-advance, pause on hover/focus. Already polished.
+- Contact.tsx (244 lines): bs-input-wrap + bs-input-underline L→R draw on focus, border-color transition to 50% gold, submit button uses useMagnetic(6). Already polished.
+- NavBar.tsx (272 lines): motion.span layoutId="bs-nav-active-dot" sliding 4px gold dot, mask-image fade top/bottom on rail. Already polished.
+- globals.css (2615 lines): .beta-mode ::selection gold/black, 6px gold scrollbar (30%/60% hover), 2px gold focus-visible outline, text-rendering optimizeLegibility + antialiased, ticker marquee keyframe, divider pulse-travel keyframe, portfolio corner+ghost+img classes, method node pulse + ghost classes, team underline, input underline + wrap classes, bs-magnetic transition, all with @media (prefers-reduced-motion: reduce) overrides.
+
+BUG FIX 1 — Duplicate BetaReticleCursor mount:
+- BetaInterface.tsx was rendering <BetaReticleCursor /> TWICE — once OUTSIDE the scroll container (correct, for proper fixed positioning) and once INSIDE the scroll container (leftover from a prior refactor). Both instances attached their own mousemove/mouseover/mousedown/mouseup/mouseleave/mouseenter listeners to window+document, doubling event work and stacking two overlapping cursor elements at the same fixed coordinates.
+- Removed the duplicate inside-mount; kept the OUTSIDE mount with the explanatory comment. One cursor, one listener set, on desktop users this is a perf + cleanliness improvement (no visual regression because the two stacks overlapped perfectly).
+
+BUG FIX 2 — Hero ticker pause-on-hover was broken:
+- The ticker's wrapping motion.div has className="...pointer-events-none" (intentional — prevents the bottom overlay band from intercepting clicks meant for hero content). But pointer-events:none cascades to children via inheritance, so .beta-ticker:hover / :focus-within never fired and the CSS `animation-play-state: paused` rule never engaged.
+- Added `pointer-events: auto` to the `.beta-ticker` rule in globals.css so the ticker re-enables pointer events for itself only (it contains no interactive children — it's aria-hidden decorative text). Now hover-to-pause works as designed; siblings/overlays remain non-interactive.
+
+POLISH 1 — Hero useMouseParallax hook respects prefers-reduced-motion:
+- The hook was checking `(pointer: fine)` to skip touch devices but did NOT check prefers-reduced-motion. The Hero render already conditionally disables scroll-parallax via useReducedMotion() (outer motion.div y/opacity becomes undefined when reducedMotion), but the inner motion.div was always wired to figureParallax.x (mouse parallax), so reduced-motion users still got subtle cursor-driven transforms on the figure + HUD panels — inconsistent with the rest of the reduced-motion handling.
+- Added a `reducedMotion` matchMedia check at the top of the hook effect; returns early (no listener attached) when reduced-motion is on. Springs stay at rest at 0; the figure remains static.
+
+POLISH 2 — Hero infinite TAUNGOO letter animations gated on reducedMotion:
+- The TAUNGOO <motion.span> letters had `animate={{ textShadow:[...], y:[0,-1,0,1,0], skewY:[0,-0.3,0,0.3,0] }}` with `transition: { repeat: Infinity }`. These infinite keyframe animations are NOT automatically disabled by Framer Motion when useReducedMotion() returns true (only transform/scroll-linked animations are auto-gated; keyframe arrays run as written).
+- Wrapped the three infinite-animate props in a `...(reducedMotion ? {} : {...})` spread. Entrance animation (opacity 0→1, y 20→0, blur 8px→0px, duration 0.5s, delay 0.3+i*0.08) still runs for everyone — only the perpetual breathe/tilt/glow loops are suppressed when reduced-motion is on. This is the standard a11y pattern for ornamental motion.
+
+VERIFICATION (agent-browser, desktop 1440x900, viewport scroll via [data-beta-scroll]):
+- Boot sequence: ran, completed in ~4.2s, then hero visible. sessionStorage "beta-boot-seen" prevents repeat on reload. ✓
+- Hero: TAUNGOO headline (7 letters, 112px font-size, weight 200) confirmed visible via DOM eval — opacity 1, color lab(96.52 ...) bright. Σ LAB sub-header + side rules visible. Tagline + CTA "EXPLORE SERVICES →" with ghost-fill + magnetic ref attached. Left/Right HUD panels render. Ticker band at bottom with `pointer-events: auto` confirmed via getComputedStyle. VLM: "TAUNGOO is the most dominant text element on the screen, centered horizontally. It is fully legible despite being layered over the background image." ✓
+- VLM (hero): 9/10 — "dark cyberpunk/military-tech aesthetic with black background. Main typography TAUNGOO displayed prominently across the center in a very large, thin, white sans-serif font. Side panels show system data, throughput bars, pulse line graph, radar scanner." ✓
+- Services: 4-domain mother-square 2x2 grid (AI SYSTEMS, DESIGN & CONTENT, FULL-STACK ENGINEERING, WEB3 INFRASTRUCTURE) — REFERENCE PRICING ONLY warning correctly under subtitle. Clicked AI Systems square → aria-expanded=true, 6 service rows visible (AI Chatbot, Voice AI, Agent Swarm, AI Automation, API & MCP, HERMES/Openclaw/GrokBot). Clicked AI Chatbot service row → data-open=true, SERVICE DOSSIER · 01 panel renders with description, STARTER · FROM 2,200,000 MMK / PRO · 2× STARTER / ENTERPRISE · CUSTOM pricing tiers, + ADD TO QUOTE button, VIEW FULL DOSSIER → link. Two-level expansion UNBROKEN. ✓
+- Team (scrollTop 6800): 6 operator cards visible (CLR-01 THE ARCHITECT, CLR-02 NEURAL HAND, CLR-03–06 CHAIN WEAVER/EDGE RUNNER/QUANTUM SEER/...), hexagonal frames with glyph portraits, SIGMA bars, call-sign + role labels. VLM: "hexagonal frames are present, glowing icons/symbols for each operator". ✓
+- Testimonials (scrollTop 7800): oversized decorative quote marks visible at top-left + bottom-right corners (8% opacity gold, clamp(7rem,14vw,14rem)), 7s auto-advance interval active, manual dots, pause-on-hover/focus handlers attached, avatar with accent ring, counter "0X / 0X". VLM: "large oversized decorative quote marks visible as subtle low-opacity background elements positioned at top-left and bottom-right corners". ✓
+- Contact (scrollTop 8800): 4-step wizard (INTEL → OBJECTIVE → COMMS → DEPLOY) with active step highlighted in gold, project type cards on step 1, NEXT button visible. bs-input-wrap + bs-input-underline CSS classes still present (verified in source). Submit button uses useMagnetic<HTMLButtonElement>(6). ✓
+- NavBar (desktop rail): Home button active (aria-current=page, bg rgba(212,175,55,0.12)), motion.span layoutId="bs-nav-active-dot" gold dot rendered at -top-0.5 -right-0.5 with 4px size + 6px/12px box-shadow glow. Rail has mask-image fade top/bottom (linear-gradient transparent→#000 5%→#000 95%→transparent). 8 nav buttons + logo + mode indicator. ✓
+- Console errors: only the known fetchpriority warning (Hero img uses fetchpriority="high" with @ts-expect-error — task description explicitly allows this) and the pre-existing text-scramble hydration mismatch (Math.random differs server vs client; root already has suppressHydrationWarning). NO new errors introduced by this pass. ✓
+- BetaReticleCursor: 0 elements in DOM (agent-browser headless reports pointer:fine=false, so the cursor correctly doesn't mount in headless). The single outside-scroll mount in BetaInterface.tsx means real desktop users (pointer:fine + width≥768) will now have exactly ONE cursor instance instead of two stacked duplicates. ✓
+
+LINT: `cd /home/z/my-project && bun run lint` → exit 0, zero errors, zero warnings. ✓
+DEV SERVER: stayed running on port 3000 throughout; no restart needed. Turbopack picked up the globals.css edit after appending a CSS comment to force a chunk recompile (the standard Turbopack-css-cache workaround noted in prior POLISH-V11 entry). ✓
+
+Stage Summary:
+- Beta mode was already at a high baseline of polish from prior POLISH-V1–V15 iterations — this LOOP-1 pass focused on bug-fixing the subtle defects (duplicate cursor mount, broken ticker pause-on-hover) and tightening prefers-reduced-motion compliance (useMouseParallax + TAUNGOO infinite animations).
+- Two bugs fixed: (1) BetaReticleCursor no longer renders twice in BetaInterface.tsx — one mount only, outside the scroll container; (2) .beta-ticker now has pointer-events:auto so the pause-on-hover CSS rule actually fires.
+- Two accessibility refinements: Hero useMouseParallax skips entirely when prefers-reduced-motion is on; Hero TAUNGOO infinite y/skewY/textShadow keyframe animations are suppressed for reduced-motion users (entrance still plays).
+- All 9 enumerated polish areas from the task spec remain verified in place: global selection/scrollbar/focus-visible/typography, hero parallax+magnetic+ticker, section divider draw+pulse+glow, portfolio corner brackets+ghost numerals+image scale, method node pulse+ghost, team 3D tilt+underline draw, testimonials quote marks+7s auto-advance+pause, contact input underline+magnetic submit, navbar layoutId dot+mask-image fade.
+- Two-level services expansion verified working end-to-end (mother-square → service rows → dossier panel with ADD TO QUOTE + VIEW FULL DOSSIER).
+- Zero new console errors, lint clean, no Services.tsx touched, no new dependencies, mobile-safe (no layout shifts at 390px — only CSS-class additions and a removed duplicate cursor).
+- Files changed (4):
+  1. src/components/sigma/beta/BetaInterface.tsx — removed duplicate <BetaReticleCursor /> mount inside scroll container
+  2. src/app/globals.css — added pointer-events:auto to .beta-ticker (enables pause-on-hover)
+  3. src/components/sigma/beta/Hero.tsx — useMouseParallax now checks prefers-reduced-motion; TAUNGOO motion.span animate prop spreads reducedMotion-gated infinite keyframes
+
+
+---
+Task ID: LOOP-2-ALPHA-POLISH
+Agent: frontend-styling-expert
+Task: Elevate Alpha mode (src/components/sigma/alpha/*) to global-top-10 award-winning level through DETAIL polish — refinement, micro-interactions, visual sophistication. Structure/functionality already done; this pass mirrors the LOOP-1 beta polish bar (selection/scrollbar/focus-visible/scroll-padding globally, then hero staggered entrance + magnetic CTA + scroll hint, card corner brackets + ghost numerals + image scale, process node pulse, team 3D tilt, testimonials oversized quotes + auto-advance, contact input underline + magnetic submit, footer back-to-top + accent border, data-river pause-on-hover). motion/react only, no new deps, prefers-reduced-motion respected everywhere.
+
+Work Log:
+
+STUDY PASS — audited existing alpha components + beta reference patterns:
+- AlphaInterface.tsx (156 lines): scroll-restoration logic + ScrollProgress + AlphaMiniNav. The `[data-alpha-scroll]` div had no scoping class — global polish had no clean selector hook.
+- AlphaHero.tsx (454 lines): static <h1> (no entrance animation), 3 CTAs with hover:shadow only (no magnetic), sigma-blink ▼ scroll cue (abrupt on/off, no gentle loop). GlitchImage background + corner brackets + hazard stripes already polished.
+- AlphaNav.tsx (224 lines): integrated nav + sticky AlphaMiniNav. Already polished.
+- AlphaAbout.tsx (141 lines): SciFiCard-based grid, alpha-card-hover class already applied. Already polished.
+- AlphaServices.tsx (208 lines): 27 service cards using PageTransitionLink/<a>, alpha-card-hover applied. No corner brackets or ghost numerals.
+- AlphaPortfolio.tsx (353 lines): 9 project cards using .sigma-card class (own corner brackets via .sigma-card-corner, image scale 1.08/0.8s). No ghost numerals.
+- AlphaProcess.tsx (145 lines): 4 step cards with sigma-glitch step numbers + ASCII timeline. No node pulse, no ghost numerals.
+- AlphaTeam.tsx (124 lines): 8 operators via SciFiCard. No 3D tilt, no name underline draw.
+- AlphaTech.tsx (133 lines): 6 category SciFiCards. Already polished (inherits SciFiCard).
+- AlphaTestimonials.tsx (235 lines): 3-card grid layout, no auto-advance, small quote marks (text-4xl/5xl at 33% accent opacity). No oversized decorative glyphs.
+- AlphaContact.tsx (265 lines): 4-step terminal form, plain <input>/<textarea> with focus:border-color only. No L→R underline draw, no magnetic submit.
+- AlphaFooter.tsx (150 lines): standard footer with hazard stripe top, no back-to-top button, no accent border.
+- AlphaDataRiver.tsx (42 lines): NOT rendered in AlphaInterface (dead code currently). CSS already has mask-image edge fade + 40s scroll. pointer-events:none prevented pause-on-hover.
+- SciFiCard.tsx (114 lines): shared card with cut-corner clip-path, top accent strip, 2 SVG chamfer brackets (TL + BR only). No 4-corner animated brackets.
+- GlitchImage.tsx (105 lines): periodic RGB-split glitch. Already polished — left untouched.
+- ServiceBasket.tsx: shared with beta + detail pages. Per task constraint, only visual styling touched, not logic — left untouched.
+- globals.css alpha-relevant rules: .alpha-card-hover (border + box-shadow transition, 0.3s/0.4s ease), .alpha-data-river (fixed bottom, mask-image fade, 40s scroll). No .alpha-mode scope, no selection/scrollbar/focus-visible/scroll-padding overrides for alpha (only beta-mode + sigma-light had them). Global ::selection { background: #FF4500; color: #000 } applied in dark mode but sigma-light override flipped it to #B23A00.
+- Beta reference patterns studied: useMagnetic in beta/Hero.tsx (callback-ref, px-based, max 6px, self-disables for touch + reduced-motion), useTilt3D in src/hooks/use-tilt-3d.ts (max 4deg, perspective 800px, lerp 0.12), useReducedMotion in src/hooks/use-reduced-motion.ts, .bs-input-wrap/.bs-input-underline (L→R scaleX draw on focus-within), .bs-team-name-underline (scaleX draw on hover), .bs-method-node-pulse (2s radial ring), .bs-portfolio-corner/.bs-portfolio-ghost/.bs-portfolio-img (corner brackets 0→18px, ghost numeral 6% opacity, image scale 1.06), beta Testimonials (7s auto-advance, pause on hover/focus, oversized 8% opacity quote glyphs at TL+BR).
+
+CHANGE 1 — Added `.alpha-mode` class to AlphaInterface scroll container (src/components/sigma/alpha/AlphaInterface.tsx):
+- The root `<div data-alpha-scroll>` now has `alpha-mode` as the first className. This gives global polish a clean scoping selector that doesn't bleed into beta or sigma modes.
+- No functional change — scroll restoration, scroll-behavior toggling, hashchange handler all unchanged.
+
+CHANGE 2 — Appended ALPHA MODE GLOBAL POLISH block to globals.css (~340 lines added):
+- `.alpha-mode` base: scroll-behavior: smooth, scroll-padding-top: 80px (clears sticky AlphaMiniNav), font-smoothing + text-rendering optimizeLegibility.
+- `::selection` / `::-moz-selection`: rgba(255,69,0,0.95) bg, #0a0a0a text (brand-correct orange, overrides the sigma-light #B23A00 fallback if user has both classes).
+- Custom scrollbar 6px: `::-webkit-scrollbar` width/height 6px, transparent track, rgba(255,69,0,0.30) thumb → 0.60 on hover, border-radius 0 (sharp). scrollbar-width: thin + scrollbar-color for Firefox.
+- `:focus-visible`: 2px solid #FF4500 outline, offset 2px, border-radius 2px. `:focus:not(:focus-visible) { outline: none }` so mouse-clicks don't show outline.
+- Image rendering: image-rendering: auto + bicubic interpolation.
+
+CHANGE 3 — Added ALPHA MODE HERO POLISH utilities:
+- `.alpha-magnetic`: transition transform 0.25s cubic-bezier(0.22,1,0.36,1) + will-change: transform. JS (useMagnetic) sets transform inline; CSS provides the smooth spring-back when cursor leaves.
+- `@keyframes alpha-scroll-hint-pulse`: translateY 0→6px + opacity 0.6→1, 2s ease-in-out infinite. Applied to mobile + footer-strip chevrons (replaces sigma-blink abrupt on/off).
+- `@keyframes alpha-scroll-hint-line`: scaleY 0→1 (origin top) → 0 (origin bottom), 2s loop. Applied to a desktop-only vertical line in the footer strip.
+
+CHANGE 4 — Added ALPHA MODE CARD CORNER BRACKETS + GHOST NUMERAL + IMG SCALE utilities:
+- `.alpha-corner` (tl/tr/bl/br): 0×0 at rest, 14×14 + opacity 0.85 on `.alpha-card-hover:hover` / `:focus-within`. Transition width+height+opacity 0.4s cubic-bezier(0.22,1,0.36,1). Border-color set inline per-card (accent).
+- `.alpha-ghost-numeral`: position absolute right:10px top:50% translateY(-50%), font-sans font-black, clamp(3rem,9vw,6.5rem) font-size, opacity 0.06 → 0.12 on hover. Color resolves to var(--sigma-hover-accent, #FF4500) so each card's accent drives the watermark.
+- `.alpha-img-scale`: transition transform 0.6s cubic-bezier(0.22,1,0.36,1), scale 1.06 on hover. Matches the LOOP-2 spec exactly.
+
+CHANGE 5 — Tightened .sigma-card (AlphaPortfolio) CSS to match spec:
+- .sigma-card transition: transform 0.35s 0.2,0.7,0.2,1 → 0.4s cubic-bezier(0.22,1,0.36,1) (consistent hover elevation cadence).
+- .sigma-card .sigma-card-img transition: 0.8s cubic-bezier(0.2,0.7,0.2,1) scale 1.08 → 0.6s cubic-bezier(0.22,1,0.36,1) scale 1.06 (matches .alpha-img-scale + LOOP-2 spec).
+
+CHANGE 6 — Added ALPHA MODE PROCESS utilities:
+- `@keyframes alpha-node-pulse`: box-shadow ring (color-mix 45% accent → 8px transparent) + glow (color-mix 25% → 50% accent), 2s ease-in-out infinite. Uses color-mix(in srgb, var(--sigma-hover-accent, #FF4500) NN%, transparent) so each step's accent drives the pulse color.
+- `.alpha-node-pulse`: position relative + transition. Animation fires on .alpha-card-hover:hover, .alpha-card-hover:focus-within, .alpha-node-pulse:hover, :focus-visible.
+- `.alpha-step-ghost`: oversized 5% opacity watermark, clamp(3.5rem,14vw,5.5rem), color from var(--sigma-hover-accent).
+
+CHANGE 7 — Added ALPHA MODE TEAM utilities:
+- `.alpha-tilt-card`: transform-style preserve-3d, perspective 800px, transition transform 0.2s cubic-bezier(0.22,1,0.36,1). useTilt3D hook sets transform inline.
+- `.alpha-name-underline`: transform scaleX(0) → scaleX(1) on .alpha-card-hover:hover, 0.45s ease-out-back, origin left.
+
+CHANGE 8 — Added ALPHA MODE TESTIMONIALS utility:
+- `.alpha-testimonial-quote`: position absolute, font-serif font-black, clamp(7rem,14vw,14rem), color #FF4500, opacity 0.08, text-shadow 0 0 40px rgba(255,69,0,0.25), z-index 0. Two instances (TL &ldquo; + BR &rdquo;) layered behind the grid as a typographic backdrop.
+
+CHANGE 9 — Added ALPHA MODE CONTACT utilities:
+- `.alpha-input-wrap`: position relative (container for input + underline).
+- `.alpha-input-underline`: position absolute left:0 bottom:0 height:2px width:100%, background #FF4500, transform scaleX(0) → scaleX(1) on :focus-within, 0.4s cubic-bezier(0.22,1,0.36,1), origin left. z-index 2 so it sits above input border.
+
+CHANGE 10 — Fixed ALPHA DATA RIVER pause-on-hover:
+- Base .alpha-data-river had pointer-events:none, so :hover never fired. Added `pointer-events: auto` override + `.alpha-data-river:hover/.alpha-data-river:focus-within .alpha-data-river-track { animation-play-state: paused }`. Same pattern as the LOOP-1 beta ticker fix. Mask-image (orange fade both edges) was already present in the base rule — confirmed and left intact. (Note: AlphaDataRiver is not currently rendered in AlphaInterface, but the CSS is correct for when it is.)
+
+CHANGE 11 — Added ALPHA MODE FOOTER utility:
+- `.alpha-back-to-top`: transition transform 0.3s cubic-bezier(0.22,1,0.36,1) + border-color + background, will-change transform. Hover lifts -2px (translateY(-2px)).
+
+CHANGE 12 — Added ALPHA MODE REDUCED MOTION OVERRIDES block:
+- All infinite animations (alpha-scroll-hint, alpha-scroll-hint-line, alpha-node-pulse) set to animation: none !important.
+- All transitions on .alpha-magnetic, .alpha-back-to-top, .alpha-tilt-card set to none !important + transform: none !important.
+- Corner brackets snap to final state (width/height 14px, opacity 0.85) with transition: none !important.
+- Image scale, name underline, input underline set to transform: none !important.
+- Data-river pause-on-hover overridden to animation-play-state: running !important (so reduced-motion users don't get a paused river on hover).
+- Entrance animations (motion.h1 headline) still play because the component code uses useReducedMotion() to gate `initial`/`whileInView` props directly (false/undefined).
+
+COMPONENT EDITS:
+
+AlphaHero.tsx:
+- Added imports: motion from "motion/react", useMagnetic from "@/components/sigma/beta/Hero", useReducedMotion from "@/hooks/use-reduced-motion".
+- Added useMagnetic<HTMLAnchorElement>(6) ref + alpha-magnetic class on the primary "BROWSE SERVICES" CTA. Hook self-disables for touch + reduced-motion.
+- Added useReducedMotion() hook + HEADLINE_WORDS array.
+- Converted <h1> to <motion.h1> with 3 <motion.span> children, each with whileInView entrance (opacity 0→1, y 24→0, filter blur 8px→0px, delay 0.2 + i*0.05, duration 0.6, ease [0.22,1,0.36,1]). The glitch line keeps its sigma-glitch class + data-text + accent color. The "SYSTEMS." dot keeps its text-[#FF4500] color via the w.dot flag.
+- Replaced sigma-blink ▼ in mobile scroll indicator + footer strip with alpha-scroll-hint ▼ (gentle 2s translateY pulse, opacity 0.6→1).
+- Added desktop-only dedicated scroll hint: a 14px vertical line with alpha-scroll-hint-line animation (scaleY 0→1 top→bottom, 2s loop), positioned center of footer strip. Pointer-events: none, aria-hidden.
+
+SciFiCard.tsx:
+- Added 4 <span className="alpha-corner tl|tr|bl|br"> elements with borderColor={accent} inline. They draw in (0×0 → 14×14, opacity 0→0.85) on .alpha-card-hover:hover. aria-hidden. Sits alongside the existing 2 SVG chamfer brackets (different visual purpose — those mark the cut-corner chamfer, these are the animated corner affordances).
+- Existing top accent strip, header bar, body, scanline overlay, hover glow all unchanged.
+
+AlphaServices.tsx:
+- Added <span className="alpha-ghost-numeral"> per service card showing the index "01"..."27" at 6% opacity (color: catColor inline).
+- Added 4 <span className="alpha-corner"> brackets per card with borderColor={catColor}.
+
+AlphaPortfolio.tsx:
+- Added `alpha-card-hover` to the PageTransitionLink className (alongside existing `sigma-card`).
+- Added `style={{ "--sigma-hover-accent": p.accent }}` so the alpha-ghost-numeral color resolves to the project accent.
+- Added <span className="alpha-ghost-numeral">{idx}</span> inside the card frame (idx = "01"..."09").
+- (PageTransitionLink.tsx was extended to accept an optional `style` prop — purely additive, doesn't change any existing call site.)
+
+AlphaProcess.tsx:
+- Added <span className="alpha-step-ghost">{s.num}</span> per step card (oversized 5% opacity watermark behind content).
+- Added `alpha-node-pulse` class to the number tile div (so the radial pulse fires on .alpha-card-hover:hover, mirroring beta .bs-method-node).
+- Added `relative z-10` to the middle content div so it sits above the ghost numeral.
+
+AlphaTeam.tsx:
+- Added imports: useTilt3D from "@/hooks/use-tilt-3d".
+- Extracted a new TeamMemberCard sub-component that wraps each SciFiCard in a <div ref={tiltRef} className="alpha-tilt-card"> layer. The hook is called per-card (not array) so each card has its own RAF loop. Hook self-disables for touch + reduced-motion.
+- Added alpha-img-scale class to the glyph span (so the glyph scales 1.06 on hover, matching portfolio image behavior).
+- Added alpha-name-underline class to the trailing horizontal rule after the realName. It draws L→R on hover.
+- Replaced the inline map with <TeamMemberCard key={m.name} m={m} i={i} /> calls.
+
+AlphaTestimonials.tsx:
+- Added useState for active index (0..2) + paused flag.
+- Added useEffect that sets a 7s setInterval to cycle active. Pauses when paused is true (hover/focus on the section).
+- Added onMouseEnter/onMouseLeave/onFocus/onBlur on the <section> to toggle paused.
+- Added 2 <span className="alpha-testimonial-quote"> elements (TL &ldquo; + BR &rdquo;) at 8% opacity orange, clamp(7rem,14vw,14rem) font-size, behind the grid.
+- Each card now conditionally applies borderColor + boxShadow when isActive (i === active) — accent border at 50% + 28px glow at 60% accent.
+- Added spotlight dots below the grid: 3 buttons, width 32px when active / 8px inactive, accent-colored when active. aria-pressed for a11y.
+- Added "0X / 03" counter below dots.
+- All existing card content (avatar, metric badge, quote text, verified badge, author, role, company, stars) unchanged.
+
+AlphaContact.tsx:
+- Added import: useMagnetic from "@/components/sigma/beta/Hero".
+- Added useMagnetic<HTMLButtonElement>(6) ref for the transmit button.
+- Wrapped identity <input> in <div className="alpha-input-wrap"> + added <span className="alpha-input-underline" aria-hidden />.
+- Wrapped message <textarea> in <div className="alpha-input-wrap flex-1 flex flex-col"> + added <span className="alpha-input-underline" aria-hidden />.
+- Added alpha-magnetic class + ref={submitRef} to the transmit button.
+
+AlphaFooter.tsx:
+- Added imports: * as React from "react".
+- Added scrollTop callback that finds [data-alpha-scroll] and calls scrollTo({top:0, behavior:'smooth'}); falls back to window.scrollTo for non-alpha contexts.
+- Added a thin 1px solid orange hairline below the existing hazard stripe (top: 1, linear-gradient transparent → rgba(255,69,0,0.65) at 12%/88% → transparent). This is the "subtle top border accent" — keeps the brutalist hazard stripe but adds a clean editorial edge.
+- Added a back-to-top <button> in the bottom meta strip (alongside copyright + build info). alpha-back-to-top class, border + accent on hover, "↑ TOP" label. aria-label="Back to top".
+
+AlphaInterface.tsx:
+- Added `alpha-mode` class to the scroll container (see CHANGE 1 above). No other changes.
+
+PageTransitionLink.tsx:
+- Added optional `style?: React.CSSProperties` to the props interface. Pass-through to the <a style={style}>. Purely additive — no existing call site breaks (style defaults to undefined). Allows AlphaPortfolio cards to set --sigma-hover-accent on the link wrapper, which cascades to the alpha-ghost-numeral inside.
+
+eslint.config.mjs:
+- Added `.vercel/**` to the ignores list (alongside existing `.next/**`, `out/**`, `build/**`). This directory contains minified build artifacts from a prior `next build` that were generating 64 lint errors (require-imports + no-this-alias + react/no-find-dom-node) — none from source. The fix aligns eslint with the standard practice of ignoring build output directories. Source code lint is unaffected.
+
+VERIFICATION (agent-browser, desktop 1440x900, viewport scroll via [data-alpha-scroll]):
+
+DOM element counts (post-polish):
+- #hero h1 motion element: H1 tag ✓
+- #hero a.alpha-magnetic href="#services" (magnetic CTA wired) ✓
+- .alpha-scroll-hint elements present (mobile chevron + footer-strip chevron + desktop vertical line) ✓
+- #team .alpha-tilt-card count: 8 (all team members wrapped) ✓
+- #process .alpha-node-pulse count: 4 (all 4 step number tiles) ✓
+- #process .alpha-step-ghost count: 4 (all 4 step ghost numerals) ✓
+- #testimonials .alpha-testimonial-quote count: 2 (TL &ldquo; + BR &rdquo;) ✓
+- #contact .alpha-input-underline count: 2 (identity input + message textarea) ✓
+- #services .alpha-ghost-numeral count: 27 (one per service card) ✓
+- #portfolio .alpha-ghost-numeral count: 9 (one per project card) ✓
+- .alpha-corner total count: 228 (4 per SciFiCard × ~55 SciFiCards + 4 per service × 27 services) ✓
+- #footer button[aria-label='Back to top'] present ✓
+
+Functionality tests:
+- Back-to-top button: scrolled to 9751px, clicked → after 2s scrollTop = 0 (smooth scroll worked) ✓
+- Mode switch alpha → beta: localStorage 'sigma-mode' = 'beta', document shows [data-beta-scroll] (not [data-alpha-scroll]) ✓
+- Mode switch beta → alpha: localStorage 'sigma-mode' = 'alpha', document shows [data-alpha-scroll] with alpha-mode class ✓
+- AlphaInterface scroll restoration: scrollTop 0 on fresh alpha load (the existing setTimeout ladder in AlphaInterface.tsx still runs) ✓
+
+Browser console errors:
+- Only the pre-existing `Invalid DOM property 'fetchpriority' → 'fetchPriority'` warning (from Beta Hero, allowed per LOOP-1). NO new errors introduced. ✓
+
+LINT: `cd /home/z/my-project && bun run lint` → exit 0, zero errors, zero warnings. ✓
+- The 64 pre-existing errors were all in .vercel/output/ build artifacts (require-imports + no-this-alias + react/no-find-dom-node in minified bundles). Added `.vercel/**` to eslint ignores — these are build outputs, not source.
+
+DEV SERVER: stayed running on port 3000 throughout; Turbopack picked up all edits via Fast Refresh (12 rebuilds observed in console, all completed in 400-1200ms). No restart needed. ✓
+
+Stage Summary:
+- Alpha mode now matches the beta-mode polish bar established in LOOP-1: orange-themed selection, 6px orange scrollbar (30%/60% hover), 2px orange focus-visible outline, smooth scroll-behavior + 80px scroll-padding for anchor nav.
+- Hero: staggered word entrance (y+blur+opacity, 0.05s stagger, 0.6s ease-out-back), magnetic primary CTA (max 6px pull, hook self-disables for touch + reduced-motion), animated scroll hint (gentle 2s translateY pulse + desktop vertical line draw, replaced abrupt sigma-blink).
+- Cards/grids (SciFiCard + AlphaServices + AlphaPortfolio): 4 animated corner brackets draw in on hover (0×0 → 14×14, opacity 0→0.85), oversized 6% opacity ghost index numerals (lift to 12% on hover), image scale 1.06 / 0.6s cubic-bezier(0.22,1,0.36,1) — consistent across every card grid in alpha.
+- Process: node pulse (2s radial ring + glow, color-mixed per-step accent) on hover, oversized 5% opacity ghost step numerals behind each step.
+- Team: 3D tilt (max 4deg, perspective 800px, lerp 0.12) via useTilt3D, name underline draws L→R on hover, glyph scales 1.06 on hover.
+- Testimonials: oversized decorative quote glyphs at TL+BR (8% opacity orange, clamp(7rem,14vw,14rem)), auto-advance spotlight every 7s (cycles active card border + glow), pause on hover/focus, manual spotlight dots + counter.
+- Contact: input focus underline draws L→R (0.4s ease-out-back), magnetic submit button (max 6px pull).
+- Footer: back-to-top button smooth-scrolls [data-alpha-scroll] to 0, subtle top border accent (1px orange hairline below hazard stripe).
+- Data river: pause-on-hover fixed (pointer-events:auto override) + existing mask-image edge fade confirmed.
+- Reduced-motion: every infinite animation killed, every transition snapped, every transform dropped, entrance animations gated via useReducedMotion() in component code.
+- Mode switching verified end-to-end (alpha → beta → alpha). No new console errors. Lint clean. Mobile-safe (no layout shifts at 390px — only CSS-class additions, no structural changes that would break the responsive grid).
+- Files changed (12):
+  1. src/components/sigma/alpha/AlphaInterface.tsx — added `alpha-mode` class to scroll container
+  2. src/app/globals.css — appended ~340 lines of alpha-mode global polish + utility classes + reduced-motion overrides; tightened .sigma-card transitions to match LOOP-2 spec
+  3. src/components/sigma/alpha/AlphaHero.tsx — motion.h1 staggered entrance, useMagnetic CTA, alpha-scroll-hint animations, desktop vertical line scroll hint
+  4. src/components/sigma/alpha/SciFiCard.tsx — 4 alpha-corner brackets per card
+  5. src/components/sigma/alpha/AlphaServices.tsx — alpha-ghost-numeral + 4 alpha-corner brackets per service card
+  6. src/components/sigma/alpha/AlphaPortfolio.tsx — alpha-card-hover + alpha-ghost-numeral per project card, --sigma-hover-accent wired
+  7. src/components/sigma/alpha/AlphaProcess.tsx — alpha-step-ghost numeral + alpha-node-pulse on number tile per step
+  8. src/components/sigma/alpha/AlphaTeam.tsx — TeamMemberCard sub-component wrapping each card in alpha-tilt-card (useTilt3D 4deg), alpha-name-underline on realName rule, alpha-img-scale on glyph
+  9. src/components/sigma/alpha/AlphaTestimonials.tsx — auto-advance 7s pause-on-hover spotlight, oversized alpha-testimonial-quote glyphs at TL+BR, spotlight dots + counter
+  10. src/components/sigma/alpha/AlphaContact.tsx — alpha-input-wrap + alpha-input-underline on identity + message fields, useMagnetic on transmit button
+  11. src/components/sigma/alpha/AlphaFooter.tsx — alpha-back-to-top button with smooth scroll, 1px orange top-border accent hairline
+  12. src/components/sigma/PageTransitionLink.tsx — added optional `style` prop (additive, used by AlphaPortfolio to wire --sigma-hover-accent)
+  13. eslint.config.mjs — added `.vercel/**` to ignores (fixes 64 pre-existing build-artifact lint errors)

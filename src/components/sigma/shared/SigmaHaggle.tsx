@@ -88,6 +88,32 @@ export function SigmaHaggle() {
   // roll applies the discount; subsequent rolls are pure animation replays.
   const haggleUsed = useBasketStore((s) => s.haggleUsed);
 
+  // === SHARED-LINK RESTORE ===
+  // When someone opens a share URL like /?haggle=4&pct=9, auto-display that
+  // specific haggle result so the recipient sees the sender's actual roll —
+  // not a blank homepage. The result shows in "FUN" mode (hologram mark)
+  // because it's a viewed share, not the visitor's own first roll.
+  const [sharedRoll, setSharedRoll] = React.useState<number | null>(null);
+  React.useEffect(() => {
+    if (typeof window === "undefined") return;
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const h = params.get("haggle");
+      const pct = params.get("pct");
+      if (h && pct) {
+        const face = parseInt(h, 10);
+        const percent = parseInt(pct, 10);
+        if (face >= 1 && face <= 6 && percent >= 0 && percent <= 100) {
+          setSharedRoll(face);
+          setPhase("result");
+          // Clean the URL so a refresh doesn't re-trigger the shared view
+          const cleanUrl = window.location.pathname + window.location.hash;
+          window.history.replaceState(null, "", cleanUrl);
+        }
+      }
+    } catch { /* ignore */ }
+  }, []);
+
   React.useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       // Ignore key presses inside form fields
@@ -186,9 +212,11 @@ export function SigmaHaggle() {
   // Display the CURRENT roll's face (not the locked discount) so the user
   // sees their actual dice result on every replay. The `isReplay` flag tells
   // the result letter whether to show a "discount locked to first roll" hint.
-  const rollFace = currentRollFace ?? useBasketStore.getState().haggleRoll ?? 1;
+  // If `sharedRoll` is set (from a share URL), display that face as a shared view.
+  const rollFace = sharedRoll ?? currentRollFace ?? useBasketStore.getState().haggleRoll ?? 1;
   const entry = HAGGLE_DICE_TABLE[rollFace - 1];
   const isReplay = haggleUsed && currentRollFace !== useBasketStore.getState().haggleRoll;
+  const isShared = sharedRoll !== null; // viewing someone else's shared result
 
   return (
     <ResultLetter
@@ -196,8 +224,10 @@ export function SigmaHaggle() {
       rate={entry.rate}
       label={entry.label}
       isReplay={isReplay}
+      isShared={isShared}
       lockedRoll={useBasketStore.getState().haggleRoll}
       onDismiss={() => {
+        setSharedRoll(null);
         setCurrentRollFace(null);
         setPhase("idle");
       }}
@@ -586,8 +616,8 @@ function ActivationCard({ onCancel, onSuccess, alreadyHaggled = false }: { onCan
               />
               {error && (
                 <div
-                  className="mt-2 flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.18em] text-[#FF3D3D]"
-                  style={{ textShadow: "0 0 8px rgba(255,61,61,0.6)" }}
+                  className="mt-2 flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.18em] text-[#B85C2E]"
+                  style={{ textShadow: "0 0 8px rgba(184,92,46,0.6)" }}
                 >
                   <span>⚠</span>
                   <span>{error}</span>
@@ -617,7 +647,7 @@ function ActivationCard({ onCancel, onSuccess, alreadyHaggled = false }: { onCan
               data-ha-line
               className="mt-4 flex items-center justify-between font-mono text-[8px] uppercase tracking-[0.18em] text-muted-foreground"
             >
-              <span>▸ TAUNGOO SIGMA LAB</span>
+              <span>▸ TAUNGOO Σ Lab</span>
               <span className="text-[#FF4500]/60">HAGGLE-PROTOCOL · ARCADE</span>
             </div>
           </div>
@@ -1412,7 +1442,7 @@ function CubeFace({
  */
 function spawnConfettiParticles(isJackpot: boolean) {
   const colors = isJackpot
-    ? ["#FFD700", "#FF4500", "#00FF94", "#00FFFF", "#FF2D7E", "#FFFFFF"]
+    ? ["#FFD700", "#FF4500", "#00FF94", "#00FFFF", "#FFB300", "#FFFFFF"]
     : ["#FFD700", "#FF4500", "#00FF94", "#FFFFFF"];
   const container = document.createElement("div");
   container.setAttribute("data-confetti", "root");
@@ -1476,6 +1506,7 @@ function ResultLetter({
   label,
   onDismiss,
   isReplay = false,
+  isShared = false,
   lockedRoll,
 }: {
   face: number;
@@ -1483,12 +1514,19 @@ function ResultLetter({
   label: string;
   onDismiss: () => void;
   isReplay?: boolean;
+  isShared?: boolean;
   lockedRoll?: number | null;
 }) {
   const rootRef = React.useRef<HTMLDivElement>(null);
   const audioRef = React.useRef<HTMLAudioElement | null>(null);
   const percent = Math.round(rate * 100);
   const isJackpot = face === 6;
+
+  // === HOLOGRAM MARK (authenticity tag) ===
+  // "REAL" = the visitor's own genuine first roll (discount applies to their basket)
+  // "FUN"  = a replay OR a shared-link view — the roll is for entertainment only,
+  //           the discount stays locked to the visitor's own first roll (if any)
+  const isReal = !isReplay && !isShared;
 
   React.useEffect(() => {
     // Play SUPER SMASH BROS BONUS song
@@ -1581,10 +1619,9 @@ function ResultLetter({
         }
       );
 
-      // Hold for 8s for soundtrack + confetti, then auto-dismiss
-      tl.to({}, { duration: 9.0 });
-      tl.to("[data-rl-bg]", { opacity: 0, duration: 0.6, ease: "power2.in" });
-      tl.call(() => onDismiss());
+      // Hold for soundtrack + confetti — NO auto-dismiss, user must click to close
+      // (removed the auto-dismiss timeline — user closes by choice only)
+      tl.to({}, { duration: 0.1 });
     }, rootRef);
 
     return () => {
@@ -1668,6 +1705,49 @@ function ResultLetter({
             ▮ REPLAY · DISCOUNT LOCKED ◆
           </div>
         )}
+
+        {/* Shared-link badge — shows when viewing someone else's haggle result */}
+        {isShared && (
+          <div
+            data-rl-line
+            className="mt-2 inline-flex items-center gap-2 border border-[#00E5FF] bg-[#00E5FF]/10 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.3em] text-[#00E5FF]"
+            style={{
+              clipPath: "polygon(6px 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%, 0 6px)",
+              boxShadow: "0 0 16px rgba(0,229,255,0.5)",
+            }}
+          >
+            <span className="h-1.5 w-1.5 animate-pulse bg-[#00E5FF]" />
+            ◈ SHARED RESULT · VIEW ONLY
+          </div>
+        )}
+
+        {/* === HOLOGRAM MARK — authenticity tag ===
+            REAL = visitor's own genuine first roll (discount applies to basket)
+            FUN  = replay or shared view — entertainment only, no discount claim */}
+        <div
+          data-rl-line
+          className="mt-2 inline-flex items-center gap-2 border px-3 py-1 font-mono text-[10px] uppercase tracking-[0.3em]"
+          style={{
+            borderColor: isReal ? "#00FF94" : "#B388FF",
+            background: isReal ? "rgba(0,255,94,0.08)" : "rgba(179,136,255,0.08)",
+            color: isReal ? "#00FF94" : "#B388FF",
+            clipPath: "polygon(6px 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%, 0 6px)",
+            boxShadow: isReal
+              ? "0 0 16px rgba(0,255,94,0.4), inset 0 0 12px rgba(0,255,94,0.06)"
+              : "0 0 16px rgba(179,136,255,0.4), inset 0 0 12px rgba(179,136,255,0.06)",
+          }}
+        >
+          {/* Hologram shimmer dot — animated to suggest a security foil */}
+          <span
+            className="relative flex h-2 w-2"
+            style={{
+              background: `linear-gradient(135deg, ${isReal ? "#00FF94" : "#B388FF"}, transparent)`,
+              borderRadius: "50%",
+              animation: "haggle-holo-shimmer 1.5s ease-in-out infinite",
+            }}
+          />
+          ◆ HOLOGRAM MARK · {isReal ? "REAL" : "FUN"}
+        </div>
 
         {/* Letter card */}
         <div
@@ -1817,6 +1897,22 @@ function ResultLetter({
               )}
             </div>
 
+            {/* DISCLAIMER — unlimited plays, only first roll qualifies */}
+            <div
+              data-rl-line
+              className="mt-3 border-l-2 pl-3 py-2"
+              style={{ borderColor: isJackpot ? "#FFD70060" : "#FF450060" }}
+            >
+              <div className="font-mono text-[8px] uppercase tracking-[0.25em]" style={{ color: isJackpot ? "#FFD700" : "#FF4500" }}>
+                ⚠ DISCLAIMER
+              </div>
+              <div className="mt-1 font-mono text-[8px] leading-relaxed text-muted-foreground">
+                Unlimited replays available. <span className="font-bold">Only the FIRST roll qualifies for discount.</span>
+                <br />
+                All subsequent rolls are for entertainment only — the discount remains locked to your first result.
+              </div>
+            </div>
+
             {/* Signature */}
             <div
               data-rl-line
@@ -1831,7 +1927,7 @@ function ResultLetter({
                   className="font-sans text-sm font-black uppercase tracking-tight"
                   style={{ color: isJackpot ? "#FFD700" : "#FF4500" }}
                 >
-                  TAUNGOO SIGMA LAB
+                  TAUNGOO Σ Lab
                 </div>
                 <div className="font-mono text-[7px] uppercase tracking-[0.2em] text-muted-foreground">
                   HAGGLE-PROTOCOL · ARCADE DIVISION
@@ -1853,6 +1949,55 @@ function ResultLetter({
               </div>
             </div>
           </div>
+
+            {/* Share + Download buttons */}
+            <div
+              data-rl-line
+              className="mt-4 flex items-center gap-2"
+            >
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  const baseUrl = typeof window !== "undefined" ? window.location.origin : "https://taungoo-sigma-lab.vercel.app";
+                  const shareUrl = `${baseUrl}/?haggle=${face}&pct=${percent}${isJackpot ? "&jackpot=1" : ""}`;
+                  const shareText = `I rolled a ${face}/6 and got ${percent}% extra discount at TAUNGOO Σ Lab! ${isJackpot ? "★ JACKPOT ★ " : ""}Roll your own dice at TAUNGOO Σ Lab.`;
+                  const shareData = { title: `TAUNGOO Σ Lab — Haggle Result: ${percent}% OFF!`, text: shareText, url: shareUrl };
+
+                  // Try native Web Share API first (mobile + desktop Chrome/Safari with support)
+                  if (typeof navigator !== "undefined" && typeof navigator.share === "function") {
+                    navigator.share(shareData).catch(() => {
+                      // If user cancels or it fails, show our custom social share modal
+                      showSocialShareModal(shareUrl, shareText, isJackpot);
+                    });
+                  } else {
+                    // No Web Share API — show custom social share modal
+                    showSocialShareModal(shareUrl, shareText, isJackpot);
+                  }
+                }}
+                className="flex items-center gap-1.5 border px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.15em] transition-all hover:scale-105"
+                style={{
+                  borderColor: isJackpot ? "#FFD70050" : "#FF450050",
+                  color: isJackpot ? "#FFD700" : "#FF4500",
+                  background: isJackpot ? "#FFD70010" : "#FF450010",
+                }}
+              >
+                ↗ SHARE
+              </button>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  downloadResultCard(face, percent, label, isJackpot, isReplay);
+                }}
+                className="flex items-center gap-1.5 border px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.15em] transition-all hover:scale-105"
+                style={{
+                  borderColor: isJackpot ? "#FFD70050" : "#FF450050",
+                  color: isJackpot ? "#FFD700" : "#FF4500",
+                  background: isJackpot ? "#FFD70010" : "#FF450010",
+                }}
+              >
+                ↓ DOWNLOAD PNG
+              </button>
+            </div>
 
           {/* Corner crosshairs on card */}
           <span
@@ -1878,7 +2023,7 @@ function ResultLetter({
           data-rl-cta
           className="mt-6 font-mono text-[10px] uppercase tracking-[0.3em] text-muted-foreground"
         >
-          ▮ CLICK ANYWHERE OR WAIT TO CONTINUE · [ESC] ▮
+          ▮ CLICK ANYWHERE TO CLOSE · [ESC] ▮
         </div>
 
         {/* Hint about secret code */}
@@ -1893,3 +2038,348 @@ function ResultLetter({
 }
 
 export default SigmaHaggle;
+
+// ============================================================
+// SOCIAL SHARE MODAL — TikTok/Facebook/Pinterest style
+// ============================================================
+
+function showSocialShareModal(url: string, text: string, isJackpot: boolean) {
+  // Remove any existing modal
+  const existing = document.getElementById("haggle-share-modal");
+  if (existing) existing.remove();
+
+  const accentColor = isJackpot ? "#FFD700" : "#FF4500";
+  const encodedUrl = encodeURIComponent(url);
+  const encodedText = encodeURIComponent(text);
+
+  // Social platform share URLs
+  const platforms = [
+    { name: "Facebook", icon: "f", color: "#1877F2", url: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}&quote=${encodedText}` },
+    { name: "X / Twitter", icon: "𝕏", color: "#000000", url: `https://twitter.com/intent/tweet?text=${encodedText}&url=${encodedUrl}` },
+    { name: "WhatsApp", icon: "✆", color: "#25D366", url: `https://wa.me/?text=${encodeURIComponent(text + " " + url)}` },
+    { name: "Telegram", icon: "✈", color: "#0088CC", url: `https://t.me/share/url?url=${encodedUrl}&text=${encodedText}` },
+    { name: "Reddit", icon: "★", color: "#FF4500", url: `https://www.reddit.com/submit?url=${encodedUrl}&title=${encodedText}` },
+    { name: "LinkedIn", icon: "in", color: "#0077B5", url: `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}` },
+    { name: "Pinterest", icon: "P", color: "#E60023", url: `https://pinterest.com/pin/create/button/?url=${encodedUrl}&description=${encodedText}` },
+    { name: "Discord", icon: "D", color: "#5865F2", url: `https://discord.com/channels/@me` },
+  ];
+
+  const modal = document.createElement("div");
+  modal.id = "haggle-share-modal";
+  modal.style.cssText = `
+    position: fixed; inset: 0; z-index: 99999; display: flex; align-items: center; justify-content: center;
+    background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+    animation: haggle-fade-in 0.2s ease;
+  `;
+  modal.onclick = (e) => { if (e.target === modal) modal.remove(); };
+
+  modal.innerHTML = `
+    <div style="
+      background: #0a0a0a; border: 1px solid ${accentColor}50; border-radius: 16px;
+      max-width: 420px; width: 90%; padding: 28px; position: relative;
+      box-shadow: 0 0 60px ${accentColor}20;
+    ">
+      <style>
+        @keyframes haggle-fade-in { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes haggle-slide-up { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+      </style>
+      <div style="text-align: center; margin-bottom: 20px; animation: haggle-slide-up 0.3s ease;">
+        <div style="font-family: monospace; font-size: 10px; text-transform: uppercase; letter-spacing: 0.3em; color: ${accentColor}; margin-bottom: 8px;">
+          ▮ SHARE YOUR RESULT ▮
+        </div>
+        <div style="font-size: 20px; font-weight: 800; color: #fff; margin-bottom: 4px;">
+          Share your Haggle score!
+        </div>
+        <div style="font-size: 13px; color: #888;">
+          Choose a platform to share
+        </div>
+      </div>
+      <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 16px; animation: haggle-slide-up 0.4s ease;">
+        ${platforms.map((p, i) => `
+          <a href="${p.url}" target="_blank" rel="noopener noreferrer" data-share="${p.name}"
+            style="
+              display: flex; flex-direction: column; align-items: center; gap: 6px;
+              text-decoration: none; cursor: pointer; padding: 12px 4px;
+              border-radius: 12px; background: ${p.color}15; border: 1px solid ${p.color}30;
+              transition: all 0.2s ease;
+            " onmouseover="this.style.background='${p.color}30';this.style.transform='scale(1.08)';"
+              onmouseout="this.style.background='${p.color}15';this.style.transform='scale(1)';"
+          >
+            <div style="
+              width: 36px; height: 36px; border-radius: 50%; background: ${p.color};
+              display: flex; align-items: center; justify-content: center;
+              font-size: 18px; font-weight: bold; color: #fff;
+            ">${p.icon}</div>
+            <span style="font-family: monospace; font-size: 8px; color: #aaa; text-transform: uppercase; letter-spacing: 0.05em;">
+              ${p.name}
+            </span>
+          </a>
+        `).join("")}
+      </div>
+      <div style="
+        display: flex; align-items: center; gap: 8px;
+        background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+        border-radius: 10px; padding: 10px 14px; margin-bottom: 14px;
+        animation: haggle-slide-up 0.5s ease;
+      ">
+        <input readonly value="${url}" aria-label="Shareable haggle code URL" style="
+          flex: 1; background: transparent; border: none; outline: none;
+          font-family: monospace; font-size: 11px; color: #888; overflow: hidden; text-overflow: ellipsis;
+        " />
+        <button id="haggle-copy-btn" style="
+          background: ${accentColor}; color: #0a0a0a; border: none; border-radius: 6px;
+          padding: 6px 14px; font-family: monospace; font-size: 10px; font-weight: 700;
+          text-transform: uppercase; letter-spacing: 0.1em; cursor: pointer; white-space: nowrap;
+        ">COPY</button>
+      </div>
+      <button id="haggle-share-close" style="
+        display: block; width: 100%; padding: 10px; background: transparent;
+        border: 1px solid rgba(255,255,255,0.1); border-radius: 10px;
+        color: #888; font-family: monospace; font-size: 11px; text-transform: uppercase;
+        letter-spacing: 0.2em; cursor: pointer; transition: all 0.2s ease;
+      " onmouseover="this.style.borderColor='${accentColor}50';this.style.color='${accentColor}';"
+        onmouseout="this.style.borderColor='rgba(255,255,255,0.1)';this.style.color='#888';"
+      >CLOSE</button>
+    </div>
+  `;
+
+  document.body.appendChild(modal);
+
+  // Wire up copy button
+  const copyBtn = modal.querySelector("#haggle-copy-btn") as HTMLButtonElement | null;
+  const linkInput = modal.querySelector("input") as HTMLInputElement | null;
+  if (copyBtn && linkInput) {
+    copyBtn.onclick = (e) => {
+      e.stopPropagation();
+      const input = linkInput as HTMLInputElement;
+      input.select();
+      navigator.clipboard?.writeText(input.value).then(() => {
+        copyBtn.textContent = "✓ COPIED";
+        setTimeout(() => { copyBtn.textContent = "COPY"; }, 2000);
+      }).catch(() => {
+        document.execCommand("copy");
+        copyBtn.textContent = "✓ COPIED";
+        setTimeout(() => { copyBtn.textContent = "COPY"; }, 2000);
+      });
+    };
+  }
+
+  // Wire up close button
+  const closeBtn = modal.querySelector("#haggle-share-close") as HTMLButtonElement | null;
+  if (closeBtn) {
+    closeBtn.onclick = () => modal.remove();
+  }
+
+  // ESC to close
+  const escHandler = (e: KeyboardEvent) => {
+    if (e.key === "Escape") {
+      modal.remove();
+      document.removeEventListener("keydown", escHandler);
+    }
+  };
+  document.addEventListener("keydown", escHandler);
+}
+
+// ============================================================
+// DOWNLOAD RESULT CARD — improved canvas design
+// ============================================================
+
+function downloadResultCard(face: number, percent: number, label: string, isJackpot: boolean, isReplay: boolean) {
+  const canvas = document.createElement("canvas");
+  const W = 1080;
+  const H = 1350; // Instagram story aspect ratio (4:5)
+  canvas.width = W;
+  canvas.height = H;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return;
+
+  const accent = isJackpot ? "#FFD700" : "#FF4500";
+
+  // Background gradient
+  const bgGrad = ctx.createLinearGradient(0, 0, 0, H);
+  bgGrad.addColorStop(0, "#0a0a0a");
+  bgGrad.addColorStop(0.5, "#121212");
+  bgGrad.addColorStop(1, "#0a0a0a");
+  ctx.fillStyle = bgGrad;
+  ctx.fillRect(0, 0, W, H);
+
+  // Radial glow behind content
+  const glowGrad = ctx.createRadialGradient(W / 2, 500, 50, W / 2, 500, 500);
+  glowGrad.addColorStop(0, isJackpot ? "rgba(255,215,0,0.08)" : "rgba(255,69,0,0.06)");
+  glowGrad.addColorStop(1, "transparent");
+  ctx.fillStyle = glowGrad;
+  ctx.fillRect(0, 0, W, H);
+
+  // Outer border
+  ctx.strokeStyle = accent;
+  ctx.lineWidth = 3;
+  ctx.strokeRect(40, 40, W - 80, H - 80);
+
+  // Inner border (double line effect)
+  ctx.strokeStyle = `${accent}30`;
+  ctx.lineWidth = 1;
+  ctx.strokeRect(56, 56, W - 112, H - 112);
+
+  // Corner brackets (decorative)
+  const drawCorner = (x: number, y: number, dx: number, dy: number) => {
+    ctx.strokeStyle = accent;
+    ctx.lineWidth = 4;
+    ctx.beginPath();
+    ctx.moveTo(x, y + dy * 40);
+    ctx.lineTo(x, y);
+    ctx.lineTo(x + dx * 40, y);
+    ctx.stroke();
+  };
+  drawCorner(70, 70, 1, 1);
+  drawCorner(W - 70, 70, -1, 1);
+  drawCorner(70, H - 70, 1, -1);
+  drawCorner(W - 70, H - 70, -1, -1);
+
+  // Header bar
+  ctx.fillStyle = accent;
+  ctx.font = "600 16px 'Courier New', monospace";
+  ctx.textAlign = "center";
+  ctx.fillText("▮  HAGGLE CERTIFICATE  ▮", W / 2, 130);
+
+  ctx.fillStyle = "#666";
+  ctx.font = "12px 'Courier New', monospace";
+  ctx.fillText(`ROLL #${face} · ${label.toUpperCase()}`, W / 2, 155);
+
+  // Divider
+  ctx.strokeStyle = `${accent}40`;
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(200, 180);
+  ctx.lineTo(W - 200, 180);
+  ctx.stroke();
+
+  // BONUS / JACKPOT title
+  ctx.fillStyle = accent;
+  ctx.font = `900 72px Arial, sans-serif`;
+  ctx.textAlign = "center";
+  ctx.shadowColor = accent;
+  ctx.shadowBlur = 30;
+  ctx.fillText(isJackpot ? "★ JACKPOT ★" : "★ BONUS ★", W / 2, 290);
+  ctx.shadowBlur = 0;
+
+  // Big percentage
+  ctx.fillStyle = accent;
+  ctx.font = `900 220px Arial, sans-serif`;
+  ctx.shadowColor = accent;
+  ctx.shadowBlur = 40;
+  ctx.fillText(`${percent}%`, W / 2, 520);
+  ctx.shadowBlur = 0;
+
+  // "EXTRA DISCOUNT" label
+  ctx.fillStyle = accent;
+  ctx.font = "600 20px 'Courier New', monospace";
+  ctx.fillText("EXTRA DISCOUNT", W / 2, 560);
+
+  // Main message
+  ctx.fillStyle = "#fff";
+  ctx.font = "900 36px Arial, sans-serif";
+  ctx.fillText("YOU GOT EXTRA DISCOUNT", W / 2, 650);
+
+  ctx.fillStyle = "#888";
+  ctx.font = "italic 22px Georgia, serif";
+  ctx.fillText("on your Haggle", W / 2, 690);
+
+  // Stats grid (2 columns)
+  const gridY = 760;
+  const colW = (W - 200) / 2;
+
+  // Left stat: DICE FACE
+  ctx.fillStyle = `${accent}15`;
+  ctx.fillRect(100, gridY, colW - 20, 100);
+  ctx.strokeStyle = `${accent}30`;
+  ctx.lineWidth = 1;
+  ctx.strokeRect(100, gridY, colW - 20, 100);
+  ctx.fillStyle = "#666";
+  ctx.font = "10px 'Courier New', monospace";
+  ctx.textAlign = "left";
+  ctx.fillText("DICE FACE", 120, gridY + 30);
+  ctx.fillStyle = accent;
+  ctx.font = "900 44px Arial, sans-serif";
+  ctx.fillText(`${face} / 6`, 120, gridY + 75);
+
+  // Right stat: DISCOUNT
+  ctx.fillStyle = `${accent}15`;
+  ctx.fillRect(W - 100 - colW + 20, gridY, colW - 20, 100);
+  ctx.strokeStyle = `${accent}30`;
+  ctx.strokeRect(W - 100 - colW + 20, gridY, colW - 20, 100);
+  ctx.fillStyle = "#666";
+  ctx.font = "10px 'Courier New', monospace";
+  ctx.fillText("EXTRA DISCOUNT", W - 100 - colW + 40, gridY + 30);
+  ctx.fillStyle = "#00FF94";
+  ctx.font = "900 44px Arial, sans-serif";
+  ctx.fillText(`${percent}%`, W - 100 - colW + 40, gridY + 75);
+
+  // Status line
+  ctx.fillStyle = isReplay ? "#FFD700" : "#00FF94";
+  ctx.font = "600 14px 'Courier New', monospace";
+  ctx.textAlign = "center";
+  ctx.fillText(isReplay ? "▸ REPLAY — DISCOUNT LOCKED TO FIRST ROLL" : "▸ QUALIFIED — APPLIED TO BASKET", W / 2, gridY + 140);
+
+  // Divider
+  ctx.strokeStyle = `${accent}30`;
+  ctx.beginPath();
+  ctx.moveTo(200, gridY + 170);
+  ctx.lineTo(W - 200, gridY + 170);
+  ctx.stroke();
+
+  // Disclaimer box
+  const discY = gridY + 200;
+  ctx.fillStyle = `${accent}08`;
+  ctx.fillRect(100, discY, W - 200, 80);
+  ctx.strokeStyle = `${accent}40`;
+  ctx.lineWidth = 1;
+  // Left accent bar
+  ctx.fillStyle = accent;
+  ctx.fillRect(100, discY, 4, 80);
+  ctx.fillStyle = accent;
+  ctx.font = "600 11px 'Courier New', monospace";
+  ctx.textAlign = "left";
+  ctx.fillText("⚠ DISCLAIMER", 120, discY + 25);
+  ctx.fillStyle = "#888";
+  ctx.font = "10px 'Courier New', monospace";
+  ctx.fillText("Unlimited replays available. Only the FIRST roll qualifies for discount.", 120, discY + 45);
+  ctx.fillText("All subsequent rolls are for entertainment only.", 120, discY + 62);
+
+  // Signature area
+  const sigY = H - 200;
+  ctx.strokeStyle = `${accent}30`;
+  ctx.beginPath();
+  ctx.moveTo(100, sigY);
+  ctx.lineTo(W - 100, sigY);
+  ctx.stroke();
+
+  ctx.fillStyle = accent;
+  ctx.font = "900 22px Arial, sans-serif";
+  ctx.textAlign = "left";
+  ctx.fillText("TAUNGOO Σ Lab", 120, sigY + 35);
+
+  ctx.fillStyle = "#555";
+  ctx.font = "10px 'Courier New', monospace";
+  ctx.fillText("HAGGLE-PROTOCOL · ARCADE DIVISION", 120, sigY + 55);
+
+  // Sigma stamp (rotated)
+  ctx.save();
+  ctx.translate(W - 160, sigY + 35);
+  ctx.rotate(-0.15);
+  ctx.strokeStyle = accent;
+  ctx.lineWidth = 3;
+  ctx.strokeRect(-40, -40, 80, 80);
+  ctx.fillStyle = accent;
+  ctx.font = "900 48px Arial, sans-serif";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.fillText("Σ", 0, 2);
+  ctx.restore();
+  ctx.textBaseline = "alphabetic";
+
+  // Download
+  const link = document.createElement("a");
+  link.download = `taungoo-haggle-${face}-${percent}pct.png`;
+  link.href = canvas.toDataURL("image/png");
+  link.click();
+}

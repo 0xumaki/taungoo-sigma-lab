@@ -1,0 +1,74 @@
+[
+  {
+    "url": "https://motion.dev/docs/gsap-vs-motion",
+    "name": "GSAP vs Motion: A detailed comparison",
+    "snippet": "This guide compares Motion and GSAP on adoption, licensing, performance, and features (complete with full comparison table), to help you decide which is right ... Read more",
+    "host_name": "motion.dev",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://annnimate.com/compare/gsap-vs-anime-js",
+    "name": "GSAP vs anime.js - 2026 comparison",
+    "snippet": "7 days ago — GSAP and anime.js are both framework-agnostic JavaScript animation libraries . anime.js is the lean, focused option; GSAP is the deep, plugin- ... Read more",
+    "host_name": "annnimate.com",
+    "rank": 1,
+    "date": "Aug 22, 2026",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.reddit.com/r/webdev/comments/1uq4xdn/gsap_motion_or_animejs_whats_your_choice",
+    "name": "GSAP, Motion or Anime.js – what's your choice? Especially",
+    "snippet": "GSAP has more advanced triggers and timeline features , overall it gives you more control. However, from my experience it's a bit more janky and ...",
+    "host_name": "www.reddit.com",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://blog.logrocket.com/comparing-javascript-animation-libraries",
+    "name": "Comparing JavaScript animation libraries",
+    "snippet": "Apr 22, 2020 — Anime.js provides a basic API that lets you animate . To use Anime.js, you first have to install it through either npm install. GSAP also ...",
+    "host_name": "blog.logrocket.com",
+    "rank": 3,
+    "date": "Apr 22, 2020",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.facebook.com/fullstackflow/posts/-i-open-sourced-react-animejsive-been-working-on-react-animejs-a-react-first-ani/122138075277086690",
+    "name": "🚀 I open-sourced React AnimeJS I've been working on **",
+    "snippet": "AnimeJS gives you React- friendly hooks and declarative components . The difference is the developer experience. GSAP brings animation into  ...",
+    "host_name": "www.facebook.com",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.linkedin.com/posts/sebasbimbi_webflow-gsap-animejs-activity-7320366622307737600-q2Dt",
+    "name": "GSAP vs Anime.js: Which animation library is better?",
+    "snippet": "GSAP ScrollTrigger wins by miles 👉 Simple hover animations: Anime.js is perfect 👉 Text animations: GSAP's SplitText plugin is unmatched. GSAP ...",
+    "host_name": "www.linkedin.com",
+    "rank": 5,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://gsap.com/community/forums/topic/25115-svg-animation-is-same-fps-as-animejs",
+    "name": "SVG animation is same FPS as anime.JS",
+    "snippet": "Aug 11, 2020 — the pen below shows you the final animation that I created using anime.JS , which includes multiple axis rotation transforms and color changes. Read more",
+    "host_name": "gsap.com",
+    "rank": 6,
+    "date": "Aug 11, 2020",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.syncfusion.com/blogs/post/react-animation-libraries-comparison",
+    "name": "Choosing a React Animation Library: Performance Trade",
+    "snippet": "Feb 17, 2026 — GSAP is the most capable option for timeline-based animation and motion design . Install the core GSAP package via npm. Anime.js is a ...",
+    "host_name": "www.syncfusion.com",
+    "rank": 7,
+    "date": "Feb 17, 2026",
+    "favicon": ""
+  }
+]

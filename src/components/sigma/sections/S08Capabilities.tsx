@@ -30,12 +30,12 @@ interface Gear {
 }
 
 const GEAR: Gear[] = [
-  { code: "GPU·CLUSTER·A", icon: Cpu, name: "Neural Forge Compute", specs: [["NODES", "4"], ["GPU", "8× A100 80GB"], ["TFLOPS", "624"], ["NET", "400GbE"]], serial: "TSL-NF-A-011407", status: "ONLINE", accent: "#FF3D3D", power: "3.2kW", temp: "61°C", location: "Rack A-01 · Lab Complex", lastMaintenance: "2024.10.15", uptimeDays: 42, notes: "Running Vortex autonomous sales inference. GPU mem at 78%." },
-  { code: "EDGE·MESH·B", icon: Radio, name: "IoT Sensor Mesh", specs: [["NODES", "240"], ["RADIOS", "LoRa+BLE"], ["PACKETS/D", "8.1M"], ["BATT", "AA · 2yr"]], serial: "TSL-EM-B-021008", status: "ONLINE", accent: "#FF3D3D", power: "0.4kW", temp: "Ambient", location: "12 fields · Yangon Region", lastMaintenance: "2024.09.30", uptimeDays: 88, notes: "3 nodes replaced last cycle. All channels nominal." },
-  { code: "STORAGE·C", icon: HardDrive, name: "Cold Storage Vault", specs: [["RAW", "1.2 PB"], ["REPLICAS", "3"], ["LATENCY", "4ms"], ["ENC", "AES-256"]], serial: "TSL-ST-C-030911", status: "ONLINE", accent: "#FF3D3D", power: "0.8kW", temp: "18°C", location: "Vault · Climate Controlled", lastMaintenance: "2024.08.12", uptimeDays: 120, notes: "37% capacity used. Scrub cycle every 14d." },
+  { code: "GPU·CLUSTER·A", icon: Cpu, name: "Neural Forge Compute", specs: [["NODES", "4"], ["GPU", "8× A100 80GB"], ["TFLOPS", "624"], ["NET", "400GbE"]], serial: "TSL-NF-A-011407", status: "ONLINE", accent: "#B85C2E", power: "3.2kW", temp: "61°C", location: "Rack A-01 · Lab Complex", lastMaintenance: "2024.10.15", uptimeDays: 42, notes: "Running Vortex autonomous sales inference. GPU mem at 78%." },
+  { code: "EDGE·MESH·B", icon: Radio, name: "IoT Sensor Mesh", specs: [["NODES", "240"], ["RADIOS", "LoRa+BLE"], ["PACKETS/D", "8.1M"], ["BATT", "AA · 2yr"]], serial: "TSL-EM-B-021008", status: "ONLINE", accent: "#B85C2E", power: "0.4kW", temp: "Ambient", location: "12 fields · Yangon Region", lastMaintenance: "2024.09.30", uptimeDays: 88, notes: "3 nodes replaced last cycle. All channels nominal." },
+  { code: "STORAGE·C", icon: HardDrive, name: "Cold Storage Vault", specs: [["RAW", "1.2 PB"], ["REPLICAS", "3"], ["LATENCY", "4ms"], ["ENC", "AES-256"]], serial: "TSL-ST-C-030911", status: "ONLINE", accent: "#B85C2E", power: "0.8kW", temp: "18°C", location: "Vault · Climate Controlled", lastMaintenance: "2024.08.12", uptimeDays: 120, notes: "37% capacity used. Scrub cycle every 14d." },
   { code: "QUANT·SIM·D", icon: Zap, name: "Quantum-Inspired Solver", specs: [["QUBITS", "32 sim"], ["GATES", "1.2M/s"], ["FIDEL", "0.984"], ["COOL", "N/A · classi"]], serial: "TSL-QS-D-040714", status: "CALIBRATING", accent: "#FFB300", power: "1.1kW", temp: "44°C", location: "Rack D-03 · Lab Complex", lastMaintenance: "2024.11.01", uptimeDays: 5, notes: "Recalibrating fidelity gate. ETA 2h." },
-  { code: "LAB·BENCH·E", icon: Microscope, name: "Hardware Bench", specs: [["OSCILLO", "4ch 2GHz"], ["REWORK", "Hot-air"], ["PCB", "6-layer"], ["VAC", "ESD-safe"]], serial: "TSL-LB-E-051813", status: "ONLINE", accent: "#FF3D3D", power: "0.6kW", temp: "Ambient", location: "Bench E · Lab Complex", lastMaintenance: "2024.07.22", uptimeDays: 180, notes: "Oscilloscope calibrated. Hot-air station serviced." },
-  { code: "WEB·RAIL·F", icon: Server, name: "Deployment Rail", specs: [["REGIONS", "6"], ["REPLICA", "auto"], ["CDN", "edge"], ["UP", "99.9%"]], serial: "TSL-WR-F-060321", status: "ONLINE", accent: "#FF3D3D", power: "Cloud", temp: "N/A", location: "6 regions · Global Edge", lastMaintenance: "2024.10.28", uptimeDays: 95, notes: "Auto-scaling active. Last deploy: 2h ago." },
+  { code: "LAB·BENCH·E", icon: Microscope, name: "Hardware Bench", specs: [["OSCILLO", "4ch 2GHz"], ["REWORK", "Hot-air"], ["PCB", "6-layer"], ["VAC", "ESD-safe"]], serial: "TSL-LB-E-051813", status: "ONLINE", accent: "#B85C2E", power: "0.6kW", temp: "Ambient", location: "Bench E · Lab Complex", lastMaintenance: "2024.07.22", uptimeDays: 180, notes: "Oscilloscope calibrated. Hot-air station serviced." },
+  { code: "WEB·RAIL·F", icon: Server, name: "Deployment Rail", specs: [["REGIONS", "6"], ["REPLICA", "auto"], ["CDN", "edge"], ["UP", "99.9%"]], serial: "TSL-WR-F-060321", status: "ONLINE", accent: "#B85C2E", power: "Cloud", temp: "N/A", location: "6 regions · Global Edge", lastMaintenance: "2024.10.28", uptimeDays: 95, notes: "Auto-scaling active. Last deploy: 2h ago." },
 ];
 
 export function S08Capabilities() {
@@ -65,7 +65,7 @@ export function S08Capabilities() {
     >
       <div ref={root} className="relative grid h-full grid-cols-12 gap-3 overflow-y-auto sigma-scroll-hidden lg:grid-rows-[repeat(6,minmax(min-content,1fr))]">
         {/* Ambient particles */}
-        <SigmaParticles count={14} color="#FF3D3D" />
+        <SigmaParticles count={14} color="#B85C2E" />
         {GEAR.map((g, i) => {
           const Icon = g.icon;
           const isFlipped = flipped === g.code;
@@ -73,9 +73,22 @@ export function S08Capabilities() {
             <div
               data-gear
               key={g.code}
-              className="col-span-12 row-span-3 sm:col-span-6 lg:col-span-4"
-              style={{ perspective: "1200px" } as React.CSSProperties}
+              className="sigma-card-hover col-span-12 row-span-3 sm:col-span-6 lg:col-span-4"
+              style={{
+                perspective: "1200px",
+                "--sigma-hover-accent": g.accent,
+              } as React.CSSProperties}
             >
+              {/* Accent underline draw — fires on .sigma-card-hover:hover (L→R, 0.5s). */}
+              <span className="sigma-underline-draw z-20" aria-hidden />
+              {/* Ghost index numeral — oversized 6% → 14% opacity on hover (gear accent). */}
+              <span
+                className="sigma-ghost-numeral pointer-events-none z-0"
+                aria-hidden
+                style={{ right: "8px", top: "38%" }}
+              >
+                {String(i + 1).padStart(2, "0")}
+              </span>
               {/* FLIP CONTAINER — 3D flip animation */}
               <div
                 className="relative h-full transition-transform duration-700"
@@ -229,7 +242,7 @@ export function S08Capabilities() {
           <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
             ▸ {GEAR.length} units cataloged · 5/6 online · 1 calibrating · CLICK TO FLIP
           </span>
-          <BrutalButton accent="#FF3D3D" onClick={() => navigate("s09")}>
+          <BrutalButton accent="#B85C2E" onClick={() => navigate("s09")}>
             VIEW ALLIANCES
           </BrutalButton>
         </div>

@@ -100,7 +100,7 @@ export function AlphaInsights() {
   const tagColors: Record<string, string> = { AI: "#00FF94", Web3: "#C6FF00", NLP: "#00E5FF" };
 
   return (
-    <section id="insights" className="relative border-t border-border px-3 py-20">
+    <section id="insights" aria-labelledby="insights-title" data-section="insights" className="relative border-t border-border px-3 py-20">
       <div className="sigma-grid pointer-events-none absolute inset-0 opacity-10" />
       <div className="sigma-scanlines pointer-events-none absolute inset-0 opacity-15" />
 
@@ -108,7 +108,7 @@ export function AlphaInsights() {
         <div className="flex items-end justify-between gap-4 border-b border-border pb-4">
           <div>
             <div className="font-mono text-[10px] uppercase tracking-[0.3em] text-[#FF4500]">▸ 09 / INSIGHTS</div>
-            <h2 className="mt-2 font-sans text-4xl font-black uppercase tracking-tight sm:text-6xl">
+            <h2 id="insights-title" className="mt-2 font-sans text-4xl font-black uppercase tracking-tight sm:text-6xl">
               RESEARCH <span style={{ color: "#FF4500" }}>LOGS.</span>
             </h2>
             <p className="mt-2 font-serif text-base italic text-muted-foreground">Peer-reviewed papers, datasets, and architecture blueprints. Open access.</p>
@@ -161,11 +161,17 @@ export function AlphaInsights() {
       </div>
 
       {/* Research Log Popup Modal — max-w-4xl + max-h-[85vh] + sm:p-8 so
-          the popup is bigger and properly centered on PC viewports. */}
+          the popup is bigger and properly centered on PC viewports.
+          LOOP-3-AGENTIC-SEO: role="dialog" + aria-modal so the popup is
+          recognized as a separate dialog region; inner heading hierarchy
+          demoted (h1→h2, h2→h3) so the page keeps exactly one <h1>. */}
       {selected !== null && INSIGHTS_DATA[selected] && (
         <div className="fixed inset-0 z-[150] flex items-center justify-center p-4 sm:p-8" onClick={() => setSelected(null)}>
           <div className="absolute inset-0 bg-background/90 backdrop-blur-md" />
           <div
+            role="dialog"
+            aria-modal="true"
+            aria-label={INSIGHTS_DATA[selected].title}
             className="relative z-10 max-h-[85vh] w-full max-w-4xl overflow-y-auto border border-border bg-card shadow-[0_20px_60px_-15px_rgba(0,0,0,0.7)]"
             style={{ clipPath: "polygon(16px 0, 100% 0, 100% calc(100% - 16px), calc(100% - 16px) 100%, 0 100%, 0 16px)" }}
             onClick={(e) => e.stopPropagation()}
@@ -184,14 +190,14 @@ export function AlphaInsights() {
                   </div>
                   <div className="h-1 w-full" style={{ background: color }} />
                   <div className="p-6">
-                    <h1 className="font-sans text-2xl font-black uppercase tracking-tight sm:text-3xl">{ins.title}</h1>
+                    <h2 className="font-sans text-2xl font-black uppercase tracking-tight sm:text-3xl">{ins.title}</h2>
                     <p className="mt-3 font-serif text-base italic text-muted-foreground">{ins.desc}</p>
                     <div className="mt-3 font-mono text-[9px] uppercase tracking-[0.18em] text-muted-foreground">▸ AUTHORS: {ins.authors}</div>
                   </div>
                   <div className="px-6 pb-6 space-y-4">
                     {ins.sections.map((s, i) => (
                       <div key={i} className="border-l-2 pl-4" style={{ borderColor: color }}>
-                        <h2 className="font-mono text-[10px] uppercase tracking-[0.3em]" style={{ color }}>▸ {s.heading}</h2>
+                        <h3 className="font-mono text-[10px] uppercase tracking-[0.3em]" style={{ color }}>▸ {s.heading}</h3>
                         <p className="mt-2 font-serif text-sm leading-relaxed text-foreground/85">{s.body}</p>
                       </div>
                     ))}

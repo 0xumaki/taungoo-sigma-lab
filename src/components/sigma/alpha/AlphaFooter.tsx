@@ -1,5 +1,6 @@
 "use client";
 
+import * as React from "react";
 import { PageTransitionLink } from "@/components/sigma/PageTransitionLink";
 
 // Service slugs — must match the actual /services/[slug] routes
@@ -20,13 +21,30 @@ const FOOTER_LINKS: [string, string[]][] = [
 ];
 
 export function AlphaFooter() {
+  // Back-to-top — smooth-scrolls the [data-alpha-scroll] container to top.
+  // Falls back to window.scrollTo for non-alpha contexts (e.g. detail pages).
+  const scrollTop = React.useCallback(() => {
+    const container = document.querySelector("[data-alpha-scroll]") as HTMLElement | null;
+    if (container) {
+      container.scrollTo({ top: 0, behavior: "smooth" });
+    } else {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  }, []);
+
   return (
-    <footer id="footer" className="relative border-t border-border px-3 py-10 sm:px-6 sm:py-12">
+    <footer id="footer" role="contentinfo" className="relative border-t border-border px-3 py-10 sm:px-6 sm:py-12">
       <div className="sigma-grid pointer-events-none absolute inset-0 opacity-10" />
       <div className="sigma-scanlines pointer-events-none absolute inset-0 opacity-10" />
 
-      {/* Hazard stripe top */}
+      {/* Top border accent — hazard stripe (existing) + thin solid orange
+          hairline below it for a clean editorial accent (LOOP-2 polish). */}
       <div className="sigma-hazard-orange absolute inset-x-0 top-0 h-1" />
+      <div
+        className="pointer-events-none absolute inset-x-0 top-1 h-px"
+        style={{ background: "linear-gradient(to right, transparent, rgba(255,69,0,0.65) 12%, rgba(255,69,0,0.65) 88%, transparent)" }}
+        aria-hidden
+      />
 
       <div className="relative z-10 mx-auto w-full max-w-[1600px]">
         {/* Top section: logo + links grid */}
@@ -36,7 +54,7 @@ export function AlphaFooter() {
             <div className="flex items-center gap-2">
               <span className="sigma-spin-slow font-sans text-2xl font-black text-[#FF4500] sm:text-3xl">Σ</span>
               <div>
-                <div className="font-sans text-sm font-black uppercase">TAUNGOO SIGMA LAB</div>
+                <div className="font-sans text-sm font-black uppercase">TAUNGOO Σ Lab</div>
                 <div className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground sm:text-[8px]">AI AUTOMATION & DEV</div>
               </div>
             </div>
@@ -109,7 +127,8 @@ export function AlphaFooter() {
                 key={ep}
                 href={`${ep}?XTransformPort=3000`}
                 target="_blank"
-                rel="noreferrer"
+                // LOOP-2-LH-BEST-PRACTICES: full rel for "external-anchors-use-rel-noopener" audit.
+                rel="noopener noreferrer"
                 className="border border-border/40 px-2 py-0.5 font-mono text-[10px] text-muted-foreground transition-colors hover:border-foreground/40 hover:text-foreground sm:text-[8px]"
               >
                 {ep}
@@ -118,10 +137,10 @@ export function AlphaFooter() {
           </div>
         </div>
 
-        {/* Bottom section: copyright + meta */}
+        {/* Bottom section: copyright + meta + back-to-top */}
         <div className="mt-6 flex flex-wrap items-center justify-between gap-2 border-t border-border/40 pt-4 font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground sm:text-[9px]">
           <div className="flex flex-wrap items-center gap-2 sm:gap-4">
-            <span>© MMXVI TAUNGOO SIGMA LAB</span>
+            <span>© MMXVI TAUNGOO Σ Lab</span>
             <span className="hidden sm:inline">·</span>
             <span className="hidden sm:inline text-[#00FF94]">▮ ALL SYSTEMS NOMINAL</span>
           </div>
@@ -132,6 +151,17 @@ export function AlphaFooter() {
             <span className="hidden sm:inline">·</span>
             <span className="hidden sm:inline">11 SECTORS</span>
           </div>
+          {/* Back-to-top — smooth scroll to top of the alpha scroll container.
+              Hover lifts -2px (alpha-back-to-top), border + accent on hover. */}
+          <button
+            type="button"
+            onClick={scrollTop}
+            className="alpha-back-to-top group flex items-center gap-1.5 border border-border/60 bg-background/60 px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground transition-colors hover:border-[#FF4500]/60 hover:text-[#FF4500]"
+            aria-label="Back to top"
+          >
+            <span className="text-[#FF4500]">↑</span>
+            <span>TOP</span>
+          </button>
         </div>
 
         {/* Fake barcode */}

@@ -42,11 +42,11 @@ export function SigmaRandom() {
   return (
     <button
       onClick={goRandom}
-      className="fixed bottom-9 left-9 z-[78] hidden items-center gap-1.5 border border-border bg-background/80 px-2 py-1 font-mono text-[9px] uppercase tracking-[0.18em] text-muted-foreground backdrop-blur-sm transition-colors hover:border-[#FF2D7E]/40 hover:text-foreground md:flex"
+      className="fixed bottom-9 left-9 z-[78] hidden items-center gap-1.5 border border-border bg-background/80 px-2 py-1 font-mono text-[9px] uppercase tracking-[0.18em] text-muted-foreground backdrop-blur-sm transition-colors hover:border-[#FFB300]/40 hover:text-foreground md:flex"
       data-cursor="hover"
       title="Random sector [R]"
     >
-      <Shuffle className="h-3 w-3 text-[#FF2D7E]" />
+      <Shuffle className="h-3 w-3 text-[#FFB300]" />
       RANDOM
     </button>
   );

@@ -36,13 +36,13 @@ interface Member {
 }
 
 const MEMBERS: Member[] = [
-  { code: "OP·01", name: "THE ARCHITECT", realName: "Aung Min", role: "Lab Director", focus: "Strategy · Sigma Variable", sig: 0.99, glyph: "Σ", accent: "#FF2D7E", clearance: "OMEGA", joined: "2016.01", location: "Yangon, MM", specialties: ["Strategy", "Architecture", "Sigma Theory", "Partnerships"], projects: 11, bio: "Founded the lab on the principle that a research institution should be measured as a sigma — the unknown deviation that bends the curve. Holds the sigma variable at 1.0000.", signature: "We are the sigma variable." },
+  { code: "OP·01", name: "THE ARCHITECT", realName: "Aung Min", role: "Lab Director", focus: "Strategy · Sigma Variable", sig: 0.99, glyph: "Σ", accent: "#FFB300", clearance: "OMEGA", joined: "2016.01", location: "Yangon, MM", specialties: ["Strategy", "Architecture", "Sigma Theory", "Partnerships"], projects: 11, bio: "Founded the lab on the principle that a research institution should be measured as a sigma — the unknown deviation that bends the curve. Holds the sigma variable at 1.0000.", signature: "We are the sigma variable." },
   { code: "OP·02", name: "NEURAL HAND", realName: "Su Mon", role: "AI Lead", focus: "Multi-model orchestration", sig: 0.94, glyph: "◴", accent: "#00E5FF", clearance: "ALPHA", joined: "2016.02", location: "Remote", specialties: ["LLM Orchestration", "Voice AI", "RLM", "Agent Loops"], projects: 4, bio: "Architect of the multi-model synergy stack. Trains self-learning CRM loops against real field conversions. Prime Agent RLM patent holder.", signature: "The loop learns. The hand guides." },
   { code: "OP·03", name: "CHAIN WEAVER", realName: "Thet Aung", role: "Web3 Lead", focus: "DeFi · RWA · DAO", sig: 0.91, glyph: "⬡", accent: "#C6FF00", clearance: "ALPHA", joined: "2016.03", location: "Yangon, MM", specialties: ["DeFi", "RWA Tokenization", "DAO Governance", "Solidity"], projects: 5, bio: "Ships DeFi navigators, RWA tokenization rails, and non-custodial wallets to mainnet. Tokenized the first agricultural microgrid in the Yangon region.", signature: "On-chain or it didn't happen." },
   { code: "OP·04", name: "EDGE RUNNER", realName: "Kyaw Zin", role: "IoT Engineer", focus: "Sensors · Microgrids", sig: 0.88, glyph: "⌖", accent: "#FFB300", clearance: "BETA", joined: "2016.04", location: "Yangon, MM", specialties: ["LoRa Mesh", "Microgrids", "Edge Inference", "PCB Design"], projects: 3, bio: "Runs the 240-node agricultural sensor mesh at the Yangon tech park. 8.1M packets/day, 41ms median latency, 2-year battery life on AA cells.", signature: "The edge is where the signal lives." },
   { code: "OP·05", name: "QUANTUM SEER", realName: "Nan Khin", role: "Research Scientist", focus: "Quantum-inspired optimization", sig: 0.86, glyph: "⟁", accent: "#B388FF", clearance: "BETA", joined: "2024.05", location: "Remote", specialties: ["Quantum Annealing", "Combinatorics", "Routing", "Simulation"], projects: 2, bio: "Builds quantum-inspired optimization kernels that run on classical hardware. 32 simulated qubits, 1.2M gates/s, 0.984 fidelity.", signature: "The future is superposed." },
   { code: "OP·06", name: "SIGNAL TENDER", realName: "Hsu Hsu", role: "Community Lead", focus: "Literacy · Local NLP", sig: 0.93, glyph: "◍", accent: "#00FF94", clearance: "ALPHA", joined: "2016.06", location: "Yangon, MM", specialties: ["Local NLP", "Digital Literacy", "Open Data", "Community"], projects: 3, bio: "Built the 4-language voice corpus with the local Myanmar community under the Helsinki-Trust partnership model. 1.8k learners and counting.", signature: "Built with, not for." },
-  { code: "OP·07", name: "NULL CIPHER", realName: "Lin Htet", role: "Security", focus: "Threat modeling · Audits", sig: 0.97, glyph: "⚿", accent: "#FF3D3D", clearance: "OMEGA", joined: "2024.07", location: "Classified", specialties: ["Threat Modeling", "Smart Contract Audit", "Pen Test", "Crypto"], projects: 6, bio: "Threat-models every deployment before it touches mainnet. Zero exploits shipped to production. Holds the keys to the cold storage vault.", signature: "Trust no input. Verify every byte." },
+  { code: "OP·07", name: "NULL CIPHER", realName: "Lin Htet", role: "Security", focus: "Threat modeling · Audits", sig: 0.97, glyph: "⚿", accent: "#B85C2E", clearance: "OMEGA", joined: "2024.07", location: "Classified", specialties: ["Threat Modeling", "Smart Contract Audit", "Pen Test", "Crypto"], projects: 6, bio: "Threat-models every deployment before it touches mainnet. Zero exploits shipped to production. Holds the keys to the cold storage vault.", signature: "Trust no input. Verify every byte." },
   { code: "OP·08", name: "GHOST PRINTER", realName: "Zaw Ye", role: "Hardware", focus: "Lab equipment · PCB", sig: 0.82, glyph: "⚙", accent: "#FFEB3B", clearance: "BETA", joined: "2016.08", location: "Yangon, MM", specialties: ["PCB Design", "Oscilloscope", "Rework", "ESD Safety"], projects: 2, bio: "Runs the hardware bench: 4-channel 2GHz oscilloscope, hot-air rework, 6-layer PCB. ESD-safe vacuum. The lab's ghost in the machine.", signature: "Print. Test. Repeat." },
 ];
 
@@ -73,18 +73,18 @@ export function S05Collective() {
     >
       <div ref={root} className="relative grid h-full grid-cols-12 gap-3 overflow-y-auto sigma-scroll-hidden">
         {/* Ambient particles */}
-        <SigmaParticles count={12} color="#FF2D7E" />
+        <SigmaParticles count={12} color="#FFB300" />
         {/* intro panel */}
         <Panel
           label="THE SIGMA COLLECTIVE"
           id="08 OPS"
-          accent="#FF2D7E"
+          accent="#FFB300"
           className="col-span-12 md:col-span-4 md:row-span-2"
           scan
         >
           <div className="flex h-full flex-col p-4">
             <div className="sigma-spin-slow mx-auto mb-3 flex h-24 w-24 items-center justify-center border font-mono text-5xl"
-              style={{ borderColor: "#FF2D7E55", color: "#FF2D7E" }}>
+              style={{ borderColor: "#FFB30055", color: "#FFB300" }}>
               Σ
             </div>
             <p className="font-serif text-sm italic text-foreground/80">

@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { toast } from "sonner";
+import { useMagnetic } from "@/components/sigma/beta/Hero";
 
 const CHANNELS = ["RESEARCH", "PARTNERSHIP", "CAREER", "PRESS", "OTHER"];
 const SERVICES = ["AI Chatbot", "Voice AI", "Agent Swarm", "AI Automation", "Web3 Wallets", "Smart Contract", "Web/WebApp", "Mobile App", "Other"];
@@ -16,6 +17,9 @@ export function AlphaContact() {
   const [transmitting, setTransmitting] = React.useState(false);
   const [logLines, setLogLines] = React.useState<string[]>([]);
 
+  // Magnetic submit (max 6px pull). Hook self-disables for touch + reduced-motion.
+  const submitRef = useMagnetic<HTMLButtonElement>(6);
+
   const transmit = async () => {
     if (!identity.trim() || !message.trim()) {
       toast.error("IDENTITY + MESSAGE REQUIRED");
@@ -24,10 +28,10 @@ export function AlphaContact() {
     setTransmitting(true);
     setLogLines([]);
     const steps = [
-      "> establish secure channel...",
+      "> establish secure channel…",
       "> handshake: OK",
-      "> encrypting payload...",
-      "> transmitting...",
+      "> encrypting payload…",
+      "> transmitting…",
       "> sigma acknowledged.",
     ];
     for (let i = 0; i < steps.length; i++) {
@@ -54,7 +58,7 @@ export function AlphaContact() {
   };
 
   return (
-    <section id="contact" className="relative border-t border-border px-3 py-12 sm:px-6 sm:py-20">
+    <section id="contact" aria-labelledby="contact-title" data-section="contact" className="relative border-t border-border px-3 py-12 sm:px-6 sm:py-20">
       <div className="sigma-grid pointer-events-none absolute inset-0 opacity-10" />
       <div className="sigma-scanlines pointer-events-none absolute inset-0 opacity-15" />
 
@@ -63,7 +67,7 @@ export function AlphaContact() {
         <div className="flex flex-col gap-3 border-b border-border pb-4 sm:flex-row sm:items-end sm:justify-between sm:gap-4">
           <div>
             <div className="font-mono text-[10px] uppercase tracking-[0.3em] text-[#FF4500]">▸ 10 / CONTACT</div>
-            <h2 className="mt-2 font-sans text-3xl font-black uppercase leading-tight tracking-tight sm:text-5xl md:text-6xl">
+            <h2 id="contact-title" className="mt-2 font-sans text-3xl font-black uppercase leading-tight tracking-tight sm:text-5xl md:text-6xl">
               LET'S SHIP <span style={{ color: "#FF4500" }}>SOMETHING.</span>
             </h2>
           </div>
@@ -88,15 +92,20 @@ export function AlphaContact() {
             <div className="flex flex-1 flex-col p-4 gap-4 sm:p-4">
               {/* Identity */}
               <div>
-                <label className="mb-1 block font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground sm:text-[9px]">
+                <label htmlFor="alpha-contact-identity" className="mb-1 block font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground sm:text-[9px]">
                   ▸ IDENTITY HANDLE / EMAIL
                 </label>
-                <input
-                  value={identity}
-                  onChange={(e) => setIdentity(e.target.value)}
-                  placeholder="e.g. @your-handle or you@company.com"
-                  className="w-full border border-border bg-background px-3 py-2.5 font-mono text-sm text-foreground outline-none transition focus:border-[#FF4500] focus:bg-[#FF45000a]"
-                />
+                <div className="alpha-input-wrap">
+                  <input
+                    id="alpha-contact-identity"
+                    value={identity}
+                    onChange={(e) => setIdentity(e.target.value)}
+                    placeholder="e.g. @your-handle or you@company.com"
+                    className="w-full border border-border bg-background px-3 py-2.5 font-mono text-sm text-foreground outline-none transition focus:border-[#FF4500] focus:bg-[#FF45000a]"
+                  />
+                  {/* Underline draw — L→R on focus (alpha-input-underline) */}
+                  <span className="alpha-input-underline" aria-hidden />
+                </div>
               </div>
 
               {/* Channel selector */}
@@ -167,15 +176,20 @@ export function AlphaContact() {
 
               {/* Message — flex-1 so textarea grows to fill remaining space */}
               <div className="flex flex-1 flex-col">
-                <label className="mb-1 block font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground sm:text-[9px]">
+                <label htmlFor="alpha-contact-message" className="mb-1 block font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground sm:text-[9px]">
                   ▸ ENCRYPTED MESSAGE
                 </label>
-                <textarea
-                  value={message}
-                  onChange={(e) => setMessage(e.target.value)}
-                  placeholder="> describe your project, timeline, and what success looks like..."
-                  className="min-h-[120px] w-full flex-1 resize-none border border-border bg-background px-3 py-2.5 font-mono text-sm leading-relaxed text-foreground outline-none transition focus:border-[#FF4500] focus:bg-[#FF45000a]"
-                />
+                <div className="alpha-input-wrap flex-1 flex flex-col">
+                  <textarea
+                    id="alpha-contact-message"
+                    value={message}
+                    onChange={(e) => setMessage(e.target.value)}
+                    placeholder="> describe your project, timeline, and what success looks like…"
+                    className="min-h-[120px] w-full flex-1 resize-none border border-border bg-background px-3 py-2.5 font-mono text-sm leading-relaxed text-foreground outline-none transition focus:border-[#FF4500] focus:bg-[#FF45000a]"
+                  />
+                  {/* Underline draw — L→R on focus (alpha-input-underline) */}
+                  <span className="alpha-input-underline" aria-hidden />
+                </div>
               </div>
 
               {/* Transmit log */}
@@ -188,13 +202,14 @@ export function AlphaContact() {
                 {transmitting && <span className="sigma-blink">▮</span>}
               </div>
 
-              {/* Transmit button */}
+              {/* Transmit button — magnetic ref + alpha-magnetic transition class */}
               <button
+                ref={submitRef}
                 onClick={transmit}
                 disabled={transmitting}
-                className="w-full border border-[#FF4500] bg-[#FF4500] py-3 font-mono text-[11px] uppercase tracking-[0.2em] text-black transition-opacity hover:opacity-80 disabled:opacity-50"
+                className="alpha-magnetic w-full border border-[#FF4500] bg-[#FF4500] py-3 font-mono text-[11px] uppercase tracking-[0.2em] text-black transition-opacity hover:opacity-80 disabled:opacity-50"
               >
-                {transmitting ? "▮ TRANSMITTING..." : "▸ TRANSMIT MESSAGE ▸"}
+                {transmitting ? "▮ TRANSMITTING…" : "▸ TRANSMIT MESSAGE ▸"}
               </button>
             </div>
           </div>
@@ -209,7 +224,7 @@ export function AlphaContact() {
                   ["EMAIL", "contact@taungoosigma.lab", "#00FF94"],
                   ["PHONE", "+95 · on request", "#00E5FF"],
                   ["GITHUB", "[ ACCESS RESTRICTED ]", "#C6FF00"],
-                  ["LOCATION", "Yangon, MM", "#FF2D7E"],
+                  ["LOCATION", "Yangon, MM", "#FFB300"],
                 ].map(([k, v, c]) => (
                   <div key={k} className="flex items-center gap-2 py-2.5 sm:gap-3">
                     <span className="h-2 w-2 shrink-0" style={{ background: c }} />
@@ -253,7 +268,7 @@ export function AlphaContact() {
             <div className="alpha-card-hover flex items-center justify-center border border-border/40 p-4" style={{ "--sigma-hover-accent": "#FF4500" } as React.CSSProperties}>
               <span className="sigma-spin-slow mr-3 font-sans text-3xl font-black text-[#FF4500] sm:text-4xl">Σ</span>
               <div className="text-center">
-                <div className="font-sans text-base font-black uppercase sm:text-lg">TAUNGOO SIGMA LAB</div>
+                <div className="font-sans text-base font-black uppercase sm:text-lg">TAUNGOO Σ Lab</div>
                 <div className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground sm:text-[8px]">© MMXVI · ALL SYSTEMS NOMINAL</div>
               </div>
             </div>

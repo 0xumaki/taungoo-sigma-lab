@@ -1,0 +1,569 @@
+     1→"use client";
+     2→
+     3→import * as React from "react";
+     4→import { useBasketStore, formatMMK, type BasketItem, DISCOUNT_TIERS, getNextTier } from "@/lib/sigma/basket";
+     5→import { toast } from "sonner";
+     6→import { ShoppingBag, X, Trash2, Send } from "lucide-react";
+     7→
+     8→// Add-on data — researched compatible services for upselling
+     9→export const ADDONS: Record<string, { slug: string; name: string; icon: string; price: string; reason: string }[]> = {
+    10→  "ai-chatbot": [
+    11→    { slug: "voice-ai", name: "Voice AI", icon: "♫", price: "from 2,500,000 MMK", reason: "Add voice capabilities to your chatbot" },
+    12→    { slug: "ai-automation", name: "AI Automation", icon: "⚙", price: "from 1,220,000 MMK", reason: "Automate chatbot-triggered workflows" },
+    13→    { slug: "api-mcp", name: "API & MCP", icon: "⌗", price: "from 4,830,000 MMK", reason: "Expose chatbot via API for integrations" },
+    14→  ],
+    15→  "voice-ai": [
+    16→    { slug: "ai-chatbot", name: "AI Chatbot", icon: "◐", price: "from 2,200,000 MMK", reason: "Text fallback when voice unavailable" },
+    17→    { slug: "ai-automation", name: "AI Automation", icon: "⚙", price: "from 1,220,000 MMK", reason: "Automate post-call workflows" },
+    18→    { slug: "content-copywriting", name: "Content & Copywriting", icon: "✎", price: "from 966,000 MMK", reason: "Call scripts and conversation flows" },
+    19→  ],
+    20→  "agent-swarm": [
+    21→    { slug: "ai-automation", name: "AI Automation", icon: "⚙", price: "from 1,220,000 MMK", reason: "Orchestrate swarm via N8N workflows" },
+    22→    { slug: "api-mcp", name: "API & MCP", icon: "⌗", price: "from 4,830,000 MMK", reason: "Expose swarm via MCP for external triggers" },
+    23→    { slug: "ai-chatbot", name: "AI Chatbot", icon: "◐", price: "from 2,200,000 MMK", reason: "Human-like interface for swarm outputs" },
+    24→  ],
+    25→  "ai-automation": [
+    26→    { slug: "api-mcp", name: "API & MCP", icon: "⌗", price: "from 4,830,000 MMK", reason: "Custom APIs for workflow integrations" },
+    27→    { slug: "web-webapp", name: "Web / WebApp", icon: "▣", price: "from 2,250,000 MMK", reason: "Dashboard for monitoring automations" },
+    28→    { slug: "ai-chatbot", name: "AI Chatbot", icon: "◐", price: "from 2,200,000 MMK", reason: "Chatbot interface for triggering workflows" },
+    29→  ],
+    30→  "api-mcp": [
+    31→    { slug: "ai-automation", name: "AI Automation", icon: "⚙", price: "from 1,220,000 MMK", reason: "Automate API-triggered workflows" },
+    32→    { slug: "web-webapp", name: "Web / WebApp", icon: "▣", price: "from 2,250,000 MMK", reason: "Admin dashboard for API management" },
+    33→    { slug: "security-audit", name: "Security Audit", icon: "⚿", price: "from 5,500,000 MMK", reason: "Audit API for vulnerabilities" },
+    34→  ],
+    35→  "hermes-openclaw-grokbot": [
+    36→    { slug: "agent-swarm", name: "Agent Swarm", icon: "⬡", price: "from 3,660,000 MMK", reason: "Multi-agent orchestration layer" },
+    37→    { slug: "ai-automation", name: "AI Automation", icon: "⚙", price: "from 1,220,000 MMK", reason: "Workflow automation integration" },
+    38→    { slug: "api-mcp", name: "API & MCP", icon: "⌗", price: "from 4,830,000 MMK", reason: "MCP server for external access" },
+    39→  ],
+    40→  "ai-video-generation": [
+    41→    { slug: "graphic-design", name: "Graphic Design", icon: "◆", price: "from 1,210,000 MMK", reason: "Brand-consistent video thumbnails" },
+    42→    { slug: "content-copywriting", name: "Content & Copywriting", icon: "✎", price: "from 966,000 MMK", reason: "Video scripts and descriptions" },
+    43→    { slug: "online-media-buying", name: "Online Media Buying", icon: "▲", price: "from 10% of ad budget + 1,210,000 MMK", reason: "Distribute videos as ad campaigns" },
+    44→  ],
+    45→  "3d-modeling": [
+    46→    { slug: "ui-ux-design", name: "UI/UX Design", icon: "◡", price: "from 2,400,000 MMK", reason: "Integrate 3D assets into product UI" },
+    47→    { slug: "graphic-design", name: "Graphic Design", icon: "◆", price: "from 1,210,000 MMK", reason: "Branded materials with 3D visuals" },
+    48→    { slug: "web-webapp", name: "Web / WebApp", icon: "▣", price: "from 2,250,000 MMK", reason: "WebGL/Three.js integration for 3D" },
+    49→  ],
+    50→  "graphic-design": [
+    51→    { slug: "ui-ux-design", name: "UI/UX Design", icon: "◡", price: "from 2,400,000 MMK", reason: "Apply designs to product interfaces" },
+    52→    { slug: "online-media-buying", name: "Online Media Buying", icon: "▲", price: "from 10% of ad budget + 1,210,000 MMK", reason: "Run ad campaigns with designs" },
+    53→    { slug: "content-copywriting", name: "Content & Copywriting", icon: "✎", price: "from 966,000 MMK", reason: "Copy to accompany designs" },
+    54→  ],
+    55→  "content-copywriting": [
+    56→    { slug: "graphic-design", name: "Graphic Design", icon: "◆", price: "from 1,210,000 MMK", reason: "Visual assets for written content" },
+    57→    { slug: "online-media-buying", name: "Online Media Buying", icon: "▲", price: "from 10% of ad budget + 1,210,000 MMK", reason: "Distribute content via ad campaigns" },
+    58→    { slug: "ai-automation", name: "AI Automation", icon: "⚙", price: "from 1,220,000 MMK", reason: "Automate content publishing pipelines" },
+    59→  ],
+    60→  "online-media-buying": [
+    61→    { slug: "graphic-design", name: "Graphic Design", icon: "◆", price: "from 1,210,000 MMK", reason: "Ad creatives and visuals" },
+    62→    { slug: "content-copywriting", name: "Content & Copywriting", icon: "✎", price: "from 966,000 MMK", reason: "Ad copy and headlines" },
+    63→    { slug: "ai-video-generation", name: "AI Video Generation", icon: "▶", price: "from 2,500,000 MMK", reason: "Video ads for campaigns" },
+    64→  ],
+    65→  "ui-ux-design": [
+    66→    { slug: "web-webapp", name: "Web / WebApp", icon: "▣", price: "from 2,250,000 MMK", reason: "Implement designs in production" },
+    67→    { slug: "android-ios-app", name: "Android & iOS App", icon: "▣", price: "from 15,000,000 MMK", reason: "Mobile implementation of designs" },
+    68→    { slug: "graphic-design", name: "Graphic Design", icon: "◆", price: "from 1,210,000 MMK", reason: "Brand assets to match UI" },
+    69→  ],
+    70→  "android-ios-app": [
+    71→    { slug: "aso", name: "ASO", icon: "⊙", price: "from 1,200,000 MMK", reason: "Optimize app store visibility" },
+    72→    { slug: "web-webapp", name: "Web / WebApp", icon: "▣", price: "from 2,250,000 MMK", reason: "Companion web app" },
+    73→    { slug: "ui-ux-design", name: "UI/UX Design", icon: "◡", price: "from 2,400,000 MMK", reason: "Polished mobile UI/UX" },
+    74→  ],
+    75→  "web-webapp": [
+    76→    { slug: "ai-chatbot", name: "AI Chatbot", icon: "◐", price: "from 2,200,000 MMK", reason: "Add AI support to your web app" },
+    77→    { slug: "ui-ux-design", name: "UI/UX Design", icon: "◡", price: "from 2,400,000 MMK", reason: "Professional design system" },
+    78→    { slug: "security-audit", name: "Security Audit", icon: "⚿", price: "from 5,500,000 MMK", reason: "Security audit before launch" },
+    79→  ],
+    80→  "chrome-extensions": [
+    81→    { slug: "web-webapp", name: "Web / WebApp", icon: "▣", price: "from 2,250,000 MMK", reason: "Companion web dashboard" },
+    82→    { slug: "api-mcp", name: "API & MCP", icon: "⌗", price: "from 4,830,000 MMK", reason: "Backend API for extension" },
+    83→    { slug: "graphic-design", name: "Graphic Design", icon: "◆", price: "from 1,210,000 MMK", reason: "Extension icons and branding" },
+    84→  ],
+    85→  "desktop-macbook-apps": [
+    86→    { slug: "web-webapp", name: "Web / WebApp", icon: "▣", price: "from 2,250,000 MMK", reason: "Web companion" },
+    87→    { slug: "ui-ux-design", name: "UI/UX Design", icon: "◡", price: "from 2,400,000 MMK", reason: "Native desktop UI design" },
+    88→    { slug: "security-audit", name: "Security Audit", icon: "⚿", price: "from 5,500,000 MMK", reason: "Code signing + security review" },
+    89→  ],
+    90→  "aso": [
+    91→    { slug: "android-ios-app", name: "Android & iOS App", icon: "▣", price: "from 15,000,000 MMK", reason: "App development if not yet built" },
+    92→    { slug: "graphic-design", name: "Graphic Design", icon: "◆", price: "from 1,210,000 MMK", reason: "Store screenshots and icons" },
+    93→    { slug: "online-media-buying", name: "Online Media Buying", icon: "▲", price: "from 10% of ad budget + 1,210,000 MMK", reason: "Boost app installs with ads" },
+    94→  ],
+    95→  "web3-wallets": [
+    96→    { slug: "security-audit", name: "Security Audit", icon: "⚿", price: "from 5,500,000 MMK", reason: "Critical for wallet security" },
+    97→    { slug: "smart-contract-development", name: "Smart Contract Dev", icon: "∎", price: "from 10,000,000 MMK", reason: "Wallet smart contracts" },
+    98→    { slug: "web-webapp", name: "Web / WebApp", icon: "▣", price: "from 2,250,000 MMK", reason: "Web interface for wallet" },
+    99→  ],
+   100→  "amm-dex": [
+   101→    { slug: "smart-contract-development", name: "Smart Contract Dev", icon: "∎", price: "from 10,000,000 MMK", reason: "Core DEX contracts" },
+   102→    { slug: "security-audit", name: "Security Audit", icon: "⚿", price: "from 5,500,000 MMK", reason: "Audit before mainnet" },
+   103→    { slug: "web-webapp", name: "Web / WebApp", icon: "▣", price: "from 2,250,000 MMK", reason: "DEX frontend dashboard" },
+   104→  ],
+   105→  "dao-governance": [
+   106→    { slug: "smart-contract-development", name: "Smart Contract Dev", icon: "∎", price: "from 10,000,000 MMK", reason: "Governance contracts" },
+   107→    { slug: "web-webapp", name: "Web / WebApp", icon: "▣", price: "from 2,250,000 MMK", reason: "Governance dashboard" },
+   108→    { slug: "security-audit", name: "Security Audit", icon: "⚿", price: "from 5,500,000 MMK", reason: "Audit governance contracts" },
+   109→  ],
+   110→  "nft-systems": [
+   111→    { slug: "smart-contract-development", name: "Smart Contract Dev", icon: "∎", price: "from 10,000,000 MMK", reason: "Minting contracts" },
+   112→    { slug: "web-webapp", name: "Web / WebApp", icon: "▣", price: "from 2,250,000 MMK", reason: "Marketplace frontend" },
+   113→    { slug: "security-audit", name: "Security Audit", icon: "ʞ", price: "from 5,500,000 MMK", reason: "Audit minting contracts" },
+   114→  ],
+   115→  "security-audit": [
+   116→    { slug: "rwa-development", name: "RWA Development", icon: "▣", price: "from 12,550,000 MMK", reason: "Tokenize real-world assets" },
+   117→    { slug: "smart-contract-development", name: "Smart Contract Dev", icon: "∎", price: "from 10,000,000 MMK", reason: "Fix vulnerabilities found" },
+   118→    { slug: "web3-wallets", name: "Web3 Wallets", icon: "⬡", price: "from 12,000,000 MMK", reason: "Secure wallet implementation" },
+   119→  ],
+   120→  "smart-contract-development": [
+   121→    { slug: "security-audit", name: "Security Audit", icon: "ʞ", price: "from 5,500,000 MMK", reason: "Audit before deployment" },
+   122→    { slug: "rwa-development", name: "RWA Development", icon: "▣", price: "from 12,550,000 MMK", reason: "RWA tokenization for your assets" },
+   123→    { slug: "web-webapp", name: "Web / WebApp", icon: "▣", price: "from 2,250,000 MMK", reason: "DApp frontend" },
+   124→  ],
+   125→  "rwa-development": [
+   126→    { slug: "security-audit", name: "Security Audit", icon: "ʞ", price: "from 5,500,000 MMK", reason: "Comprehensive security audit" },
+   127→    { slug: "smart-contract-development", name: "Smart Contract Dev", icon: "∎", price: "from 10,000,000 MMK", reason: "Fix found vulnerabilities" },
+   128→    { slug: "web3-wallets", name: "Web3 Wallets", icon: "⬡", price: "from 12,000,000 MMK", reason: "Secure wallet infrastructure" },
+   129→  ],
+   130→  "money-market-development": [
+   131→    { slug: "security-audit", name: "Security Audit", icon: "ʞ", price: "from 5,500,000 MMK", reason: "Critical for DeFi protocols" },
+   132→    { slug: "smart-contract-development", name: "Smart Contract Dev", icon: "∎", price: "from 10,000,000 MMK", reason: "Additional contract modules" },
+   133→    { slug: "amm-dex", name: "AMM / DEX", icon: "⇄", price: "from 20,000,000 MMK", reason: "Integrated swap functionality" },
+   134→  ],
+   135→  "stablecoin-development": [
+   136→    { slug: "security-audit", name: "Security Audit", icon: "ʞ", price: "from 5,500,000 MMK", reason: "Government-grade security" },
+   137→    { slug: "smart-contract-development", name: "Smart Contract Dev", icon: "∎", price: "from 10,000,000 MMK", reason: "Core infrastructure contracts" },
+   138→    { slug: "web-webapp", name: "Web / WebApp", icon: "▣", price: "from 2,250,000 MMK", reason: "Admin and user portals" },
+   139→  ],
+   140→  "mobile-web-game-development": [
+   141→    { slug: "ui-ux-design", name: "UI/UX Design", icon: "◡", price: "from 2,400,000 MMK", reason: "Game UI/UX and level design" },
+   142→    { slug: "3d-modeling", name: "3D Modeling", icon: "◈", price: "from 1,800,000 MMK", reason: "Game assets and environments" },
+   143→    { slug: "android-ios-app", name: "Android & iOS App", icon: "▣", price: "from 15,000,000 MMK", reason: "Native mobile game port" },
+   144→  ],
+   145→};
+   146→
+   147→// Main service prices for basket
+   148→export const SERVICE_PRICES: Record<string, { name: string; icon: string; price: string }> = {
+   149→  "ai-chatbot": { name: "AI Chatbot", icon: "◐", price: "from 2,200,000 MMK" },
+   150→  "voice-ai": { name: "Voice AI", icon: "♫", price: "from 2,500,000 MMK" },
+   151→  "agent-swarm": { name: "Agent Swarm", icon: "⬡", price: "from 3,660,000 MMK" },
+   152→  "ai-automation": { name: "AI Automation", icon: "⚙", price: "from 1,220,000 MMK" },
+   153→  "api-mcp": { name: "API & MCP", icon: "⌗", price: "from 4,830,000 MMK" },
+   154→  "hermes-openclaw-grokbot": { name: "HERMES / Openclaw / GrokBot", icon: "⚡", price: "custom" },
+   155→  "ai-video-generation": { name: "AI Video Generation", icon: "▶", price: "from 2,500,000 MMK" },
+   156→  "3d-modeling": { name: "3D Modeling", icon: "◈", price: "from 1,800,000 MMK" },
+   157→  "graphic-design": { name: "Graphic Design", icon: "◆", price: "from 1,210,000 MMK" },
+   158→  "content-copywriting": { name: "Content & Copywriting", icon: "✎", price: "from 966,000 MMK" },
+   159→  "online-media-buying": { name: "Online Media Buying", icon: "▲", price: "from 10% of ad budget + 1,210,000 MMK" },
+   160→  "ui-ux-design": { name: "UI/UX Design", icon: "◡", price: "from 2,400,000 MMK" },
+   161→  "android-ios-app": { name: "Android & iOS App", icon: "▣", price: "from 15,000,000 MMK" },
+   162→  "web-webapp": { name: "Web / WebApp", icon: "▣", price: "from 2,250,000 MMK" },
+   163→  "chrome-extensions": { name: "Chrome Extensions", icon: "⬚", price: "from 2,415,000 MMK" },
+   164→  "desktop-macbook-apps": { name: "Desktop / MacBook Apps", icon: "◱", price: "from 9,660,000 MMK" },
+   165→  "aso": { name: "ASO", icon: "⊙", price: "from 1,200,000 MMK" },
+   166→  "web3-wallets": { name: "Web3 Wallets", icon: "⬡", price: "from 12,000,000 MMK" },
+   167→  "amm-dex": { name: "AMM / DEX", icon: "⇄", price: "from 20,000,000 MMK" },
+   168→  "dao-governance": { name: "DAO Governance", icon: "◍", price: "from 8,500,000 MMK" },
+   169→  "nft-systems": { name: "NFT Systems", icon: "✦", price: "from 15,000,000 MMK" },
+   170→  "security-audit": { name: "Security Audit", icon: "ʞ", price: "from 5,500,000 MMK" },
+   171→  "smart-contract-development": { name: "Smart Contract Dev", icon: "∎", price: "from 10,000,000 MMK" },
+   172→  "rwa-development": { name: "RWA Tokenization", icon: "▣", price: "from 12,550,000 MMK" },
+   173→  "money-market-development": { name: "Money Market Development", icon: "$", price: "from 33,550,000 MMK" },
+   174→  "stablecoin-development": { name: "Stablecoin Development", icon: "₵", price: "from 15,550,000 MMK" },
+   175→  "mobile-web-game-development": { name: "Mobile/Web Game Dev", icon: "◆", price: "from 9,570,000 MMK" },
+   176→};
+   177→
+   178→/**
+   179→ * ServiceBasket — floating basket button + RFQ modal.
+   180→ * `accent` rebrands the chrome: default #FF4500 (alpha/detail pages),
+   181→ * beta mode mounts it with its gold #D4AF37 accent.
+   182→ */
+   183→export function ServiceBasket({ accent = "#FF4500" }: { accent?: string }) {
+   184→  const { items, isOpen, toggleOpen, removeItem, clearBasket, getTotal, getServicesTotal, getAddonsTotal, getDiscount, getDiscountedTotal, getServiceCount, getAddonCount, haggleUsed, haggleRoll, haggleDiscountRate, getHaggleDiscount, getGrandTotal } = useBasketStore();
+   185→  const [submitting, setSubmitting] = React.useState(false);
+   186→  const [btnHover, setBtnHover] = React.useState(false);
+   187→
+   188→  // === A11Y: focus management for the basket modal ===
+   189→  // - toggleBtnRef:  the floating basket button — focus restored here on close.
+   190→  // - closeBtnRef:    the modal's close button — autofocus on open so keyboard
+   191→  //                   users land inside the dialog immediately.
+   192→  // - panelRef:       the modal panel root — used for the Tab focus trap.
+   193→  // - lastFocusedRef: the element that had focus before the modal opened
+   194→  //                   (usually the floating basket button or a service card's
+   195→  //                   "ADD TO QUOTE" button). Restored on close.
+   196→  const toggleBtnRef = React.useRef<HTMLButtonElement | null>(null);
+   197→  const closeBtnRef = React.useRef<HTMLButtonElement | null>(null);
+   198→  const panelRef = React.useRef<HTMLDivElement | null>(null);
+   199→  const lastFocusedRef = React.useRef<HTMLElement | null>(null);
+   200→
+   201→  // Track the previously-focused element + autofocus the close button on open.
+   202→  React.useEffect(() => {
+   203→    if (!isOpen) return;
+   204→    lastFocusedRef.current = (document.activeElement as HTMLElement) ?? null;
+   205→    // Defer one tick so the modal panel has rendered.
+   206→    const t = setTimeout(() => {
+   207→      closeBtnRef.current?.focus();
+   208→    }, 0);
+   209→    return () => clearTimeout(t);
+   210→  }, [isOpen]);
+   211→
+   212→  // Restore focus to the trigger element on close (WCAG 2.4.3 + standard a11y).
+   213→  React.useEffect(() => {
+   214→    if (isOpen) return;
+   215→    if (lastFocusedRef.current && typeof lastFocusedRef.current.focus === "function") {
+   216→      lastFocusedRef.current.focus();
+   217→      lastFocusedRef.current = null;
+   218→    }
+   219→  }, [isOpen]);
+   220→
+   221→  // Tab focus trap + Escape-to-close — active only while the modal is open.
+   222→  React.useEffect(() => {
+   223→    if (!isOpen) return;
+   224→    const onKey = (e: KeyboardEvent) => {
+   225→      if (e.key === "Escape") {
+   226→        e.preventDefault();
+   227→        toggleOpen();
+   228→        return;
+   229→      }
+   230→      if (e.key !== "Tab") return;
+   231→      const panel = panelRef.current;
+   232→      if (!panel) return;
+   233→      // Query visible + non-disabled focusables inside the panel.
+   234→      const focusables = Array.from(
+   235→        panel.querySelectorAll<HTMLElement>(
+   236→          'a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])'
+   237→        )
+   238→      ).filter((el) => el.offsetParent !== null || el === document.activeElement);
+   239→      if (focusables.length === 0) return;
+   240→      const first = focusables[0];
+   241→      const last = focusables[focusables.length - 1];
+   242→      const active = document.activeElement as HTMLElement | null;
+   243→      if (e.shiftKey) {
+   244→        if (active === first || !panel.contains(active)) {
+   245→          e.preventDefault();
+   246→          last.focus();
+   247→        }
+   248→      } else {
+   249→        if (active === last) {
+   250→          e.preventDefault();
+   251→          first.focus();
+   252→        }
+   253→      }
+   254→    };
+   255→    window.addEventListener("keydown", onKey);
+   256→    return () => window.removeEventListener("keydown", onKey);
+   257→  }, [isOpen, toggleOpen]);
+   258→
+   259→  const submitRFQ = async () => {
+   260→    if (items.length === 0) return;
+   261→    setSubmitting(true);
+   262→    try {
+   263→      const res = await fetch("/api/sigma/transmit?XTransformPort=3000", {
+   264→        method: "POST",
+   265→        headers: { "Content-Type": "application/json" },
+   266→        body: JSON.stringify({
+   267→          identity: "basket-rfq",
+   268→          channel: "RFQ",
+   269→          message: JSON.stringify({
+   270→            type: "quotation_request",
+   271→            items: items.map((i) => ({ slug: i.slug, name: i.name, type: i.type, addonType: i.addonType, price: i.price })),
+   272→            servicesTotal: getServicesTotal(),
+   273→            addonsTotal: getAddonsTotal(),
+   274→            total: getTotal(),
+   275→            discount: getDiscount(),
+   276→            final: getDiscountedTotal(),
+   277→            serviceCount: getServiceCount(),
+   278→            addonCount: getAddonCount(),
+   279→            haggleUsed,
+   280→            haggleRoll,
+   281→            haggleDiscountRate,
+   282→            haggleDiscount: getHaggleDiscount(),
+   283→            grandTotal: getGrandTotal(),
+   284→          }),
+   285→        }),
+   286→      });
+   287→      const data = await res.json();
+   288→      if (data.ok) {
+   289→        toast.success("▮ QUOTATION REQUESTED", { description: `Ref: ${data.ref}` });
+   290→        clearBasket();
+   291→        toggleOpen();
+   292→      }
+   293→    } catch {
+   294→      toast.error("SUBMISSION FAILED");
+   295→    } finally {
+   296→      setSubmitting(false);
+   297→    }
+   298→  };
+   299→
+   300→  const services = items.filter((i) => i.type === "service");
+   301→  const addons = items.filter((i) => i.type === "addon");
+   302→
+   303→  return (
+   304→    <>
+   305→      {/* Floating basket button — lg:left-20 clears beta mode's left rail */}
+   306→      <button
+   307→        ref={toggleBtnRef}
+   308→        onClick={toggleOpen}
+   309→        onMouseEnter={() => setBtnHover(true)}
+   310→        onMouseLeave={() => setBtnHover(false)}
+   311→        aria-label={`Open service basket (${items.length} items)`}
+   312→        aria-expanded={isOpen}
+   313→        className="fixed bottom-4 left-4 z-[85] flex items-center gap-2 border px-3 py-2 font-mono text-[9px] uppercase tracking-[0.18em] backdrop-blur-sm transition-all duration-200 lg:bottom-6 lg:left-20"
+   314→        style={{
+   315→          borderColor: accent,
+   316→          color: btnHover ? "#000000" : accent,
+   317→          background: btnHover ? accent : "rgba(10, 10, 12, 0.9)",
+   318→          boxShadow: btnHover ? `0 0 24px ${accent}55` : "0 4px 16px rgba(0,0,0,0.4)",
+   319→          transitionDuration: "var(--dur-fast)",
+   320→          transitionTimingFunction: "var(--ease-out-expo)",
+   321→        }}
+   322→      >
+   323→        <ShoppingBag className="h-3.5 w-3.5" aria-hidden="true" />
+   324→        BASKET
+   325→        {items.length > 0 && (
+   326→          <span className="flex h-4 min-w-4 items-center justify-center px-1 text-[8px] font-bold text-black" style={{ background: accent }}>
+   327→            {items.length}
+   328→          </span>
+   329→        )}
+   330→      </button>
+   331→
+   332→      {/* Basket panel — sci-fi loot box style.
+   333→          role="dialog" + aria-modal="true" + aria-labelledby announce the
+   334→          modal to assistive tech. The outer backdrop click closes; the inner
+   335→          panel stops propagation so clicks inside don't dismiss. */}
+   336→      {isOpen && (
+   337→        <div className="fixed inset-0 z-[140] flex items-center justify-center p-4" onClick={toggleOpen}>
+   338→          <div className="absolute inset-0 bg-background/90 backdrop-blur-md" aria-hidden="true" />
+   339→          <div
+   340→            ref={panelRef}
+   341→            role="dialog"
+   342→            aria-modal="true"
+   343→            aria-labelledby="basket-title"
+   344→            aria-describedby="basket-desc"
+   345→            className="relative z-10 w-full max-w-2xl border bg-card"
+   346→            style={{
+   347→              borderColor: `${accent}66`,
+   348→              clipPath: "polygon(16px 0, 100% 0, 100% calc(100% - 16px), calc(100% - 16px) 100%, 0 100%, 0 16px)",
+   349→              boxShadow: `0 0 80px ${accent}22`,
+   350→            }}
+   351→            onClick={(e) => e.stopPropagation()}
+   352→          >
+   353→            {/* Top accent bar */}
+   354→            <div className="h-1 w-full" aria-hidden="true" style={{ background: `linear-gradient(to right, transparent, ${accent}, transparent)` }} />
+   355→
+   356→            {/* Header */}
+   357→            <div className="flex items-center justify-between border-b border-border px-6 py-3">
+   358→              <div className="flex items-center gap-2">
+   359→                <ShoppingBag className="h-4 w-4" aria-hidden="true" style={{ color: accent }} />
+   360→                <span id="basket-title" className="font-mono text-[10px] uppercase tracking-[0.2em]" style={{ color: accent }}>▸ SERVICE BASKET</span>
+   361→              </div>
+   362→              <button
+   363→                ref={closeBtnRef}
+   364→                onClick={toggleOpen}
+   365→                aria-label="Close basket"
+   366→                className="border border-border px-2 py-1 font-mono text-[9px] uppercase tracking-[0.18em] text-muted-foreground transition-colors hover:bg-foreground/10"
+   367→                style={{ transitionDuration: "var(--dur-fast)", transitionTimingFunction: "var(--ease-out-expo)" }}
+   368→              >
+   369→                <X className="h-3 w-3" aria-hidden="true" />
+   370→              </button>
+   371→            </div>
+   372→
+   373→            {/* Screen-reader-only description (gives context for the modal). */}
+   374→            <span id="basket-desc" className="sr-only">
+   375→              Service quotation basket dialog. Use Tab to navigate between items, totals, and the request quotation button. Press Escape to close.
+   376→            </span>
+   377→
+   378→            {/* Items list — grouped by type */}
+   379→            <div className="max-h-[50vh] overflow-y-auto p-4 sigma-scroll-hidden">
+   380→              {items.length === 0 ? (
+   381→                <div className="py-12 text-center">
+   382→                  <div className="font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">▮ BASKET EMPTY</div>
+   383→                  <p className="mt-2 font-serif text-sm italic text-muted-foreground">Browse services and add them to your basket.</p>
+   384→                </div>
+   385→              ) : (
+   386→                <div className="space-y-3">
+   387→                  {/* Main services section */}
+   388→                  {services.length > 0 && (
+   389→                    <div>
+   390→                      <div className="mb-1.5 flex items-center gap-2 border-b pb-1" style={{ borderColor: `${accent}30` }}>
+   391→                        <span className="font-mono text-[8px] uppercase tracking-[0.14em]" style={{ color: accent }}>▸ MAIN SERVICES</span>
+   392→                        <span className="font-mono text-[7px] text-muted-foreground">({services.length}) — DISCOUNT ELIGIBLE</span>
+   393→                      </div>
+   394→                      <div className="space-y-1.5">
+   395→                        {services.map((item) => (
+   396→                          <div key={item.slug} className="flex items-center gap-3 border border-border/40 bg-background/40 p-2">
+   397→                            <span className="font-sans text-lg" aria-hidden="true" style={{ color: accent }}>{item.icon}</span>
+   398→                            <div className="flex-1">
+   399→                              <div className="font-sans text-xs font-bold uppercase tracking-tight">{item.name}</div>
+   400→                              <div className="font-mono text-[8px] uppercase tracking-[0.14em] text-muted-foreground">
+   401→                                MAIN SERVICE · {item.price === 0 ? "custom" : formatMMK(item.price)}
+   402→                              </div>
+   403→                            </div>
+   404→                            <button onClick={() => removeItem(item.slug)} aria-label={`Remove ${item.name} from basket`} className="border border-border/40 p-1 text-muted-foreground transition-colors hover:border-[#FF3D3D] hover:text-[#FF3D3D]" style={{ transitionDuration: "var(--dur-fast)", transitionTimingFunction: "var(--ease-out-expo)" }}>
+   405→                              <Trash2 className="h-3 w-3" aria-hidden="true" />
+   406→                            </button>
+   407→                          </div>
+   408→                        ))}
+   409→                      </div>
+   410→                    </div>
+   411→                  )}
+   412→
+   413→                  {/* Add-ons section */}
+   414→                  {addons.length > 0 && (
+   415→                    <div>
+   416→                      <div className="mb-1.5 flex items-center gap-2 border-b border-[#00FF94]/30 pb-1">
+   417→                        <span className="font-mono text-[8px] uppercase tracking-[0.14em] text-[#00FF94]">▸ ADD-ONS</span>
+   418→                        <span className="font-mono text-[7px] text-muted-foreground">({addons.length}) — NO DISCOUNT</span>
+   419→                      </div>
+   420→                      <div className="space-y-1.5">
+   421→                        {addons.map((item) => (
+   422→                          <div key={item.slug} className="flex items-center gap-3 border border-border/40 bg-background/40 p-2">
+   423→                            <span className="font-sans text-lg" aria-hidden="true" style={{ color: "#00FF94" }}>{item.icon}</span>
+   424→                            <div className="flex-1">
+   425→                              <div className="font-sans text-xs font-bold uppercase tracking-tight">{item.name}</div>
+   426→                              <div className="font-mono text-[8px] uppercase tracking-[0.14em] text-muted-foreground">
+   427→                                ADD-ON · {item.addonType === "ongoing" ? "ONGOING · " : ""}{item.price === 0 ? "custom" : formatMMK(item.price)}
+   428→                              </div>
+   429→                            </div>
+   430→                            <button onClick={() => removeItem(item.slug)} aria-label={`Remove ${item.name} add-on from basket`} className="border border-border/40 p-1 text-muted-foreground transition-colors hover:border-[#FF3D3D] hover:text-[#FF3D3D]" style={{ transitionDuration: "var(--dur-fast)", transitionTimingFunction: "var(--ease-out-expo)" }}>
+   431→                              <Trash2 className="h-3 w-3" aria-hidden="true" />
+   432→                            </button>
+   433→                          </div>
+   434→                        ))}
+   435→                      </div>
+   436→                    </div>
+   437→                  )}
+   438→                </div>
+   439→              )}
+   440→            </div>
+   441→
+   442→            {/* Summary + checkout */}
+   443→            {items.length > 0 && (
+   444→              <div className="border-t border-border p-4">
+   445→                {/* Discount tier ladder — shows all 4 tiers, highlights current */}
+   446→                <div className="mb-3">
+   447→                  <div className="mb-1.5 flex items-center justify-between">
+   448→                    <span className="font-mono text-[8px] uppercase tracking-[0.14em] text-muted-foreground">
+   449→                      BULK DISCOUNT TIERS (MAIN SERVICES ONLY)
+   450→                    </span>
+   451→                    <span className="font-mono text-[9px] text-[#00FF94]">
+   452→                      ACTIVE: -{getDiscount() > 0 ? Math.round((getDiscount() / Math.max(getServicesTotal(), 1)) * 100) + "%" : "0%"}
+   453→                    </span>
+   454→                  </div>
+   455→                  <div className="grid grid-cols-4 gap-0.5">
+   456→                    {DISCOUNT_TIERS.map((tier) => {
+   457→                      const svcCount = getServiceCount();
+   458→                      const isActive = svcCount >= tier.count && (tier.count === DISCOUNT_TIERS[DISCOUNT_TIERS.length - 1].count
+   459→                        ? svcCount >= tier.count
+   460→                        : svcCount >= tier.count && svcCount < (DISCOUNT_TIERS.find((t) => t.count > tier.count)?.count ?? Infinity));
+   461→                      return (
+   462→                        <div
+   463→                          key={tier.count}
+   464→                          className={`border px-1.5 py-1 text-center transition-colors ${
+   465→                            isActive
+   466→                              ? "border-[#00FF94] bg-[#00FF94]/15"
+   467→                              : "border-border/40 opacity-50"
+   468→                          }`}
+   469→                        >
+   470→                          <div className="font-mono text-[7px] uppercase tracking-[0.1em] text-muted-foreground">
+   471→                            {tier.label}
+   472→                          </div>
+   473→                          <div className={`font-sans text-xs font-black ${isActive ? "text-[#00FF94]" : "text-foreground"}`}>
+   474→                            {Math.round(tier.rate * 100)}%
+   475→                          </div>
+   476→                        </div>
+   477→                      );
+   478→                    })}
+   479→                  </div>
+   480→                  {/* Next tier incentive */}
+   481→                  {(() => {
+   482→                    const next = getNextTier(getServiceCount());
+   483→                    if (!next) return null;
+   484→                    const svcCount = getServiceCount();
+   485→                    return (
+   486→                      <div className="mt-1.5 border border-[#FFB300]/40 bg-[#FFB300]/5 px-2 py-1">
+   487→                        <div className="flex items-center justify-between">
+   488→                          <span className="font-mono text-[7px] uppercase tracking-[0.12em] text-[#FFB300]">
+   489→                            ▸ ADD {next.count - svcCount} MORE MAIN SERVICE FOR {Math.round(next.rate * 100)}% OFF
+   490→                          </span>
+   491→                          <span className="font-mono text-[7px] text-muted-foreground">{svcCount}/{next.count}</span>
+   492→                        </div>
+   493→                      </div>
+   494→                    );
+   495→                  })()}
+   496→                </div>
+   497→
+   498→                {/* Price breakdown — services vs add-ons */}
+   499→                <div className="space-y-1 font-mono text-[10px] uppercase tracking-[0.14em]">
+   500→                  {services.length > 0 && (
+   501→                    <div className="flex justify-between">
+   502→                      <span className="text-muted-foreground">SERVICES SUBTOTAL</span>
+   503→                      <span className="text-foreground">{formatMMK(getServicesTotal())}</span>
+   504→                    </div>
+   505→                  )}
+   506→                  {addons.length > 0 && (
+   507→                    <div className="flex justify-between">
+   508→                      <span className="text-muted-foreground">ADD-ONS SUBTOTAL</span>
+   509→                      <span className="text-foreground">{formatMMK(getAddonsTotal())}</span>
+   510→                    </div>
+   511→                  )}
+   512→                  {getDiscount() > 0 && (
+   513→                    <div className="flex justify-between">
+   514→                      <span className="text-[#00FF94]">DISCOUNT (BULK)</span>
+   515→                      <span className="text-[#00FF94]">-{formatMMK(getDiscount())}</span>
+   516→                    </div>
+   517→                  )}
+   518→                  {haggleUsed && (
+   519→                    <div className="flex justify-between border-t border-border/40 pt-1">
+   520→                      <span className="text-[#FFD700]" title={`Haggle dice rolled: ${haggleRoll} → ${Math.round(haggleDiscountRate * 100)}% extra`}>
+   521→                        ◆ HAGGLE (ROLL {haggleRoll})
+   522→                      </span>
+   523→                      <span className="text-[#FFD700]">-{formatMMK(getHaggleDiscount())}</span>
+   524→                    </div>
+   525→                  )}
+   526→                  <div className="flex justify-between border-t border-border/40 pt-1">
+   527→                    <span style={{ color: haggleUsed ? "#FFD700" : accent }}>
+   528→                      {haggleUsed ? "GRAND TOTAL" : "TOTAL"}
+   529→                    </span>
+   530→                    <span
+   531→                      className={`font-sans text-lg font-black ${haggleUsed ? "text-[#FFD700]" : ""}`}
+   532→                      style={{ color: haggleUsed ? "#FFD700" : accent, textShadow: haggleUsed ? "0 0 12px rgba(255,215,0,0.6)" : `0 0 12px ${accent}55` }}
+   533→                    >
+   534→                      {formatMMK(haggleUsed ? getGrandTotal() : getDiscountedTotal())}
+   535→                    </span>
+   536→                  </div>
+   537→                  {haggleUsed && (
+   538→                    <div className="flex justify-between pt-0.5">
+   539→                      <span className="text-[8px] text-muted-foreground/80">SAVED VS LIST</span>
+   540→                      <span className="text-[8px] text-[#00FF94]">
+   541→                        -{formatMMK(getTotal() - (haggleUsed ? getGrandTotal() : getDiscountedTotal()))}
+   542→                      </span>
+   543→                    </div>
+   544→                  )}
+   545→                </div>
+   546→
+   547→                {/* RFQ button */}
+   548→                <button
+   549→                  onClick={submitRFQ}
+   550→                  disabled={submitting}
+   551→                  aria-label="Request quotation for basket items"
+   552→                  className="mt-4 w-full border py-3 font-mono text-[11px] uppercase tracking-[0.2em] text-black transition-all hover:brightness-110 disabled:opacity-50"
+   553→                  style={{ borderColor: accent, background: accent, boxShadow: `0 0 24px ${accent}44`, transitionDuration: "var(--dur-fast)", transitionTimingFunction: "var(--ease-out-expo)" }}
+   554→                >
+   555→                  <Send className="mr-2 inline h-3 w-3" aria-hidden="true" />
+   556→                  {submitting ? "▮ SUBMITTING..." : "REQUEST QUOTATION →"}
+   557→                </button>
+   558→                <p className="mt-2 text-center font-mono text-[8px] uppercase tracking-[0.14em] text-muted-foreground">
+   559→                  ▸ THIS IS A QUOTATION REQUEST, NOT A PURCHASE. PAYMENT HAPPENS OFF-PLATFORM.
+   560→                </p>
+   561→              </div>
+   562→            )}
+   563→          </div>
+   564→        </div>
+   565→      )}
+   566→    </>
+   567→  );
+   568→}
+   569→

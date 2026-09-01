@@ -1,0 +1,56 @@
+[
+  {
+    "url": "https://github.com/juliangarnier/anime/issues/34",
+    "name": "React Integration · Issue #34 · juliangarnier/anime",
+    "snippet": "Jul 8, 2016 — You can easily integrate it with React by using refs and something like ReactDOM.findDOMNode(this.refs.animeTarget ) . Anime's targets prop takes ... Read more",
+    "host_name": "github.com",
+    "rank": 0,
+    "date": "Jul 8, 2016",
+    "favicon": ""
+  },
+  {
+    "url": "https://stackoverflow.com/questions/61951482/how-to-use-animejs-inside-react",
+    "name": "How to use animejs inside React?",
+    "snippet": "I have installed animejs from npm , and imported the required file, but when adding anime(code) inside my code it does not work prefectly and shows an ...",
+    "host_name": "stackoverflow.com",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://animejs.com/documentation/getting-started/using-with-react",
+    "name": "Using with React | Getting started | Documentation",
+    "snippet": "Anime.js can be used with React by combining React's useEffect() and Anime.js createScope() methods . The following example showcase how to uses",
+    "host_name": "animejs.com",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://medium.com/swlh/usher-life-to-your-react-apps-using-animejs-186cf8ffaf06",
+    "name": "Usher life to your React apps using AnimeJS",
+    "snippet": "Here, it uses a blend of props for both ReactTransitionGroup and AnimeJS , making it very easy and straight-forward for usage. You can specify ... Read more",
+    "host_name": "medium.com",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://javascript.plainenglish.io/ditch-your-clunky-js-animation-code-meet-anime-js-your-new-best-friend-1bb2adcc3529",
+    "name": "Meet anime.js, Your New Best Friend",
+    "snippet": "May 20, 2025 — anime.js gives you that power tool. It lets you write animations cleanly, control timelines, add easing and delays, and it works with regular ... Read more",
+    "host_name": "javascript.plainenglish.io",
+    "rank": 4,
+    "date": "May 20, 2025",
+    "favicon": ""
+  },
+  {
+    "url": "https://smithery.ai/skills/neversight/animejs",
+    "name": "animejs - Skill",
+    "snippet": "Anime.js is a lightweight JavaScript animation library with a simple yet powerful API. It works with CSS properties, SVG, DOM attributes, and JavaScript Objects ... Read more",
+    "host_name": "smithery.ai",
+    "rank": 5,
+    "date": "",
+    "favicon": ""
+  }
+]

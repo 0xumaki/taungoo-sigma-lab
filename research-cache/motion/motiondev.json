@@ -1,0 +1,74 @@
+[
+  {
+    "url": "https://motion.dev/docs/react",
+    "name": "Motion for React: Get started - React Animation Library",
+    "snippet": "Motion for React (previously Framer Motion) is a React animation library for building smooth, production-grade UI animations. to state and props. The <motion / ...",
+    "host_name": "motion.dev",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.reddit.com/r/reactjs/comments/1ij6xuh/motion_v_framer_motion",
+    "name": "Motion v. Framer Motion : r/reactjs",
+    "snippet": "I see you asked this a while ago. But Motion is Framer Motion , I took it independent. Everything is exactly the same as it was.",
+    "host_name": "www.reddit.com",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://motion.dev",
+    "name": "Motion (prev Framer Motion): JavaScript & React animation",
+    "snippet": "Motion (prev Framer Motion) is a fast, production-grade animation library for React , JavaScript and Vue. Build smooth UI animations at a tiny footprint.",
+    "host_name": "motion.dev",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://motion.dev/docs/react-motion-component",
+    "name": "React motion component | Motion for React",
+    "snippet": "Most React animations in Motion are powered by the <motion /> component. It extends standard React components with animation props that run at up to 120fps - ...",
+    "host_name": "motion.dev",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://motion.dev/magazine/framer-motion-is-now-independent-introducing-motion",
+    "name": "Framer Motion is now independent, introducing Motion",
+    "snippet": "Nov 11, 2024 — Motion becomes more than a React library , with an amazing set of vanilla APIs that bring Motion's hybrid engine and extensive feature set to ...",
+    "host_name": "motion.dev",
+    "rank": 4,
+    "date": "Nov 11, 2024",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.framer.com/dictionary/framer-motion",
+    "name": "Framer Motion: Definition, Examples, and Framer Context",
+    "snippet": "Motion.dev, previously called Framer Motion, is a high-performance animation library for React and JavaScript. The old name still appears in tutorials and ...",
+    "host_name": "www.framer.com",
+    "rank": 5,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://blog.logrocket.com/creating-react-animations-with-motion",
+    "name": "Creating React animations in Motion (formerly Framer",
+    "snippet": "Feb 18, 2025 — Use Motion , the tool formerly known as Framer Motion , to build an animated task tracker, animate an SVG, and implement drag-and-drop.",
+    "host_name": "blog.logrocket.com",
+    "rank": 6,
+    "date": "Feb 18, 2025",
+    "favicon": ""
+  },
+  {
+    "url": "https://motion.dev/docs/react-upgrade-guide",
+    "name": "Motion & Framer Motion upgrade guide | Motion for React",
+    "snippet": "Stay up-to-date with Motion and Motion for React using our comprehensive Upgrade Guide. Find step-by-step instructions and details on breaking API changes ...",
+    "host_name": "motion.dev",
+    "rank": 7,
+    "date": "",
+    "favicon": ""
+  }
+]

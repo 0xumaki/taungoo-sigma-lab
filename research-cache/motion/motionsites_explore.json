@@ -1,0 +1,67 @@
+{
+  "code": 200,
+  "data": {
+    "description": "Beautiful Website Prompts for Lovable, Bolt, Cursor, and Claude. Build Stunning 3d Websites With AI. Just copy, paste, and launch",
+    "external": {
+      "apple-touch-icon": {
+        "https://motionsites.ai/favicon.png?v=2": {
+          "sizes": "192x192"
+        }
+      },
+      "canonical": {
+        "https://motionsites.ai/": {}
+      },
+      "icon": {
+        "https://motionsites.ai/favicon.ico": {
+          "sizes": "16x16 32x32 48x48 192x192",
+          "type": "image/x-icon"
+        },
+        "https://motionsites.ai/favicon.png?v=2": {
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      },
+      "manifest": {
+        "https://motionsites.ai/site.webmanifest": {}
+      },
+      "modulepreload": {
+        "https://motionsites.ai/assets/client-Bzd-NdgM.js": {},
+        "https://motionsites.ai/assets/dist-Dy1VweX6.js": {},
+        "https://motionsites.ai/assets/index-h1admt5j.js": {},
+        "https://motionsites.ai/assets/router-compat-C_b64a4O.js": {}
+      }
+    },
+    "html": "<html lang=\"en\"><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"><link rel=\"stylesheet\" href=\"/assets/styles-BxPTBzib.css\" data-precedence=\"default\"><link rel=\"stylesheet\" href=\"https://fonts.googleapis.com/icon?family=Material+Icons\" data-precedence=\"default\"><script async=\"\" src=\"https://static.ads-twitter.com/uwt.js\"></script><script async=\"\" src=\"https://connect.facebook.net/en_US/fbevents.js\"></script><script id=\"parity-deals-sdk\" async=\"\" src=\"https://cdn.paritydeals.com/js-promotions-ui/1.0.0/js-promotions-ui.umd.js\"></script><script async=\"\" src=\"https://files.tlt-cdn.com/tlt.js\" data-tolt=\"pk_Z128VoGFatgfeoCeExn1snQD\"></script><script async=\"\" src=\"https://www.googletagmanager.com/gtag/js?id=G-9KTL0DN6Q5\"></script><title>MotionSites AI — Official Premium AI Website Prompts</title><meta name=\"description\" content=\"Beautiful Website Prompts for Lovable, Bolt, Cursor, and Claude. Build Stunning 3d Websites With AI. Just copy, paste, and launch\"><meta name=\"author\" content=\"MotionSites\"><meta property=\"og:type\" content=\"website\"><meta property=\"og:url\" content=\"https://motionsites.ai/\"><meta property=\"og:image\" content=\"https://storage.googleapis.com/gpt-engineer-file-uploads/OzagiQ9ZfuQNatpgQBgKibiYrtm2/social-images/social-1772948036264-1social.webp\"><meta property=\"og:title\" content=\"MotionSites AI — Official Premium AI Website Prompts\"><meta property=\"og:description\" content=\"Beautiful Website Prompts for Lovable, Bolt, Cursor, and Claude. Build Stunning 3d Websites With AI. Just copy, paste, and launch\"><meta name=\"twitter:card\" content=\"summary_large_image\"><meta name=\"twitter:site\" content=\"@MotionSites\"><meta name=\"twitter:image\" content=\"https://storage.googleapis.com/gpt-engineer-file-uploads/OzagiQ9ZfuQNatpgQBgKibiYrtm2/social-images/social-1772948036264-1social.webp\"><meta name=\"twitter:title\" content=\"MotionSites AI — Official Premium AI Website Prompts\"><meta name=\"twitter:description\" content=\"Beautiful Website Prompts for Lovable, Bolt, Cursor, and Claude. Build Stunning 3d Websites With AI. Just copy, paste, and launch\"><link rel=\"modulepreload\" href=\"/assets/index-h1admt5j.js\"><link rel=\"modulepreload\" href=\"/assets/client-Bzd-NdgM.js\"><link rel=\"modulepreload\" href=\"/assets/router-compat-C_b64a4O.js\"><link rel=\"modulepreload\" href=\"/assets/dist-Dy1VweX6.js\"><link rel=\"canonical\" href=\"https://motionsites.ai/\"><link rel=\"icon\" type=\"image/x-icon\" href=\"/favicon.ico\" sizes=\"16x16 32x32 48x48 192x192\"><link rel=\"icon\" type=\"image/png\" href=\"/favicon.png?v=2\" sizes=\"192x192\"><link rel=\"shortcut icon\" type=\"image/x-icon\" href=\"/favicon.ico\"><link rel=\"apple-touch-icon\" href=\"/favicon.png?v=2\" sizes=\"192x192\"><link rel=\"manifest\" href=\"/site.webmanifest\"><title>Page not found — MotionSites AI</title><meta name=\"robots\" content=\"noindex, nofollow\"><script type=\"application/ld+json\">{\"@context\":\"https://schema.org\",\"@type\":\"Organization\",\"name\":\"MotionSites\",\"url\":\"https://motionsites.ai/\",\"logo\":\"https://motionsites.ai/icon-512x512.png\"}</script><script type=\"application/ld+json\">{\"@context\":\"https://schema.org\",\"@type\":\"WebSite\",\"name\":\"MotionSites\",\"url\":\"https://motionsites.ai/\"}</script><script>function resolvePdSDKFunction(e,...t){return new Promise((n,i)=>{!function r(){window.PDPromotionUISDK&&\"function\"==typeof window.PDPromotionUISDK[e]?window.PDPromotionUISDK[e](...t).then(n).catch(i):setTimeout(r,100)}()})}!function(e,t,n,i,r,a,c){e[i]=e[i]||function(){(e[i].q=e[i].q||[]).push(Array.prototype.slice.call(arguments))},a=t.createElement(n),c=t.getElementsByTagName(n)[0],a.id=\"parity-deals-sdk\",a.async=1,a.src=r,c.parentNode.insertBefore(a,c)}(window,document,\"script\",\"PDPromotionUISDK\",\"https://cdn.paritydeals.com/js-promotions-ui/1.0.0/js-promotions-ui.umd.js\"),window.PDPromotionUI={init:function(e){PDPromotionUISDK(\"init\",e)},getUpdatedPrice:function(e,t){return resolvePdSDKFunction(\"getUpdatedPrice\",e,t)},updatePriceElement:function(e,t){return resolvePdSDKFunction(\"updatePriceElement\",e,t)},updatePrice:function(e){return resolvePdSDKFunction(\"updatePrice\",e)}}</script><script>!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window, document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('init', '938156741961384');fbq('track', 'PageView');</script><script>window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());gtag('config', 'G-9KTL0DN6Q5');</script><script>!function(e,t,n,s,u,a){e.twq||(s=e.twq=function(){s.exe?s.exe.apply(s,arguments):s.queue.push(arguments);},s.version='1.1',s.queue=[],u=t.createElement(n),u.async=!0,u.src='https://static.ads-twitter.com/uwt.js',a=t.getElementsByTagName(n)[0],a.parentNode.insertBefore(u,a))}(window,document,'script');twq('config','reae7');</script><script defer=\"\" src=\"/~flock.js\" data-proxy-url=\"/~api/analytics\"></script></head><body><noscript><img height=\"1\" width=\"1\" style=\"display:none\" src=\"https://www.facebook.com/tr?id=938156741961384&amp;ev=PageView&amp;noscript=1\"/></noscript><div role=\"region\" aria-label=\"Notifications (F8)\" tabindex=\"-1\" style=\"pointer-events:none\"><ol tabindex=\"-1\" class=\"fixed top-0 z-[100] flex max-h-screen w-full flex-col-reverse p-4 sm:bottom-0 sm:right-0 sm:top-auto sm:flex-col md:max-w-[420px]\"></ol></div><section aria-label=\"Notifications alt+T\" tabindex=\"-1\" aria-live=\"polite\" aria-relevant=\"additions text\" aria-atomic=\"false\" data-react-aria-top-layer=\"true\"></section><main><div class=\"flex min-h-screen items-center justify-center bg-muted\"><div class=\"text-center\"><h1 class=\"mb-4 text-4xl font-bold\">404</h1><p class=\"mb-4 text-xl text-muted-foreground\">Oops! Page not found</p><a href=\"/\" class=\"text-primary underline hover:text-primary/90\">Return to Home</a></div></div></main><footer class=\"max-w-[1200px] mx-auto px-6 sm:px-8 pb-24 pt-6 flex items-center justify-between text-sm text-muted-foreground\"><span>© Motionsites AI 2026. All rights reserved</span><a href=\"https://www.youtube.com/@ViktorOddy\" target=\"_blank\" rel=\"noopener noreferrer\" aria-label=\"YouTube\" class=\"text-muted-foreground hover:text-foreground transition-colors\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"currentColor\"><path d=\"M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.016 3.016 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.016 3.016 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814ZM9.545 15.568V8.432L15.818 12l-6.273 3.568Z\"></path></svg></a></footer><script type=\"module\" async=\"\" src=\"/assets/index-h1admt5j.js\"></script></body></html>",
+    "httpStatus": 404,
+    "httpStatusText": "",
+    "metadata": {
+      "author": "MotionSites",
+      "description": "Beautiful Website Prompts for Lovable, Bolt, Cursor, and Claude. Build Stunning 3d Websites With AI. Just copy, paste, and launch",
+      "lang": "en",
+      "og:description": "Beautiful Website Prompts for Lovable, Bolt, Cursor, and Claude. Build Stunning 3d Websites With AI. Just copy, paste, and launch",
+      "og:image": "https://storage.googleapis.com/gpt-engineer-file-uploads/OzagiQ9ZfuQNatpgQBgKibiYrtm2/social-images/social-1772948036264-1social.webp",
+      "og:title": "MotionSites AI — Official Premium AI Website Prompts",
+      "og:type": "website",
+      "og:url": "https://motionsites.ai/",
+      "robots": "noindex, nofollow",
+      "twitter:card": "summary_large_image",
+      "twitter:description": "Beautiful Website Prompts for Lovable, Bolt, Cursor, and Claude. Build Stunning 3d Websites With AI. Just copy, paste, and launch",
+      "twitter:image": "https://storage.googleapis.com/gpt-engineer-file-uploads/OzagiQ9ZfuQNatpgQBgKibiYrtm2/social-images/social-1772948036264-1social.webp",
+      "twitter:site": "@MotionSites",
+      "twitter:title": "MotionSites AI — Official Premium AI Website Prompts",
+      "viewport": "width=device-width, initial-scale=1.0"
+    },
+    "title": "MotionSites AI — Official Premium AI Website Prompts",
+    "url": "https://motionsites.ai/explore",
+    "usage": {
+      "tokens": 2158
+    },
+    "warning": "Target URL returned error 404: Not Found"
+  },
+  "meta": {
+    "usage": {
+      "tokens": 2158
+    }
+  },
+  "status": 20000
+}

@@ -6,7 +6,7 @@ const capabilityData: { label: string; pct: number; color: string }[] = [
   { label: "AI / MACHINE LEARNING", pct: 95, color: "#00FF94" },
   { label: "WEB3 / BLOCKCHAIN", pct: 88, color: "#C6FF00" },
   { label: "FULL-STACK DEVELOPMENT", pct: 92, color: "#00E5FF" },
-  { label: "DESIGN / UX", pct: 80, color: "#FF2D7E" },
+  { label: "DESIGN / UX", pct: 80, color: "#FFB300" },
   { label: "AUTOMATION / N8N", pct: 90, color: "#FFB300" },
 ];
 
@@ -19,7 +19,7 @@ const statData: { v: string; k: string; c: string }[] = [
 
 export function AlphaAbout() {
   return (
-    <section id="about" className="relative border-t border-border px-3 py-12 sm:px-6 sm:py-20">
+    <section id="about" aria-labelledby="about-title" data-section="about" className="relative border-t border-border px-3 py-12 sm:px-6 sm:py-20">
       <div className="sigma-grid pointer-events-none absolute inset-0 opacity-10" />
       <div className="sigma-scanlines pointer-events-none absolute inset-0 opacity-15" />
 
@@ -28,7 +28,7 @@ export function AlphaAbout() {
         <div className="flex flex-col gap-3 border-b border-border pb-4 sm:flex-row sm:items-end sm:justify-between sm:gap-4">
           <div>
             <div className="font-mono text-[10px] uppercase tracking-[0.3em] text-[#FF4500]">▸ 02 / ABOUT</div>
-            <h2 className="mt-2 font-sans text-3xl font-black uppercase leading-tight tracking-tight sm:text-5xl md:text-6xl">
+            <h2 id="about-title" className="mt-2 font-sans text-3xl font-black uppercase leading-tight tracking-tight sm:text-5xl md:text-6xl">
               WE SHIP<br />
               THE <span style={{ color: "#FF4500" }}>FUTURE.</span>
             </h2>

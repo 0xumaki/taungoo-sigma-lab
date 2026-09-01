@@ -1,0 +1,65 @@
+[
+  {
+    "url": "https://kokonutui.com/docs",
+    "name": "Installation",
+    "snippet": "Install KokonutUI components in any React or Next.js project with the shadcn CLI, using namespaces or direct registry URLs. No extra setup required.",
+    "host_name": "kokonutui.com",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://kokonutui.com",
+    "name": "KokonutUI - Free Open Source UI Components for React and",
+    "snippet": "Explore 100+ components at kokonutui.com . Filter by category and preview live demos. 02. Install. One CLI command adds any component directly to your project. Read more",
+    "host_name": "kokonutui.com",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://shadcntemplates.com/theme/kokonut-labs-kokonutui",
+    "name": "Kokonut UI",
+    "snippet": "To install the Kokonut UI theme, follow these steps: Clone the repository: git clone https://github.com/KokonutUI/theme.git . Install dependencies: npm install. Read more",
+    "host_name": "shadcntemplates.com",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://github.com/kokonut-labs/kokonutui",
+    "name": "kokonut-labs/kokonutui: Open-source collection of stunning",
+    "snippet": "Open-source collection of stunning Components built with Tailwind CSS, shadcn/ui and Motion to use on your websites - kokonut-labs/ kokonutui .",
+    "host_name": "github.com",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://kokonut-labs-kokonutui.mintlify.app/introduction",
+    "name": "Introduction - Kokonut UI",
+    "snippet": "Easy Installation via CLI. Install components instantly using the shadcn CLI with the @kokonutui namespace . No need to manage component dependencies manually. Read more",
+    "host_name": "kokonut-labs-kokonutui.mintlify.app",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://community.vercel.com/t/kokonut-ui-open-source-ui-components-for-next-js-and-react/29419",
+    "name": "Open Source UI Components for Next.js and React",
+    "snippet": "Dec 8, 2025 — Open-source collection of stunning Components built with Tailwind CSS, shadcn/ui and Motion to use on your websites Website: https:// kokonutui. ...",
+    "host_name": "community.vercel.com",
+    "rank": 5,
+    "date": "Dec 8, 2025",
+    "favicon": ""
+  },
+  {
+    "url": "https://kokonutui.pro/docs",
+    "name": "Installation | Kokonut UI Pro",
+    "snippet": "Configure namespace. The components .json file holds configuration for your project, and allow easy installation of any components . Read more",
+    "host_name": "kokonutui.pro",
+    "rank": 6,
+    "date": "",
+    "favicon": ""
+  }
+]

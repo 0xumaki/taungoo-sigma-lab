@@ -1,0 +1,836 @@
+     1→"use client";
+     2→
+     3→import * as React from "react";
+     4→import Image from "next/image";
+     5→import { motion, useScroll, useTransform, useMotionValue, useSpring, useReducedMotion } from "motion/react";
+     6→
+     7→/**
+     8→ * Hero — Cinematic void with the Armored General figure + WIDE TAUNGOO headline.
+     9→ * HUD panels are background-less floating text — anchored by gradient lines.
+    10→ * Live-data hooks: timestamp ticks every 1s, GPS coordinates jitter every 3s,
+    11→ * uptime/load counters count-up on mount.
+    12→ */
+    13→
+    14→function useLiveTimestamp() {
+    15→  const [ts, setTs] = React.useState("T+04:17:22");
+    16→  React.useEffect(() => {
+    17→    let sec = 4 * 3600 + 17 * 60 + 22;
+    18→    const id = setInterval(() => {
+    19→      sec += 1;
+    20→      const h = String(Math.floor(sec / 3600)).padStart(2, "0");
+    21→      const m = String(Math.floor((sec % 3600) / 60)).padStart(2, "0");
+    22→      const s = String(sec % 60).padStart(2, "0");
+    23→      setTs(`T+${h}:${m}:${s}`);
+    24→    }, 1000);
+    25→    return () => clearInterval(id);
+    26→  }, []);
+    27→  return ts;
+    28→}
+    29→
+    30→function useGpsJitter() {
+    31→  const [gps, setGps] = React.useState("16.840°N 96.170°E");
+    32→  React.useEffect(() => {
+    33→    const id = setInterval(() => {
+    34→      // Skip GPS jitter when the tab is hidden — saves a setState every 3s
+    35→      // while backgrounded. Jitter is decorative; no precision is lost.
+    36→      if (document.hidden) return;
+    37→      const lat = 16.840 + (Math.random() - 0.5) * 0.008;
+    38→      const lon = 96.170 + (Math.random() - 0.5) * 0.008;
+    39→      setGps(`${lat.toFixed(3)}°N ${lon.toFixed(3)}°E`);
+    40→    }, 3000);
+    41→    return () => clearInterval(id);
+    42→  }, []);
+    43→  return gps;
+    44→}
+    45→
+    46→function useCountUp(target: number, duration = 1500, delay = 0) {
+    47→  const [val, setVal] = React.useState(0);
+    48→  React.useEffect(() => {
+    49→    let raf: number;
+    50→    const start = performance.now() + delay;
+    51→    const tick = (now: number) => {
+    52→      if (now < start) { raf = requestAnimationFrame(tick); return; }
+    53→      const t = Math.min(1, (now - start) / duration);
+    54→      const eased = 1 - Math.pow(1 - t, 3);
+    55→      setVal(target * eased);
+    56→      if (t < 1) raf = requestAnimationFrame(tick);
+    57→    };
+    58→    raf = requestAnimationFrame(tick);
+    59→    return () => cancelAnimationFrame(raf);
+    60→  }, [target, duration, delay]);
+    61→  return val;
+    62→}
+    63→
+    64→/**
+    65→ * useTextScramble — cyberpunk decoder effect.
+    66→ * Returns a string that starts as random chars and resolves to the target.
+    67→ */
+    68→const SCRAMBLE_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZΣ0123456789";
+    69→function randomScramble(len: number) {
+    70→  let s = "";
+    71→  for (let i = 0; i < len; i++) s += SCRAMBLE_CHARS[Math.floor(Math.random() * SCRAMBLE_CHARS.length)];
+    72→  return s;
+    73→}
+    74→function useTextScramble(target: string, duration = 1200, delay = 0) {
+    75→  // Initialize with the TARGET string (deterministic) so SSR output matches the
+    76→  // first client render — the scramble then starts inside useEffect (client-only),
+    77→  // which fires immediately after hydration. Fixes the hydration mismatch warning.
+    78→  const [text, setText] = React.useState(() => target);
+    79→  React.useEffect(() => {
+    80→    let raf: number;
+    81→    const start = performance.now() + delay;
+    82→    const tick = (now: number) => {
+    83→      if (now < start) {
+    84→        // Update scramble rapidly while waiting for delay to pass
+    85→        setText(randomScramble(target.length));
+    86→        raf = requestAnimationFrame(tick);
+    87→        return;
+    88→      }
+    89→      const t = Math.min(1, (now - start) / duration);
+    90→      // Number of chars resolved = ceil(t * length)
+    91→      const resolved = Math.ceil(t * target.length);
+    92→      let result = "";
+    93→      for (let i = 0; i < target.length; i++) {
+    94→        if (i < resolved || target[i] === " ") result += target[i];
+    95→        else result += SCRAMBLE_CHARS[Math.floor(Math.random() * SCRAMBLE_CHARS.length)];
+    96→      }
+    97→      setText(result);
+    98→      if (t < 1) raf = requestAnimationFrame(tick);
+    99→    };
+   100→    raf = requestAnimationFrame(tick);
+   101→    return () => cancelAnimationFrame(raf);
+   102→  }, [target, duration, delay]);
+   103→  return text;
+   104→}
+   105→
+   106→/**
+   107→ * Hero — Cinematic void with the Armored General figure + WIDE TAUNGOO headline.
+   108→ *
+   109→ * Design:
+   110→ * - The user-provided transparent Armored General image as the centerpiece
+   111→ * - "TAUNGOO" headline spread EXTREMELY WIDE — 65% of screen width
+   112→ * - Thin/light font weight (200), Rajdhani
+   113→ * - Void black (#0a0a0a) background
+   114→ * - HUD panels (left/right), corner brackets, crosshairs
+   115→ * - Figure sits BEHIND the text (z-index layering)
+   116→ */
+   117→
+   118→/**
+   119→ * useMouseParallax — returns spring-smoothed x/y motion values (in px) for a
+   120→ * subtle parallax effect based on mouse position relative to viewport center.
+   121→ * strength: how many px to move at max (e.g. 20 = ±20px)
+   122→ */
+   123→function useMouseParallax(strength = 20) {
+   124→  const x = useMotionValue(0);
+   125→  const y = useMotionValue(0);
+   126→  const sx = useSpring(x, { stiffness: 80, damping: 20, restDelta: 0.1 });
+   127→  const sy = useSpring(y, { stiffness: 80, damping: 20, restDelta: 0.1 });
+   128→  React.useEffect(() => {
+   129→    if (typeof window === "undefined") return;
+   130→    const finePointer = window.matchMedia("(pointer: fine)").matches;
+   131→    if (!finePointer) return;
+   132→    // Respect prefers-reduced-motion: skip mouse parallax entirely.
+   133→    // (Hero already disables scroll parallax via useReducedMotion in render.)
+   134→    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+   135→    if (reducedMotion) return;
+   136→    const onMove = (e: MouseEvent) => {
+   137→      const cx = window.innerWidth / 2;
+   138→      const cy = window.innerHeight / 2;
+   139→      // Normalize to [-1, 1]
+   140→      const nx = (e.clientX - cx) / cx;
+   141→      const ny = (e.clientY - cy) / cy;
+   142→      x.set(nx * strength);
+   143→      y.set(ny * strength);
+   144→    };
+   145→    window.addEventListener("mousemove", onMove);
+   146→    return () => window.removeEventListener("mousemove", onMove);
+   147→  }, [strength, x, y]);
+   148→  return { x: sx, y: sy };
+   149→}
+   150→
+   151→/**
+   152→ * useMagnetic — returns a callback ref that attaches a magnetic-cursor effect.
+   153→ * Apply to a button/anchor for subtle cursor attraction (max `strength` px pull).
+   154→ * Respects prefers-reduced-motion (skips entirely) + touch devices (pointer: coarse).
+   155→ * Uses a callback ref pattern so it works for both always-mounted elements AND
+   156→ * conditionally-rendered ones (e.g., a multi-step form's submit button that only
+   157→ * appears on the last step). Exported so other beta components (Contact submit)
+   158→ * can reuse the same px-based magnetic feel as the Hero CTA.
+   159→ */
+   160→export function useMagnetic<T extends HTMLElement = HTMLAnchorElement>(strength = 6) {
+   161→  const [el, setEl] = React.useState<T | null>(null);
+   162→  const ref = React.useCallback((node: T | null) => setEl(node), []);
+   163→  React.useEffect(() => {
+   164→    if (!el) return;
+   165→    if (typeof window === "undefined") return;
+   166→    const finePointer = window.matchMedia("(pointer: fine)").matches;
+   167→    if (!finePointer) return;
+   168→    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+   169→    if (reducedMotion) return;
+   170→    // PERF (LOOP-1-LH): cache the button's bounding rect on mouseenter (when
+   171→    // the cursor first enters the magnetic field), invalidate on scroll/resize.
+   172→    // Previously, every window mousemove forced a getBoundingClientRect() layout
+   173→    // reflow — and this is a WINDOW-level listener (fires for every mouse move
+   174→    // anywhere on the page, not just over the button). That's the worst-case
+   175→    // layout-thrash pattern: 60+ forced layouts/sec while the cursor is anywhere.
+   176→    let r: DOMRect | null = null;
+   177→    const refreshRect = () => { r = el.getBoundingClientRect(); };
+   178→    const invalidateRect = () => { r = null; };
+   179→    const onMove = (e: MouseEvent) => {
+   180→      // Lazy refresh if cache was invalidated.
+   181→      if (!r) refreshRect();
+   182→      const rect = r as DOMRect;
+   183→      const cx = rect.left + rect.width / 2;
+   184→      const cy = rect.top + rect.height / 2;
+   185→      const dx = (e.clientX - cx) / rect.width;
+   186→      const dy = (e.clientY - cy) / rect.height;
+   187→      // Only attract when cursor is within 1.5x button size
+   188→      if (Math.abs(dx) < 1.5 && Math.abs(dy) < 1.5) {
+   189→        el.style.transform = `translate(${dx * strength}px, ${dy * strength}px)`;
+   190→      } else {
+   191→        el.style.transform = "translate(0, 0)";
+   192→      }
+   193→    };
+   194→    const onLeave = () => { el.style.transform = "translate(0, 0)"; };
+   195→    el.addEventListener("mouseenter", refreshRect);
+   196→    window.addEventListener("mousemove", onMove);
+   197→    el.addEventListener("mouseleave", onLeave);
+   198→    window.addEventListener("scroll", invalidateRect, { capture: true, passive: true });
+   199→    window.addEventListener("resize", invalidateRect, { passive: true });
+   200→    return () => {
+   201→      el.removeEventListener("mouseenter", refreshRect);
+   202→      window.removeEventListener("mousemove", onMove);
+   203→      el.removeEventListener("mouseleave", onLeave);
+   204→      window.removeEventListener("scroll", invalidateRect, { capture: true });
+   205→      window.removeEventListener("resize", invalidateRect);
+   206→      el.style.transform = "";
+   207→    };
+   208→  }, [el, strength]);
+   209→  return ref;
+   210→}
+   211→
+   212→/**
+   213→ * useTypingText — types out text char-by-char, then blinks cursor.
+   214→ * Loops after a pause.
+   215→ */
+   216→function useTypingText(text: string, speed = 50, startDelay = 0, pauseAfter = 2500) {
+   217→  const [output, setOutput] = React.useState("");
+   218→  const [done, setDone] = React.useState(false);
+   219→  React.useEffect(() => {
+   220→    let i = 0;
+   221→    let timer: ReturnType<typeof setTimeout>;
+   222→    let pauseTimer: ReturnType<typeof setTimeout>;
+   223→    const startTimer = setTimeout(function type() {
+   224→      if (i <= text.length) {
+   225→        setOutput(text.slice(0, i));
+   226→        setDone(i === text.length);
+   227→        i++;
+   228→        timer = setTimeout(type, speed);
+   229→      } else {
+   230→        // Pause then restart
+   231→        pauseTimer = setTimeout(() => {
+   232→          i = 0;
+   233→          setOutput("");
+   234→          setDone(false);
+   235→          timer = setTimeout(type, speed);
+   236→        }, pauseAfter);
+   237→      }
+   238→    }, startDelay);
+   239→    return () => {
+   240→      clearTimeout(startTimer);
+   241→      clearTimeout(timer);
+   242→      clearTimeout(pauseTimer);
+   243→    };
+   244→  }, [text, speed, startDelay, pauseAfter]);
+   245→  return { output, done };
+   246→}
+   247→
+   248→/**
+   249→ * useLiveBars — returns an array of heights (0-100) that update on an interval.
+   250→ * Used for the throughput monitor visualization.
+   251→ *
+   252→ * HYDRATION SAFETY: the initial state is deterministic (all bars at 50) so the
+   253→ * SSR HTML matches the first client render. The randomization only starts inside
+   254→ * useEffect (client-only) — same pattern as useTextScramble + useCountUp above.
+   255→ * Without this guard, Math.random() in the useState initializer would produce
+   256→ * different bar values on server vs client → hydration mismatch warning.
+   257→ */
+   258→function useLiveBars(count = 12, intervalMs = 1200) {
+   259→  const [bars, setBars] = React.useState<number[]>(() =>
+   260→    Array.from({ length: count }, () => 50)
+   261→  );
+   262→  React.useEffect(() => {
+   263→    // First tick: seed real random values (client-only).
+   264→    setBars(Array.from({ length: count }, () => 20 + Math.random() * 70));
+   265→    const id = setInterval(() => {
+   266→      // Skip oscilloscope churn when the tab is hidden — bars are decorative.
+   267→      if (document.hidden) return;
+   268→      setBars((prev) => {
+   269→        // Shift left, push new value at end (oscilloscope-style)
+   270→        const next = [...prev.slice(1), 20 + Math.random() * 75];
+   271→        return next;
+   272→      });
+   273→    }, intervalMs);
+   274→    return () => clearInterval(id);
+   275→  }, [count, intervalMs]);
+   276→  return bars;
+   277→}
+   278→
+   279→export function Hero() {
+   280→  const ts = useLiveTimestamp();
+   281→  const gps = useGpsJitter();
+   282→  const uptime = useCountUp(99.97, 1800, 600);
+   283→  const load = useCountUp(81, 1800, 900);
+   284→  // Scroll parallax for the figure (y only — opacity handled by entrance animation)
+   285→  const sectionRef = React.useRef<HTMLElement>(null);
+   286→  const { scrollYProgress } = useScroll({
+   287→    target: sectionRef,
+   288→    offset: ["start start", "end start"],
+   289→  });
+   290→  // Scroll parallax: figure drifts down 0→80px and fades 1→0.3 as hero scrolls out
+   291→  const figureScrollY = useTransform(scrollYProgress, [0, 1], [0, 80]);
+   292→  const figureScrollOpacity = useTransform(scrollYProgress, [0, 1], [1, 0.3]);
+   293→  // Mouse parallax — figure moves slowest, HUDs move opposite direction
+   294→  const figureParallax = useMouseParallax(12);  // figure: subtle, depth feel
+   295→  const hudParallax = useMouseParallax(22);     // HUDs: more pronounced, foreground
+   296→  const ctaRef = useMagnetic(6);                 // CTA: subtle magnetic pull (max 6px)
+   297→  // Respect prefers-reduced-motion: kill scroll parallax if user prefers reduced motion
+   298→  const reducedMotion = useReducedMotion();
+   299→  const tickerKeywords = ["AI", "WEB3", "FULL-STACK", "MULTIMEDIA"];
+   300→  // Live data viz — typing terminal + throughput bars
+   301→  const throughputBars = useLiveBars(16, 900);
+   302→  // TAUNGOO letters each get their own scramble (staggered, longer for cinematic feel)
+   303→  const t = useTextScramble("T", 800, 500);
+   304→  const a = useTextScramble("A", 800, 620);
+   305→  const u = useTextScramble("U", 800, 740);
+   306→  const n = useTextScramble("N", 800, 860);
+   307→  const g = useTextScramble("G", 800, 980);
+   308→  const o1 = useTextScramble("O", 800, 1100);
+   309→  const o2 = useTextScramble("O", 800, 1220);
+   310→  const taungooLetters = [t, a, u, n, g, o1, o2];
+   311→  return (
+   312→    <section
+   313→      ref={sectionRef}
+   314→      id="top"
+   315→      className="relative flex items-center justify-center overflow-hidden"
+   316→      style={{ background: "var(--beta-bg)", height: "105vh" }}
+   317→    >
+   318→      {/* SEO h1 — visually hidden (sr-only). The visible "TAUNGOO" wordmark is
+   319→          rendered as motion.span letters below for the cinematic letter-by-letter
+   320→          scramble; this h1 gives the page a proper heading root for search
+   321→          engines + screen readers without altering the visible layout.
+   322→          Alpha + Sigma modes have their own visible h1s (AlphaHero + SigmaMap). */}
+   323→      <h1 className="sr-only">
+   324→        TAUNGOO Sigma Lab — Innovation Hub for AI, Web3, and Full-Stack Platforms
+   325→      </h1>
+   326→      {/* Immersive lighting — multi-layer gradient glow behind figure */}
+   327→      <div className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(ellipse 60% 70% at 50% 45%, rgba(212, 175, 55, 0.06), transparent 60%)" }} />
+   328→      <div className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(ellipse 40% 50% at 30% 60%, rgba(212, 175, 55, 0.04), transparent 50%)" }} />
+   329→      <div className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(ellipse 40% 50% at 70% 60%, rgba(212, 175, 55, 0.04), transparent 50%)" }} />
+   330→
+   331→      {/* Center-stage depth vignette — darkens armor behind center text for readability */}
+   332→      <div className="pointer-events-none absolute inset-0 z-[2]" style={{ background: "radial-gradient(ellipse 50% 60% at 50% 50%, rgba(5, 5, 8, 0.65), transparent 70%)" }} />
+   333→
+   334→      {/* Vignette */}
+   335→      <div className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(ellipse 85% 85% at 50% 50%, transparent 20%, var(--beta-bg) 100%)" }} />
+   336→
+   337→      {/* Noise grain */}
+   338→      <div className="pointer-events-none absolute inset-0 opacity-[0.03]" style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E\")" }} />
+   339→
+   340→      {/* Armored General figure — fills hero, chest-level on desktop, full on mobile.
+   341→          Outer wrapper handles scroll parallax (translateY 0→80px + opacity 1→0.3).
+   342→          Inner motion.div handles entrance animation (opacity 0→0.20, scale 1.05→1)
+   343→          + mouse parallax (x only). They compose cleanly since transform/opacity
+   344→          on parent and child are independent. */}
+   345→      <motion.div
+   346→        style={reducedMotion ? undefined : { y: figureScrollY, opacity: figureScrollOpacity }}
+   347→        className="pointer-events-none absolute inset-0"
+   348→      >
+   349→        <motion.div
+   350→          initial={{ opacity: 0, scale: 1.05 }}
+   351→          animate={{ opacity: 0.20, scale: 1 }}
+   352→          transition={{ delay: 0.3, duration: 1.5 }}
+   353→          style={{ x: figureParallax.x }}
+   354→          className="absolute inset-0 flex items-center justify-center"
+   355→        >
+   356→          {/* PERF (LOOP-1-LH): migrated from raw <img> to next/image `fill` +
+   357→              `priority` so the 1.3MB hero-figure.png is served as an
+   358→              AVIF/WebP variant sized to the viewport (~150-300KB on the wire).
+   359→              The complex filter (brightness + drop-shadow gold glow) +
+   360→              objectPosition "center 20%" are preserved via the `style` prop
+   361→              — next/image applies style directly to the underlying <img>.
+   362→              fetchPriority="high" is preserved via the `priority` prop
+   363→              (which sets fetchPriority="high" on the rendered img). */}
+   364→          <Image
+   365→            src="/hero-figure.png"
+   366→            alt=""
+   367→            fill
+   368→            priority
+   369→            sizes="100vw"
+   370→            className="h-full w-full"
+   371→            style={{
+   372→              objectFit: "cover",
+   373→              objectPosition: "center 20%",
+   374→              filter: "brightness(0.78) drop-shadow(0 0 80px rgba(212, 175, 55, 0.15)) drop-shadow(0 0 30px rgba(212, 175, 55, 0.1))",
+   375→            }}
+   376→          />
+   377→        </motion.div>
+   378→      </motion.div>
+   379→
+   380→      {/* Corner brackets */}
+   381→      <span className="absolute left-6 top-6 h-4 w-4 border-l border-t" style={{ borderColor: "rgba(212, 175, 55, 0.4)" }} />
+   382→      <span className="absolute right-6 top-6 h-4 w-4 border-r border-t" style={{ borderColor: "rgba(212, 175, 55, 0.4)" }} />
+   383→      <span className="absolute bottom-6 left-6 h-4 w-4 border-b border-l" style={{ borderColor: "rgba(212, 175, 55, 0.4)" }} />
+   384→      <span className="absolute bottom-6 right-6 h-4 w-4 border-b border-r" style={{ borderColor: "rgba(212, 175, 55, 0.4)" }} />
+   385→
+   386→      {/* LEFT HUD — floating text only, no card background (mouse parallax wrapper) */}
+   387→      <motion.div
+   388→        style={{ x: hudParallax.x, y: hudParallax.y }}
+   389→        className="absolute left-[5%] lg:left-[88px] top-1/2 hidden -translate-y-1/2 w-[200px] lg:block"
+   390→      >
+   391→      <motion.div initial={{ opacity: 0, x: -24 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.6, duration: 0.6 }}>
+   392→        {/* Top divider line — minimal */}
+   393→        <div className="h-px w-full mb-3" style={{ background: "linear-gradient(to right, transparent, rgba(212, 175, 55, 0.4), transparent)" }} />
+   394→
+   395→        {/* Header */}
+   396→        <div className="flex items-center justify-between mb-3">
+   397→          <span className="font-mono text-[9px] tracking-[0.2em]" style={{ color: "var(--beta-accent)" }}>SYS.ID</span>
+   398→          <span className="font-mono text-[9px] tracking-[0.2em] tabular-nums" style={{ color: "var(--beta-fg-subtle)" }}>{ts}</span>
+   399→        </div>
+   400→
+   401→        {/* Identity readout */}
+   402→        <div className="bs-flicker mb-3">
+   403→          <div className="font-mono text-[13px] font-semibold tracking-[0.08em]" style={{ color: "var(--beta-fg-strong)" }}>
+   404→            TAU-Σ-0027<span className="bs-blink" />
+   405→          </div>
+   406→          <div className="font-mono text-[9px] tracking-[0.15em] mt-0.5" style={{ color: "var(--beta-fg-muted)" }}>CLEARANCE · ALPHA</div>
+   407→        </div>
+   408→
+   409→        {/* Divider */}
+   410→        <div className="h-px w-full mb-3" style={{ background: "rgba(212, 175, 55, 0.15)" }} />
+   411→
+   412→        {/* Uptime + sparkline */}
+   413→        <div className="flex items-end justify-between mb-3">
+   414→          <div>
+   415→            <div className="font-mono text-[9px] tracking-[0.2em]" style={{ color: "var(--beta-fg-subtle)" }}>UPTIME</div>
+   416→            <div className="font-mono text-[14px] font-semibold tabular-nums" style={{ color: "var(--beta-accent)" }}>{uptime.toFixed(2)}%</div>
+   417→          </div>
+   418→          <svg viewBox="0 0 60 24" width="56" height="22" aria-hidden="true">
+   419→            <polyline className="bs-sparkline-path" points="0,18 8,14 14,16 22,8 28,12 36,4 42,10 50,6 60,8" />
+   420→          </svg>
+   421→        </div>
+   422→
+   423→        {/* Bottom: signal + coords */}
+   424→        <div className="flex items-center justify-between">
+   425→          <div className="flex items-center gap-1.5">
+   426→            <span className="bs-pulse-dot inline-block h-1.5 w-1.5 rounded-full" style={{ background: "var(--beta-accent)" }} />
+   427→            <span className="font-mono text-[9px] tracking-[0.15em]" style={{ color: "var(--beta-accent)" }}>LOCK</span>
+   428→          </div>
+   429→          <span className="font-mono text-[9px] tracking-[0.1em] tabular-nums" style={{ color: "var(--beta-fg-subtle)" }}>{gps}</span>
+   430→        </div>
+   431→
+   432→        {/* Bottom divider */}
+   433→        <div className="h-px w-full mt-3" style={{ background: "linear-gradient(to right, transparent, rgba(212, 175, 55, 0.4), transparent)" }} />
+   434→
+   435→        {/* Side label */}
+   436→        <div className="mt-3 flex items-center gap-2 px-1">
+   437→          <div className="h-px w-6" style={{ background: "rgba(212, 175, 55, 0.4)" }} />
+   438→          <span className="font-mono text-[9px] tracking-[0.2em]" style={{ color: "var(--beta-fg-subtle)" }}>NODE 01</span>
+   439→          <div className="h-px flex-1" style={{ background: "rgba(212, 175, 55, 0.15)" }} />
+   440→        </div>
+   441→      </motion.div>
+   442→      </motion.div>
+   443→
+   444→      {/* RIGHT HUD — floating text only, no card background (mouse parallax wrapper) */}
+   445→      <motion.div
+   446→        style={{ x: hudParallax.x, y: hudParallax.y }}
+   447→        className="absolute right-[5%] lg:right-[3%] top-1/2 hidden -translate-y-1/2 w-[200px] lg:block"
+   448→      >
+   449→      <motion.div initial={{ opacity: 0, x: 24 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.6, duration: 0.6 }}>
+   450→        {/* Top divider line */}
+   451→        <div className="h-px w-full mb-3" style={{ background: "linear-gradient(to right, transparent, rgba(212, 175, 55, 0.4), transparent)" }} />
+   452→
+   453→        {/* Header */}
+   454→        <div className="flex items-center justify-between mb-3">
+   455→          <span className="font-mono text-[9px] tracking-[0.2em]" style={{ color: "var(--beta-fg-subtle)" }}>BUILD</span>
+   456→          <span className="font-mono text-[9px] tracking-[0.2em]" style={{ color: "var(--beta-accent)" }}>V.2.7.Σ</span>
+   457→        </div>
+   458→
+   459→        {/* Circular progress + load */}
+   460→        <div className="flex items-center gap-3 mb-3">
+   461→          <svg viewBox="0 0 40 40" width="40" height="40" aria-hidden="true" style={{ transform: "rotate(-90deg)" }}>
+   462→            <circle cx="20" cy="20" r="18" fill="none" stroke="var(--beta-border)" strokeWidth="2" />
+   463→            <circle
+   464→              className="bs-ring-progress"
+   465→              cx="20" cy="20" r="18"
+   466→              fill="none"
+   467→              stroke="var(--beta-accent)"
+   468→              strokeWidth="2"
+   469→              strokeLinecap="round"
+   470→              strokeDasharray="113"
+   471→              style={{ filter: "drop-shadow(0 0 4px rgba(212, 175, 55, 0.6))" }}
+   472→            />
+   473→          </svg>
+   474→          <div>
+   475→            <div className="font-mono text-[9px] tracking-[0.2em]" style={{ color: "var(--beta-fg-subtle)" }}>LOAD</div>
+   476→            <div className="font-mono text-[15px] font-semibold tabular-nums" style={{ color: "var(--beta-fg-strong)" }}>{Math.round(load)}<span className="text-[10px] ml-0.5" style={{ color: "var(--beta-fg-muted)" }}>%</span></div>
+   477→          </div>
+   478→        </div>
+   479→
+   480→        {/* Divider */}
+   481→        <div className="h-px w-full mb-3" style={{ background: "rgba(212, 175, 55, 0.15)" }} />
+   482→
+   483→        {/* Stats */}
+   484→        <div className="grid grid-cols-2 gap-2 mb-3">
+   485→          <div>
+   486→            <div className="font-mono text-[9px] tracking-[0.2em]" style={{ color: "var(--beta-fg-subtle)" }}>DEPLOY</div>
+   487→            <div className="font-mono text-[14px] font-semibold" style={{ color: "var(--beta-fg-strong)" }}>09</div>
+   488→          </div>
+   489→          <div>
+   490→            <div className="font-mono text-[9px] tracking-[0.2em]" style={{ color: "var(--beta-fg-subtle)" }}>SVC</div>
+   491→            <div className="font-mono text-[14px] font-semibold" style={{ color: "var(--beta-accent)" }}>27</div>
+   492→          </div>
+   493→        </div>
+   494→
+   495→        {/* Audio bars */}
+   496→        <div className="flex items-end gap-[2px] h-4 justify-end">
+   497→          {[3, 5, 4, 7, 4, 6, 3, 5, 4].map((h, i) => (
+   498→            <div key={i} className="w-[2px]" style={{ height: `${h * 2}px`, background: "rgba(212, 175, 55, 0.5)", animation: `bs-sparkline-shift ${1.4 + (i % 3) * 0.3}s ease-in-out infinite` }} />
+   499→          ))}
+   500→        </div>
+   501→
+   502→        {/* Bottom divider */}
+   503→        <div className="h-px w-full mt-3" style={{ background: "linear-gradient(to right, transparent, rgba(212, 175, 55, 0.4), transparent)" }} />
+   504→
+   505→        {/* Side label */}
+   506→        <div className="mt-3 flex items-center gap-2 px-1">
+   507→          <div className="h-px flex-1" style={{ background: "rgba(212, 175, 55, 0.15)" }} />
+   508→          <span className="font-mono text-[9px] tracking-[0.2em]" style={{ color: "var(--beta-fg-subtle)" }}>SYS.MON</span>
+   509→          <div className="h-px w-6" style={{ background: "rgba(212, 175, 55, 0.4)" }} />
+   510→        </div>
+   511→      </motion.div>
+   512→      </motion.div>
+   513→
+   514→      {/* CENTER CONTENT */}
+   515→      <div className="relative z-10 flex w-full flex-col items-center px-[6%] sm:px-[2%]">
+   516→        {/* Minimal animated visualization above TAUNGOO — single line on mobile */}
+   517→        <motion.div
+   518→          initial={{ opacity: 0, y: -10 }}
+   519→          animate={{ opacity: 1, y: 0 }}
+   520→          transition={{ delay: 0.3, duration: 0.6 }}
+   521→          className="mb-6 flex items-center justify-center gap-1.5 sm:gap-2 whitespace-nowrap"
+   522→        >
+   523→          {/* Animated signal dots — 3 dots on mobile, 5 on desktop */}
+   524→          {[0, 1, 2].map((i) => (
+   525→            <motion.span
+   526→              key={i}
+   527→              animate={{ opacity: [0.2, 1, 0.2], scale: [1, 1.3, 1] }}
+   528→              transition={{ duration: 1.5, repeat: Infinity, delay: i * 0.15, ease: "easeInOut" }}
+   529→              className="hidden sm:block h-1 w-1 rounded-full"
+   530→              style={{ background: "var(--beta-accent)" }}
+   531→            />
+   532→          ))}
+   533→          {/* Thin animated line */}
+   534→          <motion.div
+   535→            initial={{ width: 0 }}
+   536→            animate={{ width: 30 }}
+   537→            transition={{ delay: 0.5, duration: 0.8, ease: "easeOut" }}
+   538→            className="h-px sm:!w-[60px]"
+   539→            style={{ background: "linear-gradient(to right, var(--beta-accent), transparent)" }}
+   540→          />
+   541→          {/* Status text */}
+   542→          <span className="font-mono text-[7px] sm:text-[8px] uppercase tracking-[0.2em] sm:tracking-[0.3em]" style={{ color: "var(--beta-fg-subtle)" }}>
+   543→            SIGMA · CORE
+   544→          </span>
+   545→          {/* Thin animated line — right side */}
+   546→          <motion.div
+   547→            initial={{ width: 0 }}
+   548→            animate={{ width: 30 }}
+   549→            transition={{ delay: 0.5, duration: 0.8, ease: "easeOut" }}
+   550→            className="h-px sm:!w-[60px]"
+   551→            style={{ background: "linear-gradient(to left, var(--beta-accent), transparent)" }}
+   552→          />
+   553→          {/* Mirror dots */}
+   554→          {[2, 1, 0].map((i) => (
+   555→            <motion.span
+   556→              key={`r-${i}`}
+   557→              animate={{ opacity: [0.2, 1, 0.2], scale: [1, 1.3, 1] }}
+   558→              transition={{ duration: 1.5, repeat: Infinity, delay: i * 0.15, ease: "easeInOut" }}
+   559→              className="hidden sm:block h-1 w-1 rounded-full"
+   560→              style={{ background: "var(--beta-accent)" }}
+   561→            />
+   562→          ))}
+   563→        </motion.div>
+   564→
+   565→        {/* TAUNGOO — with mechanical letter animation + breathing gold glow + corner brackets */}
+   566→        <motion.div
+   567→          initial={{ opacity: 0 }}
+   568→          animate={{ opacity: 1 }}
+   569→          transition={{ delay: 0.2, duration: 1.0 }}
+   570→          className="relative text-center"
+   571→          style={{ width: "92%", maxWidth: "92vw", margin: "0 auto" }}
+   572→        >
+   573→          {/* Corner brackets */}
+   574→          <span className="absolute -left-1 -top-1 sm:-left-2 sm:-top-2 h-2 w-2 sm:h-3 sm:w-3" style={{ borderLeft: "1px solid rgba(212,175,55,0.5)", borderTop: "1px solid rgba(212,175,55,0.5)" }} />
+   575→          <span className="absolute -right-1 -top-1 sm:-right-2 sm:-top-2 h-2 w-2 sm:h-3 sm:w-3" style={{ borderRight: "1px solid rgba(212,175,55,0.5)", borderTop: "1px solid rgba(212,175,55,0.5)" }} />
+   576→          <span className="absolute -left-1 -bottom-1 sm:-left-2 sm:-bottom-2 h-2 w-2 sm:h-3 sm:w-3" style={{ borderLeft: "1px solid rgba(212,175,55,0.5)", borderBottom: "1px solid rgba(212,175,55,0.5)" }} />
+   577→          <span className="absolute -right-1 -bottom-1 sm:-right-2 sm:-bottom-2 h-2 w-2 sm:h-3 sm:w-3" style={{ borderRight: "1px solid rgba(212,175,55,0.5)", borderBottom: "1px solid rgba(212,175,55,0.5)" }} />
+   578→
+   579→          <div className="flex justify-between items-center lg:px-12" style={{ width: "100%" }}>
+   580→            {taungooLetters.map((letter, i) => (
+   581→              <motion.span
+   582→                key={i}
+   583→                initial={{ opacity: 0, y: 20, filter: "blur(8px)" }}
+   584→                animate={{
+   585→                  opacity: 1,
+   586→                  y: 0,
+   587→                  filter: "blur(0px)",
+   588→                  // Mechanical animation: subtle translateY + slight skew + glow on a slow loop.
+   589→                  // Disabled entirely when prefers-reduced-motion is on (entrance still runs).
+   590→                  ...(reducedMotion ? {} : {
+   591→                    textShadow: [
+   592→                      "0 0 30px rgba(212, 175, 55, 0.15)",
+   593→                      "0 0 60px rgba(212, 175, 55, 0.35)",
+   594→                      "0 0 30px rgba(212, 175, 55, 0.15)",
+   595→                    ],
+   596→                    y: [0, -1, 0, 1, 0],
+   597→                    skewY: [0, -0.3, 0, 0.3, 0],
+   598→                  }),
+   599→                }}
+   600→                transition={{
+   601→                  delay: 0.3 + i * 0.08,
+   602→                  duration: 0.5,
+   603→                  textShadow: { delay: 1.5 + i * 0.08, duration: 4, repeat: Infinity, ease: "easeInOut" },
+   604→                  y: { delay: 2 + i * 0.3, duration: 6, repeat: Infinity, ease: "easeInOut" },
+   605→                  skewY: { delay: 2 + i * 0.3, duration: 6, repeat: Infinity, ease: "easeInOut" },
+   606→                }}
+   607→                className="font-light uppercase tabular-nums"
+   608→                style={{
+   609→                  fontSize: "clamp(2.25rem, 9vw, 7rem)",
+   610→                  color: "var(--beta-fg-strong)",
+   611→                  fontFamily: "var(--font-tactical), var(--font-sans), sans-serif",
+   612→                  fontWeight: 200,
+   613→                  display: "inline-block",
+   614→                }}
+   615→              >
+   616→                {letter}
+   617→              </motion.span>
+   618→            ))}
+   619→          </div>
+   620→        </motion.div>
+   621→
+   622→        {/* Σ LAB — placed BELOW TAUNGOO with side rules */}
+   623→        <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.8 }} className="mt-4 flex items-center justify-center gap-3">
+   624→          <span className="h-px w-8 sm:w-16" style={{ background: "rgba(212, 175, 55, 0.4)" }} />
+   625→          <span className="font-mono uppercase" style={{ color: "var(--beta-accent)", fontSize: "clamp(0.6rem, 1vw, 0.75rem)", letterSpacing: "0.4em", fontWeight: 600 }}>Σ LAB</span>
+   626→          <span className="h-px w-8 sm:w-16" style={{ background: "rgba(212, 175, 55, 0.4)" }} />
+   627→        </motion.div>
+   628→
+   629→        {/* Tagline */}
+   630→        <motion.p initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.0 }} className="mt-6 sm:mt-8 max-w-xl text-center font-mono text-[13px] sm:text-sm leading-relaxed" style={{ color: "var(--beta-fg)", letterSpacing: "0.05em", fontWeight: 500 }}>
+   631→          We build AI systems, Web3 protocols, and full-stack platforms.
+   632→        </motion.p>
+   633→
+   634→        {/* CTA — ghost-style with fill animation + magnetic attraction */}
+   635→        <motion.a
+   636→          ref={ctaRef}
+   637→          href="#services"
+   638→          initial={{ opacity: 0, y: 10 }}
+   639→          animate={{ opacity: 1, y: 0 }}
+   640→          transition={{ delay: 1.2 }}
+   641→          whileTap={{ scale: 0.96 }}
+   642→          className="bs-cta-ghost bs-magnetic mt-8 sm:mt-10 inline-flex items-center gap-2 px-7 py-3 font-mono text-[11px] font-medium uppercase tracking-[0.2em] relative overflow-hidden"
+   643→          style={{
+   644→            color: "var(--beta-accent)",
+   645→            borderRadius: "1px",
+   646→            border: "1px solid var(--beta-accent)",
+   647→            background: "transparent",
+   648→          }}
+   649→        >
+   650→          <span className="relative z-10 flex items-center gap-2">
+   651→            Explore Services <span aria-hidden="true">→</span>
+   652→          </span>
+   653→        </motion.a>
+   654→      </div>
+   655→
+   656→      {/* BOOT LOG + SCI-FI DATA VIZ — bottom-left (desktop only) */}
+   657→      <motion.div
+   658→        initial={{ opacity: 0, y: 10 }}
+   659→        animate={{ opacity: 1, y: 0 }}
+   660→        transition={{ delay: 1.8, duration: 0.6 }}
+   661→        className="hidden lg:flex absolute bottom-16 left-[88px] flex-col gap-2 pointer-events-none max-w-[320px]"
+   662→      >
+   663→        {/* Sci-fi spectrum analyzer — sharp rectangular bars, no rounding */}
+   664→        <div className="relative">
+   665→          {/* Label row */}
+   666→          <div className="flex items-center justify-between mb-1">
+   667→            <span className="font-mono text-[9px] uppercase tracking-[0.2em]" style={{ color: "var(--beta-fg-subtle)" }}>SIGNAL · THROUGHPUT</span>
+   668→            <span className="font-mono text-[10px] tabular-nums" style={{ color: "var(--beta-accent)" }}>
+   669→              {(throughputBars[throughputBars.length - 1] * 12.7).toFixed(0)}/s
+   670→            </span>
+   671→          </div>
+   672→          {/* Spectrum bars — sharp edges, no border-radius, serious look */}
+   673→          <div className="bs-spectrum-bar flex items-end gap-[1px] h-10 relative" style={{ background: "rgba(212,175,55,0.03)", padding: "2px" }}>
+   674→            {/* Grid lines for sci-fi feel */}
+   675→            <div className="absolute inset-0 pointer-events-none" style={{
+   676→              backgroundImage: "repeating-linear-gradient(to right, transparent 0, transparent 19px, rgba(212,175,55,0.08) 19px, rgba(212,175,55,0.08) 20px)",
+   677→            }} />
+   678→            {throughputBars.map((h, i) => (
+   679→              <div
+   680→                key={i}
+   681→                className="bs-spectrum-bar flex-1 min-w-[2px] relative"
+   682→                style={{
+   683→                  height: `${h}%`,
+   684→                  background: i === throughputBars.length - 1
+   685→                    ? "var(--beta-accent)"
+   686→                    : `rgba(212, 175, 55, ${0.2 + (i / throughputBars.length) * 0.6})`,
+   687→                  boxShadow: i === throughputBars.length - 1 ? "0 0 6px rgba(212, 175, 55, 0.6)" : "none",
+   688→                  transition: `height var(--dur-slow) var(--ease-out-expo)`,
+   689→                }}
+   690→              >
+   691→                {/* Peak marker on latest bar */}
+   692→                {i === throughputBars.length - 1 && (
+   693→                  <div className="absolute -top-1 left-0 right-0 h-[2px]" style={{ background: "var(--beta-accent)", boxShadow: "0 0 4px var(--beta-accent)" }} />
+   694→                )}
+   695→              </div>
+   696→            ))}
+   697→          </div>
+   698→          {/* Frequency labels */}
+   699→          <div className="flex justify-between mt-0.5">
+   700→            <span className="font-mono text-[7px] tabular-nums" style={{ color: "var(--beta-fg-subtle)" }}>0Hz</span>
+   701→            <span className="font-mono text-[7px] tabular-nums" style={{ color: "var(--beta-fg-subtle)" }}>250Hz</span>
+   702→            <span className="font-mono text-[7px] tabular-nums" style={{ color: "var(--beta-fg-subtle)" }}>500Hz</span>
+   703→            <span className="font-mono text-[7px] tabular-nums" style={{ color: "var(--beta-fg-subtle)" }}>1kHz</span>
+   704→          </div>
+   705→        </div>
+   706→
+   707→        {/* SVG waveform graph — sci-fi ECG-style line, full length always visible */}
+   708→        <div className="mt-1">
+   709→          <div className="flex items-center justify-between mb-1">
+   710→            <span className="font-mono text-[9px] uppercase tracking-[0.2em]" style={{ color: "var(--beta-fg-subtle)" }}>SYS · PULSE</span>
+   711→            <span className="font-mono text-[9px] tabular-nums" style={{ color: "var(--beta-accent)" }}>72 BPM</span>
+   712→          </div>
+   713→          <svg viewBox="0 0 280 40" width="100%" height="32" aria-hidden="true" className="overflow-visible">
+   714→            {/* Grid */}
+   715→            <line x1="0" y1="20" x2="280" y2="20" stroke="rgba(212,175,55,0.08)" strokeWidth="1" />
+   716→            <line x1="0" y1="10" x2="280" y2="10" stroke="rgba(212,175,55,0.04)" strokeWidth="1" strokeDasharray="2 4" />
+   717→            <line x1="0" y1="30" x2="280" y2="30" stroke="rgba(212,175,55,0.04)" strokeWidth="1" strokeDasharray="2 4" />
+   718→            {/* ECG-style waveform — static path, always full length */}
+   719→            <polyline
+   720→              points="0,20 20,20 25,20 28,18 30,22 33,20 50,20 55,20 58,10 60,30 63,20 80,20 100,20 105,20 108,18 110,22 113,20 130,20 135,20 138,8 140,32 143,20 160,20 180,20 185,20 188,18 190,22 193,20 210,20 215,20 218,10 220,30 223,20 240,20 260,20 265,20 268,18 270,22 273,20 280,20"
+   721→              fill="none"
+   722→              stroke="var(--beta-accent)"
+   723→              strokeWidth="1.5"
+   724→              strokeLinecap="round"
+   725→              strokeLinejoin="round"
+   726→              style={{ filter: "drop-shadow(0 0 3px rgba(212,175,55,0.6))" }}
+   727→            />
+   728→          </svg>
+   729→        </div>
+   730→
+   731→        {/* Boot log — full text always visible, no typing animation, no expansion */}
+   732→        <div className="mt-1 font-mono text-[10px] leading-relaxed" style={{ color: "var(--beta-fg-muted)" }}>
+   733→          <span style={{ color: "var(--beta-accent)" }}>&gt; sigma.core boot — 27 services online · 9 deployments live · MMXVI</span>
+   734→        </div>
+   735→      </motion.div>
+   736→
+   737→      {/* RADAR SWEEP — bottom-right mini radar (desktop only) */}
+   738→      <motion.div
+   739→        initial={{ opacity: 0, y: 10 }}
+   740→        animate={{ opacity: 1, y: 0 }}
+   741→        transition={{ delay: 2.0, duration: 0.6 }}
+   742→        className="hidden lg:block absolute bottom-16 right-[3%] pointer-events-none"
+   743→      >
+   744→        <svg viewBox="0 0 80 80" width="72" height="72" aria-hidden="true">
+   745→          {/* Concentric circles */}
+   746→          <circle cx="40" cy="40" r="36" fill="none" stroke="rgba(212, 175, 55, 0.15)" strokeWidth="1" />
+   747→          <circle cx="40" cy="40" r="24" fill="none" stroke="rgba(212, 175, 55, 0.15)" strokeWidth="1" />
+   748→          <circle cx="40" cy="40" r="12" fill="none" stroke="rgba(212, 175, 55, 0.15)" strokeWidth="1" />
+   749→          {/* Crosshairs */}
+   750→          <line x1="4" y1="40" x2="76" y2="40" stroke="rgba(212, 175, 55, 0.1)" strokeWidth="1" />
+   751→          <line x1="40" y1="4" x2="40" y2="76" stroke="rgba(212, 175, 55, 0.1)" strokeWidth="1" />
+   752→          {/* Radar sweep — rotating conic gradient via SVG */}
+   753→          <defs>
+   754→            <linearGradient id="radar-sweep" x1="0%" y1="0%" x2="100%" y2="0%">
+   755→              <stop offset="0%" stopColor="rgba(212, 175, 55, 0)" />
+   756→              <stop offset="100%" stopColor="rgba(212, 175, 55, 0.6)" />
+   757→            </linearGradient>
+   758→          </defs>
+   759→          <g style={{ transformOrigin: "40px 40px", animation: "bs-radar-rotate 4s linear infinite" }}>
+   760→            <path d="M 40 40 L 76 40 A 36 36 0 0 0 56 8 Z" fill="url(#radar-sweep)" opacity="0.7" />
+   761→          </g>
+   762→          {/* Contact dots */}
+   763→          <circle cx="52" cy="28" r="1.5" fill="var(--beta-accent)" />
+   764→          <circle cx="32" cy="48" r="1.5" fill="var(--beta-accent)" opacity="0.7" />
+   765→          <circle cx="56" cy="56" r="1.5" fill="var(--beta-accent)" opacity="0.5" />
+   766→          {/* Center dot */}
+   767→          <circle cx="40" cy="40" r="2" fill="var(--beta-accent)" />
+   768→        </svg>
+   769→        <div className="mt-2 flex items-center justify-between">
+   770→          <span className="font-mono text-[9px] uppercase tracking-[0.2em]" style={{ color: "var(--beta-fg-subtle)" }}>SCAN</span>
+   771→          <span className="font-mono text-[9px] tabular-nums" style={{ color: "var(--beta-accent)" }}>3 CONTACTS</span>
+   772→        </div>
+   773→      </motion.div>
+   774→
+   775→      {/* Animated pulse line from bottom-left corner */}
+   776→      <motion.div
+   777→        initial={{ opacity: 0 }}
+   778→        animate={{ opacity: 1 }}
+   779→        transition={{ delay: 2.2, duration: 0.6 }}
+   780→        className="hidden sm:block absolute bottom-0 left-0 pointer-events-none"
+   781→        style={{ width: "40%", height: "1px" }}
+   782→      >
+   783→        <motion.div
+   784→          animate={{ scaleX: [0, 1, 1, 0] }}
+   785→          transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+   786→          className="h-full origin-left"
+   787→          style={{ background: "linear-gradient(to right, var(--beta-accent), transparent)" }}
+   788→        />
+   789→        {/* Pulse dot at the start */}
+   790→        <motion.span
+   791→          animate={{ opacity: [0.3, 1, 0.3], scale: [1, 1.5, 1] }}
+   792→          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+   793→          className="absolute left-0 top-1/2 -translate-y-1/2 h-1.5 w-1.5 rounded-full"
+   794→          style={{ background: "var(--beta-accent)", boxShadow: "0 0 8px var(--beta-accent)" }}
+   795→        />
+   796→      </motion.div>
+   797→
+   798→      {/* Scroll indicator — lifted above the ticker band */}
+   799→      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.5 }} className="absolute bottom-12 left-1/2 -translate-x-1/2 z-[3]">
+   800→        <div className="flex flex-col items-center gap-1">
+   801→          <span className="font-mono text-[8px] uppercase tracking-[0.3em]" style={{ color: "var(--beta-fg-subtle)" }}>SCROLL</span>
+   802→          <motion.div animate={{ y: [0, 6, 0] }} transition={{ duration: 1.5, repeat: Infinity }} className="h-6 w-px" style={{ background: "rgba(212, 175, 55, 0.3)" }} />
+   803→        </div>
+   804→      </motion.div>
+   805→
+   806→      {/* Bottom ticker — thin gold band of keywords (CSS marquee, 30s loop, pause on hover).
+   807→          Sits at the very bottom of the hero, fade-masked at edges so it doesn't collide
+   808→          with the corner brackets or other HUD elements. Pointer-events enabled so the
+   809→          hover pause works; reduced-motion users get a static strip. */}
+   810→      <motion.div
+   811→        initial={{ opacity: 0 }}
+   812→        animate={{ opacity: 1 }}
+   813→        transition={{ delay: 2.4, duration: 0.8 }}
+   814→        className="absolute bottom-0 left-0 right-0 z-[2] pointer-events-none"
+   815→        style={{
+   816→          height: "26px",
+   817→          background: "linear-gradient(to top, var(--beta-bg) 55%, rgba(5,5,8,0.3) 85%, transparent)",
+   818→          borderTop: "1px solid rgba(212, 175, 55, 0.10)",
+   819→        }}
+   820→        aria-hidden="true"
+   821→      >
+   822→        <div className="beta-ticker h-full">
+   823→          <div className="beta-ticker-track h-full">
+   824→            {[...tickerKeywords, ...tickerKeywords, ...tickerKeywords, ...tickerKeywords, ...tickerKeywords, ...tickerKeywords, ...tickerKeywords, ...tickerKeywords].map((kw, i) => (
+   825→              <React.Fragment key={i}>
+   826→                <span className="font-mono text-[10px] uppercase tracking-[0.35em]" style={{ color: "var(--beta-accent)", opacity: 0.85 }}>{kw}</span>
+   827→                <span className="font-mono text-[10px]" style={{ color: "var(--beta-fg-subtle)", opacity: 0.4 }}>·</span>
+   828→              </React.Fragment>
+   829→            ))}
+   830→          </div>
+   831→        </div>
+   832→      </motion.div>
+   833→    </section>
+   834→  );
+   835→}
+   836→

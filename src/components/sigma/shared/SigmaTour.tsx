@@ -160,11 +160,11 @@ export function SigmaTour() {
       </button>
       <button
         onClick={stopTour}
-        className="border border-border p-1 transition-colors hover:bg-[#FF3D3D]/20"
+        className="border border-border p-1 transition-colors hover:bg-[#B85C2E]/20"
         data-cursor="hover"
         title="Stop tour"
       >
-        <Square className="h-3 w-3 text-[#FF3D3D]" />
+        <Square className="h-3 w-3 text-[#B85C2E]" />
       </button>
     </div>
   );

@@ -1,0 +1,74 @@
+[
+  {
+    "url": "https://motion.dev/docs/react",
+    "name": "Get started - React Animation Library - Motion.dev",
+    "snippet": "Install Motion for React , animate elements with spring animations. Complete guide with examples. Install Motion is available via npm: Check out our full  ...",
+    "host_name": "motion.dev",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://motion.dev/docs/react-installation",
+    "name": "How to install Motion for React",
+    "snippet": "This guide covers everything you need to install and set up Motion for React . We'll cover installation via: Package managers like npm, Yarn and pnpm. Read more",
+    "host_name": "motion.dev",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.npmjs.com/package/motion",
+    "name": "motion",
+    "snippet": "Aug 20, 2026 — An animation library for JavaScript and React .. Latest version: 13.1.1, last published: 9 days ago. Start using motion in your project by ...",
+    "host_name": "www.npmjs.com",
+    "rank": 2,
+    "date": "Aug 20, 2026",
+    "favicon": ""
+  },
+  {
+    "url": "https://motion.dev/docs/quick-start",
+    "name": "Get started with Motion | install, first animation",
+    "snippet": "You can install Motion in two ways: A package manager like npm or. Motion can be installed via the \" motion \" package. npm install motion",
+    "host_name": "motion.dev",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://stackoverflow.com/questions/78908486/how-to-prevent-the-useinview-and-usescroll-framer-motion-hooks-from-start-to",
+    "name": "how to prevent the useInView() and useScroll() framer-",
+    "snippet": "To achieve the desired animation behavior, you can use a combination of the useInView and useScroll hooks from Framer Motion . Read more",
+    "host_name": "stackoverflow.com",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://dev.to/elvis2280/scroll-reveal-with-framer-motion-224",
+    "name": "Scroll reveal with Framer Motion",
+    "snippet": "Aug 21, 2021 — In this blog I'll show you how u can implement a Scroll reveal animation with framer motion , you'll be surprised how much easy it will be. I'll ... Read more",
+    "host_name": "dev.to",
+    "rank": 5,
+    "date": "Aug 21, 2021",
+    "favicon": ""
+  },
+  {
+    "url": "https://motion.dev",
+    "name": "Motion (prev Framer Motion): JavaScript & React animation",
+    "snippet": "Motion (prev Framer Motion) is a fast, production-grade animation library for React, JavaScript and Vue. Build smooth UI animations at a tiny footprint.",
+    "host_name": "motion.dev",
+    "rank": 6,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://raghavvelan.medium.com/getting-started-with-framer-motion-now-motion-dev-c07051ad64b0",
+    "name": "Getting Started with Framer Motion (now motion.dev) - Medium",
+    "snippet": "Existing code using framer-motion still works like a charm. Use npm install framer-motion for full-featured UI animations in React. Use npm ... Read more",
+    "host_name": "raghavvelan.medium.com",
+    "rank": 7,
+    "date": "",
+    "favicon": ""
+  }
+]

@@ -57,6 +57,9 @@ export function CrosshairFrame({
 
 /* ---------------------------------------------------------------
    Panel — brutalist bordered container
+   Adds .sigma-panel for the hover scanline sweep effect (CSS-driven,
+   scoped to .sigma-mode via globals.css). The accent is wired via
+   --sigma-panel-accent so each panel drives its own sweep color.
 ---------------------------------------------------------------- */
 export function Panel({
   children,
@@ -78,10 +81,11 @@ export function Panel({
   return (
     <div
       className={cn(
-        "relative border border-border bg-card/40 backdrop-blur-[1px]",
+        "sigma-panel relative border border-border bg-card/40 backdrop-blur-[1px]",
         scan && "sigma-scanlines",
         className
       )}
+      style={accent ? ({ "--sigma-panel-accent": accent } as React.CSSProperties) : undefined}
       {...props}
     >
       {(label || id) && (
@@ -117,6 +121,7 @@ export function BrutalButton({
   accent,
   arrow = true,
   magnetic = true,
+  style,
   ...props
 }: {
   children: React.ReactNode;
@@ -134,6 +139,12 @@ export function BrutalButton({
     outline:
       "bg-transparent text-foreground border border-foreground hover:bg-foreground hover:text-background",
   };
+  // Merge inline accent styles with caller-provided style (caller wins for any
+  // key they set, including CSS custom properties like --sigma-hazard-accent).
+  const mergedStyle: React.CSSProperties = {
+    ...(accent && variant === "solid" ? { backgroundColor: accent, color: "#000" } : null),
+    ...style,
+  };
   return (
     <button
       ref={magnetic ? magRef : undefined}
@@ -143,7 +154,7 @@ export function BrutalButton({
         styles[variant],
         className
       )}
-      style={accent && variant === "solid" ? { background: accent, color: "#000" } : undefined}
+      style={mergedStyle}
       {...props}
     >
       {arrow && <span className="opacity-70">◄</span>}
@@ -189,6 +200,9 @@ export function StatReadout({
 
 /* ---------------------------------------------------------------
    Tag — small status pill (sharp)
+   Adds .sigma-tag for the hover shimmer effect (CSS-driven,
+   scoped to .sigma-mode via globals.css). The accent is wired via
+   --sigma-tag-accent so each tag drives its own shimmer color.
 ---------------------------------------------------------------- */
 export function Tag({
   children,
@@ -202,13 +216,14 @@ export function Tag({
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-1.5 border px-2 py-0.5 font-mono text-[9px] uppercase tracking-[0.2em]",
+        "sigma-tag inline-flex items-center gap-1.5 border px-2 py-0.5 font-mono text-[9px] uppercase tracking-[0.2em]",
         className
       )}
       style={{
+        "--sigma-tag-accent": accent ?? "var(--muted-foreground)",
         borderColor: accent ? `${accent}66` : "var(--border)",
         color: accent ?? "var(--muted-foreground)",
-      }}
+      } as React.CSSProperties}
     >
       <span
         className="h-1.5 w-1.5"

@@ -21,7 +21,7 @@ gsap.registerPlugin(useGSAP);
 type LogKind = "PAPER" | "MODEL" | "DATASET" | "BLUEPRINT";
 const KIND_META: Record<LogKind, { icon: typeof FileText; color: string }> = {
   PAPER: { icon: FileText, color: "#FFB300" },
-  MODEL: { icon: FlaskConical, color: "#FF2D7E" },
+  MODEL: { icon: FlaskConical, color: "#FFB300" },
   DATASET: { icon: Database, color: "#00E5FF" },
   BLUEPRINT: { icon: PenTool, color: "#C6FF00" },
 };
@@ -158,39 +158,41 @@ export function S06Research() {
                   data-log
                   key={log.id}
                   onClick={() => { setSelected(log); sigmaSound.play("open"); }}
-                  className="group grid w-full grid-cols-12 items-center gap-3 p-3 text-left transition-colors hover:bg-foreground/[0.04]"
+                  className="group flex w-full items-start gap-3 p-3 text-left transition-colors hover:bg-foreground/[0.04]"
                   data-cursor="hover"
                 >
-                  <div className="col-span-1 font-mono text-3xl font-black text-foreground/15 transition-colors group-hover:text-foreground/30">
+                  {/* Number — responsive */}
+                  <div className="hidden sm:block font-mono text-2xl font-black text-foreground/15 transition-colors group-hover:text-foreground/30 shrink-0 w-8">
                     {String(i + 1).padStart(2, "0")}
                   </div>
+                  {/* Icon */}
                   <div
-                    className="col-span-1 flex h-9 w-9 items-center justify-center border"
+                    className="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center border shrink-0"
                     style={{ borderColor: `${color}55`, color }}
                   >
-                    <Icon className="h-4 w-4" />
+                    <Icon className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                   </div>
-                  <div className="col-span-10 md:col-span-6">
-                    <div className="flex items-center gap-2">
+                  {/* Content — flex-1, min-w-0 for truncation */}
+                  <div className="min-w-0 flex-1">
+                    <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
                       <Tag accent={color}>{log.kind}</Tag>
-                      <span className="font-mono text-[9px] tracking-[0.2em] text-muted-foreground">{log.id}</span>
-                      <span className="font-mono text-[9px] tracking-[0.16em]" style={{ color }}>{log.status}</span>
+                      <span className="font-mono text-[8px] sm:text-[9px] tracking-[0.15em] sm:tracking-[0.2em] text-muted-foreground">{log.id}</span>
+                      <span className="font-mono text-[8px] sm:text-[9px] tracking-[0.12em] sm:tracking-[0.16em]" style={{ color }}>{log.status}</span>
                     </div>
-                    <div className="mt-1 font-sans text-base font-bold uppercase leading-tight tracking-tight group-hover:text-foreground">
+                    <div className="mt-1 font-sans text-sm sm:text-base font-bold uppercase leading-tight tracking-tight group-hover:text-foreground">
                       {log.title}
                     </div>
-                    <div className="mt-0.5 line-clamp-1 font-serif text-[12px] italic text-muted-foreground">
+                    <div className="mt-0.5 line-clamp-1 font-serif text-[11px] sm:text-[12px] italic text-muted-foreground">
                       {log.abstract}
                     </div>
-                    <div className="mt-1 font-mono text-[9px] uppercase tracking-[0.16em] text-muted-foreground">
+                    <div className="mt-1 font-mono text-[8px] sm:text-[9px] uppercase tracking-[0.12em] sm:tracking-[0.16em] text-muted-foreground">
                       {log.authors} · {log.date} · {log.citations} cites · {log.downloads} dl
                     </div>
                   </div>
-                  <div className="col-span-6 hidden md:col-span-2 md:block">
+                  {/* Size + Read — hidden on mobile, visible on md+ */}
+                  <div className="hidden md:flex flex-col items-end gap-1 shrink-0 w-20">
                     <div className="font-mono text-[9px] uppercase tracking-[0.18em] text-muted-foreground">SIZE</div>
                     <div className="font-mono text-sm font-bold text-foreground">{log.size}</div>
-                  </div>
-                  <div className="col-span-6 flex items-center justify-end gap-2 md:col-span-2">
                     <span className="font-mono text-[9px] uppercase tracking-[0.18em] text-muted-foreground transition-colors group-hover:text-foreground">
                       <BookOpen className="mr-1 inline h-3 w-3" />
                       READ

@@ -9,7 +9,10 @@ const THEME_KEY = "sigma-theme";
 
 /**
  * SigmaThemeToggle — toggles between dark (default) and light themes.
- * Applies a `light` class to <html> which activates the light CSS variables.
+ * Applies a `sigma-light` class to <html> which activates light CSS variables.
+ * IMPORTANT: This ONLY affects Sigma mode. The class is `sigma-light` (not `light`)
+ * to prevent any bleed into Alpha or Beta modes.
+ * When switching to Alpha/Beta, the class is removed and re-applied on return.
  */
 export function SigmaThemeToggle() {
   const [theme, setTheme] = React.useState<Theme>("dark");
@@ -20,7 +23,7 @@ export function SigmaThemeToggle() {
       if (saved === "light") {
         setTheme("light");
         document.documentElement.classList.remove("dark");
-        document.documentElement.classList.add("light");
+        document.documentElement.classList.add("sigma-light");
       }
     } catch {
       // ignore
@@ -37,9 +40,9 @@ export function SigmaThemeToggle() {
       }
       if (next === "light") {
         document.documentElement.classList.remove("dark");
-        document.documentElement.classList.add("light");
+        document.documentElement.classList.add("sigma-light");
       } else {
-        document.documentElement.classList.remove("light");
+        document.documentElement.classList.remove("sigma-light");
         document.documentElement.classList.add("dark");
       }
       return next;
@@ -81,4 +84,22 @@ export function SigmaThemeToggle() {
       )}
     </button>
   );
+}
+
+/**
+ * Ensures sigma-light class is removed when leaving Sigma mode
+ * and re-applied when returning (if it was previously enabled).
+ * Call this from the mode switcher.
+ */
+export function syncSigmaTheme(currentMode: string) {
+  const isLight = document.documentElement.classList.contains("sigma-light");
+  if (currentMode !== "sigma" && isLight) {
+    // Leaving sigma — remove light class to prevent bleed
+    document.documentElement.classList.remove("sigma-light");
+    document.documentElement.dataset.savedTheme = "light";
+  } else if (currentMode === "sigma" && document.documentElement.dataset.savedTheme === "light") {
+    // Returning to sigma — restore light class
+    document.documentElement.classList.add("sigma-light");
+    delete document.documentElement.dataset.savedTheme;
+  }
 }
