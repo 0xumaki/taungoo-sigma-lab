@@ -125,9 +125,14 @@ export function ExperienceShell() {
     // If isReturning → skip boot screen (coming back from detail page)
 
     try {
-      // show onboarding only once per browser (localStorage)
+      // show onboarding only once per browser (localStorage).
+      // Set the flag IMMEDIATELY (not on tour completion) so reloads / mid-tour
+      // navigation never re-trigger the onboarding panel — the "orange rectangle"
+      // / "preview not displaying" complaint.
       const onboarded = localStorage.getItem("sigma_onboarded");
       if (!onboarded && !isReturning) {
+        // Mark as onboarded NOW so any reload / route change skips it forever
+        try { localStorage.setItem("sigma_onboarded", "1"); } catch { /* ignore */ }
         // delay onboarding until after boot screen
         const ob = setTimeout(() => setOnboarding(true), 4000);
         return () => clearTimeout(ob);
