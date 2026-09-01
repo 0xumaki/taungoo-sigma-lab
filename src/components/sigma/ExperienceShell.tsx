@@ -22,7 +22,6 @@ import { SigmaCompletion } from "./shared/SigmaCompletion";
 import { SigmaMCController } from "./shared/SigmaMCController";
 import { SigmaToolbar } from "./shared/SigmaToolbar";
 import { SigmaModeSwitcher } from "./shared/SigmaModeSwitcher";
-import { AlphaInterface } from "./alpha/AlphaInterface";
 import { BetaInterface } from "./beta/BetaInterface";
 import { sigmaSound, useSigmaSound } from "@/lib/sigma/sound";
 
@@ -30,7 +29,12 @@ import { sigmaSound, useSigmaSound } from "@/lib/sigma/sound";
 // These are the memory-heavy components (recharts, GSAP contexts, particles).
 // With dynamic imports, they only compile when Sigma mode is actually used.
 // When in Alpha mode, NONE of these are compiled — saving ~70% memory.
+// PERF (LOOP-5): AlphaInterface (~3500 lines across 12 child components)
+// joins the lazy group with `ssr: false` — Beta (the default mode) ships
+// none of the Alpha chunk until the user first switches modes. The mode
+// switcher prefetches this chunk on hover, so the switch still feels instant.
 const SigmaMap = dynamic(() => import("./SigmaMap").then(m => m.SigmaMap));
+const AlphaInterface = dynamic(() => import("./alpha/AlphaInterface").then(m => m.AlphaInterface), { ssr: false, loading: () => null });
 const S01Initializing = dynamic(() => import("./sections/S01Initializing").then(m => m.S01Initializing));
 const S02Manifesto = dynamic(() => import("./sections/S02Manifesto").then(m => m.S02Manifesto));
 const S03CoreSystems = dynamic(() => import("./sections/S03CoreSystems").then(m => m.S03CoreSystems));
@@ -204,6 +208,7 @@ export function ExperienceShell() {
   const overlayRef = React.useRef<HTMLDivElement>(null);
   const flashRef = React.useRef<HTMLDivElement>(null);
   const labelRef = React.useRef<HTMLDivElement>(null);
+  const glitchRef = React.useRef<HTMLDivElement>(null);
   const rootRef = React.useRef<HTMLDivElement>(null);
 
   // Keyboard navigation — DISABLED when typing in form inputs (S10 Access, S08 search, etc.)
@@ -321,6 +326,7 @@ export function ExperienceShell() {
     const overlay = overlayRef.current;
     const flash = flashRef.current;
     const label = labelRef.current;
+    const glitch = glitchRef.current;
 
     if (panels.length === 0 || !overlay) {
       // no panels yet — just swap immediately
@@ -342,20 +348,26 @@ export function ExperienceShell() {
     });
 
     // 1. COVER — panels slam down, staggered from top
+    // PRE-RESET STATE (worklog FIX 1): slam panels are NEUTRAL DARK #0a0a0a,
+    // NOT the destination accent. Colouring them with the accent produced a
+    // full-screen colour wash on every sector transition — the exact defect
+    // the user had asked to have removed.
     tl.set(panels, {
       scaleY: 0,
       transformOrigin: "top",
-      backgroundColor: destMeta.accent,
+      backgroundColor: "#0a0a0a",
     });
-    // Set flash bg via GSAP (not JSX) to avoid React re-render interference
+    // Flash layer pinned at opacity 0 — the accent strobe was removed
+    // (worklog FIX 2). Kept as an explicit no-op so refs stay valid.
     if (flash) {
-      tl.set(flash, { backgroundColor: destMeta.accent });
+      tl.set(flash, { opacity: 0 });
     }
     // CRITICAL: set overlay background to accent color so the content swap
     // (setRenderedView → React reconciliation → 3-frame GSAP ticker pause)
     // doesn't show a black flash. The overlay bg covers the content even if
     // the panels briefly reset during React's reconciliation.
-    tl.set(overlay, { pointerEvents: "auto", zIndex: 90, backgroundColor: destMeta.accent });
+    // Neutral dark, not accent — prevents an accent wash during the swap.
+    tl.set(overlay, { pointerEvents: "auto", zIndex: 90, backgroundColor: "#0a0a0a" });
     tl.to(panels, {
       scaleY: 1,
       duration: 0.42,
@@ -375,13 +387,11 @@ export function ExperienceShell() {
     tl.call(
       () => {
         setRenderedView(dest);
-        if (flash) {
-          gsap.fromTo(
-            flash,
-            { opacity: 1 },
-            { opacity: 0, duration: 0.5, ease: "power2.out" }
-          );
-        }
+        // PRE-RESET STATE (worklog FIX 2): the accent flash tween and the
+        // data-glitch-layer flicker are deliberately NOT fired here. Both were
+        // removed because they produced a full-screen amber/accent wash on
+        // every transition. The `flash` and `glitch` nodes stay mounted at
+        // opacity 0 as harmless no-ops, so all refs remain valid.
       },
       [],
       ">"  // fire exactly when the hold ends (panels 100% covering)
@@ -460,6 +470,19 @@ export function ExperienceShell() {
       suppressHydrationWarning
       className={`relative fixed inset-0 overflow-hidden bg-background ${mode === "beta" ? "" : "sigma-noise sigma-vignette"}`}
     >
+      {/* LOOP-4 (cross-mode a11y): skip-to-content link — LITERAL FIRST CHILD
+          of the shell root, rendered BEFORE the mode switcher, so it leads the
+          DOM tab order (first focusable element on the page). Gated to beta
+          mode — the only mode with a long scrollable document. Visually hidden
+          until focused; styling lives in globals.css `.bs-skip-link`
+          (unscoped, with #D4AF37 gold fallback because this renders OUTSIDE
+          the .beta-mode scroll container). */}
+      {mode === "beta" && (
+        <a href="#top" className="bs-skip-link">
+          Skip to content
+        </a>
+      )}
+
       {/* Persistent layered background — HIDDEN in Beta mode (clean enterprise) */}
       {mode !== "beta" && <div className="sigma-grid pointer-events-none absolute inset-0 opacity-60" />}
 
@@ -517,13 +540,20 @@ export function ExperienceShell() {
           ))}
         </div>
 
-        {/* glitch flash — background set by GSAP (tl.set), NOT JSX.
-            This prevents setFlashAccent state update from triggering a
-            React re-render that could interfere with GSAP panel transforms. */}
+        {/* Flash + glitch layers are RETAINED but INERT (pre-reset state,
+            worklog FIX 2). Both are pinned at opacity 0 and are never coloured
+            or animated, so they cannot produce the amber/accent wash. They stay
+            mounted purely so `flashRef` / `glitchRef` remain valid. */}
         <div
           ref={flashRef}
           className="absolute inset-0 mix-blend-screen"
           style={{ opacity: 0 }}
+        />
+        <div
+          ref={glitchRef}
+          data-glitch-layer
+          className="pointer-events-none absolute inset-0 mix-blend-screen"
+          style={{ opacity: 0, zIndex: 2 }}
         />
 
         {/* sector label fly-through — shows "01"/"02" ONLY during slam cover transition.

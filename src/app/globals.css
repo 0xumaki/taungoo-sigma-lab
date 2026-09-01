@@ -1074,6 +1074,17 @@
     0% { transform: translateX(0); }
     100% { transform: translateX(-50%); }
   }
+
+  /* Tech-stack marquee (beta Method section) — content is duplicated once
+     ([...items, ...items], width: max-content) so a -50% translate loops
+     seamlessly. Consumed via inline style in beta/Method.tsx. */
+  @keyframes bs-marquee-scroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+  .bs-marquee:hover {
+    animation-play-state: paused;
+  }
   .beta-marquee {
     display: flex;
     overflow: hidden;

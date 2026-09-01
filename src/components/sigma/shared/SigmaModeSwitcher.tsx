@@ -164,7 +164,7 @@ export function SigmaModeSwitcher({
       // Set initial states
       tl.set(topPanelRef.current, { y: "-100%", opacity: 1 });
       tl.set(bottomPanelRef.current, { y: "100%", opacity: 1 });
-      tl.set(flashRef.current, { opacity: 0, background: targetMeta.accent });
+      tl.set(flashRef.current, { opacity: 0, background: "#0A0A0A" });
       tl.set(labelRef.current, { opacity: 0, scale: 0.7 });
 
       // Phase 1: Slam panels in (0 → 0.35s) — fast, forceful
@@ -184,8 +184,10 @@ export function SigmaModeSwitcher({
       );
 
       // Phase 2: Flash + label appear (0.35 → 0.55s)
+      // Accent strobe removed (worklog FIX 2) — the flash stays invisible so
+      // the mode label reads against the neutral-dark panels.
       tl.to(flashRef.current, {
-        opacity: 0.4,
+        opacity: 0,
         duration: 0.1,
         ease: "power2.out",
       });
@@ -336,7 +338,8 @@ export function SigmaModeSwitcher({
           className="absolute inset-x-0 top-0 h-1/2"
           style={{
             y: "-100%",
-            backgroundColor: pendingMode ? MODE_META[pendingMode].accent : "#0A0A0A",
+            // PRE-RESET STATE (worklog FIX 1): panels are always NEUTRAL DARK.
+            backgroundColor: "#0A0A0A",
             borderBottom: "2px solid rgba(255,255,255,0.15)",
           }}
         />
@@ -346,7 +349,8 @@ export function SigmaModeSwitcher({
           className="absolute inset-x-0 bottom-0 h-1/2"
           style={{
             y: "100%",
-            backgroundColor: pendingMode ? MODE_META[pendingMode].accent : "#0A0A0A",
+            // PRE-RESET STATE (worklog FIX 1): panels are always NEUTRAL DARK.
+            backgroundColor: "#0A0A0A",
             borderTop: "2px solid rgba(255,255,255,0.15)",
           }}
         />

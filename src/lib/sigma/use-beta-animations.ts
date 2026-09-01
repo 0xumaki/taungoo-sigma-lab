@@ -23,22 +23,35 @@ export function useBetaAnimations() {
     const container = document.querySelector("[data-beta-scroll]") as HTMLElement;
     if (!container) return;
 
+    // Track ONLY the triggers this hook creates. Never call
+    // ScrollTrigger.getAll().kill() on cleanup — that also destroys triggers
+    // owned by other components (Sigma / Alpha), silently killing their scroll
+    // animations after a mode switch. This hook happens to be the only
+    // ScrollTrigger consumer today, but the global kill is a latent trap the
+    // moment a second one appears.
+    const owned: ScrollTrigger[] = [];
+    const track = (tween: { scrollTrigger?: ScrollTrigger }) => {
+      if (tween?.scrollTrigger) owned.push(tween.scrollTrigger);
+    };
+
     // 1. Hero parallax — Σ watermark + ambient glow move slower
     const heroWatermark = container.querySelector("[style*='48vh']") as HTMLElement;
     const heroGlow = container.querySelector("[style*='radial-gradient']") as HTMLElement;
 
     if (heroWatermark) {
-      gsap.to(heroWatermark, {
-        yPercent: 30,
-        ease: "none",
-        scrollTrigger: {
-          trigger: container.querySelector("#top") as HTMLElement,
-          start: "top top",
-          end: "bottom top",
-          scrub: 1,
-          scroller: container,
-        },
-      });
+      track(
+        gsap.to(heroWatermark, {
+          yPercent: 30,
+          ease: "none",
+          scrollTrigger: {
+            trigger: container.querySelector("#top") as HTMLElement,
+            start: "top top",
+            end: "bottom top",
+            scrub: 1,
+            scroller: container,
+          },
+        })
+      );
     }
 
     // 2. Section headers — y-offset + opacity on scroll
@@ -47,17 +60,19 @@ export function useBetaAnimations() {
       const section = header.closest("section");
       if (!section || section.id === "top") return; // skip hero
 
-      gsap.from(header, {
-        y: 40,
-        opacity: 0,
-        duration: 0.8,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: section,
-          start: "top 80%",
-          scroller: container,
-        },
-      });
+      track(
+        gsap.from(header, {
+          y: 40,
+          opacity: 0,
+          duration: 0.8,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: section,
+            start: "top 80%",
+            scroller: container,
+          },
+        })
+      );
     });
 
     // 3. Card grids — stagger reveal
@@ -66,17 +81,19 @@ export function useBetaAnimations() {
       // Skip if already handled by data-reveal
       if (card.hasAttribute("data-reveal")) return;
 
-      gsap.from(card, {
-        y: 20,
-        opacity: 0,
-        duration: 0.5,
-        ease: "power2.out",
-        scrollTrigger: {
-          trigger: card,
-          start: "top 90%",
-          scroller: container,
-        },
-      });
+      track(
+        gsap.from(card, {
+          y: 20,
+          opacity: 0,
+          duration: 0.5,
+          ease: "power2.out",
+          scrollTrigger: {
+            trigger: card,
+            start: "top 90%",
+            scroller: container,
+          },
+        })
+      );
     });
 
     // 4. Stat numbers — count up when visible (re-trigger on scroll)
@@ -96,7 +113,7 @@ export function useBetaAnimations() {
 
       // Set up the scroll trigger
       let animated = false;
-      ScrollTrigger.create({
+      const counter = ScrollTrigger.create({
         trigger: el,
         start: "top 85%",
         scroller: container,
@@ -118,13 +135,16 @@ export function useBetaAnimations() {
           });
         },
       });
+      if (counter) owned.push(counter);
     });
 
     // Refresh after setup
     ScrollTrigger.refresh();
 
     return () => {
-      ScrollTrigger.getAll().forEach((st) => st.kill());
+      // Kill only what this hook created.
+      owned.forEach((st) => st.kill());
+      owned.length = 0;
     };
   }, []);
 }

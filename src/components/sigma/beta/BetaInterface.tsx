@@ -14,6 +14,7 @@ import { Contact } from "./Contact";
 import { SectionDivider } from "./SectionDivider";
 import { BetaReticleCursor } from "./BetaReticleCursor";
 import { useScrollReveal } from "./useScrollReveal";
+import { useBetaAnimations } from "@/lib/sigma/use-beta-animations";
 import { BetaBootSequence } from "./BetaBootSequence";
 import { ServiceBasket } from "../alpha/ServiceBasket";
 
@@ -22,6 +23,10 @@ const BETA_THEME_KEY = "beta-theme";
 export function BetaInterface() {
   const scrollRef = React.useRef<HTMLDivElement>(null);
   useScrollReveal();
+  // GSAP ScrollTrigger system — hero parallax (Σ watermark at 30% scroll
+  // speed), section-header reveals, card-grid staggers, and stat count-ups.
+  // Scoped to the [data-beta-scroll] container; kills all triggers on unmount.
+  useBetaAnimations();
 
   React.useEffect(() => {
     if ("scrollRestoration" in history) history.scrollRestoration = "manual";
