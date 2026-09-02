@@ -40,6 +40,8 @@
     "node_modules",
     "examples",
     "mini-services",
-    "skills"
+    "skills",
+    "_backups",
+    "tool-results"
   ]
 }
