@@ -17,7 +17,7 @@ import { SigmaHaggle } from "./shared/SigmaHaggle";
 import { SigmaSoundToggle } from "./shared/SigmaSoundToggle";
 import { SigmaHelp } from "./shared/SigmaHelp";
 import { SigmaBreadcrumb } from "./shared/SigmaBreadcrumb";
-import { SigmaThemeToggle } from "./shared/SigmaThemeToggle";
+import { SigmaThemeToggle, syncSigmaTheme } from "./shared/SigmaThemeToggle";
 import { SigmaCompletion } from "./shared/SigmaCompletion";
 import { SigmaMCController } from "./shared/SigmaMCController";
 import { SigmaToolbar } from "./shared/SigmaToolbar";
@@ -48,6 +48,67 @@ const S10Access = dynamic(() => import("./sections/S10Access").then(m => m.S10Ac
 const S11Status = dynamic(() => import("./sections/S11Status").then(m => m.S11Status));
 
 const PANEL_COUNT = 8;
+
+/**
+ * Cover palette for the slam panels.
+ *
+ * Sector accents are authored for text and small chrome, not for full-bleed
+ * fills — and two of them (the nexus map and s01) are pure #FFFFFF. Painting a
+ * full-screen cover with those is a blinding white wash, far worse than the
+ * black wipe this replaces. So we clamp perceived luminance into a middle band:
+ * over-bright accents get knocked back, very dark ones get lifted, and anything
+ * already in range passes through untouched.
+ */
+const COVER_LUM_MIN = 90;
+const COVER_LUM_MAX = 190;
+/** Ink that stays legible on the cover: black on light panels, white on dark. */
+const COVER_INK_THRESHOLD = 140;
+
+function perceivedLuminance(r: number, g: number, b: number) {
+  return 0.299 * r + 0.587 * g + 0.114 * b;
+}
+
+function parseHex(hex: string): [number, number, number] | null {
+  const raw = hex.replace("#", "");
+  if (raw.length !== 6) return null;
+  const r = parseInt(raw.slice(0, 2), 16);
+  const g = parseInt(raw.slice(2, 4), 16);
+  const b = parseInt(raw.slice(4, 6), 16);
+  if ([r, g, b].some((c) => Number.isNaN(c))) return null;
+  return [r, g, b];
+}
+
+function toHex(r: number, g: number, b: number) {
+  const part = (c: number) =>
+    Math.max(0, Math.min(255, Math.round(c)))
+      .toString(16)
+      .padStart(2, "0");
+  return `#${part(r)}${part(g)}${part(b)}`;
+}
+
+function coverPalette(accent: string): { tone: string; ink: string } {
+  const rgb = parseHex(accent);
+  if (!rgb) {
+    // Unparseable accent — fall back to the previous neutral treatment.
+    return { tone: "#0a0a0a", ink: "#ffffff" };
+  }
+  const [r, g, b] = rgb;
+  const lum = perceivedLuminance(r, g, b);
+  let tone = accent;
+  if (lum > COVER_LUM_MAX) {
+    const scale = COVER_LUM_MAX / lum;
+    tone = toHex(r * scale, g * scale, b * scale);
+  } else if (lum < COVER_LUM_MIN) {
+    const scale = COVER_LUM_MIN / Math.max(lum, 1);
+    tone = toHex(r * scale, g * scale, b * scale);
+  }
+  const toneRgb = parseHex(tone) ?? [r, g, b];
+  const toneLum = perceivedLuminance(toneRgb[0], toneRgb[1], toneRgb[2]);
+  return {
+    tone,
+    ink: toneLum >= COVER_INK_THRESHOLD ? "#0a0a0a" : "#ffffff",
+  };
+}
 
 function renderView(view: SectionId) {
   switch (view) {
@@ -94,6 +155,36 @@ export function ExperienceShell() {
   const [tourPaused, setTourPaused] = React.useState(false);
   const [tourIndex, setTourIndex] = React.useState(0);
   const [mode, setMode] = React.useState<"sigma" | "alpha" | "beta">("beta");
+
+  // Restore the saved mode BEFORE the browser paints.
+  //
+  // The shell used to mount as "beta" (the hard default) and only correct itself
+  // in a post-paint useEffect, so every return from a detail page painted one
+  // frame of Beta before flipping to Sigma/Alpha. That flash is what read as
+  // "the site reloaded". useLayoutEffect runs before paint, so the first painted
+  // frame already shows the correct mode.
+  //
+  // Server-rendered fallback to useEffect keeps React quiet during SSR.
+  const useIsomorphicLayoutEffect =
+    typeof window !== "undefined" ? React.useLayoutEffect : React.useEffect;
+
+  useIsomorphicLayoutEffect(() => {
+    let saved: "sigma" | "alpha" | "beta" | null = null;
+    try {
+      const sm = localStorage.getItem("sigma-mode");
+      if (sm === "sigma" || sm === "alpha" || sm === "beta") saved = sm;
+    } catch {
+      /* localStorage unavailable (private mode) — keep the default */
+    }
+    if (!saved) return;
+    setMode((current) => {
+      if (saved && saved !== current) {
+        syncSigmaTheme(saved);
+        return saved;
+      }
+      return current;
+    });
+  }, []);
 
   // Deep-link + boot screen + onboarding logic — single effect, runs once after mount
   React.useEffect(() => {
@@ -308,6 +399,8 @@ export function ExperienceShell() {
     const dest = useSigmaStore.getState().view;
     const destMeta = getSection(dest);
     flashAccentRef.current = destMeta.accent;
+    // Accent → cover-safe panel colour + matching label ink.
+    const cover = coverPalette(destMeta.accent);
     sigmaSound.play("transition");
     // play ambient tone tuned to the destination sector's accent color
     if (dest !== "map") {
@@ -347,26 +440,25 @@ export function ExperienceShell() {
       onReverseComplete: finish,
     });
 
-    // 1. COVER — panels slam down, staggered from top
-    // PRE-RESET STATE (worklog FIX 1): slam panels are NEUTRAL DARK #0a0a0a,
-    // NOT the destination accent. Colouring them with the accent produced a
-    // full-screen colour wash on every sector transition — the exact defect
-    // the user had asked to have removed.
+    // 1. COVER — panels slam down, staggered from top.
+    // RESTORED: the panels carry the destination sector's accent, pushed through
+    // `coverPalette` so accents like map/s01's #FFFFFF can't blow out into a
+    // full-screen white wash.
     tl.set(panels, {
       scaleY: 0,
       transformOrigin: "top",
-      backgroundColor: "#0a0a0a",
+      backgroundColor: cover.tone,
     });
-    // Flash layer pinned at opacity 0 — the accent strobe was removed
-    // (worklog FIX 2). Kept as an explicit no-op so refs stay valid.
+    // Flash layer: armed with the accent here, fired at the midpoint below.
     if (flash) {
-      tl.set(flash, { opacity: 0 });
+      tl.set(flash, { opacity: 0, background: cover.tone });
     }
-    // CRITICAL: set overlay background to accent color so the content swap
-    // (setRenderedView → React reconciliation → 3-frame GSAP ticker pause)
-    // doesn't show a black flash. The overlay bg covers the content even if
-    // the panels briefly reset during React's reconciliation.
-    // Neutral dark, not accent — prevents an accent wash during the swap.
+    // Neutral backing sheet — matches the page background, so it is invisible.
+    // It exists only to hide the React reconciliation gap during the content
+    // swap (setRenderedView → reconcile → 3-frame GSAP ticker pause), and is
+    // dropped again at covered+=0.10 so the retract reveals the new section.
+    // Deliberately NOT the accent: tinting this would wash the entire screen
+    // the instant the transition starts, before the panels have even moved.
     tl.set(overlay, { pointerEvents: "auto", zIndex: 90, backgroundColor: "#0a0a0a" });
     tl.to(panels, {
       scaleY: 1,
@@ -381,21 +473,45 @@ export function ExperienceShell() {
     // where neither is rendered → page background (black) shows through.
     tl.to({}, { duration: 0.08 });
 
-    // 2. MIDPOINT — swap the rendered view + flash + label fly-through.
+    // Panels now fully cover the screen. Everything from here on is positioned
+    // off this label instead of relative to "the previous tween", so adding the
+    // flash below can't silently shift the swap timing.
+    tl.addLabel("covered");
+
+    // MIDPOINT ACCENT STROBE (restored): a short, low-peak flash in the
+    // destination sector's accent. Capped at 0.30 opacity and decaying inside
+    // ~0.3s so it reads as an impact flash, not the full-screen colour wash
+    // that originally got this effect removed.
+    if (flash) {
+      tl.fromTo(
+        flash,
+        { opacity: 0 },
+        { opacity: 0.30, duration: 0.09, ease: "power2.out" },
+        "covered"
+      );
+      tl.to(flash, { opacity: 0, duration: 0.32, ease: "power2.in" }, "covered+=0.09");
+    }
+
+    // 2. MIDPOINT — swap the rendered view + label fly-through.
     // Fires AFTER panels are 100% covering (not at ">-0.05" which was 0.05s
     // before the cover ended → gap → black flash).
     tl.call(
       () => {
         setRenderedView(dest);
-        // PRE-RESET STATE (worklog FIX 2): the accent flash tween and the
-        // data-glitch-layer flicker are deliberately NOT fired here. Both were
-        // removed because they produced a full-screen amber/accent wash on
-        // every transition. The `flash` and `glitch` nodes stay mounted at
-        // opacity 0 as harmless no-ops, so all refs remain valid.
+        // NOTE: the glitch layer flicker stays deliberately disabled — it
+        // produced a full-screen amber wash. The `glitch` node remains mounted
+        // at opacity 0 purely so the ref stays valid.
       },
       [],
-      ">"  // fire exactly when the hold ends (panels 100% covering)
+      "covered+=0.08" // fire exactly when the hold ends (panels 100% covering)
     );
+
+    // Drop the neutral backing sheet now that the swap has happened.
+    // BUG FIX: this used to run only AFTER the panels finished retracting, so
+    // the retract revealed BLACK and the new section popped in abruptly at the
+    // very end. Clearing it here means the retract genuinely reveals the new
+    // section as the panels slide away.
+    tl.set(overlay, { backgroundColor: "transparent" }, "covered+=0.10");
 
     // sector label flies through during slam cover transition.
     // Set the label TEXT dynamically so it shows the DESTINATION sector code
@@ -405,39 +521,51 @@ export function ExperienceShell() {
       // Step 1: Set the text content to the destination sector code
       tl.call(() => {
         label.textContent = destMeta.shortCode;
-      }, [], "<");
+      }, [], "covered");
       // Step 2: Set visibility:visible + initial position (BEFORE animating opacity,
-      // so the element is visible when opacity starts increasing)
-      tl.set(label, { visibility: "visible", opacity: 0, x: -120 }, "<");
+      // so the element is visible when opacity starts increasing).
+      // `color` comes from the cover palette so the sector code stays legible on
+      // both light panels (black ink) and dark ones (white ink).
+      tl.set(
+        label,
+        { visibility: "visible", opacity: 0, x: -120, color: cover.ink },
+        "covered"
+      );
       // Step 3: Animate opacity 0→1 + x: -120→0 (fly in from left)
       tl.to(
         label,
         { opacity: 1, x: 0, duration: 0.28, ease: "power3.out" },
-        "<"
+        "covered"
       );
       // Step 4: Animate opacity 1→0 + x: 0→120 (fly out to right)
       tl.to(
         label,
         { opacity: 0, x: 120, duration: 0.28, ease: "power3.in" },
-        ">+0.04"
+        "covered+=0.34"
       );
     }
 
     // 3. REVEAL — panels retract from bottom, staggered
-    tl.set(panels, { transformOrigin: "bottom" });
-    tl.to(panels, {
-      scaleY: 0,
-      duration: 0.46,
-      ease: "power3.out",
-      stagger: { each: 0.035, from: "start" },
-      // Only clear backgroundColor — NOT transform. The inline transform
-      // (scaleY 0) stays, which overrides the CSS class default. If we clear
-      // transform, the CSS class (.sigma-transition-panel { transform: scaleY(0) })
-      // still applies, so panels stay hidden — but the inline removal causes
-      // a brief reflow. Keeping the inline transform is cleaner.
-      clearProps: "backgroundColor",
-    });
+    tl.set(panels, { transformOrigin: "bottom" }, "covered+=0.42");
+    tl.to(
+      panels,
+      {
+        scaleY: 0,
+        duration: 0.46,
+        ease: "power3.out",
+        stagger: { each: 0.035, from: "start" },
+        // Only clear backgroundColor — NOT transform. The inline transform
+        // (scaleY 0) stays, which overrides the CSS class default. If we clear
+        // transform, the CSS class (.sigma-transition-panel { transform: scaleY(0) })
+        // still applies, so panels stay hidden — but the inline removal causes
+        // a brief reflow. Keeping the inline transform is cleaner.
+        clearProps: "backgroundColor",
+      },
+      "covered+=0.42"
+    );
 
+    // Backing sheet is already transparent (cleared at covered+=0.10) — here we
+    // just hand pointer events back to the page.
     tl.set(overlay, { pointerEvents: "none", backgroundColor: "transparent" });
     // CRITICAL: explicitly set opacity to 0 AND visibility to hidden (do NOT use clearProps — clearProps
     // reverts to CSS default opacity:1, which makes the number persist on screen).

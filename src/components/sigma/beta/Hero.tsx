@@ -333,8 +333,11 @@ export function Hero() {
       <div className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(ellipse 40% 50% at 30% 60%, rgba(212, 175, 55, 0.04), transparent 50%)" }} />
       <div className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(ellipse 40% 50% at 70% 60%, rgba(212, 175, 55, 0.04), transparent 50%)" }} />
 
-      {/* Center-stage depth vignette — darkens armor behind center text for readability */}
-      <div className="pointer-events-none absolute inset-0 z-[2]" style={{ background: "radial-gradient(ellipse 50% 60% at 50% 50%, rgba(5, 5, 8, 0.65), transparent 70%)" }} />
+      {/* Center-stage depth vignette — darkens armor behind center text for readability.
+          SOFTENED 0.65 → 0.38: this layer sits ON TOP of the figure (z-[2] versus the
+          figure's auto z-index), so at 0.65 it crushed the armor into flat grey and
+          swallowed any gold in it. 0.38 still buys the headline contrast it exists for. */}
+      <div className="pointer-events-none absolute inset-0 z-[2]" style={{ background: "radial-gradient(ellipse 50% 60% at 50% 50%, rgba(5, 5, 8, 0.38), transparent 70%)" }} />
 
       {/* Vignette */}
       <div className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(ellipse 85% 85% at 50% 50%, transparent 20%, var(--beta-bg) 100%)" }} />
@@ -351,6 +354,17 @@ export function Hero() {
         style={reducedMotion ? undefined : { y: figureScrollY, opacity: figureScrollOpacity }}
         className="pointer-events-none absolute inset-0"
       >
+        {/* Golden aura bed — a wide, soft halo sitting directly behind the figure.
+            Deliberately placed OUTSIDE the 0.35-opacity entrance wrapper below, so
+            the glow is not dimmed along with the figure, while still riding the
+            same parallax as everything else in this group. */}
+        <div
+          className="pointer-events-none absolute inset-0"
+          style={{
+            background:
+              "radial-gradient(ellipse 46% 58% at 50% 52%, rgba(212, 175, 55, 0.22), rgba(212, 175, 55, 0.08) 46%, transparent 72%)",
+          }}
+        />
         <motion.div
           initial={{ opacity: 0, scale: 1.05 }}
           animate={{ opacity: 0.35, scale: 1 }}
@@ -383,8 +397,18 @@ export function Hero() {
             style={{
               objectFit: "cover",
               objectPosition: "center 20%",
-              // Subtle illumination — figure visible but not prominent
-              filter: "brightness(0.82) drop-shadow(0 0 40px rgba(212, 175, 55, 0.15))",
+              // Studio-video grade: pulled-down exposure with a touch more contrast
+              // and slightly desaturated, so the figure reads as *lit* rather than
+              // flat-bright (was brightness(0.82) with no grading).
+              //
+              // Golden aura — two stacked drop-shadows hugging the figure's alpha
+              // silhouette: a tight hot rim plus a wider soft bloom. The old single
+              // 40px shadow at 0.15 alpha was so faint it just read as grey haze
+              // against the dark backdrop.
+              filter:
+                "brightness(0.72) contrast(1.06) saturate(0.92) " +
+                "drop-shadow(0 0 16px rgba(212, 175, 55, 0.55)) " +
+                "drop-shadow(0 0 44px rgba(212, 175, 55, 0.32))",
             }}
           />
         </motion.div>

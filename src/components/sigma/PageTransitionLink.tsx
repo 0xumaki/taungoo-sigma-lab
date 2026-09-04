@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { usePageTransition, KIND_ACCENT, type TransitionKind } from "@/lib/sigma/page-transition";
+import { captureAlphaReturn } from "@/lib/sigma/scroll-return";
 
 interface PageTransitionLinkProps {
   href: string;
@@ -55,11 +56,16 @@ export function PageTransitionLink({
     }
 
     e.preventDefault();
-    // Save scroll position so we can restore it when the user comes back
+    // Remember where we were so the trip back lands on the same section.
+    // Records BOTH the pixel offset and the id of the section that owned the
+    // viewport — see src/lib/sigma/scroll-return.ts for why pixels alone were
+    // never enough. (AlphaInterface also runs a capture-phase listener that
+    // catches plain <Link>s; doing it here too keeps this component correct
+    // wherever it is used.)
     if (typeof window !== "undefined") {
-      const scrollContainer = document.querySelector("[data-alpha-scroll]");
-      const scrollTop = scrollContainer?.scrollTop ?? window.scrollY;
-      sessionStorage.setItem("alpha_scroll_position", String(scrollTop));
+      captureAlphaReturn(
+        document.querySelector<HTMLElement>("[data-alpha-scroll]"),
+      );
     }
     onBeforeNavigate?.();
     startCover(href, label, kind, finalAccent);

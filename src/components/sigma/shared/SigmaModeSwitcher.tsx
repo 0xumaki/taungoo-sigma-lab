@@ -76,6 +76,16 @@ export function SigmaModeSwitcher({
   const flashRef = React.useRef<HTMLDivElement>(null);
   const labelRef = React.useRef<HTMLDivElement>(null);
 
+  // MODE-RELEVANT COVER COLOUR.
+  // The slam panels + flash take the TARGET mode's accent, so switching to Σ/α/β
+  // is immediately recognisable instead of a generic black wipe.
+  // This is applied as an inline style (not via GSAP `backgroundColor`) so a
+  // React re-render during the transition can never clobber it — GSAP only owns
+  // transform/opacity. `pendingMode` is set in the same click handler that
+  // starts the timeline, and React flushes that update before the next paint,
+  // so the accent is present on the first visible frame of the slam.
+  const coverAccent = pendingMode ? MODE_META[pendingMode].accent : "#0A0A0A";
+
   // Initialize audio reference (Audio element is created on-demand in switchMode)
   React.useEffect(() => {
     return () => {
@@ -161,10 +171,12 @@ export function SigmaModeSwitcher({
         },
       });
 
-      // Set initial states
+      // Set initial states. Note: panel/flash COLOUR is applied declaratively via
+      // the `coverAccent` inline style in the JSX — GSAP only drives transform and
+      // opacity here.
       tl.set(topPanelRef.current, { y: "-100%", opacity: 1 });
       tl.set(bottomPanelRef.current, { y: "100%", opacity: 1 });
-      tl.set(flashRef.current, { opacity: 0, background: "#0A0A0A" });
+      tl.set(flashRef.current, { opacity: 0 });
       tl.set(labelRef.current, { opacity: 0, scale: 0.7 });
 
       // Phase 1: Slam panels in (0 → 0.35s) — fast, forceful
@@ -183,13 +195,20 @@ export function SigmaModeSwitcher({
         "<" // same time as top panel
       );
 
-      // Phase 2: Flash + label appear (0.35 → 0.55s)
-      // Accent strobe removed (worklog FIX 2) — the flash stays invisible so
-      // the mode label reads against the neutral-dark panels.
+      // Phase 2: Flash + label appear (0.35 → ~0.61s)
+      // RESTORED: the flash strobes in the target mode's accent at the instant
+      // the two panels meet. It is deliberately short and capped at a low peak
+      // opacity (0.42, decaying inside ~0.3s) so it reads as an impact flash
+      // rather than the full-screen colour wash that got it removed originally.
+      tl.to(flashRef.current, {
+        opacity: 0.42,
+        duration: 0.10,
+        ease: "power2.out",
+      });
       tl.to(flashRef.current, {
         opacity: 0,
-        duration: 0.1,
-        ease: "power2.out",
+        duration: 0.32,
+        ease: "power2.in",
       });
       tl.to(
         labelRef.current,
@@ -199,7 +218,7 @@ export function SigmaModeSwitcher({
           duration: 0.2,
           ease: "back.out(1.6)",
         },
-        "-=0.05"
+        "-=0.36"
       );
 
       // Phase 3: SWAP mode (content changes underneath the panels)
@@ -338,8 +357,8 @@ export function SigmaModeSwitcher({
           className="absolute inset-x-0 top-0 h-1/2"
           style={{
             y: "-100%",
-            // PRE-RESET STATE (worklog FIX 1): panels are always NEUTRAL DARK.
-            backgroundColor: "#0A0A0A",
+            // Mode-relevant cover colour — was hard-coded neutral #0A0A0A.
+            backgroundColor: coverAccent,
             borderBottom: "2px solid rgba(255,255,255,0.15)",
           }}
         />
@@ -349,8 +368,8 @@ export function SigmaModeSwitcher({
           className="absolute inset-x-0 bottom-0 h-1/2"
           style={{
             y: "100%",
-            // PRE-RESET STATE (worklog FIX 1): panels are always NEUTRAL DARK.
-            backgroundColor: "#0A0A0A",
+            // Mode-relevant cover colour — was hard-coded neutral #0A0A0A.
+            backgroundColor: coverAccent,
             borderTop: "2px solid rgba(255,255,255,0.15)",
           }}
         />
@@ -359,7 +378,7 @@ export function SigmaModeSwitcher({
         <div
           ref={flashRef}
           className="absolute inset-0 mix-blend-screen"
-          style={{ opacity: 0 }}
+          style={{ opacity: 0, background: coverAccent }}
         />
 
         {/* Center label — shows the mode being switched to */}
@@ -373,15 +392,22 @@ export function SigmaModeSwitcher({
               className="font-sans text-7xl font-black leading-none sm:text-8xl"
               style={{
                 color: "#FFFFFF",
-                textShadow: "0 0 30px rgba(0,0,0,0.4)",
-                WebkitTextStroke: "1px rgba(0,0,0,0.15)",
+                // Heavier shadow/stroke than before — the panels are now bright
+                // accent colours, so the label needs a solid dark scrim to stay
+                // legible on both #FF4500 (Σ/α) and #6366F1 (β).
+                textShadow:
+                  "0 2px 18px rgba(0,0,0,0.55), 0 0 40px rgba(0,0,0,0.35)",
+                WebkitTextStroke: "1px rgba(0,0,0,0.25)",
               }}
             >
               {pendingMode ? MODE_META[pendingMode].symbol : ""}
             </div>
             <div
               className="font-mono text-[10px] uppercase tracking-[0.4em]"
-              style={{ color: "rgba(255,255,255,0.85)" }}
+              style={{
+                color: "rgba(255,255,255,0.95)",
+                textShadow: "0 1px 8px rgba(0,0,0,0.6)",
+              }}
             >
               {pendingMode ? MODE_META[pendingMode].label : ""} · {pendingMode ? MODE_META[pendingMode].tagline : ""}
             </div>
