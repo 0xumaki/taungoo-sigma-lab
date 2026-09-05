@@ -22,8 +22,7 @@ import type { MetadataRoute } from "next";
 import { SERVICES } from "./services/[slug]/services-data";
 import { PROJECTS } from "./portfolio/[slug]/projects-data";
 import { INSIGHTS } from "./insights/[slug]/insights-data";
-
-const SITE_URL = "https://taungoo-sigma-lab.vercel.app";
+import { SITE_URL } from "@/lib/site";
 
 // ISO 8601 timestamp for static-content routes with no per-route date.
 const STATIC_LASTMOD = "2025-01-01T00:00:00.000Z";

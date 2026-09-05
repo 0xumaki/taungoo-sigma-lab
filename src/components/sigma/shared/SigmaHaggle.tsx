@@ -1958,7 +1958,9 @@ function ResultLetter({
               <button
                 onClick={(e) => {
                   e.stopPropagation();
-                  const baseUrl = typeof window !== "undefined" ? window.location.origin : "https://taungoo-sigma-lab.vercel.app";
+                  // Empty-string origin yields a valid root-relative URL — never
+                  // fall back to a hardcoded host (it may not be ours).
+                  const baseUrl = typeof window !== "undefined" ? window.location.origin : "";
                   const shareUrl = `${baseUrl}/?haggle=${face}&pct=${percent}${isJackpot ? "&jackpot=1" : ""}`;
                   const shareText = `I rolled a ${face}/6 and got ${percent}% extra discount at TAUNGOO Σ Lab! ${isJackpot ? "★ JACKPOT ★ " : ""}Roll your own dice at TAUNGOO Σ Lab.`;
                   const shareData = { title: `TAUNGOO Σ Lab — Haggle Result: ${percent}% OFF!`, text: shareText, url: shareUrl };

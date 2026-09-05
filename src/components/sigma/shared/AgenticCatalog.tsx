@@ -32,7 +32,9 @@ import { SERVICES } from "@/app/services/[slug]/services-data";
 import { PROJECTS } from "@/app/portfolio/[slug]/projects-data";
 import { INSIGHTS } from "@/app/insights/[slug]/insights-data";
 
-const SITE_URL = "https://taungoo-sigma-lab.vercel.app";
+// Server component (no "use client"), so the env-derived absolute origin is
+// safe here and keeps the canonical-URL-for-crawlers intent intact.
+import { SITE_URL } from "@/lib/site";
 
 export function AgenticCatalog() {
   return (

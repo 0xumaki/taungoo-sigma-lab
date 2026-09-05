@@ -11,6 +11,7 @@ import { PageTransitionOverlay } from "@/components/sigma/PageTransitionOverlay"
 // mounts on user click; this catalog fills that SSR gap without changing
 // the visible UX).
 import { AgenticCatalog } from "@/components/sigma/shared/AgenticCatalog";
+import { SITE_URL } from "@/lib/site";
 
 // === TYPOGRAPHY (5 families — Outfit + Sora removed LOOP-5: unused across the codebase) ===
 // PERF (LOOP-1-LH): preload audit — only the primary above-fold font
@@ -101,7 +102,7 @@ const rajdhani = Rajdhani({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://taungoo-sigma-lab.vercel.app"),
+  metadataBase: new URL(SITE_URL),
   title: {
     default: "TAUNGOO Σ Lab — Innovation Hub for Tomorrow's Technology",
     template: "%s · TAUNGOO Σ Lab",
@@ -123,7 +124,7 @@ export const metadata: Metadata = {
     "IoT",
     "quantum computing",
   ],
-  authors: [{ name: "Taungoo Sigma Lab", url: "https://taungoo-sigma-lab.vercel.app" }],
+  authors: [{ name: "Taungoo Sigma Lab", url: SITE_URL }],
   creator: "Taungoo Sigma Lab",
   publisher: "Taungoo Sigma Lab",
   category: "technology",
@@ -140,7 +141,7 @@ export const metadata: Metadata = {
     siteName: "Taungoo Sigma Lab",
     type: "website",
     locale: "en_US",
-    url: "https://taungoo-sigma-lab.vercel.app",
+    url: SITE_URL,
     images: [
       {
         url: "/sections/map.png",
@@ -185,8 +186,6 @@ export const metadata: Metadata = {
     email: false,
   },
 };
-
-const SITE_URL = "https://taungoo-sigma-lab.vercel.app";
 
 // LOOP-3-AGENTIC-SEO: JSON-LD restructured as a single @graph node containing
 // Organization + WebSite entities (cleaner than emitting two separate

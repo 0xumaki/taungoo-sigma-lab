@@ -9,8 +9,7 @@
 import type { Metadata } from "next";
 import { PROJECTS, type ProjectDetail } from "./projects-data";
 import { PortfolioCaseStudyView } from "./view";
-
-const SITE_URL = "https://taungoo-sigma-lab.vercel.app";
+import { SITE_URL } from "@/lib/site";
 
 type Params = Promise<{ slug: string }>;
 
