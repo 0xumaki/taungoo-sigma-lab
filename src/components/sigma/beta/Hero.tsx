@@ -399,16 +399,9 @@ export function Hero() {
               objectPosition: "center 20%",
               // Studio-video grade: pulled-down exposure with a touch more contrast
               // and slightly desaturated, so the figure reads as *lit* rather than
-              // flat-bright (was brightness(0.82) with no grading).
-              //
-              // Golden aura — two stacked drop-shadows hugging the figure's alpha
-              // silhouette: a tight hot rim plus a wider soft bloom. The old single
-              // 40px shadow at 0.15 alpha was so faint it just read as grey haze
-              // against the dark backdrop.
+              // flat-bright. Gold drop-shadow glow REMOVED per user request.
               filter:
-                "brightness(0.72) contrast(1.06) saturate(0.92) " +
-                "drop-shadow(0 0 16px rgba(212, 175, 55, 0.55)) " +
-                "drop-shadow(0 0 44px rgba(212, 175, 55, 0.32))",
+                "brightness(0.72) contrast(1.06) saturate(0.92)",
             }}
           />
         </motion.div>
